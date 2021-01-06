@@ -1,0 +1,15 @@
+// Some quick styling for navigation button
+.btn.navigationButton {
+  font-size: 11px;
+  height: 28px;
+  line-height: 28px;
+  padding: 0 8px;
+}
+
+.uilibWelcome__compose {
+  compose {
+    display: block; // to make <compose> styleable
+    margin: 25px 20px;
+  }
+
+}
