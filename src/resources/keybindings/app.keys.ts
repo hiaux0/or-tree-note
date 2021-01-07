@@ -59,7 +59,19 @@ export const MODIFIERS = [
   "⇪",
   "Caps Lock(Capital)",
   "↩︎",
-  "return/Enter space",
+  "Enter",
+  "Backspace",
+  "CapsLock",
+  "Delete",
+  // Navigation
+  "Tab",
+  "PageUp",
+  "Home",
+  "End",
+  "ArrowLeft",
+  "ArrowRight",
+  "ArrowUp",
+  "ArrowDown",
 ];
 
 // Cursor

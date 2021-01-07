@@ -27,16 +27,6 @@ export class NormalMode extends AbstractMode {
 
   cursorLeft() {
     super.cursorLeft();
-    const currentCaretLeft = getValueFromPixelString(
-      this.caretElement.style.left
-    );
-
-    const newLeft = currentCaretLeft - this.caretWidth;
-
-    if (newLeft < 0) {
-      return;
-    }
-    this.caretElement.style.left = `${newLeft}px`;
   }
 
   cursorRight() {

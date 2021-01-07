@@ -21,6 +21,7 @@ import { InsertMode } from "./insert-mode/insert-mode";
 import { NormalModeKeybindings } from "./normal-mode/normal-mode-commands";
 import keyBindingsJson from "../../resources/keybindings/key-bindings.json";
 import { InsertModeKeybindings } from "./insert-mode/insert-mode-commands";
+import { sendKeyEvent, sendKeySequence } from "modules/keys/keys";
 
 export enum EditorModes {
   "NORMAL" = "NORMAL",
@@ -106,10 +107,12 @@ export class EditingModes {
 
   keyPressed(pressedKey: string) {
     const currentMode = this.getCurrentMode();
+    //
     if (this.isInsertMode(currentMode)) {
       if (pressedKey !== SHIFT) {
         currentMode.keyPressed(pressedKey);
       }
+      //
     } else if (this.isNormalMode(currentMode)) {
       const targetCommand = keyBindings.normal.find(
         (binding) => binding.key === pressedKey
@@ -130,11 +133,23 @@ export class EditingModes {
     }
   }
 
+  modifierKeyPressed(modifierKey: string) {
+    const currentMode = this.getCurrentMode();
+    //
+    if (this.isInsertMode(currentMode)) {
+      if (modifierKey !== SHIFT) {
+        currentMode.modifierKeyPressed(modifierKey);
+      }
+      //
+    }
+  }
+
   initKeys() {
     hotkeys("*", (ev) => {
       logger.debug(["-------------- Key pressed: %s", ev.key]);
 
       if (MODIFIERS.includes(ev.key)) {
+        this.modifierKeyPressed(ev.key);
         return;
       }
 

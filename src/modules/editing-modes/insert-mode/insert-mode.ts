@@ -12,7 +12,7 @@ import {
 } from "../../../resources/keybindings/app.keys";
 import { getCssVar, getValueFromPixelString } from "../../css/css-variables";
 import hotkeys from "hotkeys-js";
-import { insert } from "modules/string/string";
+import { insert, replaceAt } from "modules/string/string";
 
 const CARET_NORMAL_CLASS = "caret-normal";
 const CARET_INSERT_CLASS = "caret-insert";
@@ -24,6 +24,32 @@ export class InsertMode extends AbstractMode {
 
   keyPressed(pressedKey: string) {
     this.type(pressedKey);
+  }
+
+  modifierKeyPressed(modifierKey: string) {
+    if (this[modifierKey.toLowerCase()]) {
+      this[modifierKey.toLowerCase()]();
+    }
+  }
+
+  backspace() {
+    const currentLine = this.children[this.currentLineNumber];
+    const curLineText = currentLine.textContent;
+    const currentCaretCol = this.getCurrentCaretCol();
+
+    const result = replaceAt(curLineText, currentCaretCol - 1, "");
+    currentLine.textContent = result;
+
+    super.cursorLeft();
+  }
+
+  delete() {
+    const currentLine = this.children[this.currentLineNumber];
+    const curLineText = currentLine.textContent;
+    const currentCaretCol = this.getCurrentCaretCol();
+
+    const result = replaceAt(curLineText, currentCaretCol, "");
+    currentLine.textContent = result;
   }
 
   type(pressedKey: string) {

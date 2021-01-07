@@ -58,6 +58,16 @@ export abstract class AbstractMode {
 
   cursorLeft() {
     this.commenKeyFunctionality();
+    const currentCaretLeft = getValueFromPixelString(
+      this.caretElement.style.left
+    );
+
+    const newLeft = currentCaretLeft - this.caretWidth;
+
+    if (newLeft < 0) {
+      return;
+    }
+    this.caretElement.style.left = `${newLeft}px`;
   }
 
   commenKeyFunctionality() {
