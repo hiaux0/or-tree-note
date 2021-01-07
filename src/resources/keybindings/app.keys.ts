@@ -63,6 +63,9 @@ export const MODIFIERS = [
   "Backspace",
   "CapsLock",
   "Delete",
+];
+
+export const NAVIGATION_KEYS = [
   // Navigation
   "Tab",
   "PageUp",
@@ -73,6 +76,8 @@ export const MODIFIERS = [
   "ArrowUp",
   "ArrowDown",
 ];
+
+export const SPECIAL_KEYS = [...MODIFIERS, ...NAVIGATION_KEYS];
 
 // Cursor
 export const CURSOR_LEFT = "h";

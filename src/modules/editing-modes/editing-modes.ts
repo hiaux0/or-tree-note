@@ -108,16 +108,8 @@ export class EditingModes {
     return this.currentModeName === EditorModes.NORMAL;
   }
 
-  keyPressed(pressedKey: string) {
-    const currentMode = this.getCurrentMode();
-    //
-    if (this.isInsertMode(currentMode)) {
-      if (pressedKey !== SHIFT) {
-        currentMode.keyPressed(pressedKey);
-      }
-      //
-    } else if (this.isNormalMode(currentMode)) {
-      const targetCommand = keyBindings.normal.find(
+  getCommand(pressedKey: string) {
+    const targetCommand = keyBindings[this.currentModeName.toLowerCase()].find(
         (binding) => binding.key === pressedKey
       );
 
@@ -132,8 +124,23 @@ export class EditingModes {
 
       logger.debug(["Command: %s", targetCommand.command]);
 
-      currentMode.keyPressed(pressedKey, targetCommand.command);
+    return targetCommand.command;
     }
+
+  keyPressed(pressedKey: string) {
+    const currentMode = this.getCurrentMode();
+
+    if (this.isInsertMode(currentMode)) {
+      if (pressedKey !== SHIFT) {
+        const targetCommand = this.getCommand(pressedKey);
+        currentMode.keyPressed(pressedKey, targetCommand);
+      }
+      return;
+    }
+
+    const targetCommand = this.getCommand(pressedKey);
+
+    currentMode.keyPressed(pressedKey, targetCommand);
   }
 
   modifierKeyPressed(modifierKey: string) {
@@ -144,6 +151,7 @@ export class EditingModes {
         currentMode.modifierKeyPressed(modifierKey);
       }
       //
+    } else if (this.isNormalMode(currentMode)) {
     }
   }
 
@@ -151,7 +159,10 @@ export class EditingModes {
     hotkeys("*", (ev) => {
       logger.debug(["-------------- Key pressed: %s", ev.key]);
 
-      if (MODIFIERS.includes(ev.key)) {
+      if (
+        MODIFIERS.includes(ev.key) &&
+        this.currentModeName === EditorModes.INSERT
+      ) {
         this.modifierKeyPressed(ev.key);
         return;
       }

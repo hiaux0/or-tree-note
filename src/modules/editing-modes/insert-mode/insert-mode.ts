@@ -22,7 +22,11 @@ export class InsertMode extends AbstractMode {
     super(parentElement, childSelector, caretElement);
   }
 
-  keyPressed(pressedKey: string) {
+  keyPressed(pressedKey: string, targetCommandName?: string) {
+    if (targetCommandName) {
+      super[targetCommandName]();
+      return;
+    }
     this.type(pressedKey);
   }
 
