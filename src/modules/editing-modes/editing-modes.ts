@@ -6,6 +6,7 @@ import {
   INSERT_MODE,
   SHIFT,
   SHIFT_KEY_CODE,
+  MODIFIERS,
 } from "./../../resources/keybindings/app.keys";
 import {
   COMMAND_PALETT,
@@ -136,7 +137,7 @@ export class EditingModes {
     hotkeys("*", (ev) => {
       logger.debug(["-------------- Key pressed: %s", ev.key]);
 
-      if (ev.key === SHIFT) {
+      if (MODIFIERS.includes(ev.key)) {
         return;
       }
 

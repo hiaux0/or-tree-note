@@ -46,6 +46,22 @@ export const ESCAPE = "Escape";
 export const SHIFT = "Shift";
 export const SHIFT_KEY_CODE = 16;
 
+export const MODIFIERS = [
+  "⌘",
+  "Command",
+  "⌃",
+  "Control",
+  "⌥",
+  "Option",
+  "Alt",
+  "⇧",
+  "Shift",
+  "⇪",
+  "Caps Lock(Capital)",
+  "↩︎",
+  "return/Enter space",
+];
+
 // Cursor
 export const CURSOR_LEFT = "h";
 export const CURSOR_RIGHT = "l";
