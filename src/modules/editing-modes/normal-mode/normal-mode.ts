@@ -36,25 +36,7 @@ export class NormalMode extends AbstractMode {
   }
 
   cursorRight() {
-    console.log("TCL: NormalMode -> cursorRight -> cursorRight");
     super.cursorRight();
-    const currentCaretLeft = getValueFromPixelString(
-      this.caretElement.style.left
-    );
-
-    const newLeft = currentCaretLeft + this.caretWidth;
-    const parentWidth = getValueFromPixelString(
-      getComputedStyle(this.parentElement).width
-    );
-
-    /**
-     * TODO: Only until word end
-     */
-    if (newLeft > parentWidth) {
-      return;
-    }
-
-    this.caretElement.style.left = `${newLeft}px`;
   }
 
   cursorUp() {
