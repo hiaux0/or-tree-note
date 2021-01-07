@@ -96,24 +96,36 @@ export class EditingModes {
     return this.modes[this.currentModeName];
   }
 
+  isInsertMode(currentMode): currentMode is InsertMode {
+    return this.currentModeName === EditorModes.INSERT;
+  }
+
+  isNormalMode(currentMode): currentMode is NormalMode {
+    return this.currentModeName === EditorModes.NORMAL;
+  }
+
   keyPressed(pressedKey: string) {
-    const curMode = this.currentModeName.toLocaleLowerCase();
-    const targetCommand = keyBindings[curMode].find(
-      (binding) => binding.key === pressedKey
-    );
+    const currentMode = this.getCurrentMode();
+    if (this.isInsertMode(currentMode)) {
+      currentMode.keyPressed(pressedKey);
+    } else if (this.isNormalMode(currentMode)) {
+      const targetCommand = keyBindings.normal.find(
+        (binding) => binding.key === pressedKey
+      );
 
-    if (!targetCommand) {
-      logger.debug([
-        "No command for key: %s in Mode: %s",
-        pressedKey,
-        this.currentModeName,
-      ]);
-      return;
+      if (!targetCommand) {
+        logger.debug([
+          "No command for key: %s in Mode: %s",
+          pressedKey,
+          this.currentModeName,
+        ]);
+        return;
+      }
+
+      logger.debug(["Command: %s", targetCommand.command]);
+
+      currentMode.keyPressed(pressedKey, targetCommand.command);
     }
-
-    logger.debug(["Command: %s", targetCommand.command]);
-
-    return this.getCurrentMode()[targetCommand.command](pressedKey);
   }
 
   initKeys() {

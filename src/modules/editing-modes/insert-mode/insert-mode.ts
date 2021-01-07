@@ -22,6 +22,10 @@ export class InsertMode extends AbstractMode {
     super(parentElement, childSelector, caretElement);
   }
 
+  keyPressed(pressedKey: string) {
+    this.type(pressedKey);
+  }
+
   type(pressedKey: string) {
     super.cursorRight();
     const currentLine = this.children[this.currentLineNumber];

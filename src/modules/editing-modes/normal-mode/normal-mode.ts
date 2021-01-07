@@ -21,6 +21,10 @@ export class NormalMode extends AbstractMode {
     super(parentElement, childSelector, caretElement);
   }
 
+  keyPressed(pressedKey: string, targetCommandName: string) {
+    this[targetCommandName]();
+  }
+
   cursorLeft() {
     super.cursorLeft();
     const currentCaretLeft = getValueFromPixelString(
