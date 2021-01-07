@@ -19,3 +19,10 @@ export function setCssVariable(varName, value): void {
 export function getValueFromPixelString(pixelString: string): number {
   return Number(pixelString.replace(/px$/, ""));
 }
+
+export function getComputedValueFromPixelString(
+  element: HTMLElement,
+  value: string
+): number {
+  return getValueFromPixelString(getComputedStyle(element)[value]);
+}
