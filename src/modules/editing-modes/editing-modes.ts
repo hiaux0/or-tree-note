@@ -130,9 +130,12 @@ export class EditingModes {
 
   initKeys() {
     hotkeys("*", (ev) => {
-      logger.debug(["--- Key pressed: %s", ev.key]);
+      logger.debug(["-------------- Key pressed: %s", ev.key]);
 
-      if (ev.key === INSERT_MODE) {
+      if (
+        ev.key === INSERT_MODE &&
+        this.currentModeName === EditorModes.NORMAL
+      ) {
         logger.debug("Enter Insert mode");
 
         this.currentModeName = EditorModes.INSERT;
