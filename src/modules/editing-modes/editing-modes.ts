@@ -1,4 +1,4 @@
-import { logger } from "./../debug/debug-logger";
+import { logger } from "../debug/logger";
 import { AbstractMode } from "./abstract-mode";
 import {
   CURSOR_UP,
