@@ -41,7 +41,7 @@ const keyBindings = (keyBindingsJson as unknown) as KeyBindingModes;
 
 export class EditingModes {
   // currentModeName: EditorModes = EditorModes.INSERT;
-  currentModeName: EditorModes = EditorModes.NORMAL;
+  currentModeName: EditorModes = EditorModes.INSERT;
   normalMode: NormalMode;
   insertMode: InsertMode;
   modes: { [key: string]: AbstractMode };
@@ -71,6 +71,9 @@ export class EditingModes {
     this.modes = {};
     this.modes[EditorModes.NORMAL] = this.normalMode;
     this.modes[EditorModes.INSERT] = this.insertMode;
+
+    document.dispatchEvent(new KeyboardEvent("keydown", { key: "l" }));
+    document.dispatchEvent(new KeyboardEvent("keydown", { key: "x" }));
   }
 
   initKeyBinding() {
@@ -88,26 +91,34 @@ export class EditingModes {
   }
 
   getCurrentMode() {
+    logger.debug(["Current mode: %s", this.currentModeName]);
+
     return this.modes[this.currentModeName];
   }
 
   keyPressed(pressedKey: string) {
-    const targetCommand = keyBindings.normal.find(
+    const curMode = this.currentModeName.toLocaleLowerCase();
+    const targetCommand = keyBindings[curMode].find(
       (binding) => binding.key === pressedKey
     );
 
     if (!targetCommand) {
+      logger.debug([
+        "No command for key: %s in Mode: %s",
+        pressedKey,
+        this.currentModeName,
+      ]);
       return;
     }
 
     logger.debug(["Command: %s", targetCommand.command]);
 
-    return this.getCurrentMode()[targetCommand.command]();
+    return this.getCurrentMode()[targetCommand.command](pressedKey);
   }
 
   initKeys() {
     hotkeys("*", (ev) => {
-      logger.debug(["Key pressed: %s", ev.key]);
+      logger.debug(["--- Key pressed: %s", ev.key]);
 
       if (ev.key === INSERT_MODE) {
         logger.debug("Enter Insert mode");

@@ -22,61 +22,14 @@ export class InsertMode extends AbstractMode {
     super(parentElement, childSelector, caretElement);
   }
 
-  cursorLeft() {
-    super.cursorLeft();
-    const currentCaretLeft = getValueFromPixelString(
-      this.caretElement.style.left
-    );
-
-    const newLeft = currentCaretLeft - this.caretWidth;
-
-    if (newLeft < 0) {
-      return;
-    }
-    this.caretElement.style.left = `${newLeft}px`;
-  }
-
-  cursorRight() {
-    console.log("TODO: insert the letter: L");
+  type(pressedKey: string) {
+    super.cursorRight();
     const currentLine = this.children[this.currentLineNumber];
-    console.log("TCL: InsertMode -> keyL -> currentLine", currentLine);
     const curLineText = currentLine.textContent;
 
     const currentCaretCol = this.getCurrentCaretCol();
 
-    const result = insert(curLineText, currentCaretCol, "l");
-    console.log("TCL: InsertMode -> keyL -> result", result);
+    const result = insert(curLineText, currentCaretCol, pressedKey);
     currentLine.textContent = result;
-  }
-
-  cursorUp() {
-    super.cursorUp();
-    const currentCaretTop = getValueFromPixelString(
-      this.caretElement.style.top
-    );
-
-    const newTop = currentCaretTop - this.caretHeight;
-    if (newTop < 0) {
-      return;
-    }
-
-    this.caretElement.style.top = `${newTop}px`;
-  }
-
-  cursorDown() {
-    super.cursorDown();
-    const currentCaretTop = getValueFromPixelString(
-      this.caretElement.style.top
-    );
-
-    const newTop = currentCaretTop + this.caretHeight;
-    const parentHeight = getValueFromPixelString(
-      getComputedStyle(this.parentElement).height
-    );
-    if (newTop > parentHeight) {
-      return;
-    }
-
-    this.caretElement.style.top = `${newTop}px`;
   }
 }
