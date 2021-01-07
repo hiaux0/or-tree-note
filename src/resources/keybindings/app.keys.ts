@@ -11,8 +11,40 @@ export const INPUT_DROPDOWN_ENTER = "enter, ctrl+n";
 // Jumpable
 export const JUMPABLE = "ctrl+m";
 
-// App wide
+// Letters
+export const LETTERS = [
+  "a",
+  "b",
+  "c",
+  "d",
+  "e",
+  "f",
+  "g",
+  "h",
+  "i",
+  "j",
+  "k",
+  "l",
+  "m",
+  "n",
+  "o",
+  "p",
+  "q",
+  "r",
+  "s",
+  "t",
+  "u",
+  "v",
+  "w",
+  "x",
+  "y",
+  "z",
+];
+
+// Modifiers
 export const ESCAPE = "Escape";
+export const SHIFT = "Shift";
+export const SHIFT_KEY_CODE = 16;
 
 // Cursor
 export const CURSOR_LEFT = "h";

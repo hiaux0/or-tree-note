@@ -4,6 +4,8 @@ import {
   CURSOR_UP,
   CURSOR_DOWN,
   INSERT_MODE,
+  SHIFT,
+  SHIFT_KEY_CODE,
 } from "./../../resources/keybindings/app.keys";
 import {
   COMMAND_PALETT,
@@ -107,7 +109,9 @@ export class EditingModes {
   keyPressed(pressedKey: string) {
     const currentMode = this.getCurrentMode();
     if (this.isInsertMode(currentMode)) {
+      if (pressedKey !== SHIFT) {
       currentMode.keyPressed(pressedKey);
+      }
     } else if (this.isNormalMode(currentMode)) {
       const targetCommand = keyBindings.normal.find(
         (binding) => binding.key === pressedKey
@@ -132,6 +136,11 @@ export class EditingModes {
     hotkeys("*", (ev) => {
       logger.debug(["-------------- Key pressed: %s", ev.key]);
 
+      if (ev.key === SHIFT) {
+        return;
+      }
+
+      //
       if (
         ev.key === INSERT_MODE &&
         this.currentModeName === EditorModes.NORMAL
@@ -142,6 +151,7 @@ export class EditingModes {
         this.caretElement.classList.remove(CARET_NORMAL_CLASS);
         this.caretElement.classList.add(CARET_INSERT_CLASS);
         return;
+        //
       } else if (ev.key === ESCAPE) {
         logger.debug("Enter Normal mode");
 
