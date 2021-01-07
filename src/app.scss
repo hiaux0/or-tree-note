@@ -1,4 +1,7 @@
+@import './common/variables.scss';
 
 body {
   background: #706363;
+  font-size: $fontSize;
+  font-family: monospace;
 }

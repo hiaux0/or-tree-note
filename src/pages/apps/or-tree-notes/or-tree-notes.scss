@@ -1,4 +1,84 @@
+@import '../../../common/variables.scss';
+
+// @mixin caretBlinking {
+//   animation-name: blink;
+//   animation-duration: 0.5s;
+//   animation-timing-function: steps(1);
+//   animation-delay: 0s;
+//   animation-iteration-count: infinite;
+//   animation-direction: alternate;
+//   animation-fill-mode: none;
+//   animation-play-state: running;
+// }
+$caretBackgroundColor: lightblue;
+$caretColor: black;
+$carentWidth: 1.6px;
+$caretSizeWidth: 0.6 * $fontSize;
+$caretSizeHeight: 1.2 * $fontSize;
+
+:root {
+  --caret-size-width: #{$caretSizeWidth};
+  --caret-size-height: #{$caretSizeHeight};
+}
+
+@keyframes blinkInsert {
+  from, to {
+    border-left: $carentWidth solid $caretColor;
+  }
+
+  50% {
+    border-left: none;
+  }
+}
+
+@keyframes blinkNormal {
+  from, to {
+    background: $caretBackgroundColor
+  }
+
+  50% {
+    background: transparent;
+  }
+}
+
+@mixin caretBlinking($animationName) {
+  animation: 1.3s $animationName step-end infinite;
+}
 
 or-tree-notes {
+  .notes-container {
+    position: relative;
+    border: 1px solid black;
+    height: 40vh;
+    width: 40vw;
 
+    #caret {
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: $caretSizeHeight;
+      width: $caretSizeWidth;
+
+      opacity: 0.5;
+      z-index: -1;
+
+      &.caret-normal {
+        background: $caretBackgroundColor;
+        border: 1px solid black;
+        &.caret-blinking {
+          @include caretBlinking(blinkNormal);
+        }
+      }
+
+      &.caret-insert {
+        background: transparent;
+        border-left: $carentWidth solid $caretColor;
+        &.caret-blinking {
+          @include caretBlinking(blinkInsert);
+        }
+      }
+
+    }
+  }
 }
+
