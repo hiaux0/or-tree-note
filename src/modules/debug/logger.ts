@@ -11,7 +11,7 @@ interface LogOptions {
 
 const defautLogOptions: LogOptions = {
   logMethod: "log",
-  focusedLogging: true,
+  focusedLogging: false,
 };
 
 export class Logger {
