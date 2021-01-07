@@ -1,5 +1,5 @@
 import { bindable } from "aurelia-framework";
-import { EditingModes } from "modules/editing-modes/editing-modes";
+import { EditingModes, EditorModes } from "modules/editing-modes/editing-modes";
 import "./or-tree-notes.scss";
 
 export class OrTreeNotes {
@@ -8,6 +8,8 @@ export class OrTreeNotes {
   notesContainerRef: HTMLDivElement;
   lineSpanRef: HTMLSpanElement;
   caretRef: HTMLSpanElement;
+
+  currentModeName: EditorModes;
 
   editorLineClass: string = "editor-line";
 
@@ -20,5 +22,6 @@ export class OrTreeNotes {
       this.caretRef
     );
     editModes.init();
+    this.currentModeName = editModes.currentModeName;
   }
 }

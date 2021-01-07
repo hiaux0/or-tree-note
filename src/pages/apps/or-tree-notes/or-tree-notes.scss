@@ -62,7 +62,7 @@ or-tree-notes {
       opacity: 0.5;
       z-index: -1;
 
-      &.caret-normal {
+      &.caret-NORMAL {
         background: $caretBackgroundColor;
         border: 1px solid black;
         &.caret-blinking {
@@ -70,7 +70,7 @@ or-tree-notes {
         }
       }
 
-      &.caret-insert {
+      &.caret-INSERT {
         background: transparent;
         border-left: $carentWidth solid $caretColor;
         &.caret-blinking {
