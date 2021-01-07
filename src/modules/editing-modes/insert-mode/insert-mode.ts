@@ -27,7 +27,6 @@ export class InsertMode extends AbstractMode {
   }
 
   type(pressedKey: string) {
-    super.cursorRight();
     const currentLine = this.children[this.currentLineNumber];
     const curLineText = currentLine.textContent;
 
@@ -35,5 +34,6 @@ export class InsertMode extends AbstractMode {
 
     const result = insert(curLineText, currentCaretCol, pressedKey);
     currentLine.textContent = result;
+    super.cursorRight();
   }
 }
