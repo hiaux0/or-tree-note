@@ -1,3 +1,4 @@
+import { logger } from "modules/debug/logger";
 import {
   getComputedValueFromPixelString,
   getCssVar,
@@ -54,6 +55,7 @@ export abstract class AbstractMode {
 
     this.caretElement.style.left = `${newLeft}px`;
   }
+
   cursorLeft() {
     this.commenKeyFunctionality();
   }
@@ -73,9 +75,17 @@ export abstract class AbstractMode {
   }
 
   /** CARET */
+
   getCurrentCaretCol() {
-    const curCarW = getComputedValueFromPixelString(this.caretElement, "width");
-    /** -1 Caret style logic has always a start width -> Eg 10 / 10 = 1 */
-    return curCarW / this.caretWidth - 1;
+    const curCarLeft = getComputedValueFromPixelString(
+      this.caretElement,
+      "left"
+    );
+
+    const currentCaretCol = Math.round(curCarLeft / this.caretWidth);
+
+    logger.debug(["Current caret col: %n", currentCaretCol], { log: true });
+
+    return currentCaretCol;
   }
 }
