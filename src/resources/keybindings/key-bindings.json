@@ -1,0 +1,18 @@
+{
+  "normal": [
+    { "key": "h", "command": "cursorLeft" },
+    { "key": "k", "command": "cursorUp" },
+    { "key": "l", "command": "cursorRight" },
+    { "key": "u", "command": "cursorDown" },
+    {
+      "key": "y",
+      "command": "yank"
+    }
+  ],
+  "insert": [
+    {
+      "key": "l",
+      "command": "type l"
+    }
+  ]
+}

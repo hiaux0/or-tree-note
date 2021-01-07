@@ -12,7 +12,7 @@ export const INPUT_DROPDOWN_ENTER = "enter, ctrl+n";
 export const JUMPABLE = "ctrl+m";
 
 // App wide
-export const ESCAPE = "escape";
+export const ESCAPE = "Escape";
 
 // Cursor
 export const CURSOR_LEFT = "h";

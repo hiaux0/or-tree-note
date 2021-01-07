@@ -1,3 +1,5 @@
+import { logger } from "./../debug/debug-logger";
+import { AbstractMode } from "./abstract-mode";
 import {
   CURSOR_UP,
   CURSOR_DOWN,
@@ -11,39 +13,64 @@ import {
 } from "../../resources/keybindings/app.keys";
 import { getCssVar, getValueFromPixelString } from "../css/css-variables";
 import hotkeys from "hotkeys-js";
+import { NormalMode } from "./normal-mode/normal-mode";
+import { InsertMode } from "./insert-mode/insert-mode";
+import { NormalModeKeybindings } from "./normal-mode/normal-mode-commands";
+import keyBindingsJson from "../../resources/keybindings/key-bindings.json";
+import { InsertModeKeybindings } from "./insert-mode/insert-mode-commands";
 
-const CARET_NORMAL_CLASS = "caret-normal";
-const CARET_INSERT_CLASS = "caret-insert";
+export enum EditorModes {
+  "NORMAL" = "NORMAL",
+  "INSERT" = "INSERT",
+}
+
+const CARET_NORMAL_CLASS = "caret-NORMAL";
+const CARET_INSERT_CLASS = "caret-INSERT";
 
 function isHTMLElement(input): input is HTMLElement {
   if (typeof input === "string") return false;
   return true;
 }
 
-export class EditingModes {
-  children: NodeListOf<Element>;
+interface KeyBindingModes {
+  normal: NormalModeKeybindings[];
+  insert: InsertModeKeybindings[]; // TODO to instert
+}
 
-  caretWidth: number;
-  caretHeight: number;
+const keyBindings = (keyBindingsJson as unknown) as KeyBindingModes;
+
+export class EditingModes {
+  // currentModeName: EditorModes = EditorModes.INSERT;
+  currentModeName: EditorModes = EditorModes.NORMAL;
+  normalMode: NormalMode;
+  insertMode: InsertMode;
+  modes: { [key: string]: AbstractMode };
 
   constructor(
     private parentElement: HTMLElement,
     private childSelector: string,
     private caretElement: HTMLElement
   ) {
-    this.children = parentElement.querySelectorAll(this.childSelector);
-  }
+    this.normalMode = new NormalMode(
+      this.parentElement,
+      this.childSelector,
+      this.caretElement
+    );
 
-  setVariables() {
-    this.caretWidth = getCssVar("--caret-size-width");
-    this.caretHeight = getCssVar("--caret-size-height");
+    this.insertMode = new InsertMode(
+      this.parentElement,
+      this.childSelector,
+      this.caretElement
+    );
   }
 
   init() {
-    this.setVariables();
     this.initKeyBinding();
-    this.initCursors();
-    this.initModes();
+    this.initKeys();
+
+    this.modes = {};
+    this.modes[EditorModes.NORMAL] = this.normalMode;
+    this.modes[EditorModes.INSERT] = this.insertMode;
   }
 
   initKeyBinding() {
@@ -60,113 +87,45 @@ export class EditingModes {
     });
   }
 
-  initModes() {
-    this.enterInsertMode();
-    this.enterNormalMode();
+  getCurrentMode() {
+    return this.modes[this.currentModeName];
   }
 
-  enterInsertMode() {
-    hotkeys(INSERT_MODE, () => {
-      this.caretElement.classList.remove(CARET_NORMAL_CLASS);
-      this.caretElement.classList.add(CARET_INSERT_CLASS);
-    });
+  keyPressed(pressedKey: string) {
+    const targetCommand = keyBindings.normal.find(
+      (binding) => binding.key === pressedKey
+    );
+
+    if (!targetCommand) {
+      return;
+    }
+
+    logger.debug(["Command: %s", targetCommand.command]);
+
+    return this.getCurrentMode()[targetCommand.command]();
   }
 
-  enterNormalMode() {
-    hotkeys(ESCAPE, () => {
-      this.caretElement.classList.remove(CARET_INSERT_CLASS);
-      this.caretElement.classList.add(CARET_NORMAL_CLASS);
-    });
-  }
+  initKeys() {
+    hotkeys("*", (ev) => {
+      logger.debug(["Key pressed: %s", ev.key]);
 
-  initCursors() {
-    this.cursorLeft();
-    this.cursorRight();
-    this.cursorUp();
-    this.cursorDown();
-  }
+      if (ev.key === INSERT_MODE) {
+        logger.debug("Enter Insert mode");
 
-  cursorLeft() {
-    hotkeys(CURSOR_LEFT, () => {
-      this.resetCaretBlinking();
-      const currentCaretLeft = getValueFromPixelString(
-        this.caretElement.style.left
-      );
-
-      const newLeft = currentCaretLeft - this.caretWidth;
-
-      if (newLeft < 0) {
+        this.currentModeName = EditorModes.INSERT;
+        this.caretElement.classList.remove(CARET_NORMAL_CLASS);
+        this.caretElement.classList.add(CARET_INSERT_CLASS);
         return;
-      }
-      this.caretElement.style.left = `${newLeft}px`;
-    });
-  }
+      } else if (ev.key === ESCAPE) {
+        logger.debug("Enter Normal mode");
 
-  cursorRight() {
-    hotkeys(CURSOR_RIGHT, () => {
-      this.resetCaretBlinking();
-      const currentCaretLeft = getValueFromPixelString(
-        this.caretElement.style.left
-      );
-
-      const newLeft = currentCaretLeft + this.caretWidth;
-      const parentWidth = getValueFromPixelString(
-        getComputedStyle(this.parentElement).width
-      );
-
-      /**
-       * TODO: Only until word end
-       */
-      if (newLeft > parentWidth) {
+        this.currentModeName = EditorModes.NORMAL;
+        this.caretElement.classList.remove(CARET_INSERT_CLASS);
+        this.caretElement.classList.add(CARET_NORMAL_CLASS);
         return;
       }
 
-      this.caretElement.style.left = `${newLeft}px`;
+      this.keyPressed(ev.key);
     });
-  }
-
-  cursorUp() {
-    hotkeys(CURSOR_UP, () => {
-      this.resetCaretBlinking();
-      const currentCaretTop = getValueFromPixelString(
-        this.caretElement.style.top
-      );
-
-      const newTop = currentCaretTop - this.caretHeight;
-      if (newTop < 0) {
-        return;
-      }
-
-      this.caretElement.style.top = `${newTop}px`;
-    });
-  }
-
-  cursorDown() {
-    hotkeys(CURSOR_DOWN, () => {
-      this.resetCaretBlinking();
-      const currentCaretTop = getValueFromPixelString(
-        this.caretElement.style.top
-      );
-
-      const newTop = currentCaretTop + this.caretHeight;
-      const parentHeight = getValueFromPixelString(
-        getComputedStyle(this.parentElement).height
-      );
-      if (newTop > parentHeight) {
-        return;
-      }
-
-      this.caretElement.style.top = `${newTop}px`;
-    });
-  }
-
-  resetCaretBlinking() {
-    this.caretElement.classList.remove("caret-blinking");
-    /**
-     * Needed to restart the animation
-     * https://css-tricks.com/restart-css-animation/
-     */
-    void this.caretElement.offsetWidth;
-    this.caretElement.classList.add("caret-blinking");
   }
 }
