@@ -18,7 +18,7 @@ describe("Stage App Component", () => {
       .create(bootstrap)
       .then(() => {
         const view = component.element;
-        expect(view.textContent.trim()).toBe("Hello World!");
+        expect(view.textContent.trim()).toBeTruthy();
         done();
       })
       .catch((e) => {
