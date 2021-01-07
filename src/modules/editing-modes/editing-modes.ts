@@ -44,8 +44,8 @@ interface KeyBindingModes {
 const keyBindings = (keyBindingsJson as unknown) as KeyBindingModes;
 
 export class EditingModes {
-  currentModeName: EditorModes = EditorModes.INSERT;
-  // currentModeName: EditorModes = EditorModes.NORMAL;
+  // currentModeName: EditorModes = EditorModes.INSERT;
+  currentModeName: EditorModes = EditorModes.NORMAL;
   normalMode: NormalMode;
   insertMode: InsertMode;
   modes: { [key: string]: AbstractMode };
@@ -75,6 +75,9 @@ export class EditingModes {
     this.modes = {};
     this.modes[EditorModes.NORMAL] = this.normalMode;
     this.modes[EditorModes.INSERT] = this.insertMode;
+
+    sendKeySequence("llis");
+    // sendKeyEvent("Backspace");
   }
 
   initKeyBinding() {
