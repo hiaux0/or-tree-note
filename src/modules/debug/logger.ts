@@ -1,26 +1,39 @@
 const debugMode = true;
 
 interface LogOptions {
-  logMethod: "log" | "trace" | "error";
+  logMethod?: "log" | "trace" | "error";
+  log?: boolean;
+  /**
+   * Even in debug mode, only log, when explicitely set via `log`.
+   */
+  focusedLogging?: boolean;
 }
 
 const defautLogOptions: LogOptions = {
   logMethod: "log",
+  focusedLogging: true,
 };
 
 export class Logger {
-  constructor(private logOptions: LogOptions = defautLogOptions) {}
+  constructor(private globalLogOptions: LogOptions = defautLogOptions) {}
 
-  debug(messages: string | string[], logOptions?: LogOptions) {
+  debug(messages: any | string[], logOptions?: LogOptions) {
     if (debugMode) {
-      const logMethod = (logOptions || this.logOptions).logMethod;
+      const logOpt = {
+        ...this.globalLogOptions,
+        ...logOptions,
+      };
 
-      if (Array.isArray(messages)) {
-        console[logMethod](...messages);
+      if (this.globalLogOptions.focusedLogging && !logOptions?.log) {
         return;
       }
 
-      console[logMethod](messages);
+      if (Array.isArray(messages)) {
+        console[logOpt.logMethod](...messages);
+        return;
+      }
+
+      console[logOpt.logMethod](messages);
     }
   }
 }
