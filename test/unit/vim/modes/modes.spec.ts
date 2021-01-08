@@ -6,9 +6,9 @@ const input = ["foo"];
 const cursor = { line: 0, col: 0 };
 
 describe("Vim", () => {
-  let v: Vim;
+  let vim: Vim;
   beforeEach(() => {
-    v = new Vim(cloneDeep(input), cloneDeep(cursor));
+    vim = new Vim(cloneDeep(input), cloneDeep(cursor));
   });
 
   /** *******/
@@ -17,12 +17,12 @@ describe("Vim", () => {
 
   describe("C: Modes", () => {
     it("F: Switch to insert mode", () => {
-      v.enterInsertMode();
-      expect(v.vimMode).toBe(VimMode.INSERT);
+      vim.enterInsertMode();
+      expect(vim.vimMode).toBe(VimMode.INSERT);
     });
     it("F: Switch to insert mode", () => {
-      v.enterNormalMode();
-      expect(v.vimMode).toBe(VimMode.NORMAL);
+      vim.enterNormalMode();
+      expect(vim.vimMode).toBe(VimMode.NORMAL);
     });
   });
 
@@ -32,13 +32,13 @@ describe("Vim", () => {
 
   describe("C: Input Queue", () => {
     it("F: Should execute command in Input Queue", () => {
-      v.enterInsertMode();
-      const result = v.queueInput("@");
+      vim.enterInsertMode();
+      const result = vim.queueInput("@");
       expect(result.commandOutput).toBe(`@${input[0]}`);
     });
     it("F: Should execute command in Input Queue Chain", () => {
-      v.enterInsertMode();
-      const result = v.queueChainedInputs("345");
+      vim.enterInsertMode();
+      const result = vim.queueChainedInputs("345");
       expect(result.commandOutput).toBe(`345${input[0]}`);
     });
   });

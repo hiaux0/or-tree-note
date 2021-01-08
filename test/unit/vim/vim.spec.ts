@@ -6,7 +6,7 @@ const cursor: Cursor = { line: 0, col: 0 };
 
 describe("C: Mode - Normal", () => {
   describe("C: Chained commands", () => {
-    let v: Vim;
+    let vim: Vim;
     beforeEach(() => {
       const keyBindings: KeyBindingModes = {
         normal: [
@@ -25,27 +25,27 @@ describe("C: Mode - Normal", () => {
         ],
         insert: [],
       };
-      v = new Vim(cloneDeep(input), cloneDeep(cursor), {
+      vim = new Vim(cloneDeep(input), cloneDeep(cursor), {
         keyBindings,
       });
-      v.enterNormalMode();
+      vim.enterNormalMode();
     });
 
     describe("Finding", () => {
       it("F: Find potential chained commands (sideeffect)", () => {
-        const result = v.findPotentialCommand("f");
+        const result = vim.findPotentialCommand("f");
         expect(map(result.potentialCommands, "command")).toEqual([
           "cursorDown",
           "yank",
         ]);
       });
       it("F: Return chained command name", () => {
-        const { targetCommand } = v.findPotentialCommand("u");
+        const { targetCommand } = vim.findPotentialCommand("u");
         expect(targetCommand.command).toEqual("cursorDown");
       });
       it("F: Throw error on no match", () => {
         try {
-          v.findPotentialCommand("x");
+          vim.findPotentialCommand("x");
         } catch (error) {
           expect(error.message).toBe("Empty Array");
         }
@@ -55,40 +55,40 @@ describe("C: Mode - Normal", () => {
     describe("Getting", () => {
       describe("#getCommandName", () => {
         it("F: Get command - Single", () => {
-          const result = v.getCommandName("u");
+          const result = vim.getCommandName("u");
           expect(result).toBe("cursorDown");
         });
         it("F: Get command - Chain", () => {
           //
-          v.getCommandName("f");
-          expect(map(v.potentialCommands, "command")).toEqual([
+          vim.getCommandName("f");
+          expect(map(vim.potentialCommands, "command")).toEqual([
             "cursorDown",
             "yank",
           ]);
           //
-          v.getCommandName("o");
-          expect(map(v.potentialCommands, "command")).toEqual(["cursorDown"]);
+          vim.getCommandName("o");
+          expect(map(vim.potentialCommands, "command")).toEqual(["cursorDown"]);
           //
-          const result = v.getCommandName("o");
+          const result = vim.getCommandName("o");
           expect(result).toBe("cursorDown");
         });
       });
       //
       describe("#queueChainedInputs", () => {
         it("F: Single input", () => {
-          const result = v.queueInput("u");
+          const result = vim.queueInput("u");
           expect(result.targetCommand).toBe("cursorDown");
           expect(result.commandOutput).toEqual({ col: 0, line: 1 });
         });
         //
         it("F: Chained input", () => {
-          const result = v.queueChainedInputs("u");
+          const result = vim.queueChainedInputs("u");
           expect(result.targetCommand).toBe("cursorDown");
           expect(result.commandOutput).toEqual({ col: 0, line: 1 });
         });
         it("F: Chained input - lli!", () => {
-          v = new Vim(cloneDeep(input), cloneDeep(cursor));
-          const result = v.queueChainedInputs("lli!");
+          vim = new Vim(cloneDeep(input), cloneDeep(cursor));
+          const result = vim.queueChainedInputs("lli!");
           expect(result.commandOutput).toBe("fo!o");
         });
       });

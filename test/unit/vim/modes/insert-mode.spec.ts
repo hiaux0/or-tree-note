@@ -5,15 +5,15 @@ const input = ["foo"];
 const cursor: Cursor = { line: 0, col: 0 };
 
 describe("C: Mode - Insert", () => {
-  let v: Vim;
+  let vim: Vim;
   beforeEach(() => {
-    v = new Vim(cloneDeep(input), cloneDeep(cursor));
+    vim = new Vim(cloneDeep(input), cloneDeep(cursor));
   });
 
   describe("C: Typing characters", () => {
     it("F: Update input with typed character", () => {
-      v.enterInsertMode();
-      const result = v.executeCommand("type", "!");
+      vim.enterInsertMode();
+      const result = vim.executeCommand("type", "!");
       expect(result).toBe(`!${input[0]}`); // !foo
     });
     it("F: Curosr updated after character input", () => {});
