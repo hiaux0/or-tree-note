@@ -18,9 +18,9 @@ import { getCssVar, getValueFromPixelString } from "../css/css-variables";
 import hotkeys from "hotkeys-js";
 import { NormalMode } from "./normal-mode/normal-mode";
 import { InsertMode } from "./insert-mode/insert-mode";
-import { NormalModeKeybindings } from "./normal-mode/normal-mode-commands";
+import { NormalModeKeybindings } from "../vim/modes/normal-mode-commands";
 import keyBindingsJson from "../../resources/keybindings/key-bindings.json";
-import { InsertModeKeybindings } from "./insert-mode/insert-mode-commands";
+import { InsertModeKeybindings } from "../vim/modes/insert-mode-commands";
 import { sendKeyEvent, sendKeySequence } from "modules/keys/keys";
 
 export enum EditorModes {
@@ -110,22 +110,22 @@ export class EditingModes {
 
   getCommand(pressedKey: string) {
     const targetCommand = keyBindings[this.currentModeName.toLowerCase()].find(
-        (binding) => binding.key === pressedKey
-      );
+      (binding) => binding.key === pressedKey
+    );
 
-      if (!targetCommand) {
-        logger.debug([
-          "No command for key: %s in Mode: %s",
-          pressedKey,
-          this.currentModeName,
-        ]);
-        return;
-      }
+    if (!targetCommand) {
+      logger.debug([
+        "No command for key: %s in Mode: %s",
+        pressedKey,
+        this.currentModeName,
+      ]);
+      return;
+    }
 
-      logger.debug(["Command: %s", targetCommand.command]);
+    logger.debug(["Command: %s", targetCommand.command]);
 
     return targetCommand.command;
-    }
+  }
 
   keyPressed(pressedKey: string) {
     const currentMode = this.getCurrentMode();

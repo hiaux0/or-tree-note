@@ -1,3 +1,4 @@
+import { VIM_COMMANDS } from "./vim-commands";
 import { insert } from "modules/string/string";
 import { logger } from "./../debug/logger";
 import hotkeys from "hotkeys-js";
@@ -67,7 +68,7 @@ export class Vim {
   /** **********/
 
   executeCommand<CommandType = any>(
-    commandName: string,
+    commandName: typeof VIM_COMMANDS[number],
     commandValue?: string
   ) {
     const currentMode = this.getCurrentMode();
