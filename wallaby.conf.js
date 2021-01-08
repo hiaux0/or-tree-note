@@ -59,20 +59,23 @@ module.exports = function(wallaby) {
   });
 
   return {
-    files: [{
-      pattern: 'src/**/*.+(ts|html|json)',
-      load: false
-    },
+    files: [
+      {
+        pattern: 'src/**/*.+(ts|html|json)',
+        load: false
+      },
     ],
 
 
-    tests: [{
-      pattern: 'test/unit/**/*.spec.ts',
-      load: false
-    }],
+    tests: [
+      { pattern: 'test/unit/**/*.spec.ts', load: false },
+      // { pattern: 'test/unit/**/vim.spec.ts', load: false }
+    ],
 
     compilers: {
-      '**/*.ts': wallaby.compilers.typeScript()
+      '**/*.ts': wallaby.compilers.typeScript({
+        module: 'commonjs'
+      })
     },
 
     env: {
