@@ -1,4 +1,4 @@
-import { VIM_COMMANDS } from "./vim-commands";
+import { VimCommandNames, VimCommands, VIM_COMMANDS } from "./vim-commands";
 import { insert } from "modules/string/string";
 import { logger } from "./../debug/logger";
 import hotkeys from "hotkeys-js";
@@ -9,7 +9,7 @@ import { NormalModeKeybindings } from "./modes/normal-mode-commands";
 import { InsertModeKeybindings } from "./modes/insert-mode-commands";
 import keyBindingsJson from "../../resources/keybindings/key-bindings";
 
-interface KeyBindingModes {
+export interface KeyBindingModes {
   normal: NormalModeKeybindings[];
   insert: InsertModeKeybindings[];
 }
@@ -33,6 +33,13 @@ export enum VimMode {
   "NORMAL" = "NORMAL",
   "INSERT" = "INSERT",
 }
+export interface VimOptions {
+  keyBindings: KeyBindingModes;
+}
+
+const defaultVimOptions: VimOptions = {
+  keyBindings,
+};
 
 /**
  * First iteration: All vim needs is
@@ -44,9 +51,17 @@ export class Vim {
   normalMode: NormalMode;
   insertMode: InsertMode;
 
-  constructor(public wholeInput: string[], public cursor: Cursor) {
+  keyBindings: KeyBindingModes;
+
+  constructor(
+    public wholeInput: string[],
+    public cursor: Cursor,
+    public vimOptions: VimOptions = defaultVimOptions
+  ) {
     this.normalMode = new NormalMode(wholeInput, cursor);
     this.insertMode = new InsertMode(wholeInput, cursor);
+
+    this.keyBindings = vimOptions.keyBindings;
 
     this.verifyValidCursorPosition();
   }
@@ -102,17 +117,18 @@ export class Vim {
   /** **********/
 
   executeCommand<CommandType = any>(
-    commandName: typeof VIM_COMMANDS[number],
+    commandName: VimCommandNames,
     commandValue?: string
   ) {
     const currentMode = this.getCurrentMode();
     return currentMode.executeCommand(commandName, commandValue) as CommandType;
   }
 
-  getCommand(pressedKey: string): typeof VIM_COMMANDS[number] {
-    const targetCommand = keyBindings[this.vimMode.toLowerCase()].find(
+
+  getCommand(pressedKey: string): VimCommandNames {
+    const targetCommand = this.keyBindings[this.vimMode.toLowerCase()].find(
       (binding) => binding.key === pressedKey
-    );
+    ) as VimCommands;
 
     if (!targetCommand) {
       logger.debug(
