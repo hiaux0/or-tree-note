@@ -39,3 +39,11 @@ export class Logger {
 }
 
 export const logger = new Logger(defautLogOptions);
+
+/**
+ * - [ ] Throw on first error
+ *   - is this part of a logger?
+ *   - some other debugging mode then?
+ *
+ * - colorize logs
+ */
