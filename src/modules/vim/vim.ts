@@ -124,8 +124,7 @@ export class Vim {
     return currentMode.executeCommand(commandName, commandValue) as CommandType;
   }
 
-
-  getCommand(pressedKey: string): VimCommandNames {
+  getCommandName(pressedKey: string): VimCommandNames {
     const targetCommand = this.keyBindings[this.vimMode.toLowerCase()].find(
       (binding) => binding.key === pressedKey
     ) as VimCommands;
@@ -154,7 +153,7 @@ export class Vim {
   /** *************/
 
   queueInput(input: string) {
-    const targetCommand = this.getCommand(input);
+    const targetCommand = this.getCommandName(input);
     if (targetCommand === "enterInsertMode") {
       this.enterInsertMode();
       return;
