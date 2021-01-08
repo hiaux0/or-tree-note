@@ -72,7 +72,9 @@ module.exports = function(wallaby) {
     }],
 
     compilers: {
-      '**/*.ts': wallaby.compilers.typeScript()
+      '**/*.ts': wallaby.compilers.typeScript({
+        module: 'commonjs'
+      })
     },
 
     env: {
