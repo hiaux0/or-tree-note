@@ -12,3 +12,73 @@ export function replaceAt(str: string, index: number, char: string) {
     );
   }
 }
+
+/**
+ * @param {string} input
+ *
+ * @example
+ * input // what i t
+ * padWithRegexWildCard(input) // w.*h.*a.*t.* .*i.* .*t.*
+ */
+function padWithRegexWildCard(input: string) {
+  /** TODO SUPPORT FOR ? */
+  // const edgeCaseList = ['?'];
+
+  const splitByChar = input.split("");
+  const withWildCard = splitByChar.join(".*");
+  return withWildCard + ".*";
+}
+
+/**
+ * @example
+ * inputList ['foo', 'faz', 'flo']
+ * value 'fo'
+ * --> ['foo', 'flo']
+ */
+function fuzzySearch(inputList: string[], value: string) {
+  const wildCardValue = padWithRegexWildCard(value);
+  const fileredList = inputList.filter((input) => {
+    const ignoreCase = input.toLowerCase();
+    const searchRegex = new RegExp(`${wildCardValue}`);
+    return searchRegex.exec(ignoreCase);
+  });
+  return fileredList;
+}
+
+/**
+ * @example
+ * inputList = ['foo', 'for', 'faz', 'flo', 'z']
+ *
+ * ## Example 1
+ * value = 'fo'
+ * --> ['foo', 'for']
+ *
+ * ## Example 2
+ * value = 'z'
+ * --> ['z']
+ */
+export function filterListByCharSequence(inputList: string[], value: string) {
+  const result = inputList.filter((input) => {
+    return filterStringByCharSequence(input, value);
+  });
+
+  return result;
+}
+
+/**
+ * @example
+ *
+ * ## Example 1
+ * input = 'foo'
+ * value = 'fo'
+ * --> false
+ *
+ * ## Example 2
+ * input = 'z'
+ * value = 'z'
+ * --> true
+ */
+export function filterStringByCharSequence(input: string, value: string) {
+  const regex = new RegExp(`^${value}`);
+  return regex.exec(input) !== null;
+}
