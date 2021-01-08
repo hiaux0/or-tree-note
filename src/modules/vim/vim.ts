@@ -1,5 +1,5 @@
 import { VimCommandNames, VimCommands, VIM_COMMANDS } from "./vim-commands";
-import { insert } from "modules/string/string";
+import { filterStringByCharSequence, insert } from "modules/string/string";
 import { logger } from "./../debug/logger";
 import hotkeys from "hotkeys-js";
 import { AbstractMode } from "modules/vim/modes/modes";
@@ -10,7 +10,7 @@ import { InsertModeKeybindings } from "./modes/insert-mode-commands";
 import keyBindingsJson from "../../resources/keybindings/key-bindings";
 
 export interface KeyBindingModes {
-  normal: NormalModeKeybindings[];
+  normal: VimCommands[];
   insert: InsertModeKeybindings[];
 }
 
@@ -24,6 +24,16 @@ export const vim = "vim";
  * When I type "l"
  * Then the cursor should move one right
  */
+
+interface FindPotentialCommandReturn {
+  targetCommand: VimCommands;
+  potentialCommands: VimCommands[];
+}
+
+interface QueueInputReturn {
+  commandOutput: any;
+  targetCommand: VimCommandNames;
+}
 
 export interface Cursor {
   col: number;
@@ -51,7 +61,12 @@ export class Vim {
   normalMode: NormalMode;
   insertMode: InsertMode;
 
+  /** Alias for vimOptions.keyBindings */
   keyBindings: KeyBindingModes;
+
+  potentialCommands: VimCommands[];
+  /** If a command did not trigger, save key */
+  queuedKeys: string[] = [];
 
   constructor(
     public wholeInput: string[],
@@ -124,10 +139,66 @@ export class Vim {
     return currentMode.executeCommand(commandName, commandValue) as CommandType;
   }
 
+  /**
+   * @throws EmpytArrayException
+   * @sideeffect queuedKeys
+   * @sideeffect potentialCommands
+   */
+  findPotentialCommand(pressedKey: string): FindPotentialCommandReturn {
+    //
+    let targetKeyBinding;
+
+    if (this.potentialCommands) {
+      targetKeyBinding = this.potentialCommands;
+    } else {
+      targetKeyBinding = this.keyBindings[
+        this.vimMode.toLowerCase()
+      ] as VimCommands[];
+    }
+
+    //
+    let keySequence;
+
+    if (this.queuedKeys) {
+      keySequence = this.queuedKeys.join("").concat(pressedKey);
+    } else {
+      keySequence = pressedKey;
+    }
+
+    //
+    let targetCommand;
+    const potentialCommands = targetKeyBinding.filter((keyBinding) => {
+      const result = filterStringByCharSequence(keyBinding.key, keySequence);
+      return result;
+    });
+
+    if (potentialCommands.length === 0) {
+      throw new Error("Empty Array");
+    } else if (
+      potentialCommands.length === 1 &&
+      keySequence === potentialCommands[0].key
+    ) {
+      targetCommand = potentialCommands[0];
+      this.emptyQueuedKeys();
+    } else {
+      this.queuedKeys.push(pressedKey);
+      this.potentialCommands = potentialCommands;
+    }
+
+    //
+    return { targetCommand, potentialCommands };
+  }
+
+  /** */
   getCommandName(pressedKey: string): VimCommandNames {
-    const targetCommand = this.keyBindings[this.vimMode.toLowerCase()].find(
-      (binding) => binding.key === pressedKey
-    ) as VimCommands;
+    let potentialCommands;
+    let targetCommand;
+
+    try {
+      ({ potentialCommands, targetCommand } = this.findPotentialCommand(
+        pressedKey
+      ));
+    } catch {}
 
     if (!targetCommand) {
       logger.debug(
@@ -148,21 +219,26 @@ export class Vim {
     return targetCommand.command;
   }
 
+  emptyQueuedKeys() {
+    this.queuedKeys = [];
+  }
+
   /** *************/
   /** Input Queue */
   /** *************/
 
-  queueInput(input: string) {
+  queueInput(input: string): QueueInputReturn {
     const targetCommand = this.getCommandName(input);
     if (targetCommand === "enterInsertMode") {
       this.enterInsertMode();
       return;
     }
-    const result = this.executeCommand(targetCommand, input);
+    const commandOutput = this.executeCommand(targetCommand, input);
 
-    return result;
+    return { commandOutput, targetCommand };
   }
-  queueChainedInputs(inputChain: string | string[]) {
+  //
+  queueChainedInputs(inputChain: string | string[]): QueueInputReturn {
     let result;
     let givenInputChain;
 
