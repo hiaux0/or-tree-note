@@ -37,6 +37,30 @@ export class Vim {
   constructor(public wholeInput: string[], public cursor: Cursor) {
     this.normalMode = new NormalMode(wholeInput, cursor);
     this.insertMode = new InsertMode(wholeInput, cursor);
+
+    this.verifyValidCursorPosition();
+  }
+
+  verifyValidCursorPosition() {
+    const cursorCol = this.cursor.col;
+    const cursorLine = this.cursor.line;
+    if (cursorCol < 0) {
+      throw new Error(
+        `[ILLEGAL]: Cursor out of bound: Must not be negative, but column is ${cursorCol}`
+      );
+    } else if (cursorLine < 0) {
+      throw new Error(
+        `[ILLEGAL]: Cursor out of bound: Must not be negative, but line is ${cursorLine}`
+      );
+    } else if (!this.wholeInput[cursorLine]) {
+      throw new Error(
+        `[ILLEGAL]: Cursor out of bound: Your input has ${this.wholeInput.length} lines, but cursor line is: ${cursorLine}`
+      );
+    } else if (cursorCol > this.wholeInput[cursorLine].length) {
+      throw new Error(
+        `[ILLEGAL]: Cursor out of bound: Your input has ${this.wholeInput[cursorLine].length} columns, but cursor column is: ${cursorCol}`
+      );
+    }
   }
 
   /** *******/

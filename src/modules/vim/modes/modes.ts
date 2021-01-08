@@ -33,11 +33,23 @@ export abstract class AbstractMode {
   }
 
   cursorRight() {
-    this.cursor.col += 1;
+    const updaterCursorCol = this.cursor.col + 1;
+
+    if (!this.isValidHorizontalPosition(updaterCursorCol)) {
+      return this.cursor;
+    }
+
+    this.cursor.col = updaterCursorCol;
     return this.cursor;
   }
   cursorLeft() {
-    this.cursor.col -= 1;
+    const updaterCursorCol = this.cursor.col - 1;
+
+    if (!this.isValidHorizontalPosition(updaterCursorCol)) {
+      return this.cursor;
+    }
+
+    this.cursor.col = updaterCursorCol;
     return this.cursor;
   }
   cursorUp() {
@@ -47,5 +59,14 @@ export abstract class AbstractMode {
   cursorDown() {
     this.cursor.line += 1;
     return this.cursor;
+  }
+  //
+  isValidHorizontalPosition(cursorCol: number) {
+    if (cursorCol > this.activeInput.length) {
+      return false;
+    } else if (cursorCol < 0) {
+      return false;
+    }
+    return true;
   }
 }
