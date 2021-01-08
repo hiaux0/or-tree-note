@@ -19,7 +19,7 @@ import hotkeys from "hotkeys-js";
 import { NormalMode } from "./normal-mode/normal-mode";
 import { InsertMode } from "./insert-mode/insert-mode";
 import { NormalModeKeybindings } from "../vim/modes/normal-mode-commands";
-import keyBindingsJson from "../../resources/keybindings/key-bindings.json";
+import keyBindingsJson from "../../resources/keybindings/key-bindings";
 import { InsertModeKeybindings } from "../vim/modes/insert-mode-commands";
 import { sendKeyEvent, sendKeySequence } from "modules/keys/keys";
 
