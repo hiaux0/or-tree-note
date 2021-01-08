@@ -34,12 +34,12 @@ describe("Vim", () => {
     it("F: Should execute command in Input Queue", () => {
       v.enterInsertMode();
       const result = v.queueInput("@");
-      expect(result).toBe(`@${input[0]}`);
+      expect(result.commandOutput).toBe(`@${input[0]}`);
     });
     it("F: Should execute command in Input Queue Chain", () => {
       v.enterInsertMode();
       const result = v.queueChainedInputs("345");
-      expect(result).toBe(`345${input[0]}`);
+      expect(result.commandOutput).toBe(`345${input[0]}`);
     });
   });
 });

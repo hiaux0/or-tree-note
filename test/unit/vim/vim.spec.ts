@@ -75,8 +75,8 @@ describe("C: Mode - Normal", () => {
       });
       //
       describe("#queueChainedInputs", () => {
-        it("F: Single queue", () => {
-          const result = v.queueChainedInputs("u");
+        it("F: Single input", () => {
+          const result = v.queueInput("u");
           expect(result.targetCommand).toBe("cursorDown");
           expect(result.commandOutput).toEqual({ col: 0, line: 1 });
         });
@@ -85,6 +85,11 @@ describe("C: Mode - Normal", () => {
           const result = v.queueChainedInputs("u");
           expect(result.targetCommand).toBe("cursorDown");
           expect(result.commandOutput).toEqual({ col: 0, line: 1 });
+        });
+        it("F: Chained input - lli!", () => {
+          v = new Vim(cloneDeep(input), cloneDeep(cursor));
+          const result = v.queueChainedInputs("lli!");
+          expect(result.commandOutput).toBe("fo!o");
         });
       });
     });
