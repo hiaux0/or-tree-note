@@ -5,4 +5,5 @@ export const VIM_COMMANDS = [
   "cursorDown",
   "yank",
   "type",
+  "enterInsertMode",
 ] as const;

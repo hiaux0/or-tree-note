@@ -5,6 +5,16 @@ import hotkeys from "hotkeys-js";
 import { AbstractMode } from "modules/vim/modes/modes";
 import { NormalMode } from "modules/vim/modes/normal-mode";
 import { InsertMode } from "modules/vim/modes/insert-mode";
+import { NormalModeKeybindings } from "./modes/normal-mode-commands";
+import { InsertModeKeybindings } from "./modes/insert-mode-commands";
+import keyBindingsJson from "../../resources/keybindings/key-bindings";
+
+interface KeyBindingModes {
+  normal: NormalModeKeybindings[];
+  insert: InsertModeKeybindings[];
+}
+
+const keyBindings = (keyBindingsJson as unknown) as KeyBindingModes;
 
 export const vim = "vim";
 
@@ -99,12 +109,41 @@ export class Vim {
     return currentMode.executeCommand(commandName, commandValue) as CommandType;
   }
 
+  getCommand(pressedKey: string): typeof VIM_COMMANDS[number] {
+    const targetCommand = keyBindings[this.vimMode.toLowerCase()].find(
+      (binding) => binding.key === pressedKey
+    );
+
+    if (!targetCommand) {
+      logger.debug(
+        ["No command for key: %s in Mode: %s", pressedKey, this.vimMode],
+        { log: true }
+      );
+
+      if (this.vimMode === VimMode.INSERT) {
+        logger.debug("Default to the command: type", { log: true });
+        return "type";
+      }
+
+      return;
+    }
+
+    logger.debug(["Command: %s", targetCommand.command]);
+
+    return targetCommand.command;
+  }
+
   /** *************/
   /** Input Queue */
   /** *************/
 
   queueInput(input: string) {
-    const result = this.executeCommand("type", input);
+    const targetCommand = this.getCommand(input);
+    if (targetCommand === "enterInsertMode") {
+      this.enterInsertMode();
+      return;
+    }
+    const result = this.executeCommand(targetCommand, input);
 
     return result;
   }

@@ -78,4 +78,12 @@ describe("C: Mode - Normal", () => {
       }
     });
   });
+
+  //
+  describe("C: Input Chain", () => {
+    it("F: Input Chain - lli!", () => {
+      const result = v.queueChainedInputs("lli!");
+      expect(result).toBe("fo!o");
+    });
+  });
 });
