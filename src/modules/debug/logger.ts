@@ -7,11 +7,13 @@ interface LogOptions {
    * Even in debug mode, only log, when explicitely set via `log`.
    */
   focusedLogging?: boolean;
+  throwOnFirstError?: boolean;
 }
 
 const defautLogOptions: LogOptions = {
   logMethod: "log",
-  focusedLogging: true,
+  focusedLogging: false,
+  throwOnFirstError: false,
 };
 
 export class Logger {
@@ -29,6 +31,15 @@ export class Logger {
       }
 
       if (Array.isArray(messages)) {
+        if (logOpt.throwOnFirstError) {
+          messages.forEach((message) => {
+            if (!message) {
+              console.log(...messages);
+              throw message;
+            }
+          });
+        }
+
         console[logOpt.logMethod](...messages);
         return;
       }
