@@ -10,7 +10,7 @@ export const VIM_COMMANDS = [
 
 export type VimCommandNames = typeof VIM_COMMANDS[number];
 
-export interface VimCommands {
+export interface VimCommand {
   key: string;
   command: VimCommandNames;
 }

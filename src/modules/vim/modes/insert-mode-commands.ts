@@ -1,8 +1,8 @@
-import { VimCommands } from "../vim-commands";
+import { VimCommand } from "../vim-commands";
 
 export const insertModeCommands = [] as const;
 
-export interface InsertModeKeybindings extends VimCommands {
+export interface InsertModeKeybindings extends VimCommand {
   key: string;
   command: typeof insertModeCommands[number];
 }

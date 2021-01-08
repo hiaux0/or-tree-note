@@ -1,4 +1,4 @@
-import { VimCommandNames, VimCommands, VIM_COMMANDS } from "./vim-commands";
+import { VimCommandNames, VimCommand, VIM_COMMANDS } from "./vim-commands";
 import { filterStringByCharSequence, insert } from "modules/string/string";
 import { logger } from "./../debug/logger";
 import hotkeys from "hotkeys-js";
@@ -10,7 +10,7 @@ import { InsertModeKeybindings } from "./modes/insert-mode-commands";
 import keyBindingsJson from "../../resources/keybindings/key-bindings";
 
 export interface KeyBindingModes {
-  normal: VimCommands[];
+  normal: VimCommand[];
   insert: InsertModeKeybindings[];
 }
 
@@ -26,8 +26,8 @@ export const vim = "vim";
  */
 
 interface FindPotentialCommandReturn {
-  targetCommand: VimCommands;
-  potentialCommands: VimCommands[];
+  targetCommand: VimCommand;
+  potentialCommands: VimCommand[];
 }
 
 interface QueueInputReturn {
@@ -64,7 +64,7 @@ export class Vim {
   /** Alias for vimOptions.keyBindings */
   keyBindings: KeyBindingModes;
 
-  potentialCommands: VimCommands[];
+  potentialCommands: VimCommand[];
   /** If a command did not trigger, save key */
   queuedKeys: string[] = [];
 
@@ -153,7 +153,7 @@ export class Vim {
     } else {
       targetKeyBinding = this.keyBindings[
         this.vimMode.toLowerCase()
-      ] as VimCommands[];
+      ] as VimCommand[];
     }
 
     //

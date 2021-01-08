@@ -1,4 +1,4 @@
-import { VimCommands } from "../vim-commands";
+import { VimCommand } from "../vim-commands";
 
 export const normalModeCommands = [
   "cursorRight",
@@ -8,7 +8,7 @@ export const normalModeCommands = [
   "yank",
 ] as const;
 
-export interface NormalModeKeybindings extends VimCommands {
+export interface NormalModeKeybindings extends VimCommand {
   key: string;
   command: typeof normalModeCommands[number];
 }
