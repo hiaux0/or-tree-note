@@ -68,8 +68,8 @@ module.exports = function(wallaby) {
 
 
     tests: [
-      // { pattern: 'test/unit/**/*.spec.ts', load: false },
-      { pattern: 'test/unit/**/string.spec.ts', load: false }
+      { pattern: 'test/unit/**/*.spec.ts', load: false },
+      // { pattern: 'test/unit/**/vim.spec.ts', load: false }
     ],
 
     compilers: {
