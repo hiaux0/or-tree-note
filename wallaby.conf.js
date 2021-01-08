@@ -59,17 +59,18 @@ module.exports = function(wallaby) {
   });
 
   return {
-    files: [{
-      pattern: 'src/**/*.+(ts|html|json)',
-      load: false
-    },
+    files: [
+      {
+        pattern: 'src/**/*.+(ts|html|json)',
+        load: false
+      },
     ],
 
 
-    tests: [{
-      pattern: 'test/unit/**/*.spec.ts',
-      load: false
-    }],
+    tests: [
+      // { pattern: 'test/unit/**/*.spec.ts', load: false },
+      { pattern: 'test/unit/**/string.spec.ts', load: false }
+    ],
 
     compilers: {
       '**/*.ts': wallaby.compilers.typeScript({
