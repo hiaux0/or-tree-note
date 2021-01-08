@@ -1,4 +1,5 @@
 import { logger } from "modules/debug/logger";
+import { Cursor, VimMode } from "../vim";
 
 export abstract class AbstractMode {
   /**
@@ -8,6 +9,7 @@ export abstract class AbstractMode {
    * - multiple cursors
    */
   activeInput: string;
+  activeMode: VimMode;
 
   constructor(public wholeInput: string[], public cursor: Cursor) {
     this.activeInput = wholeInput[cursor.line];

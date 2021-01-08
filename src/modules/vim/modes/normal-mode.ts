@@ -1,5 +1,6 @@
+import { VimMode } from "../vim";
 import { AbstractMode } from "./modes";
 
 export class NormalMode extends AbstractMode {
-  execu;
+  activeMode = VimMode.NORMAL;
 }
