@@ -1,7 +1,7 @@
 export default {
   normal: [
     { key: "h", command: "cursorLeft" },
-    { key: "i", command: "enterInsertMode" },
+    { key: "i", command: "enterInsertTextMode" },
     { key: "k", command: "cursorUp" },
     { key: "l", command: "cursorRight" },
     { key: "u", command: "cursorDown" },

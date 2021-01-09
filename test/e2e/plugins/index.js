@@ -1,3 +1,4 @@
+//@ts-check
 // ***********************************************************
 // This example plugins/index.js can be used to load plugins
 //
@@ -12,13 +13,18 @@
 // the project's config changing)
 
 const wp = require('@cypress/webpack-preprocessor');
+const path = require('path');
 
 module.exports = (on) => {
   const options = {
     webpackOptions: {
       resolve: {
-        extensions: ['.ts', '.tsx', '.js']
+        extensions: ['.ts', '.tsx', '.js'],
+        alias: {
+          'src': path.resolve(__dirname, '../../../src')
+        }
       },
+      devtool: 'eval-source-map',
       module: {
         rules: [
           {

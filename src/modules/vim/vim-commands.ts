@@ -5,7 +5,7 @@ export const VIM_COMMANDS = [
   "cursorDown",
   "yank",
   "type",
-  "enterInsertMode",
+  "enterInsertTextMode",
 ] as const;
 
 export type VimCommandNames = typeof VIM_COMMANDS[number];

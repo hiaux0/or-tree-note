@@ -1,4 +1,4 @@
-import { AbstractMode } from "./../abstract-mode";
+import { AbstractTextMode } from "../abstract-text-mode";
 import {
   CURSOR_UP,
   CURSOR_DOWN,
@@ -16,7 +16,7 @@ import hotkeys from "hotkeys-js";
 const CARET_NORMAL_CLASS = "caret-normal";
 const CARET_INSERT_CLASS = "caret-insert";
 
-export class NormalMode extends AbstractMode {
+export class NormalTextMode extends AbstractTextMode {
   constructor(public parentElement, public childSelector, public caretElement) {
     super(parentElement, childSelector, caretElement);
   }

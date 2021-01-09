@@ -1,7 +1,9 @@
-export function getCssVar(varName: string, isPixel = true): number {
-  const cssVar = getComputedStyle(document.documentElement).getPropertyValue(
-    varName
-  );
+export function getCssVar(
+  varName: string,
+  isPixel = true,
+  documentElement = document.documentElement
+): number {
+  const cssVar = getComputedStyle(documentElement).getPropertyValue(varName);
 
   if (isPixel) {
     return getValueFromPixelString(cssVar);

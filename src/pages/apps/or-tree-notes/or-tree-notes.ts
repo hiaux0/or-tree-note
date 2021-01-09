@@ -1,6 +1,10 @@
+import { inject } from "aurelia-dependency-injection";
+import { VimEditor, VimEditorOptions } from "modules/vim-editor/vim-editor";
 import { bindable } from "aurelia-framework";
-import { EditingModes, EditorModes } from "modules/editing-modes/editing-modes";
 import "./or-tree-notes.scss";
+import { rootContainer } from "modules/root-container";
+import { VimEditorTextMode } from "modules/vim-editor/vim-editor-text-mode";
+import { VimMode } from "modules/vim/vim";
 
 export class OrTreeNotes {
   @bindable value = "OrTreeNotes";
@@ -9,19 +13,30 @@ export class OrTreeNotes {
   lineSpanRef: HTMLSpanElement;
   caretRef: HTMLSpanElement;
 
-  currentModeName: EditorModes;
-
   editorLineClass: string = "editor-line";
+  currentModeName: VimMode;
 
   bind() {}
 
   attached() {
-    const editModes = new EditingModes(
-      this.notesContainerRef,
-      `.${this.editorLineClass}`,
-      this.caretRef
+    console.clear();
+    const vimEditorOptions: VimEditorOptions = {
+      parentHtmlElement: this.notesContainerRef,
+      childSelectors: [this.editorLineClass],
+      caretElements: [this.caretRef],
+      isTextMode: true,
+    };
+    rootContainer.registerInstance(
+      VimEditorTextMode,
+      new VimEditorTextMode(vimEditorOptions)
     );
-    editModes.init();
-    this.currentModeName = editModes.currentModeName;
+    const vimEditorTextMode = rootContainer.get(VimEditorTextMode);
+    rootContainer.registerInstance(
+      VimEditor,
+      new VimEditor(vimEditorOptions, vimEditorTextMode)
+    );
+
+    const vimEditor = rootContainer.get(VimEditor);
+    this.currentModeName = vimEditor.getMode();
   }
 }

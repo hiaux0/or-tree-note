@@ -8,7 +8,7 @@ import {
 const CARET_NORMAL_CLASS = "caret-normal";
 const CARET_INSERT_CLASS = "caret-insert";
 
-export abstract class AbstractMode {
+export abstract class AbstractTextMode {
   children: NodeListOf<Element>;
 
   caretWidth: number;
@@ -22,7 +22,7 @@ export abstract class AbstractMode {
     public childSelector: string,
     public caretElement: HTMLElement
   ) {
-    this.children = parentElement.querySelectorAll(this.childSelector);
+    this.children = parentElement.querySelectorAll(`.${childSelector}`);
 
     this.caretWidth = getCssVar("--caret-size-width");
     this.caretHeight = getCssVar("--caret-size-height");

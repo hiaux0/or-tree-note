@@ -1,4 +1,4 @@
-import { AbstractMode } from "./../abstract-mode";
+import { AbstractTextMode } from "../abstract-text-mode";
 import {
   CURSOR_UP,
   CURSOR_DOWN,
@@ -17,7 +17,7 @@ import { insert, replaceAt } from "modules/string/string";
 const CARET_NORMAL_CLASS = "caret-normal";
 const CARET_INSERT_CLASS = "caret-insert";
 
-export class InsertMode extends AbstractMode {
+export class InsertTextMode extends AbstractTextMode {
   constructor(public parentElement, public childSelector, public caretElement) {
     super(parentElement, childSelector, caretElement);
   }
@@ -56,14 +56,10 @@ export class InsertMode extends AbstractMode {
     currentLine.textContent = result;
   }
 
-  type(pressedKey: string) {
+  type(newContent: string) {
     const currentLine = this.children[this.currentLineNumber];
-    const curLineText = currentLine.textContent;
 
-    const currentCaretCol = this.getCurrentCaretCol();
-
-    const result = insert(curLineText, currentCaretCol, pressedKey);
-    currentLine.textContent = result;
+    currentLine.textContent = newContent;
     super.cursorRight();
   }
 }
