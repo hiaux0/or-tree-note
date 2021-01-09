@@ -63,7 +63,9 @@ export const MODIFIERS = [
   "Backspace",
   "CapsLock",
   "Delete",
-];
+] as const;
+
+export type ModifiersType = typeof MODIFIERS[number];
 
 export const NAVIGATION_KEYS = [
   // Navigation

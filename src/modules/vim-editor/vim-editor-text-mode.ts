@@ -1,3 +1,4 @@
+import { ModifiersType } from "./../../resources/keybindings/app.keys";
 import { InsertMode } from "./../vim/modes/insert-mode";
 import { NormalMode } from "./../vim/modes/normal-mode";
 import { inject, Container } from "aurelia-dependency-injection";
@@ -52,17 +53,21 @@ export class VimEditorTextMode {
     });
   }
 
+  isModifierKey(input: string): input is ModifiersType {
+    const modifierInput = input as ModifiersType;
+    return MODIFIERS.includes(modifierInput);
+  }
+
   initVim() {
     this.vim = new Vim(this.elementText);
   }
 
   initKeys() {
     hotkeys("*", (ev) => {
-      console.clear();
       logger.debug(["-------------- Key pressed: %s", ev.key]);
 
       if (
-        MODIFIERS.includes(ev.key) &&
+        this.isModifierKey(ev.key) &&
         this.vim.getCurrentMode().currentMode === VimMode.INSERT
       ) {
         // this.modifierKeyPressed(ev.key);

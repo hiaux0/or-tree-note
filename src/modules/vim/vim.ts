@@ -1,4 +1,4 @@
-import { VimCommandNames, VimCommand } from "./vim-commands";
+import { VimCommandNames, VimCommand, SynonymKey } from "./vim-commands";
 import { filterStringByCharSequence } from "modules/string/string";
 import { logger } from "./../debug/logger";
 import { NormalMode } from "modules/vim/modes/normal-mode";
@@ -9,6 +9,7 @@ import keyBindingsJson from "../../resources/keybindings/key-bindings";
 export interface KeyBindingModes {
   normal: VimCommand[];
   insert: InsertTextModeKeybindings[];
+  synonyms: SynonymKey;
 }
 
 const keyBindings = (keyBindingsJson as unknown) as KeyBindingModes;
@@ -137,12 +138,13 @@ export class Vim {
    * @sideeffect queuedKeys
    * @sideeffect potentialCommands
    */
-  findPotentialCommand(pressedKey: string): FindPotentialCommandReturn {
+  findPotentialCommand(input: string): FindPotentialCommandReturn {
     //
     let targetKeyBinding;
 
     if (this.potentialCommands) {
       targetKeyBinding = this.potentialCommands;
+      //
     } else {
       targetKeyBinding = this.keyBindings[
         this.activeMode.toLowerCase()
@@ -152,10 +154,15 @@ export class Vim {
     //
     let keySequence;
 
-    if (this.queuedKeys) {
-      keySequence = this.queuedKeys.join("").concat(pressedKey);
+    if (this.queuedKeys.length) {
+      keySequence = this.queuedKeys.join("").concat(input);
+    } else if (input.startsWith("<")) {
+      const synonymInput = this.keyBindings.synonyms[input];
+      if (synonymInput) {
+        keySequence = synonymInput;
+      }
     } else {
-      keySequence = pressedKey;
+      keySequence = input;
     }
 
     //
@@ -174,7 +181,7 @@ export class Vim {
       targetCommand = potentialCommands[0];
       this.emptyQueuedKeys();
     } else {
-      this.queuedKeys.push(pressedKey);
+      this.queuedKeys.push(input);
       this.potentialCommands = potentialCommands;
     }
 
@@ -183,30 +190,34 @@ export class Vim {
   }
 
   /** */
-  getCommandName(pressedKey: string): VimCommandNames {
-    let potentialCommands;
+  getCommandName(input: string): VimCommandNames {
     let targetCommand;
+    let potentialCommands: FindPotentialCommandReturn["potentialCommands"];
 
     try {
-      ({ potentialCommands, targetCommand } = this.findPotentialCommand(
-        pressedKey
-      ));
+      ({ targetCommand, potentialCommands } = this.findPotentialCommand(input));
     } catch {}
 
     if (!targetCommand) {
       if (this.activeMode === VimMode.INSERT) {
-        logger.debug("Default to the command: type", { log: true });
+        logger.debug("Default to the command: type in Insert Mode", {
+          log: true,
+        });
         return "type";
       }
 
-      logger.debug(
-        [
-          "No command for key: %s in Mode: %s ((vim.ts-getCommandName))",
-          pressedKey,
-          this.activeMode,
-        ],
-        { isError: true }
-      );
+      if (potentialCommands.length) {
+        logger.debug(["Awaiting potential commands: %o", potentialCommands]);
+      } else {
+        logger.debug(
+          [
+            "No command for key: %s in Mode: %s ((vim.ts-getCommandName))",
+            input,
+            this.activeMode,
+          ],
+          { isError: true }
+        );
+      }
 
       return;
     }
@@ -228,6 +239,9 @@ export class Vim {
     const targetCommand = this.getCommandName(input);
     if (targetCommand === "enterInsertTextMode") {
       this.enterInsertTextMode();
+      return { commandOutput: null, targetCommand };
+    } else if (targetCommand === "enterNormalTextMode") {
+      this.enterNormalTextMode();
       return { commandOutput: null, targetCommand };
     }
     const commandOutput = this.executeCommand(targetCommand, input);
