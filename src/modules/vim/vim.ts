@@ -30,7 +30,7 @@ interface FindPotentialCommandReturn {
   potentialCommands: VimCommand[];
 }
 
-interface QueueInputReturn {
+export interface QueueInputReturn {
   commandOutput: any;
   targetCommand: VimCommandNames;
 }
@@ -57,7 +57,7 @@ const defaultVimOptions: VimOptions = {
  * - the cursor location
  */
 export class Vim {
-  vimMode: VimMode = VimMode.NORMAL;
+  activeMode: VimMode = VimMode.NORMAL;
   normalMode: NormalMode;
   insertMode: InsertMode;
 
@@ -108,23 +108,25 @@ export class Vim {
   /** *******/
 
   enterInsertTextMode() {
-    this.vimMode = VimMode.INSERT;
+    logger.debug("Enter Insert mode");
+    this.activeMode = VimMode.INSERT;
   }
   enterNormalTextMode() {
-    this.vimMode = VimMode.NORMAL;
+    logger.debug("Enter Normal mode");
+    this.activeMode = VimMode.NORMAL;
   }
   getCurrentMode() {
-    if (this.vimMode === VimMode.NORMAL) {
+    if (this.activeMode === VimMode.NORMAL) {
       return this.normalMode;
-    } else if (this.vimMode === VimMode.INSERT) {
+    } else if (this.activeMode === VimMode.INSERT) {
       return this.insertMode;
     }
   }
   isInsertTextMode(mode: AbstractMode): mode is InsertMode {
-    return this.vimMode === VimMode.INSERT;
+    return this.activeMode === VimMode.INSERT;
   }
   isNormalTextMode(mode: AbstractMode): mode is NormalMode {
-    return this.vimMode === VimMode.NORMAL;
+    return this.activeMode === VimMode.NORMAL;
   }
 
   /** **********/
@@ -152,7 +154,7 @@ export class Vim {
       targetKeyBinding = this.potentialCommands;
     } else {
       targetKeyBinding = this.keyBindings[
-        this.vimMode.toLowerCase()
+        this.activeMode.toLowerCase()
       ] as VimCommand[];
     }
 
@@ -201,15 +203,19 @@ export class Vim {
     } catch {}
 
     if (!targetCommand) {
-      logger.debug(
-        ["No command for key: %s in Mode: %s", pressedKey, this.vimMode],
-        { log: true }
-      );
-
-      if (this.vimMode === VimMode.INSERT) {
+      if (this.activeMode === VimMode.INSERT) {
         logger.debug("Default to the command: type", { log: true });
         return "type";
       }
+
+      logger.debug(
+        [
+          "No command for key: %s in Mode: %s ((vim.ts-getCommandName))",
+          pressedKey,
+          this.activeMode,
+        ],
+        { isError: true }
+      );
 
       return;
     }
@@ -231,7 +237,7 @@ export class Vim {
     const targetCommand = this.getCommandName(input);
     if (targetCommand === "enterInsertTextMode") {
       this.enterInsertTextMode();
-      return;
+      return { commandOutput: null, targetCommand };
     }
     const commandOutput = this.executeCommand(targetCommand, input);
 

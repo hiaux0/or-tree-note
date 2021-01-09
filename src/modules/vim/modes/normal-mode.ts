@@ -2,5 +2,9 @@ import { VimMode } from "../vim";
 import { AbstractMode } from "./modes";
 
 export class NormalMode extends AbstractMode {
-  activeMode = VimMode.NORMAL;
+  currentMode = VimMode.NORMAL;
+
+  executeCommand(commandName: string, commandValue: string) {
+    return super.executeCommand(commandName, commandValue, this.currentMode);
+  }
 }

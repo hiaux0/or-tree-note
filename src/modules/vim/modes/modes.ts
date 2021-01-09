@@ -9,20 +9,27 @@ export abstract class AbstractMode {
    * - multiple cursors
    */
   activeInput: string;
-  activeMode: VimMode;
+  currentMode: VimMode;
 
   constructor(public wholeInput: string[], public cursor: Cursor) {
     this.activeInput = wholeInput[cursor.line];
   }
 
-  executeCommand(commandName: string, commandValue: string) {
+  executeCommand(
+    commandName: string,
+    commandValue: string,
+    currentMode?: VimMode
+  ) {
     if (!this[commandName]) {
-      logger.debug([
-        "No command '%s' found in %s Mode.",
-        commandName,
-        this.activeMode,
-        this[commandName],
-      ]);
+      logger.debug(
+        [
+          "No command '%s' found in %s Mode. ((modes.ts-executeCommand))",
+          commandName,
+          currentMode,
+          this[commandName],
+        ],
+        { isError: true }
+      );
     }
 
     const result = this[commandName](commandValue);

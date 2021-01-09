@@ -18,11 +18,11 @@ describe("Vim", () => {
   describe("C: Modes", () => {
     it("F: Switch to insert mode", () => {
       vim.enterInsertTextMode();
-      expect(vim.vimMode).toBe(VimMode.INSERT);
+      expect(vim.activeMode).toBe(VimMode.INSERT);
     });
     it("F: Switch to insert mode", () => {
       vim.enterNormalTextMode();
-      expect(vim.vimMode).toBe(VimMode.NORMAL);
+      expect(vim.activeMode).toBe(VimMode.NORMAL);
     });
   });
 
