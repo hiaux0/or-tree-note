@@ -24,6 +24,7 @@ module.exports = (on) => {
           'src': path.resolve(__dirname, '../../../src')
         }
       },
+      devtool: 'eval-source-map',
       module: {
         rules: [
           {
