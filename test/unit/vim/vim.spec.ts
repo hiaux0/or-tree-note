@@ -32,11 +32,23 @@ describe("C: Mode - Normal", () => {
     });
 
     describe("Finding", () => {
-      it("F: Find potential chained commands (sideeffect)", () => {
+      it("F: Find potential chained commands - 1 char - (sideeffect)", () => {
         const result = vim.findPotentialCommand("f");
         expect(map(result.potentialCommands, "command")).toEqual([
           "cursorDown",
           "yank",
+        ]);
+      });
+      it("F: Find potential chained commands - 2 chars - (sideeffect)", () => {
+        const result = vim.findPotentialCommand("fo");
+        expect(map(result.potentialCommands, "command")).toEqual([
+          "cursorDown",
+        ]);
+      });
+      it("F: Find potential chained commands - 3 chars - (sideeffect)", () => {
+        const result = vim.findPotentialCommand("foo");
+        expect(map(result.potentialCommands, "command")).toEqual([
+          "cursorDown",
         ]);
       });
       it("F: Return chained command name", () => {
@@ -58,17 +70,13 @@ describe("C: Mode - Normal", () => {
           const result = vim.getCommandName("u");
           expect(result).toBe("cursorDown");
         });
+        /**
+         * Relates to #findPotentialCommand test
+         */
         it("F: Get command - Chain", () => {
           //
           vim.getCommandName("f");
-          expect(map(vim.potentialCommands, "command")).toEqual([
-            "cursorDown",
-            "yank",
-          ]);
-          //
           vim.getCommandName("o");
-          expect(map(vim.potentialCommands, "command")).toEqual(["cursorDown"]);
-          //
           const result = vim.getCommandName("o");
           expect(result).toBe("cursorDown");
         });
@@ -81,6 +89,9 @@ describe("C: Mode - Normal", () => {
           expect(result.commandOutput).toEqual({ col: 0, line: 1 });
         });
         //
+      });
+      //
+      describe("#queueChainedInputs", () => {
         it("F: Chained input", () => {
           const result = vim.queueChainedInputs("u");
           expect(result.targetCommand).toBe("cursorDown");

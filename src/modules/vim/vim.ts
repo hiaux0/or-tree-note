@@ -185,9 +185,12 @@ export class Vim {
   /** */
   getCommandName(pressedKey: string): VimCommandNames {
     let targetCommand;
+    let potentialCommands: FindPotentialCommandReturn["potentialCommands"];
 
     try {
-      ({ targetCommand } = this.findPotentialCommand(pressedKey));
+      ({ targetCommand, potentialCommands } = this.findPotentialCommand(
+        pressedKey
+      ));
     } catch {}
 
     if (!targetCommand) {
@@ -196,14 +199,18 @@ export class Vim {
         return "type";
       }
 
-      logger.debug(
-        [
-          "No command for key: %s in Mode: %s ((vim.ts-getCommandName))",
-          pressedKey,
-          this.activeMode,
-        ],
-        { isError: true }
-      );
+      if (potentialCommands.length) {
+        logger.debug(["Awaiting potential commands: %o", potentialCommands]);
+      } else {
+        logger.debug(
+          [
+            "No command for key: %s in Mode: %s ((vim.ts-getCommandName))",
+            pressedKey,
+            this.activeMode,
+          ],
+          { isError: true }
+        );
+      }
 
       return;
     }
@@ -223,7 +230,6 @@ export class Vim {
 
   queueInput(input: string): QueueInputReturn {
     const targetCommand = this.getCommandName(input);
-    console.log("TCL: Vim -> queueInput -> targetCommand", targetCommand);
     if (targetCommand === "enterInsertTextMode") {
       this.enterInsertTextMode();
       return { commandOutput: null, targetCommand };
