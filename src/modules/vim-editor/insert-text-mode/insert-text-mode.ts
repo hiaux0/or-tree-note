@@ -56,14 +56,10 @@ export class InsertTextMode extends AbstractTextMode {
     currentLine.textContent = result;
   }
 
-  type(pressedKey: string) {
+  type(newContent: string) {
     const currentLine = this.children[this.currentLineNumber];
-    const curLineText = currentLine.textContent;
 
-    const currentCaretCol = this.getCurrentCaretCol();
-
-    const result = insert(curLineText, currentCaretCol, pressedKey);
-    currentLine.textContent = result;
+    currentLine.textContent = newContent;
     super.cursorRight();
   }
 }

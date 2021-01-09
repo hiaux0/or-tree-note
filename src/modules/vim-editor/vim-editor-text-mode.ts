@@ -98,7 +98,7 @@ export class VimEditorTextMode {
   executeCommandInEditor(result: QueueInputReturn) {
     const currentMode = this.getCurrentTextMode();
     if (currentMode[result.targetCommand]) {
-      currentMode[result.targetCommand]();
+      currentMode[result.targetCommand](result.commandOutput);
     }
   }
 
