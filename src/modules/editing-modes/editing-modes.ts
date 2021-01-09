@@ -1,5 +1,5 @@
 import { logger } from "../debug/logger";
-import { AbstractMode } from "./abstract-mode";
+import { AbstractMode } from "../vim-editor/abstract-mode";
 import {
   CURSOR_UP,
   CURSOR_DOWN,
@@ -16,8 +16,8 @@ import {
 } from "../../resources/keybindings/app.keys";
 import { getCssVar, getValueFromPixelString } from "../css/css-variables";
 import hotkeys from "hotkeys-js";
-import { NormalMode } from "./normal-mode/normal-mode";
-import { InsertMode } from "./insert-mode/insert-mode";
+import { NormalMode } from "../vim-editor/normal-mode/normal-mode";
+import { InsertMode } from "../vim-editor/insert-mode/insert-mode";
 import { NormalModeKeybindings } from "../vim/modes/normal-mode-commands";
 import keyBindingsJson from "../../resources/keybindings/key-bindings";
 import { InsertModeKeybindings } from "../vim/modes/insert-mode-commands";
