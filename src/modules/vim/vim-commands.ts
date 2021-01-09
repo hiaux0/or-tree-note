@@ -6,6 +6,7 @@ export const VIM_COMMANDS = [
   "yank",
   "type",
   "enterInsertTextMode",
+  "enterNormalTextMode",
 ] as const;
 
 export type VimCommandNames = typeof VIM_COMMANDS[number];

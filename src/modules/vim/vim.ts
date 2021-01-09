@@ -195,7 +195,9 @@ export class Vim {
 
     if (!targetCommand) {
       if (this.activeMode === VimMode.INSERT) {
-        logger.debug("Default to the command: type", { log: true });
+        logger.debug("Default to the command: type in Insert Mode", {
+          log: true,
+        });
         return "type";
       }
 
@@ -232,6 +234,9 @@ export class Vim {
     const targetCommand = this.getCommandName(input);
     if (targetCommand === "enterInsertTextMode") {
       this.enterInsertTextMode();
+      return { commandOutput: null, targetCommand };
+    } else if (targetCommand === "enterNormalTextMode") {
+      this.enterNormalTextMode();
       return { commandOutput: null, targetCommand };
     }
     const commandOutput = this.executeCommand(targetCommand, input);

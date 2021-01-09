@@ -106,3 +106,19 @@ describe("C: Mode - Normal", () => {
     });
   });
 });
+
+describe("C: Mode - Insert", () => {
+  let vim: Vim;
+
+  beforeEach(() => {
+    vim = new Vim(cloneDeep(input), cloneDeep(cursor));
+    vim.enterInsertTextMode();
+  });
+
+  describe("C: #findPotentialCommand", () => {
+    it("F: Modifier key Escape", () => {
+      const result = vim.queueInput("Escape");
+      expect(result.targetCommand).toBe("enterNormalTextMode");
+    });
+  });
+});
