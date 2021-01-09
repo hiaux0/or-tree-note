@@ -1,17 +1,5 @@
 import { AbstractTextMode } from "../abstract-text-mode";
-import {
-  CURSOR_UP,
-  CURSOR_DOWN,
-  INSERT_MODE,
-} from "../../../resources/keybindings/app.keys";
-
-import {
-  CURSOR_LEFT,
-  CURSOR_RIGHT,
-  ESCAPE,
-} from "../../../resources/keybindings/app.keys";
-import { getCssVar, getValueFromPixelString } from "../../css/css-variables";
-import hotkeys from "hotkeys-js";
+import { getValueFromPixelString } from "../../css/css-variables";
 
 const CARET_NORMAL_CLASS = "caret-normal";
 const CARET_INSERT_CLASS = "caret-insert";
@@ -21,7 +9,7 @@ export class NormalTextMode extends AbstractTextMode {
     super(parentElement, childSelector, caretElement);
   }
 
-  keyPressed(pressedKey: string, targetCommandName: string) {
+  keyPressed(_pressedKey: string, targetCommandName: string) {
     this[targetCommandName]();
   }
 

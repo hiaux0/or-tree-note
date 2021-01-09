@@ -28,7 +28,7 @@ export abstract class AbstractTextMode {
     this.caretHeight = getCssVar("--caret-size-height");
   }
 
-  keyPressed(pressedKey: string, targetCommandName?: string) {}
+  keyPressed(_pressedKey: string, _targetCommandName?: string) {}
 
   cursorUp() {
     this.commenKeyFunctionality();
