@@ -24,6 +24,7 @@ describe("C: Mode - Normal", () => {
           },
         ],
         insert: [],
+        synonyms: {},
       };
       vim = new Vim(cloneDeep(input), cloneDeep(cursor), {
         keyBindings,
@@ -117,8 +118,19 @@ describe("C: Mode - Insert", () => {
 
   describe("C: #findPotentialCommand", () => {
     it("F: Modifier key Escape", () => {
-      const result = vim.queueInput("Escape");
-      expect(result.targetCommand).toBe("enterNormalTextMode");
+      const result = vim.findPotentialCommand("Escape");
+      expect(result.targetCommand).toEqual({
+        key: "Escape",
+        command: "enterNormalTextMode",
+      });
+    });
+    //
+    it("F: Modifier key Escape (<esc>)", () => {
+      const result = vim.findPotentialCommand("<esc>");
+      expect(result.targetCommand).toEqual({
+        key: "Escape",
+        command: "enterNormalTextMode",
+      });
     });
   });
 });

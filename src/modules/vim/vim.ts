@@ -1,4 +1,4 @@
-import { VimCommandNames, VimCommand } from "./vim-commands";
+import { VimCommandNames, VimCommand, SynonymKey } from "./vim-commands";
 import { filterStringByCharSequence } from "modules/string/string";
 import { logger } from "./../debug/logger";
 import { NormalMode } from "modules/vim/modes/normal-mode";
@@ -9,6 +9,7 @@ import keyBindingsJson from "../../resources/keybindings/key-bindings";
 export interface KeyBindingModes {
   normal: VimCommand[];
   insert: InsertTextModeKeybindings[];
+  synonyms: SynonymKey;
 }
 
 const keyBindings = (keyBindingsJson as unknown) as KeyBindingModes;
@@ -143,6 +144,7 @@ export class Vim {
 
     if (this.potentialCommands) {
       targetKeyBinding = this.potentialCommands;
+      //
     } else {
       targetKeyBinding = this.keyBindings[
         this.activeMode.toLowerCase()
@@ -152,8 +154,13 @@ export class Vim {
     //
     let keySequence;
 
-    if (this.queuedKeys) {
+    if (this.queuedKeys.length) {
       keySequence = this.queuedKeys.join("").concat(input);
+    } else if (input.startsWith("<")) {
+      const synonymInput = this.keyBindings.synonyms[input];
+      if (synonymInput) {
+        keySequence = synonymInput;
+      }
     } else {
       keySequence = input;
     }

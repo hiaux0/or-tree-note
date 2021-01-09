@@ -19,4 +19,7 @@ export default {
     { key: "ArrowDown", command: "cursorDown" },
     { key: "Escape", command: "enterNormalTextMode" },
   ],
+  synonyms: {
+    "<esc>": "Escape",
+  },
 };
