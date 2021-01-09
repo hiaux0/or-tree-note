@@ -39,7 +39,7 @@ export class VimEditor {
   }
 
   getMode() {
-    const { activeMode } = this.vim.getCurrentMode();
+    const { currentMode: activeMode } = this.vim.getCurrentMode();
     return activeMode;
   }
 }
