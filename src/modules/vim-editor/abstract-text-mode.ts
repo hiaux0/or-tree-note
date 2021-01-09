@@ -8,7 +8,7 @@ import {
 const CARET_NORMAL_CLASS = "caret-normal";
 const CARET_INSERT_CLASS = "caret-insert";
 
-export abstract class AbstractMode {
+export abstract class AbstractTextMode {
   children: NodeListOf<Element>;
 
   caretWidth: number;

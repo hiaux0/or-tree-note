@@ -8,7 +8,7 @@ export const normalModeCommands = [
   "yank",
 ] as const;
 
-export interface NormalModeKeybindings extends VimCommand {
+export interface NormalTextModeKeybindings extends VimCommand {
   key: string;
   command: typeof normalModeCommands[number];
 }

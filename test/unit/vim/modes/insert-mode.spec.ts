@@ -12,7 +12,7 @@ describe("C: Mode - Insert", () => {
 
   describe("C: Typing characters", () => {
     it("F: Update input with typed character", () => {
-      vim.enterInsertMode();
+      vim.enterInsertTextMode();
       const result = vim.executeCommand("type", "!");
       expect(result).toBe(`!${input[0]}`); // !foo
     });

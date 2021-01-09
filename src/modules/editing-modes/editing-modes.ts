@@ -1,5 +1,5 @@
 import { logger } from "../debug/logger";
-import { AbstractMode } from "../vim-editor/abstract-mode";
+import { AbstractTextMode } from "../vim-editor/abstract-text-mode";
 import {
   CURSOR_UP,
   CURSOR_DOWN,
@@ -16,11 +16,11 @@ import {
 } from "../../resources/keybindings/app.keys";
 import { getCssVar, getValueFromPixelString } from "../css/css-variables";
 import hotkeys from "hotkeys-js";
-import { NormalMode } from "../vim-editor/normal-mode/normal-mode";
-import { InsertMode } from "../vim-editor/insert-mode/insert-mode";
-import { NormalModeKeybindings } from "../vim/modes/normal-mode-commands";
+import { NormalTextMode } from "../vim-editor/normal-text-mode/normal-text-mode";
+import { InsertTextMode } from "../vim-editor/insert-text-mode/insert-text-mode";
+import { NormalTextModeKeybindings } from "../vim/modes/normal-mode-commands";
 import keyBindingsJson from "../../resources/keybindings/key-bindings";
-import { InsertModeKeybindings } from "../vim/modes/insert-mode-commands";
+import { InsertTextModeKeybindings } from "../vim/modes/insert-mode-commands";
 import { sendKeyEvent, sendKeySequence } from "modules/keys/keys";
 
 export enum EditorModes {
@@ -37,8 +37,8 @@ function isHTMLElement(input): input is HTMLElement {
 }
 
 interface KeyBindingModes {
-  normal: NormalModeKeybindings[];
-  insert: InsertModeKeybindings[]; // TODO to instert
+  normal: NormalTextModeKeybindings[];
+  insert: InsertTextModeKeybindings[]; // TODO to instert
 }
 
 const keyBindings = (keyBindingsJson as unknown) as KeyBindingModes;
@@ -46,22 +46,22 @@ const keyBindings = (keyBindingsJson as unknown) as KeyBindingModes;
 export class EditingModes {
   // currentModeName: EditorModes = EditorModes.INSERT;
   currentModeName: EditorModes = EditorModes.NORMAL;
-  normalMode: NormalMode;
-  insertMode: InsertMode;
-  modes: { [key: string]: AbstractMode };
+  normalMode: NormalTextMode;
+  InsertTextMode: InsertTextMode;
+  modes: { [key: string]: AbstractTextMode };
 
   constructor(
     private parentElement: HTMLElement,
     private childSelector: string,
     private caretElement: HTMLElement
   ) {
-    this.normalMode = new NormalMode(
+    this.normalMode = new NormalTextMode(
       this.parentElement,
       this.childSelector,
       this.caretElement
     );
 
-    this.insertMode = new InsertMode(
+    this.InsertTextMode = new InsertTextMode(
       this.parentElement,
       this.childSelector,
       this.caretElement
@@ -74,7 +74,7 @@ export class EditingModes {
 
     this.modes = {};
     this.modes[EditorModes.NORMAL] = this.normalMode;
-    this.modes[EditorModes.INSERT] = this.insertMode;
+    this.modes[EditorModes.INSERT] = this.InsertTextMode;
 
     sendKeySequence("llis");
     // sendKeyEvent("Backspace");
@@ -100,11 +100,11 @@ export class EditingModes {
     return this.modes[this.currentModeName];
   }
 
-  isInsertMode(currentMode): currentMode is InsertMode {
+  isInsertTextMode(currentMode): currentMode is InsertTextMode {
     return this.currentModeName === EditorModes.INSERT;
   }
 
-  isNormalMode(currentMode): currentMode is NormalMode {
+  isNormalTextMode(currentMode): currentMode is NormalTextMode {
     return this.currentModeName === EditorModes.NORMAL;
   }
 
@@ -130,7 +130,7 @@ export class EditingModes {
   keyPressed(pressedKey: string) {
     const currentMode = this.getCurrentMode();
 
-    if (this.isInsertMode(currentMode)) {
+    if (this.isInsertTextMode(currentMode)) {
       if (pressedKey !== SHIFT) {
         const targetCommand = this.getCommand(pressedKey);
         currentMode.keyPressed(pressedKey, targetCommand);
@@ -146,12 +146,12 @@ export class EditingModes {
   modifierKeyPressed(modifierKey: string) {
     const currentMode = this.getCurrentMode();
     //
-    if (this.isInsertMode(currentMode)) {
+    if (this.isInsertTextMode(currentMode)) {
       if (modifierKey !== SHIFT) {
         currentMode.modifierKeyPressed(modifierKey);
       }
       //
-    } else if (this.isNormalMode(currentMode)) {
+    } else if (this.isNormalTextMode(currentMode)) {
     }
   }
 

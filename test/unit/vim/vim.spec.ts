@@ -28,7 +28,7 @@ describe("C: Mode - Normal", () => {
       vim = new Vim(cloneDeep(input), cloneDeep(cursor), {
         keyBindings,
       });
-      vim.enterNormalMode();
+      vim.enterNormalTextMode();
     });
 
     describe("Finding", () => {

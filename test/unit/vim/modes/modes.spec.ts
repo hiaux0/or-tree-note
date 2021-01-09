@@ -17,11 +17,11 @@ describe("Vim", () => {
 
   describe("C: Modes", () => {
     it("F: Switch to insert mode", () => {
-      vim.enterInsertMode();
+      vim.enterInsertTextMode();
       expect(vim.vimMode).toBe(VimMode.INSERT);
     });
     it("F: Switch to insert mode", () => {
-      vim.enterNormalMode();
+      vim.enterNormalTextMode();
       expect(vim.vimMode).toBe(VimMode.NORMAL);
     });
   });
@@ -32,12 +32,12 @@ describe("Vim", () => {
 
   describe("C: Input Queue", () => {
     it("F: Should execute command in Input Queue", () => {
-      vim.enterInsertMode();
+      vim.enterInsertTextMode();
       const result = vim.queueInput("@");
       expect(result.commandOutput).toBe(`@${input[0]}`);
     });
     it("F: Should execute command in Input Queue Chain", () => {
-      vim.enterInsertMode();
+      vim.enterInsertTextMode();
       const result = vim.queueChainedInputs("345");
       expect(result.commandOutput).toBe(`345${input[0]}`);
     });

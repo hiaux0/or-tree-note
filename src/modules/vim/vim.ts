@@ -5,13 +5,13 @@ import hotkeys from "hotkeys-js";
 import { AbstractMode } from "modules/vim/modes/modes";
 import { NormalMode } from "modules/vim/modes/normal-mode";
 import { InsertMode } from "modules/vim/modes/insert-mode";
-import { NormalModeKeybindings } from "./modes/normal-mode-commands";
-import { InsertModeKeybindings } from "./modes/insert-mode-commands";
+import { NormalTextModeKeybindings } from "./modes/normal-mode-commands";
+import { InsertTextModeKeybindings } from "./modes/insert-mode-commands";
 import keyBindingsJson from "../../resources/keybindings/key-bindings";
 
 export interface KeyBindingModes {
   normal: VimCommand[];
-  insert: InsertModeKeybindings[];
+  insert: InsertTextModeKeybindings[];
 }
 
 const keyBindings = (keyBindingsJson as unknown) as KeyBindingModes;
@@ -107,10 +107,10 @@ export class Vim {
   /** Modes */
   /** *******/
 
-  enterInsertMode() {
+  enterInsertTextMode() {
     this.vimMode = VimMode.INSERT;
   }
-  enterNormalMode() {
+  enterNormalTextMode() {
     this.vimMode = VimMode.NORMAL;
   }
   getCurrentMode() {
@@ -120,10 +120,10 @@ export class Vim {
       return this.insertMode;
     }
   }
-  isInsertMode(mode: AbstractMode): mode is InsertMode {
+  isInsertTextMode(mode: AbstractMode): mode is InsertMode {
     return this.vimMode === VimMode.INSERT;
   }
-  isNormalMode(mode: AbstractMode): mode is NormalMode {
+  isNormalTextMode(mode: AbstractMode): mode is NormalMode {
     return this.vimMode === VimMode.NORMAL;
   }
 
@@ -229,8 +229,8 @@ export class Vim {
 
   queueInput(input: string): QueueInputReturn {
     const targetCommand = this.getCommandName(input);
-    if (targetCommand === "enterInsertMode") {
-      this.enterInsertMode();
+    if (targetCommand === "enterInsertTextMode") {
+      this.enterInsertTextMode();
       return;
     }
     const commandOutput = this.executeCommand(targetCommand, input);

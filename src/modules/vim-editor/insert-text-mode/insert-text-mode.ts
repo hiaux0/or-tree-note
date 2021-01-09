@@ -1,4 +1,4 @@
-import { AbstractMode } from "./../abstract-mode";
+import { AbstractTextMode } from "../abstract-text-mode";
 import {
   CURSOR_UP,
   CURSOR_DOWN,
@@ -17,7 +17,7 @@ import { insert, replaceAt } from "modules/string/string";
 const CARET_NORMAL_CLASS = "caret-normal";
 const CARET_INSERT_CLASS = "caret-insert";
 
-export class InsertMode extends AbstractMode {
+export class InsertTextMode extends AbstractTextMode {
   constructor(public parentElement, public childSelector, public caretElement) {
     super(parentElement, childSelector, caretElement);
   }
