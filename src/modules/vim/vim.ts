@@ -137,7 +137,7 @@ export class Vim {
    * @sideeffect queuedKeys
    * @sideeffect potentialCommands
    */
-  findPotentialCommand(pressedKey: string): FindPotentialCommandReturn {
+  findPotentialCommand(input: string): FindPotentialCommandReturn {
     //
     let targetKeyBinding;
 
@@ -153,9 +153,9 @@ export class Vim {
     let keySequence;
 
     if (this.queuedKeys) {
-      keySequence = this.queuedKeys.join("").concat(pressedKey);
+      keySequence = this.queuedKeys.join("").concat(input);
     } else {
-      keySequence = pressedKey;
+      keySequence = input;
     }
 
     //
@@ -174,7 +174,7 @@ export class Vim {
       targetCommand = potentialCommands[0];
       this.emptyQueuedKeys();
     } else {
-      this.queuedKeys.push(pressedKey);
+      this.queuedKeys.push(input);
       this.potentialCommands = potentialCommands;
     }
 
@@ -183,14 +183,12 @@ export class Vim {
   }
 
   /** */
-  getCommandName(pressedKey: string): VimCommandNames {
+  getCommandName(input: string): VimCommandNames {
     let targetCommand;
     let potentialCommands: FindPotentialCommandReturn["potentialCommands"];
 
     try {
-      ({ targetCommand, potentialCommands } = this.findPotentialCommand(
-        pressedKey
-      ));
+      ({ targetCommand, potentialCommands } = this.findPotentialCommand(input));
     } catch {}
 
     if (!targetCommand) {
@@ -207,7 +205,7 @@ export class Vim {
         logger.debug(
           [
             "No command for key: %s in Mode: %s ((vim.ts-getCommandName))",
-            pressedKey,
+            input,
             this.activeMode,
           ],
           { isError: true }
