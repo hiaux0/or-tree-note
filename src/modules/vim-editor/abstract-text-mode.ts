@@ -22,7 +22,7 @@ export abstract class AbstractTextMode {
     public childSelector: string,
     public caretElement: HTMLElement
   ) {
-    this.children = parentElement.querySelectorAll(this.childSelector);
+    this.children = parentElement.querySelectorAll(`.${childSelector}`);
 
     this.caretWidth = getCssVar("--caret-size-width");
     this.caretHeight = getCssVar("--caret-size-height");
