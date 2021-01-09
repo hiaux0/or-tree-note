@@ -1,11 +1,8 @@
-import { VimCommandNames, VimCommand, VIM_COMMANDS } from "./vim-commands";
-import { filterStringByCharSequence, insert } from "modules/string/string";
+import { VimCommandNames, VimCommand } from "./vim-commands";
+import { filterStringByCharSequence } from "modules/string/string";
 import { logger } from "./../debug/logger";
-import hotkeys from "hotkeys-js";
-import { AbstractMode } from "modules/vim/modes/modes";
 import { NormalMode } from "modules/vim/modes/normal-mode";
 import { InsertMode } from "modules/vim/modes/insert-mode";
-import { NormalTextModeKeybindings } from "./modes/normal-mode-commands";
 import { InsertTextModeKeybindings } from "./modes/insert-mode-commands";
 import keyBindingsJson from "../../resources/keybindings/key-bindings";
 
@@ -121,12 +118,6 @@ export class Vim {
     } else if (this.activeMode === VimMode.INSERT) {
       return this.insertMode;
     }
-  }
-  isInsertTextMode(mode: AbstractMode): mode is InsertMode {
-    return this.activeMode === VimMode.INSERT;
-  }
-  isNormalTextMode(mode: AbstractMode): mode is NormalMode {
-    return this.activeMode === VimMode.NORMAL;
   }
 
   /** **********/
