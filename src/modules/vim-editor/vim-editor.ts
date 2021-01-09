@@ -22,17 +22,15 @@ const defaultVimEditorOptions: VimEditorOptions = {
   isTextMode: true,
 };
 
+@inject(VimEditorTextMode)
 export class VimEditor {
   vim: Vim;
 
-  constructor(public vimEditorOptions: VimEditorOptions) {
-    this.vimEditorOptions = {
-      ...this.vimEditorOptions,
-      ...defaultVimEditorOptions,
-    };
-
+  constructor(
+    public vimEditorOptions: VimEditorOptions,
+    public vimEditorTextMode: VimEditorTextMode
+  ) {
     if (this.vimEditorOptions.isTextMode) {
-      const vimEditorTextMode = new VimEditorTextMode(vimEditorOptions);
       vimEditorTextMode.setupElementMode();
       vimEditorTextMode.initVim();
       vimEditorTextMode.initKeys();

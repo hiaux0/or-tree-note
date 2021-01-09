@@ -20,14 +20,21 @@ export class OrTreeNotes {
 
   attached() {
     console.clear();
-    const vimEditorTextMode = rootContainer.get(VimEditorTextMode);
     const vimEditorOptions: VimEditorOptions = {
       parentHtmlElement: this.notesContainerRef,
       childSelectors: [this.editorLineClass],
       caretElements: [this.caretRef],
       isTextMode: true,
     };
-    inject(vimEditorOptions, vimEditorTextMode)(VimEditor);
+    rootContainer.registerInstance(
+      VimEditorTextMode,
+      new VimEditorTextMode(vimEditorOptions)
+    );
+    const vimEditorTextMode = rootContainer.get(VimEditorTextMode);
+    rootContainer.registerInstance(
+      VimEditor,
+      new VimEditor(vimEditorOptions, vimEditorTextMode)
+    );
 
     const vimEditor = rootContainer.get(VimEditor);
     this.currentModeName = vimEditor.getMode();
