@@ -17,5 +17,6 @@ export default {
     { key: "ArrowUp", command: "cursorUp" },
     { key: "ArrowRight", command: "cursorRight" },
     { key: "ArrowDown", command: "cursorDown" },
+    { key: "Escape", command: "enterNormalTextMode" },
   ],
 };

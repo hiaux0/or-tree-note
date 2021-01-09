@@ -184,13 +184,10 @@ export class Vim {
 
   /** */
   getCommandName(pressedKey: string): VimCommandNames {
-    let potentialCommands;
     let targetCommand;
 
     try {
-      ({ potentialCommands, targetCommand } = this.findPotentialCommand(
-        pressedKey
-      ));
+      ({ targetCommand } = this.findPotentialCommand(pressedKey));
     } catch {}
 
     if (!targetCommand) {
@@ -226,6 +223,7 @@ export class Vim {
 
   queueInput(input: string): QueueInputReturn {
     const targetCommand = this.getCommandName(input);
+    console.log("TCL: Vim -> queueInput -> targetCommand", targetCommand);
     if (targetCommand === "enterInsertTextMode") {
       this.enterInsertTextMode();
       return { commandOutput: null, targetCommand };
