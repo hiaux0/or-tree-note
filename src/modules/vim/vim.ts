@@ -70,7 +70,7 @@ export class Vim {
 
   constructor(
     public wholeInput: string[],
-    public cursor: Cursor,
+    public cursor: Cursor = { line: 0, col: 0 },
     public vimOptions: VimOptions = defaultVimOptions
   ) {
     this.normalMode = new NormalMode(wholeInput, cursor);
