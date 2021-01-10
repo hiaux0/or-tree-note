@@ -5,6 +5,7 @@ import { NormalMode } from "modules/vim/modes/normal-mode";
 import { InsertMode } from "modules/vim/modes/insert-mode";
 import { InsertTextModeKeybindings } from "./modes/insert-mode-commands";
 import keyBindingsJson from "../../resources/keybindings/key-bindings";
+import { groupBy } from "lodash";
 
 export interface KeyBindingModes {
   normal: VimCommand[];
@@ -239,7 +240,10 @@ export class Vim {
 
   /** */
   queueInput(input: string): QueueInputReturn {
+    logger.debug(["Received input: %s", input]);
+
     const targetCommand = this.getCommandName(input);
+
     if (targetCommand === "enterInsertTextMode") {
       this.enterInsertTextMode();
       return { commandOutput: null, targetCommand };
@@ -252,8 +256,8 @@ export class Vim {
     return { commandOutput, targetCommand };
   }
   /** */
-  queueChainedInputs(inputChain: string | string[]): QueueInputReturn {
-    let result;
+  queueChainedInputs(inputChain: string | string[]): QueueInputReturn[] {
+    let resultList: QueueInputReturn[] = [];
     let givenInputChain;
 
     if (typeof inputChain === "string") {
@@ -262,16 +266,11 @@ export class Vim {
       givenInputChain = inputChain;
     }
 
-    givenInputChain.forEach((input, index) => {
-      /** Save the last result */
-      if (index === inputChain.length - 1) {
-        result = this.queueInput(input);
-        return;
-      }
-      this.queueInput(input);
+    givenInputChain.forEach((input) => {
+      resultList.push(this.queueInput(input));
     });
 
-    return result;
+    return this.accumulateResults(resultList);
   }
 
   /** */
@@ -301,5 +300,26 @@ export class Vim {
     });
 
     return result;
+  }
+  /** */
+  accumulateResults(resultList: QueueInputReturn[]): QueueInputReturn[] {
+    const accumulatedResult = resultList.filter(
+      (result) => result.commandOutput
+    );
+
+    //
+    function groupByCommand(input: any[]) {
+      const grouped = groupBy(input, (commandResult) => {
+        return commandResult.targetCommand;
+      });
+
+      const result = Object.values(grouped).map((commandOutputs) => {
+        return commandOutputs[commandOutputs.length - 1];
+      });
+
+      return result;
+    }
+
+    return groupByCommand(accumulatedResult);
   }
 }

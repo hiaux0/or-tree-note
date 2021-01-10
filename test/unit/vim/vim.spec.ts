@@ -133,13 +133,36 @@ describe("C: Mode - Insert", () => {
   });
 
   fdescribe("#queueChainedInputs", () => {
-    xit("F: Chained input - string", () => {
+    it("F: Chained input - string", () => {
       const result = vim.queueChainedInputs("@<esc>l");
-      expect(result).toBe("hi");
+      expect(result).toEqual([
+        { commandOutput: "@foo", targetCommand: "type" },
+        {
+          commandOutput: { line: 0, col: 2 },
+          targetCommand: "cursorRight",
+        },
+      ]);
     });
-    xit("F: Chained input - string[]", () => {
+    it("F: Chained input - string - multiple typing", () => {
+      const result = vim.queueChainedInputs("@#<esc>l");
+      expect(result).toEqual([
+        { commandOutput: "@#foo", targetCommand: "type" },
+        {
+          commandOutput: { line: 0, col: 3 },
+          targetCommand: "cursorRight",
+        },
+      ]);
+    });
+
+    it("F: Chained input - string[]", () => {
       const result = vim.queueChainedInputs(["@", "<esc>", "l"]);
-      expect(result).toBe("hi");
+      expect(result).toEqual([
+        { commandOutput: "@foo", targetCommand: "type" },
+        {
+          commandOutput: { line: 0, col: 2 },
+          targetCommand: "cursorRight",
+        },
+      ]);
     });
   });
 });
@@ -150,7 +173,7 @@ describe("Methods", () => {
     vim.enterInsertTextMode();
   });
 
-  fdescribe("#splitInputChain", () => {
+  describe("#splitInputChain", () => {
     it("Split mixed input", () => {
       const result = vim.splitInputChain("1<23>45<67><8>9");
       expect(result).toEqual(["1", "<23>", "4", "5", "<67>", "<8>", "9"]);
