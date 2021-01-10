@@ -16,7 +16,7 @@
 // Import commands.js using ES2015 syntax:
 import "./commands";
 
-import "./commands/app";
+import "./commands/e2e-app";
 //
 import "./commands/css/e2e-css-variables";
 
