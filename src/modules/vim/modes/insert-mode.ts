@@ -1,5 +1,5 @@
 import { AbstractMode } from "./modes";
-import { insert } from "modules/string/string";
+import { insert, replaceAt } from "modules/string/string";
 import { VimMode } from "../vim";
 
 export class InsertMode extends AbstractMode {
@@ -13,5 +13,18 @@ export class InsertMode extends AbstractMode {
 
   executeCommand(commandName: string, commandValue: string) {
     return super.executeCommand(commandName, commandValue, this.currentMode);
+  }
+
+  backspace() {
+    this.activeInput;
+    const updatedInput = replaceAt(this.activeInput, this.cursor.col, "");
+    super.cursorLeft();
+    return updatedInput;
+  }
+
+  delete() {
+    this.activeInput;
+    const updatedInput = replaceAt(this.activeInput, this.cursor.col + 1, "");
+    return updatedInput;
   }
 }

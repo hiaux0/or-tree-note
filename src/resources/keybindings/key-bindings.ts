@@ -18,6 +18,8 @@ export default {
     { key: "ArrowRight", command: "cursorRight" },
     { key: "ArrowDown", command: "cursorDown" },
     { key: "Escape", command: "enterNormalTextMode" },
+    { key: "Backspace", command: "backspace" },
+    { key: "Delete", command: "delete" },
   ],
   synonyms: {
     "<esc>": "Escape",
