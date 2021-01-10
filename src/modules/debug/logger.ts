@@ -30,6 +30,11 @@ export class Logger {
         ...logOptions,
       };
 
+      /** === false, because it is explicitly set */
+      if (logOpt.log === false) {
+        return;
+      }
+
       if (this.globalLogOptions.focusedLogging && !logOptions?.log) {
         return;
       }
