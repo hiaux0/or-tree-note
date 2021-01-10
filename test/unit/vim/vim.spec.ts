@@ -3,10 +3,10 @@ import { Cursor, KeyBindingModes, Vim } from "modules/vim/vim";
 
 const input = ["foo"];
 const cursor: Cursor = { line: 0, col: 0 };
+let vim: Vim;
 
 describe("C: Mode - Normal", () => {
   describe("C: Chained commands", () => {
-    let vim: Vim;
     beforeEach(() => {
       const keyBindings: KeyBindingModes = {
         normal: [
@@ -83,7 +83,7 @@ describe("C: Mode - Normal", () => {
         });
       });
       //
-      describe("#queueChainedInputs", () => {
+      describe("#queueInput", () => {
         it("F: Single input", () => {
           const result = vim.queueInput("u");
           expect(result.targetCommand).toBe("cursorDown");
@@ -109,8 +109,6 @@ describe("C: Mode - Normal", () => {
 });
 
 describe("C: Mode - Insert", () => {
-  let vim: Vim;
-
   beforeEach(() => {
     vim = new Vim(cloneDeep(input), cloneDeep(cursor));
     vim.enterInsertTextMode();
@@ -131,6 +129,39 @@ describe("C: Mode - Insert", () => {
         key: "Escape",
         command: "enterNormalTextMode",
       });
+    });
+  });
+
+  fdescribe("#queueChainedInputs", () => {
+    xit("F: Chained input - string", () => {
+      const result = vim.queueChainedInputs("@<esc>l");
+      expect(result).toBe("hi");
+    });
+    xit("F: Chained input - string[]", () => {
+      const result = vim.queueChainedInputs(["@", "<esc>", "l"]);
+      expect(result).toBe("hi");
+    });
+  });
+});
+
+describe("Methods", () => {
+  beforeEach(() => {
+    vim = new Vim(cloneDeep(input), cloneDeep(cursor));
+    vim.enterInsertTextMode();
+  });
+
+  fdescribe("#splitInputChain", () => {
+    it("Split mixed input", () => {
+      const result = vim.splitInputChain("1<23>45<67><8>9");
+      expect(result).toEqual(["1", "<23>", "4", "5", "<67>", "<8>", "9"]);
+    });
+    it("Input with `<`", () => {
+      const result = vim.splitInputChain("1<23><");
+      expect(result).toEqual(["1", "<23>", "<"]);
+    });
+    it("Input with `>`", () => {
+      const result = vim.splitInputChain("1><23>");
+      expect(result).toEqual(["1", ">", "<23>"]);
     });
   });
 });

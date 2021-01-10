@@ -157,7 +157,7 @@ export class Vim {
     if (this.queuedKeys.length) {
       keySequence = this.queuedKeys.join("").concat(input);
     } else if (input.startsWith("<")) {
-      const synonymInput = this.keyBindings.synonyms[input];
+      const synonymInput = this.keyBindings.synonyms[input].toLowerCase();
       if (synonymInput) {
         keySequence = synonymInput;
       }
@@ -198,6 +198,7 @@ export class Vim {
       ({ targetCommand, potentialCommands } = this.findPotentialCommand(input));
     } catch {}
 
+    //
     if (!targetCommand) {
       if (this.activeMode === VimMode.INSERT) {
         logger.debug("Default to the command: type in Insert Mode", {
@@ -224,6 +225,7 @@ export class Vim {
 
     logger.debug(["Command: %s", targetCommand.command]);
 
+    //
     return targetCommand.command;
   }
 
@@ -235,6 +237,7 @@ export class Vim {
   /** Input Queue */
   /** *************/
 
+  /** */
   queueInput(input: string): QueueInputReturn {
     const targetCommand = this.getCommandName(input);
     if (targetCommand === "enterInsertTextMode") {
@@ -248,7 +251,7 @@ export class Vim {
 
     return { commandOutput, targetCommand };
   }
-  //
+  /** */
   queueChainedInputs(inputChain: string | string[]): QueueInputReturn {
     let result;
     let givenInputChain;
@@ -266,6 +269,35 @@ export class Vim {
         return;
       }
       this.queueInput(input);
+    });
+
+    return result;
+  }
+
+  /** */
+  splitInputChain(inputChain: string) {
+    /**
+     * 1st part: match char after > (positive lookbehind)
+     * 2nd part: match < with char following (positive lookahead)
+     *
+     * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions/Cheatsheet
+     */
+    const regex = /(?<=>).|<(?=.)/g;
+    let splitByModifier = inputChain
+      .replace(regex, (match) => {
+        return `,${match}`;
+      })
+      .split(",");
+
+    let result = [];
+    splitByModifier.forEach((splitCommands) => {
+      if (splitCommands.includes("<")) {
+        result.push(splitCommands);
+      } else {
+        splitCommands.split("").forEach((command) => {
+          result.push(command);
+        });
+      }
     });
 
     return result;
