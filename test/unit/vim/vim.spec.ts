@@ -94,14 +94,20 @@ describe("C: Mode - Normal", () => {
       //
       describe("#queueChainedInputs", () => {
         it("F: Chained input", () => {
-          const result = vim.queueChainedInputs("u");
+          const result = vim.queueChainedInputs("u")[0];
           expect(result.targetCommand).toBe("cursorDown");
           expect(result.commandOutput).toEqual({ col: 0, line: 1 });
         });
         it("F: Chained input - lli!", () => {
           vim = new Vim(cloneDeep(input), cloneDeep(cursor));
           const result = vim.queueChainedInputs("lli!");
-          expect(result.commandOutput).toBe("fo!o");
+          expect(result).toEqual([
+            {
+              commandOutput: { line: 0, col: 3 },
+              targetCommand: "cursorRight",
+            },
+            { commandOutput: "fo!o", targetCommand: "type" },
+          ]);
         });
       });
     });
@@ -132,7 +138,7 @@ describe("C: Mode - Insert", () => {
     });
   });
 
-  fdescribe("#queueChainedInputs", () => {
+  describe("#queueChainedInputs", () => {
     it("F: Chained input - string", () => {
       const result = vim.queueChainedInputs("@<esc>l");
       expect(result).toEqual([
