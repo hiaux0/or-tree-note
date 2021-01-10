@@ -7,8 +7,6 @@ interface LogOptions {
    * Even in debug mode, only log, when explicitely set via `log`.
    */
   focusedLogging?: boolean;
-  /** BUGGY */
-  throwOnFirstError?: boolean;
   throwOnError?: boolean;
   /** Mark a logger as error */
   isError?: boolean;
@@ -56,15 +54,6 @@ export class Logger {
          */
         console.error(...messageWithLogScope);
         throw "ERROR";
-      }
-
-      if (logOpt.throwOnFirstError) {
-        messageWithLogScope.forEach((message) => {
-          if (!message) {
-            console.log(...messageWithLogScope);
-            throw message;
-          }
-        });
       }
 
       console[logOpt.logMethod](...messageWithLogScope);
