@@ -3,6 +3,8 @@ const debugMode = true;
 interface LogOptions {
   logMethod?: "log" | "trace" | "error";
   log?: boolean;
+  logLevel?: "info" | "verbose";
+  onlyVerbose?: boolean;
   /**
    * Even in debug mode, only log, when explicitely set via `log`.
    */
@@ -16,6 +18,7 @@ interface LogOptions {
 
 const defautLogOptions: LogOptions = {
   logMethod: "log",
+  logLevel: "verbose",
   focusedLogging: false,
   throwOnError: true,
 };
@@ -48,6 +51,7 @@ export class Logger {
         ...placeholderValues,
       ];
 
+      //
       if (logOpt.throwOnError && logOpt.isError) {
         /**
          * We console.error AND throw, because we want to keep the formatting of the console.**
@@ -56,6 +60,11 @@ export class Logger {
         throw "ERROR";
       }
 
+      if (logOpt.logLevel !== "verbose" && logOpt.onlyVerbose) {
+        return;
+      }
+
+      //
       console[logOpt.logMethod](...messageWithLogScope);
     }
   }
