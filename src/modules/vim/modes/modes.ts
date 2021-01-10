@@ -1,5 +1,7 @@
-import { logger } from "modules/debug/logger";
+import { Logger } from "modules/debug/logger";
 import { Cursor, VimMode } from "../vim";
+
+const logger = new Logger({ scope: "AbstractMode" });
 
 export abstract class AbstractMode {
   /**

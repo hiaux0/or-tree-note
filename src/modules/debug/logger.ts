@@ -12,6 +12,8 @@ interface LogOptions {
   throwOnError?: boolean;
   /** Mark a logger as error */
   isError?: boolean;
+  /** */
+  scope?: string;
 }
 
 const defautLogOptions: LogOptions = {
@@ -21,12 +23,13 @@ const defautLogOptions: LogOptions = {
 };
 
 export class Logger {
-  constructor(private globalLogOptions: LogOptions = defautLogOptions) {}
+  constructor(private globalLogOptions: LogOptions) {}
 
   debug(messages: any | string[], logOptions?: LogOptions) {
     if (debugMode) {
       const logOpt = {
         ...this.globalLogOptions,
+        ...defautLogOptions,
         ...logOptions,
       };
 
@@ -43,7 +46,7 @@ export class Logger {
         /**
          * We console.error AND throw, because we want to keep the formatting of the console.**
          */
-        console.error(...messages);
+        console.error(`[${logOpt.scope}]`, ...messages);
         throw "ERROR";
       }
 
@@ -51,13 +54,13 @@ export class Logger {
         if (logOpt.throwOnFirstError) {
           messages.forEach((message) => {
             if (!message) {
-              console.log(...messages);
+              console.log(`[${logOpt.scope}]`, ...messages);
               throw message;
             }
           });
         }
 
-        console[logOpt.logMethod](...messages);
+        console[logOpt.logMethod](`[${logOpt.scope}]`, ...messages);
         return;
       }
 

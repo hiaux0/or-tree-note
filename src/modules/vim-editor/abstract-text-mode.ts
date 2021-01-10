@@ -1,9 +1,11 @@
-import { logger } from "modules/debug/logger";
+import { Logger } from "modules/debug/logger";
 import {
   getComputedValueFromPixelString,
   getCssVar,
   getValueFromPixelString,
 } from "../css/css-variables";
+
+const logger = new Logger({ scope: "AbstractTextMode" });
 
 const CARET_NORMAL_CLASS = "caret-normal";
 const CARET_INSERT_CLASS = "caret-insert";

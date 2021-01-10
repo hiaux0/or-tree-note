@@ -1,11 +1,13 @@
 import { VimCommandNames, VimCommand, SynonymKey } from "./vim-commands";
 import { filterStringByCharSequence } from "modules/string/string";
-import { logger } from "./../debug/logger";
+import { Logger } from "./../debug/logger";
 import { NormalMode } from "modules/vim/modes/normal-mode";
 import { InsertMode } from "modules/vim/modes/insert-mode";
 import { InsertTextModeKeybindings } from "./modes/insert-mode-commands";
 import keyBindingsJson from "../../resources/keybindings/key-bindings";
 import { groupBy } from "lodash";
+
+const logger = new Logger({ scope: "Vim" });
 
 export interface KeyBindingModes {
   normal: VimCommand[];

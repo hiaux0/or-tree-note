@@ -6,11 +6,13 @@ import "aurelia-polyfills";
 import { QueueInputReturn, Vim, VimMode } from "modules/vim/vim";
 import { VimEditor, VimEditorOptions } from "./vim-editor";
 import hotkeys from "hotkeys-js";
-import { logger } from "modules/debug/logger";
+import { Logger } from "modules/debug/logger";
 import { ESCAPE, INSERT_MODE, MODIFIERS } from "resources/keybindings/app.keys";
 import { NormalTextMode } from "./normal-text-mode/normal-text-mode";
 import { InsertTextMode } from "./insert-text-mode/insert-text-mode";
 import { AbstractTextMode } from "./abstract-text-mode";
+
+const logger = new Logger({ scope: "VimEditorTextMode" });
 
 const CARET_NORMAL_CLASS = "caret-NORMAL";
 const CARET_INSERT_CLASS = "caret-INSERT";
