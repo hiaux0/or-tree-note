@@ -5,7 +5,6 @@ import { Cursor } from "modules/vim/vim";
 import {
   getComputedValueFromPixelString,
   getCssVar,
-  getValueFromPixelString,
 } from "../css/css-variables";
 
 const logger = new Logger({ scope: "AbstractTextMode" });
@@ -36,10 +35,6 @@ export abstract class AbstractTextMode {
 
     //
     const newLeft = newCursorValue.col * this.caretWidth;
-    const parentWidth = getValueFromPixelString(
-      getComputedStyle(this.parentElement).width
-    );
-
     const activeChildText = this.children[newCursorValue.line].textContent;
     if (!isValidHorizontalPosition(newCursorValue.col, activeChildText)) {
       return;

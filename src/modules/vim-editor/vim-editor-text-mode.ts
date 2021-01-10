@@ -1,13 +1,9 @@
-import { ModifiersType } from "./../../resources/keybindings/app.keys";
-import { InsertMode } from "./../vim/modes/insert-mode";
-import { NormalMode } from "./../vim/modes/normal-mode";
-import { inject, Container } from "aurelia-dependency-injection";
 import "aurelia-polyfills";
-import { QueueInputReturn, Vim, VimMode } from "modules/vim/vim";
-import { VimEditor, VimEditorOptions } from "./vim-editor";
+import { Vim, VimMode } from "modules/vim/vim";
+import { VimEditorOptions } from "./vim-editor";
 import hotkeys from "hotkeys-js";
 import { Logger } from "modules/debug/logger";
-import { ESCAPE, INSERT_MODE, MODIFIERS } from "resources/keybindings/app.keys";
+import { ESCAPE, INSERT_MODE } from "resources/keybindings/app.keys";
 import { NormalTextMode } from "./normal-text-mode/normal-text-mode";
 import { InsertTextMode } from "./insert-text-mode/insert-text-mode";
 import { AbstractTextMode } from "./abstract-text-mode";

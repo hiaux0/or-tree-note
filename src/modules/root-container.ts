@@ -1,6 +1,4 @@
-import { inject, Container } from "aurelia-dependency-injection";
-import { VimEditor } from "./vim-editor/vim-editor";
-import { VimEditorTextMode } from "./vim-editor/vim-editor-text-mode";
+import { Container } from "aurelia-dependency-injection";
 
 export const rootContainer = new Container();
 rootContainer.makeGlobal();

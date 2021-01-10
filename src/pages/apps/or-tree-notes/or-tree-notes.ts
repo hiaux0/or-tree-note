@@ -1,4 +1,3 @@
-import { inject } from "aurelia-dependency-injection";
 import { VimEditor, VimEditorOptions } from "modules/vim-editor/vim-editor";
 import { bindable } from "aurelia-framework";
 import "./or-tree-notes.scss";
@@ -19,7 +18,6 @@ export class OrTreeNotes {
   bind() {}
 
   attached() {
-    console.clear();
     const vimEditorOptions: VimEditorOptions = {
       parentHtmlElement: this.notesContainerRef,
       childSelectors: [this.editorLineClass],
