@@ -86,6 +86,9 @@ export class VimEditorTextMode {
   executeCommandInEditor(input: string) {
     //
     const result = this.vim.queueInput(input);
+    logger.debug(["Result of input: %s is: %o", input, result], {
+      onlyVerbose: true,
+    });
 
     //
     const currentMode = this.getCurrentTextMode();
