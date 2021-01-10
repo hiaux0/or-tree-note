@@ -6,10 +6,6 @@ export class NormalTextMode extends AbstractTextMode {
     super(parentElement, childSelector, caretElement);
   }
 
-  keyPressed(_pressedKey: string, targetCommandName: string) {
-    this[targetCommandName]();
-  }
-
   cursorLeft(newCursorValue) {
     super.cursorLeft(newCursorValue);
   }

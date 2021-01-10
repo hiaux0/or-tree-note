@@ -9,20 +9,6 @@ export class InsertTextMode extends AbstractTextMode {
     super(parentElement, childSelector, caretElement);
   }
 
-  keyPressed(pressedKey: string, targetCommandName?: string) {
-    if (targetCommandName) {
-      super[targetCommandName]();
-      return;
-    }
-    this.type(pressedKey);
-  }
-
-  modifierKeyPressed(modifierKey: string) {
-    if (this[modifierKey.toLowerCase()]) {
-      this[modifierKey.toLowerCase()]();
-    }
-  }
-
   backspace() {
     const currentLine = this.children[this.currentLineNumber];
     const curLineText = currentLine.textContent;
