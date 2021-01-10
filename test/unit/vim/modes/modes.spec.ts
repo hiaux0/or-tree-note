@@ -34,12 +34,25 @@ describe("Vim", () => {
     it("F: Should execute command in Input Queue", () => {
       vim.enterInsertTextMode();
       const result = vim.queueInput("@");
-      expect(result.commandOutput).toBe(`@${input[0]}`);
+      expect(result.commandOutput.text).toBe(`@${input[0]}`);
     });
     it("F: Should execute command in Input Queue Sequence", () => {
       vim.enterInsertTextMode();
-      const result = vim.queueInputSequence("345")[0];
-      expect(result.commandOutput).toBe(`345${input[0]}`);
+      const result = vim.queueInputSequence("345");
+      expect(result).toEqual([
+        {
+          commandOutput: { cursor: { col: 1, line: 0 }, text: "3foo" },
+          targetCommand: "type",
+        },
+        {
+          commandOutput: { cursor: { col: 2, line: 0 }, text: "34foo" },
+          targetCommand: "type",
+        },
+        {
+          commandOutput: { cursor: { col: 3, line: 0 }, text: "345foo" },
+          targetCommand: "type",
+        },
+      ]);
     });
   });
 });

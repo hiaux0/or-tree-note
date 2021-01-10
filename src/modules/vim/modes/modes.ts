@@ -1,5 +1,5 @@
 import { Logger } from "modules/debug/logger";
-import { Cursor, VimMode } from "../vim";
+import { Cursor, VimCommandOutput, VimMode } from "../vim";
 
 const logger = new Logger({ scope: "AbstractMode" });
 
@@ -21,7 +21,7 @@ export abstract class AbstractMode {
     commandName: string,
     commandValue: string,
     currentMode?: VimMode
-  ) {
+  ): VimCommandOutput {
     if (!this[commandName]) {
       logger.debug(
         [
@@ -34,40 +34,42 @@ export abstract class AbstractMode {
       );
     }
 
-    const result = this[commandName](commandValue);
+    const result = this[commandName](commandValue) as VimCommandOutput;
 
-    this.activeInput = result;
+    if (result.text) {
+      this.activeInput = result.text;
+    }
 
     return result;
   }
 
-  cursorRight() {
+  cursorRight(): VimCommandOutput {
     const updaterCursorCol = this.cursor.col + 1;
 
     if (!this.isValidHorizontalPosition(updaterCursorCol)) {
-      return this.cursor;
+      return { cursor: { ...this.cursor } };
     }
 
     this.cursor.col = updaterCursorCol;
-    return this.cursor;
+    return { cursor: { ...this.cursor } };
   }
-  cursorLeft() {
+  cursorLeft(): VimCommandOutput {
     const updaterCursorCol = this.cursor.col - 1;
 
     if (!this.isValidHorizontalPosition(updaterCursorCol)) {
-      return this.cursor;
+      return { cursor: { ...this.cursor } };
     }
 
     this.cursor.col = updaterCursorCol;
-    return this.cursor;
+    return { cursor: { ...this.cursor } };
   }
-  cursorUp() {
+  cursorUp(): VimCommandOutput {
     this.cursor.line -= 1;
-    return this.cursor;
+    return { cursor: { ...this.cursor } };
   }
-  cursorDown() {
+  cursorDown(): VimCommandOutput {
     this.cursor.line += 1;
-    return this.cursor;
+    return { cursor: { ...this.cursor } };
   }
   //
   isValidHorizontalPosition(cursorCol: number) {

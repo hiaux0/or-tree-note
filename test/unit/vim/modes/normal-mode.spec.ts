@@ -15,29 +15,29 @@ describe("C: Mode - Normal", () => {
   describe("C: Navigating", () => {
     it("F: Update cursor on move right", () => {
       const result = vim.executeCommand<Cursor>("cursorRight");
-      expect(result.col).toBe(cursor.col + 1);
+      expect(result.cursor.col).toBe(cursor.col + 1);
     });
     it("F: Update cursor on move left", () => {
       const customV = new Vim(cloneDeep(input), { col: 2, line: 0 });
       const result = customV.executeCommand<Cursor>("cursorLeft");
-      expect(result.col).toBe(1);
+      expect(result.cursor.col).toBe(1);
     });
     it("F: Cursor stays in horizontal boundaries - Right", () => {
       const customV = new Vim(cloneDeep(input), { col: 3, line: 0 });
       const result = customV.executeCommand<Cursor>("cursorRight");
-      expect(result.col).toBe(3);
+      expect(result.cursor.col).toBe(3);
     });
     it("F: Cursor stays in horizontal boundaries - Left", () => {
       const result = vim.executeCommand<Cursor>("cursorLeft");
-      expect(result.col).toBe(0);
+      expect(result.cursor.col).toBe(0);
     });
     it("F: Update cursor on move up", () => {
       const result = vim.executeCommand<Cursor>("cursorUp");
-      expect(result.line).toBe(cursor.line - 1);
+      expect(result.cursor.line).toBe(cursor.line - 1);
     });
     it("F: Update cursor on move down", () => {
       const result = vim.executeCommand<Cursor>("cursorDown");
-      expect(result.line).toBe(cursor.line + 1);
+      expect(result.cursor.line).toBe(cursor.line + 1);
     });
     //
     const outOfBoundCursorTests: [Cursor, string][] = [

@@ -15,6 +15,11 @@ export interface KeyBindingModes {
   synonyms: SynonymKey;
 }
 
+export enum VimExecutingMode {
+  "INDIVIDUAL" = "INDIVIDUAL",
+  "BATCH" = "BATCH",
+}
+
 const keyBindings = (keyBindingsJson as unknown) as KeyBindingModes;
 
 export const vim = "vim";
@@ -31,8 +36,13 @@ interface FindPotentialCommandReturn {
   potentialCommands: VimCommand[];
 }
 
+export type VimCommandOutput = {
+  cursor?: Cursor;
+  text?: string;
+};
+
 export interface QueueInputReturn {
-  commandOutput: any;
+  commandOutput: VimCommandOutput | null;
   targetCommand: VimCommandNames;
 }
 
@@ -131,7 +141,7 @@ export class Vim {
   executeCommand<CommandType = any>(
     commandName: VimCommandNames,
     commandValue?: string
-  ) {
+  ): VimCommandOutput {
     const currentMode = this.getCurrentMode();
     return currentMode.executeCommand(commandName, commandValue) as CommandType;
   }
@@ -210,7 +220,7 @@ export class Vim {
         return "type";
       }
 
-      if (potentialCommands.length) {
+      if (potentialCommands?.length) {
         logger.debug(["Awaiting potential commands: %o", potentialCommands]);
       } else {
         logger.debug(
@@ -255,10 +265,14 @@ export class Vim {
     }
     const commandOutput = this.executeCommand(targetCommand, input);
 
-    return { commandOutput, targetCommand };
+    const result = { commandOutput, targetCommand };
+    return result;
   }
   /** */
-  queueInputSequence(inputSequence: string | string[]): QueueInputReturn[] {
+  queueInputSequence(
+    inputSequence: string | string[],
+    vimExecutingMode: VimExecutingMode = VimExecutingMode.INDIVIDUAL
+  ): QueueInputReturn[] {
     let resultList: QueueInputReturn[] = [];
     let givenInputSequence;
 
@@ -269,10 +283,14 @@ export class Vim {
     }
 
     givenInputSequence.forEach((input) => {
-      resultList.push(this.queueInput(input));
+      const subResult = this.queueInput(input);
+      resultList.push(subResult);
     });
 
-    console.log("TCL: Vim -> getCommandName -> resultList", resultList);
+    if (vimExecutingMode === VimExecutingMode.INDIVIDUAL) {
+      return resultList;
+    }
+
     return this.batchResults(resultList);
   }
 

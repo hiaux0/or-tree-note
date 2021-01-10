@@ -87,26 +87,34 @@ describe("C: Mode - Normal", () => {
         it("F: Single input", () => {
           const result = vim.queueInput("u");
           expect(result.targetCommand).toBe("cursorDown");
-          expect(result.commandOutput).toEqual({ col: 0, line: 1 });
+          expect(result.commandOutput.cursor).toEqual({ col: 0, line: 1 });
         });
         //
       });
       //
       describe("#queueInputSequence", () => {
-        it("F: Input sequence", () => {
+        it("F: Input sequence - 1", () => {
           const result = vim.queueInputSequence("u")[0];
           expect(result.targetCommand).toBe("cursorDown");
-          expect(result.commandOutput).toEqual({ col: 0, line: 1 });
+          expect(result.commandOutput.cursor).toEqual({ col: 0, line: 1 });
         });
         it("F: Input sequence - lli!", () => {
           vim = new Vim(cloneDeep(input), cloneDeep(cursor));
           const result = vim.queueInputSequence("lli!");
           expect(result).toEqual([
             {
-              commandOutput: { line: 0, col: 3 },
+              commandOutput: { cursor: { col: 1, line: 0 } },
               targetCommand: "cursorRight",
             },
-            { commandOutput: "fo!o", targetCommand: "type" },
+            {
+              commandOutput: { cursor: { col: 2, line: 0 } },
+              targetCommand: "cursorRight",
+            },
+            { commandOutput: null, targetCommand: "enterInsertTextMode" },
+            {
+              commandOutput: { cursor: { col: 3, line: 0 }, text: "fo!o" },
+              targetCommand: "type",
+            },
           ]);
         });
       });
@@ -142,9 +150,13 @@ describe("C: Mode - Insert", () => {
     it("F: Input sequence - string", () => {
       const result = vim.queueInputSequence("@<esc>l");
       expect(result).toEqual([
-        { commandOutput: "@foo", targetCommand: "type" },
         {
-          commandOutput: { line: 0, col: 2 },
+          commandOutput: { cursor: { col: 1, line: 0 }, text: "@foo" },
+          targetCommand: "type",
+        },
+        { commandOutput: null, targetCommand: "enterNormalTextMode" },
+        {
+          commandOutput: { cursor: { col: 2, line: 0 } },
           targetCommand: "cursorRight",
         },
       ]);
@@ -152,9 +164,17 @@ describe("C: Mode - Insert", () => {
     it("F: Input sequence - string - multiple typing", () => {
       const result = vim.queueInputSequence("@#<esc>l");
       expect(result).toEqual([
-        { commandOutput: "@#foo", targetCommand: "type" },
         {
-          commandOutput: { line: 0, col: 3 },
+          commandOutput: { cursor: { col: 1, line: 0 }, text: "@foo" },
+          targetCommand: "type",
+        },
+        {
+          commandOutput: { cursor: { col: 2, line: 0 }, text: "@#foo" },
+          targetCommand: "type",
+        },
+        { commandOutput: null, targetCommand: "enterNormalTextMode" },
+        {
+          commandOutput: { cursor: { col: 3, line: 0 } },
           targetCommand: "cursorRight",
         },
       ]);
@@ -163,9 +183,13 @@ describe("C: Mode - Insert", () => {
     it("F: Input sequence - string[]", () => {
       const result = vim.queueInputSequence(["@", "<esc>", "l"]);
       expect(result).toEqual([
-        { commandOutput: "@foo", targetCommand: "type" },
         {
-          commandOutput: { line: 0, col: 2 },
+          commandOutput: { cursor: { col: 1, line: 0 }, text: "@foo" },
+          targetCommand: "type",
+        },
+        { commandOutput: null, targetCommand: "enterNormalTextMode" },
+        {
+          commandOutput: { cursor: { col: 2, line: 0 } },
           targetCommand: "cursorRight",
         },
       ]);

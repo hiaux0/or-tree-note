@@ -1,9 +1,6 @@
 import { AbstractTextMode } from "../abstract-text-mode";
 import { getValueFromPixelString } from "../../css/css-variables";
 
-const CARET_NORMAL_CLASS = "caret-normal";
-const CARET_INSERT_CLASS = "caret-insert";
-
 export class NormalTextMode extends AbstractTextMode {
   constructor(public parentElement, public childSelector, public caretElement) {
     super(parentElement, childSelector, caretElement);
@@ -13,12 +10,12 @@ export class NormalTextMode extends AbstractTextMode {
     this[targetCommandName]();
   }
 
-  cursorLeft() {
-    super.cursorLeft();
+  cursorLeft(newCursorValue) {
+    super.cursorLeft(newCursorValue);
   }
 
-  cursorRight() {
-    super.cursorRight();
+  cursorRight(newCursorValue) {
+    super.cursorRight(newCursorValue);
   }
 
   cursorUp() {
