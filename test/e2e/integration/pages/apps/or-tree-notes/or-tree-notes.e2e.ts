@@ -37,7 +37,7 @@ describe("Aurelia skeleton app", () => {
       });
   });
 
-  it.only("Dev: Escape in insert mode should not print escape", () => {
+  it("Dev: Escape in insert mode should not print escape", () => {
     cy.main().type("i{esc}");
     cy.get(".editor-line")
       .invoke("text")
@@ -45,12 +45,18 @@ describe("Aurelia skeleton app", () => {
         expect(updatedContent).equal(initialContent);
       });
   });
-  it.skip("Dev: Escape in insert mode, then queue key in normal should not type out", () => {
+  it("Dev: Escape in insert mode, then queue key in normal should not type out", () => {
     cy.main().type("i{esc}l");
     cy.get(".editor-line")
       .invoke("text")
       .then((updatedContent) => {
         expect(updatedContent).equal(initialContent);
       });
+    cy.getCssVar("--caret-size-width").then((caretWidth) => {
+      cy.get("%caret")
+        .should("exist")
+        .invoke("attr", "style")
+        .should("contain", caretWidth);
+    });
   });
 });
