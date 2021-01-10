@@ -157,7 +157,7 @@ export class Vim {
     if (this.queuedKeys.length) {
       keySequence = this.queuedKeys.join("").concat(input);
     } else if (input.startsWith("<")) {
-      const synonymInput = this.keyBindings.synonyms[input].toLowerCase();
+      const synonymInput = this.keyBindings.synonyms[input.toLowerCase()];
       if (synonymInput) {
         keySequence = synonymInput;
       }
