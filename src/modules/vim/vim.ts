@@ -257,7 +257,7 @@ export class Vim {
     let givenInputChain;
 
     if (typeof inputChain === "string") {
-      givenInputChain = inputChain.split("");
+      givenInputChain = this.splitInputChain(inputChain);
     } else {
       givenInputChain = inputChain;
     }
