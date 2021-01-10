@@ -36,9 +36,9 @@ describe("Vim", () => {
       const result = vim.queueInput("@");
       expect(result.commandOutput).toBe(`@${input[0]}`);
     });
-    it("F: Should execute command in Input Queue Chain", () => {
+    it("F: Should execute command in Input Queue Sequence", () => {
       vim.enterInsertTextMode();
-      const result = vim.queueChainedInputs("345")[0];
+      const result = vim.queueInputSequence("345")[0];
       expect(result.commandOutput).toBe(`345${input[0]}`);
     });
   });

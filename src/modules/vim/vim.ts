@@ -258,17 +258,17 @@ export class Vim {
     return { commandOutput, targetCommand };
   }
   /** */
-  queueChainedInputs(inputChain: string | string[]): QueueInputReturn[] {
+  queueInputSequence(inputSequence: string | string[]): QueueInputReturn[] {
     let resultList: QueueInputReturn[] = [];
-    let givenInputChain;
+    let givenInputSequence;
 
-    if (typeof inputChain === "string") {
-      givenInputChain = this.splitInputChain(inputChain);
+    if (typeof inputSequence === "string") {
+      givenInputSequence = this.splitInputSequence(inputSequence);
     } else {
-      givenInputChain = inputChain;
+      givenInputSequence = inputSequence;
     }
 
-    givenInputChain.forEach((input) => {
+    givenInputSequence.forEach((input) => {
       resultList.push(this.queueInput(input));
     });
 
@@ -276,7 +276,7 @@ export class Vim {
   }
 
   /** */
-  splitInputChain(inputChain: string) {
+  splitInputSequence(inputSequence: string) {
     /**
      * 1st part: match char after > (positive lookbehind)
      * 2nd part: match < with char following (positive lookahead)
@@ -284,7 +284,7 @@ export class Vim {
      * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions/Cheatsheet
      */
     const regex = /(?<=>).|<(?=.)/g;
-    let splitByModifier = inputChain
+    let splitByModifier = inputSequence
       .replace(regex, (match) => {
         return `,${match}`;
       })

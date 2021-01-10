@@ -6,7 +6,7 @@ const cursor: Cursor = { line: 0, col: 0 };
 let vim: Vim;
 
 describe("C: Mode - Normal", () => {
-  describe("C: Chained commands", () => {
+  describe("C: Sequenced commands", () => {
     beforeEach(() => {
       const keyBindings: KeyBindingModes = {
         normal: [
@@ -33,26 +33,26 @@ describe("C: Mode - Normal", () => {
     });
 
     describe("Finding", () => {
-      it("F: Find potential chained commands - 1 char - (sideeffect)", () => {
+      it("F: Find potential sequenced commands - 1 char - (sideeffect)", () => {
         const result = vim.findPotentialCommand("f");
         expect(map(result.potentialCommands, "command")).toEqual([
           "cursorDown",
           "yank",
         ]);
       });
-      it("F: Find potential chained commands - 2 chars - (sideeffect)", () => {
+      it("F: Find potential sequenced commands - 2 chars - (sideeffect)", () => {
         const result = vim.findPotentialCommand("fo");
         expect(map(result.potentialCommands, "command")).toEqual([
           "cursorDown",
         ]);
       });
-      it("F: Find potential chained commands - 3 chars - (sideeffect)", () => {
+      it("F: Find potential sequenced commands - 3 chars - (sideeffect)", () => {
         const result = vim.findPotentialCommand("foo");
         expect(map(result.potentialCommands, "command")).toEqual([
           "cursorDown",
         ]);
       });
-      it("F: Return chained command name", () => {
+      it("F: Return sequenced command name", () => {
         const { targetCommand } = vim.findPotentialCommand("u");
         expect(targetCommand.command).toEqual("cursorDown");
       });
@@ -74,7 +74,7 @@ describe("C: Mode - Normal", () => {
         /**
          * Relates to #findPotentialCommand test
          */
-        it("F: Get command - Chain", () => {
+        it("F: Get command - Sequence", () => {
           //
           vim.getCommandName("f");
           vim.getCommandName("o");
@@ -92,15 +92,15 @@ describe("C: Mode - Normal", () => {
         //
       });
       //
-      describe("#queueChainedInputs", () => {
-        it("F: Chained input", () => {
-          const result = vim.queueChainedInputs("u")[0];
+      describe("#queueInputSequence", () => {
+        it("F: Input sequence", () => {
+          const result = vim.queueInputSequence("u")[0];
           expect(result.targetCommand).toBe("cursorDown");
           expect(result.commandOutput).toEqual({ col: 0, line: 1 });
         });
-        it("F: Chained input - lli!", () => {
+        it("F: Input sequence - lli!", () => {
           vim = new Vim(cloneDeep(input), cloneDeep(cursor));
-          const result = vim.queueChainedInputs("lli!");
+          const result = vim.queueInputSequence("lli!");
           expect(result).toEqual([
             {
               commandOutput: { line: 0, col: 3 },
@@ -138,9 +138,9 @@ describe("C: Mode - Insert", () => {
     });
   });
 
-  describe("#queueChainedInputs", () => {
-    it("F: Chained input - string", () => {
-      const result = vim.queueChainedInputs("@<esc>l");
+  describe("#queueInputSequence", () => {
+    it("F: Input sequence - string", () => {
+      const result = vim.queueInputSequence("@<esc>l");
       expect(result).toEqual([
         { commandOutput: "@foo", targetCommand: "type" },
         {
@@ -149,8 +149,8 @@ describe("C: Mode - Insert", () => {
         },
       ]);
     });
-    it("F: Chained input - string - multiple typing", () => {
-      const result = vim.queueChainedInputs("@#<esc>l");
+    it("F: Input sequence - string - multiple typing", () => {
+      const result = vim.queueInputSequence("@#<esc>l");
       expect(result).toEqual([
         { commandOutput: "@#foo", targetCommand: "type" },
         {
@@ -160,8 +160,8 @@ describe("C: Mode - Insert", () => {
       ]);
     });
 
-    it("F: Chained input - string[]", () => {
-      const result = vim.queueChainedInputs(["@", "<esc>", "l"]);
+    it("F: Input sequence - string[]", () => {
+      const result = vim.queueInputSequence(["@", "<esc>", "l"]);
       expect(result).toEqual([
         { commandOutput: "@foo", targetCommand: "type" },
         {
@@ -179,17 +179,17 @@ describe("Methods", () => {
     vim.enterInsertTextMode();
   });
 
-  describe("#splitInputChain", () => {
+  describe("#splitInputSequence", () => {
     it("Split mixed input", () => {
-      const result = vim.splitInputChain("1<23>45<67><8>9");
+      const result = vim.splitInputSequence("1<23>45<67><8>9");
       expect(result).toEqual(["1", "<23>", "4", "5", "<67>", "<8>", "9"]);
     });
     it("Input with `<`", () => {
-      const result = vim.splitInputChain("1<23><");
+      const result = vim.splitInputSequence("1<23><");
       expect(result).toEqual(["1", "<23>", "<"]);
     });
     it("Input with `>`", () => {
-      const result = vim.splitInputChain("1><23>");
+      const result = vim.splitInputSequence("1><23>");
       expect(result).toEqual(["1", ">", "<23>"]);
     });
   });
