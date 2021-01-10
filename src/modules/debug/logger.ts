@@ -25,7 +25,7 @@ const defautLogOptions: LogOptions = {
 export class Logger {
   constructor(private globalLogOptions: LogOptions) {}
 
-  debug(messages: any | string[], logOptions?: LogOptions) {
+  debug(messages: [string, ...any[]], logOptions?: LogOptions) {
     if (debugMode) {
       const logOpt = {
         ...this.globalLogOptions,
@@ -33,6 +33,7 @@ export class Logger {
         ...logOptions,
       };
 
+      //
       /** === false, because it is explicitly set */
       if (logOpt.log === false) {
         return;
@@ -42,29 +43,31 @@ export class Logger {
         return;
       }
 
+      //
+      const [withPlaceholder, ...placeholderValues] = messages;
+      const messageWithLogScope = [
+        `[${logOpt.scope}] ${withPlaceholder}`,
+        ...placeholderValues,
+      ];
+
       if (logOpt.throwOnError && logOpt.isError) {
         /**
          * We console.error AND throw, because we want to keep the formatting of the console.**
          */
-        console.error(`[${logOpt.scope}]`, ...messages);
+        console.error(...messageWithLogScope);
         throw "ERROR";
       }
 
-      if (Array.isArray(messages)) {
-        if (logOpt.throwOnFirstError) {
-          messages.forEach((message) => {
-            if (!message) {
-              console.log(`[${logOpt.scope}]`, ...messages);
-              throw message;
-            }
-          });
-        }
-
-        console[logOpt.logMethod](`[${logOpt.scope}]`, ...messages);
-        return;
+      if (logOpt.throwOnFirstError) {
+        messageWithLogScope.forEach((message) => {
+          if (!message) {
+            console.log(...messageWithLogScope);
+            throw message;
+          }
+        });
       }
 
-      console[logOpt.logMethod](messages);
+      console[logOpt.logMethod](...messageWithLogScope);
     }
   }
 }

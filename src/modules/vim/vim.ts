@@ -109,11 +109,11 @@ export class Vim {
   /** *******/
 
   enterInsertTextMode() {
-    logger.debug("Enter Insert mode");
+    logger.debug(["Enter Insert mode"]);
     this.activeMode = VimMode.INSERT;
   }
   enterNormalTextMode() {
-    logger.debug("Enter Normal mode");
+    logger.debug(["Enter Normal mode"]);
     this.activeMode = VimMode.NORMAL;
   }
   getCurrentMode() {
@@ -204,7 +204,7 @@ export class Vim {
     //
     if (!targetCommand) {
       if (this.activeMode === VimMode.INSERT) {
-        logger.debug("Default to the command: type in Insert Mode", {
+        logger.debug(["Default to the command: type in Insert Mode"], {
           log: true,
         });
         return "type";
