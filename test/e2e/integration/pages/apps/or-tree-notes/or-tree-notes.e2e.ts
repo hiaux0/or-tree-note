@@ -69,4 +69,20 @@ describe("Aurelia skeleton app", () => {
         .should("contain", Math.round(caretWidth * 3));
     });
   });
+  it("DEV: i{shift}", () => {
+    cy.vim("i{shift}");
+    cy.get(".editor-line")
+      .invoke("text")
+      .then((updatedContent) => {
+        expect(updatedContent).equal(initialContent);
+      });
+  });
+  it.only("DEV: i^{esc}", () => {
+    cy.vim("i^{esc}l");
+    cy.get(".editor-line")
+      .invoke("text")
+      .then((updatedContent) => {
+        expect(updatedContent).equal(`^${initialContent}`);
+      });
+  });
 });

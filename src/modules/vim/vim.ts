@@ -177,12 +177,18 @@ export class Vim {
     } else {
       keySequence = input;
     }
+    logger.debug(["keySequence: %o", keySequence], {
+      onlyVerbose: true,
+    });
 
     //
     let targetCommand;
     const potentialCommands = targetKeyBinding.filter((keyBinding) => {
       const result = filterStringByCharSequence(keyBinding.key, keySequence);
       return result;
+    });
+    logger.debug(["potentialCommands: %o", potentialCommands], {
+      onlyVerbose: true,
     });
 
     if (potentialCommands.length === 0) {
