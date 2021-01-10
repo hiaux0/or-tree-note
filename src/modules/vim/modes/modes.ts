@@ -3,6 +3,18 @@ import { Cursor, VimCommandOutput, VimMode } from "../vim";
 
 const logger = new Logger({ scope: "AbstractMode" });
 
+export function isValidHorizontalPosition(
+  cursorCol: number,
+  activeInput: string
+) {
+  if (cursorCol > activeInput.length) {
+    return false;
+  } else if (cursorCol < 0) {
+    return false;
+  }
+  return true;
+}
+
 export abstract class AbstractMode {
   /**
    * Firstly: The active input, is the eg. "active line".

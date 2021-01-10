@@ -4,7 +4,7 @@ import { bindable } from "aurelia-framework";
 import "./or-tree-notes.scss";
 import { rootContainer } from "modules/root-container";
 import { VimEditorTextMode } from "modules/vim-editor/vim-editor-text-mode";
-import { VimMode } from "modules/vim/vim";
+import { VimExecutingMode, VimMode } from "modules/vim/vim";
 
 export class OrTreeNotes {
   @bindable value = "OrTreeNotes";
@@ -25,6 +25,7 @@ export class OrTreeNotes {
       childSelectors: [this.editorLineClass],
       caretElements: [this.caretRef],
       isTextMode: true,
+      vimExecutingMode: VimExecutingMode.BATCH,
     };
     rootContainer.registerInstance(
       VimEditorTextMode,

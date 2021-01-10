@@ -83,16 +83,35 @@ export class VimEditorTextMode {
         );
       }
 
-      const result = this.vim.queueInput(ev.key);
-      this.executeCommandInEditor(result);
+      this.executeCommandInEditor(ev.key);
     });
   }
 
-  executeCommandInEditor(result: QueueInputReturn) {
+  executeCommandInEditor(input: string) {
+    //
+    const result = this.vim.queueInput(input);
+
+    //
     const currentMode = this.getCurrentTextMode();
+
     if (currentMode[result.targetCommand]) {
       currentMode[result.targetCommand](result.commandOutput);
     }
+  }
+
+  executeCommandSequenceInEditor(inputSequence: string | string[]) {
+    const resultList = this.vim.queueInputSequence(
+      inputSequence,
+      this.vimEditorOptions.vimExecutingMode
+    );
+
+    resultList.forEach((result) => {
+      const currentMode = this.getCurrentTextMode();
+
+      if (currentMode[result.targetCommand]) {
+        currentMode[result.targetCommand](result.commandOutput);
+      }
+    });
   }
 
   getVim() {

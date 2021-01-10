@@ -1,4 +1,7 @@
+import { VimCommandOutput } from "./../vim/vim";
 import { Logger } from "modules/debug/logger";
+import { isValidHorizontalPosition } from "modules/vim/modes/modes";
+import { Cursor } from "modules/vim/vim";
 import {
   getComputedValueFromPixelString,
   getCssVar,
@@ -6,9 +9,6 @@ import {
 } from "../css/css-variables";
 
 const logger = new Logger({ scope: "AbstractTextMode" });
-
-const CARET_NORMAL_CLASS = "caret-normal";
-const CARET_INSERT_CLASS = "caret-insert";
 
 export abstract class AbstractTextMode {
   children: NodeListOf<Element>;
@@ -30,46 +30,36 @@ export abstract class AbstractTextMode {
     this.caretHeight = getCssVar("--caret-size-height");
   }
 
+  cursorHorizontalMovement(newCursorValue?: Cursor) {
+    //
+    this.commenKeyFunctionality();
+
+    //
+    const newLeft = newCursorValue.col * this.caretWidth;
+    const parentWidth = getValueFromPixelString(
+      getComputedStyle(this.parentElement).width
+    );
+
+    const activeChildText = this.children[newCursorValue.line].textContent;
+    if (isValidHorizontalPosition(newLeft, activeChildText)) {
+      return;
+    }
+
+    this.caretElement.style.left = `${newLeft}px`;
+  }
+
   cursorUp() {
     this.commenKeyFunctionality();
   }
   cursorDown() {
     this.commenKeyFunctionality();
   }
-  cursorRight() {
-    this.commenKeyFunctionality();
-
-    const currentCaretLeft = getValueFromPixelString(
-      this.caretElement.style.left
-    );
-
-    const newLeft = currentCaretLeft + this.caretWidth;
-    const parentWidth = getValueFromPixelString(
-      getComputedStyle(this.parentElement).width
-    );
-
-    /**
-     * TODO: Only until word end
-     */
-    if (newLeft > parentWidth) {
-      return;
-    }
-
-    this.caretElement.style.left = `${newLeft}px`;
+  cursorRight(commandOutput: VimCommandOutput) {
+    this.cursorHorizontalMovement(commandOutput?.cursor);
+    return;
   }
-
-  cursorLeft() {
-    this.commenKeyFunctionality();
-    const currentCaretLeft = getValueFromPixelString(
-      this.caretElement.style.left
-    );
-
-    const newLeft = currentCaretLeft - this.caretWidth;
-
-    if (newLeft < 0) {
-      return;
-    }
-    this.caretElement.style.left = `${newLeft}px`;
+  cursorLeft(commandOutput: VimCommandOutput) {
+    this.cursorHorizontalMovement(commandOutput?.cursor);
   }
 
   commenKeyFunctionality() {
