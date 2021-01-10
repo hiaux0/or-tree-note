@@ -272,7 +272,8 @@ export class Vim {
       resultList.push(this.queueInput(input));
     });
 
-    return this.accumulateResults(resultList);
+    console.log("TCL: Vim -> getCommandName -> resultList", resultList);
+    return this.batchResults(resultList);
   }
 
   /** */
@@ -304,7 +305,7 @@ export class Vim {
     return result;
   }
   /** */
-  accumulateResults(resultList: QueueInputReturn[]): QueueInputReturn[] {
+  batchResults(resultList: QueueInputReturn[]): QueueInputReturn[] {
     const accumulatedResult = resultList.filter(
       (result) => result.commandOutput
     );
