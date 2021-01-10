@@ -17,7 +17,7 @@ describe("Aurelia skeleton app", () => {
       .invoke("attr", "style")
       .should("be.undefined");
 
-    cy.main().type("l");
+    cy.vim("l");
 
     cy.getCssVar("--caret-size-width").then((caretWidth) => {
       cy.get("%caret")
@@ -28,7 +28,7 @@ describe("Aurelia skeleton app", () => {
   });
 
   it("Should write text", () => {
-    cy.main().type("i@");
+    cy.vim("i@");
 
     cy.get(".editor-line")
       .invoke("text")
@@ -38,7 +38,7 @@ describe("Aurelia skeleton app", () => {
   });
 
   it("Dev: Escape in insert mode should not print escape", () => {
-    cy.main().type("i{esc}");
+    cy.vim("i{esc}");
     cy.get(".editor-line")
       .invoke("text")
       .then((updatedContent) => {
@@ -46,7 +46,7 @@ describe("Aurelia skeleton app", () => {
       });
   });
   it("Dev: Escape in insert mode, then queue key in normal should not type out", () => {
-    cy.main().type("i{esc}l");
+    cy.vim("i{esc}l");
     cy.get(".editor-line")
       .invoke("text")
       .then((updatedContent) => {

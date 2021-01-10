@@ -19,6 +19,8 @@ import "./commands";
 import "./commands/e2e-app";
 //
 import "./commands/css/e2e-css-variables";
+//
+import "./commands/vim/e2e-vim";
 
 // Alternatively you can use CommonJS syntax:
 // require('./commands');
