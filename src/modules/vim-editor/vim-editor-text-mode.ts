@@ -55,11 +55,6 @@ export class VimEditorTextMode {
     });
   }
 
-  isModifierKey(input: string): input is ModifiersType {
-    const modifierInput = input as ModifiersType;
-    return MODIFIERS.includes(modifierInput);
-  }
-
   initVim() {
     this.vim = new Vim(this.elementText);
   }
@@ -67,15 +62,6 @@ export class VimEditorTextMode {
   initKeys() {
     hotkeys("*", (ev) => {
       logger.debug(["-------------- Key pressed: %s", ev.key]);
-
-      if (
-        this.isModifierKey(ev.key) &&
-        this.vim.getCurrentMode().currentMode === VimMode.INSERT
-      ) {
-        // this.modifierKeyPressed(ev.key);
-        console.log("TODO: modifierKeyPressed");
-        return;
-      }
 
       //
       if (
