@@ -77,12 +77,20 @@ describe("Aurelia skeleton app", () => {
         expect(updatedContent).equal(initialContent);
       });
   });
-  it.only("DEV: i^{esc}", () => {
+  it("DEV: i^{esc}", () => {
     cy.vim("i^{esc}l");
     cy.get(".editor-line")
       .invoke("text")
       .then((updatedContent) => {
         expect(updatedContent).equal(`^${initialContent}`);
+      });
+  });
+  it.only("DEV: iAB{esc}", () => {
+    cy.vim("iAB{esc}");
+    cy.get(".editor-line")
+      .invoke("text")
+      .then((updatedContent) => {
+        expect(updatedContent).equal(`AB${initialContent}`);
       });
   });
 });

@@ -155,7 +155,7 @@ export class Vim {
     //
     let targetKeyBinding;
 
-    if (this.potentialCommands) {
+    if (this.potentialCommands?.length) {
       targetKeyBinding = this.potentialCommands;
       //
     } else {
@@ -183,6 +183,10 @@ export class Vim {
 
     //
     let targetCommand;
+    console.log(
+      "TCL: Vim -> findPotentialCommand -> targetKeyBinding",
+      targetKeyBinding
+    );
     const potentialCommands = targetKeyBinding.filter((keyBinding) => {
       const result = filterStringByCharSequence(keyBinding.key, keySequence);
       return result;
@@ -192,6 +196,7 @@ export class Vim {
     });
 
     if (potentialCommands.length === 0) {
+      this.emptyQueuedKeys();
       throw new Error("Empty Array");
     } else if (
       potentialCommands.length === 1 &&
@@ -215,7 +220,9 @@ export class Vim {
 
     try {
       ({ targetCommand, potentialCommands } = this.findPotentialCommand(input));
-    } catch {}
+    } catch (error) {
+      logger.debug(["Error: %s", error], { onlyVerbose: true });
+    }
 
     //
     if (!targetCommand) {
@@ -250,6 +257,7 @@ export class Vim {
 
   emptyQueuedKeys() {
     this.queuedKeys = [];
+    this.potentialCommands = [];
   }
 
   /** *************/
