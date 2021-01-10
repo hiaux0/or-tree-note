@@ -3,7 +3,12 @@ import { Vim, VimMode } from "modules/vim/vim";
 import { VimEditorOptions } from "./vim-editor";
 import hotkeys from "hotkeys-js";
 import { Logger } from "modules/debug/logger";
-import { ESCAPE, INSERT_MODE } from "resources/keybindings/app.keys";
+import {
+  ESCAPE,
+  INSERT_MODE,
+  MODIFIERS,
+  ModifiersType,
+} from "resources/keybindings/app.keys";
 import { NormalTextMode } from "./normal-text-mode/normal-text-mode";
 import { InsertTextMode } from "./insert-text-mode/insert-text-mode";
 import { AbstractTextMode } from "./abstract-text-mode";
@@ -59,6 +64,9 @@ export class VimEditorTextMode {
     hotkeys("*", (ev) => {
       logger.debug(["-------------- Key pressed: %s", ev.key]);
 
+      if (this.isModifierKey(ev.key)) {
+        return;
+      }
       //
       if (
         ev.key === INSERT_MODE &&
@@ -81,6 +89,11 @@ export class VimEditorTextMode {
 
       this.executeCommandInEditor(ev.key);
     });
+  }
+
+  isModifierKey(input: string): input is ModifiersType {
+    const modifierInput = input as ModifiersType;
+    return MODIFIERS.includes(modifierInput);
   }
 
   executeCommandInEditor(input: string) {
