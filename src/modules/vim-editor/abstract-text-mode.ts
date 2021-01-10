@@ -41,7 +41,7 @@ export abstract class AbstractTextMode {
     );
 
     const activeChildText = this.children[newCursorValue.line].textContent;
-    if (isValidHorizontalPosition(newLeft, activeChildText)) {
+    if (!isValidHorizontalPosition(newCursorValue.col, activeChildText)) {
       return;
     }
 
