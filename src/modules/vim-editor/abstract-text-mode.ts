@@ -1,6 +1,5 @@
 import { VimCommandOutput } from "./../vim/vim";
 import { Logger } from "modules/debug/logger";
-import { isValidHorizontalPosition } from "modules/vim/modes/modes";
 import { Cursor } from "modules/vim/vim";
 import {
   getComputedValueFromPixelString,

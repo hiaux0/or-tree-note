@@ -1,5 +1,5 @@
 import { VimMode } from "../vim";
-import { AbstractMode } from "./modes";
+import { AbstractMode } from "./abstract-mode";
 
 export class NormalMode extends AbstractMode {
   currentMode = VimMode.NORMAL;

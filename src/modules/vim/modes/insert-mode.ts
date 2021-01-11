@@ -1,4 +1,4 @@
-import { AbstractMode } from "./modes";
+import { AbstractMode } from "./abstract-mode";
 import { insert, replaceAt } from "modules/string/string";
 import { VimCommandOutput, VimMode } from "../vim";
 
