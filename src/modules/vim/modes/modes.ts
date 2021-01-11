@@ -7,12 +7,13 @@ export function isValidHorizontalPosition(
   cursorCol: number,
   activeInput: string
 ) {
-  if (cursorCol > activeInput.length) {
-    return false;
+  let result = true;
+  if (cursorCol > activeInput.length - 1) {
+    result = false;
   } else if (cursorCol < 0) {
-    return false;
+    result = false;
   }
-  return true;
+  return result;
 }
 
 export abstract class AbstractMode {
@@ -25,14 +26,12 @@ export abstract class AbstractMode {
   activeInput: string;
   currentMode: VimMode;
 
-  constructor(public wholeInput: string[], public cursor: Cursor) {
-    this.activeInput = wholeInput[cursor.line];
-  }
+  constructor(public vimCommandOutput: VimCommandOutput) {}
 
   executeCommand(
     commandName: string,
     commandValue: string,
-    currentMode?: VimMode
+    currentMode: VimMode
   ): VimCommandOutput {
     if (!this[commandName]) {
       logger.debug(
@@ -49,47 +48,60 @@ export abstract class AbstractMode {
     const result = this[commandName](commandValue) as VimCommandOutput;
 
     if (result.text) {
-      this.activeInput = result.text;
+      this.vimCommandOutput.text = result.text;
     }
 
     return result;
   }
 
   cursorRight(): VimCommandOutput {
-    const updaterCursorCol = this.cursor.col + 1;
+    const updaterCursorCol = this.vimCommandOutput.cursor.col + 1;
 
-    if (!this.isValidHorizontalPosition(updaterCursorCol)) {
-      return { cursor: { ...this.cursor } };
+    if (
+      !isValidHorizontalPosition(updaterCursorCol, this.vimCommandOutput.text)
+    ) {
+      return {
+        cursor: { ...this.vimCommandOutput.cursor },
+        text: this.vimCommandOutput.text,
+      };
     }
 
-    this.cursor.col = updaterCursorCol;
-    return { cursor: { ...this.cursor } };
+    this.vimCommandOutput.cursor.col = updaterCursorCol;
+    return {
+      cursor: { ...this.vimCommandOutput.cursor },
+      text: this.vimCommandOutput.text,
+    };
   }
   cursorLeft(): VimCommandOutput {
-    const updaterCursorCol = this.cursor.col - 1;
+    const updaterCursorCol = this.vimCommandOutput.cursor.col - 1;
 
-    if (!this.isValidHorizontalPosition(updaterCursorCol)) {
-      return { cursor: { ...this.cursor } };
+    if (
+      !isValidHorizontalPosition(updaterCursorCol, this.vimCommandOutput.text)
+    ) {
+      return {
+        cursor: { ...this.vimCommandOutput.cursor },
+        text: this.vimCommandOutput.text,
+      };
     }
 
-    this.cursor.col = updaterCursorCol;
-    return { cursor: { ...this.cursor } };
+    this.vimCommandOutput.cursor.col = updaterCursorCol;
+    return {
+      cursor: { ...this.vimCommandOutput.cursor },
+      text: this.vimCommandOutput.text,
+    };
   }
   cursorUp(): VimCommandOutput {
-    this.cursor.line -= 1;
-    return { cursor: { ...this.cursor } };
+    this.vimCommandOutput.cursor.line -= 1;
+    return {
+      cursor: { ...this.vimCommandOutput.cursor },
+      text: this.vimCommandOutput.text,
+    };
   }
   cursorDown(): VimCommandOutput {
-    this.cursor.line += 1;
-    return { cursor: { ...this.cursor } };
-  }
-  //
-  isValidHorizontalPosition(cursorCol: number) {
-    if (cursorCol > this.activeInput.length) {
-      return false;
-    } else if (cursorCol < 0) {
-      return false;
-    }
-    return true;
+    this.vimCommandOutput.cursor.line += 1;
+    return {
+      cursor: { ...this.vimCommandOutput.cursor },
+      text: this.vimCommandOutput.text,
+    };
   }
 }

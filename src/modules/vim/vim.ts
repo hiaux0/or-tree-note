@@ -79,14 +79,21 @@ export class Vim {
   potentialCommands: VimCommand[];
   /** If a command did not trigger, save key */
   queuedKeys: string[] = [];
+  vimCommandOutput: VimCommandOutput;
 
   constructor(
     public wholeInput: string[],
     public cursor: Cursor = { line: 0, col: 0 },
     public vimOptions: VimOptions = defaultVimOptions
   ) {
-    this.normalMode = new NormalMode(wholeInput, cursor);
-    this.insertMode = new InsertMode(wholeInput, cursor);
+    const activeInput = wholeInput[cursor.line];
+    const vimCommandOutput: VimCommandOutput = {
+      text: activeInput,
+      cursor,
+    };
+
+    this.normalMode = new NormalMode(vimCommandOutput);
+    this.insertMode = new InsertMode(vimCommandOutput);
 
     this.keyBindings = vimOptions.keyBindings;
 
@@ -141,10 +148,15 @@ export class Vim {
 
   executeCommand<CommandType = any>(
     commandName: VimCommandNames,
-    commandValue?: string
+    commandInput?: string
   ): VimCommandOutput {
     const currentMode = this.getCurrentMode();
-    return currentMode.executeCommand(commandName, commandValue) as CommandType;
+    const commandOutput = currentMode.executeCommand(
+      commandName,
+      commandInput
+    ) as CommandType;
+
+    return commandOutput;
   }
 
   /**
@@ -187,10 +199,7 @@ export class Vim {
 
     //
     let targetCommand;
-    console.log(
-      "TCL: Vim -> findPotentialCommand -> targetKeyBinding",
-      targetKeyBinding
-    );
+
     const potentialCommands = targetKeyBinding.filter((keyBinding) => {
       const result = filterStringByCharSequence(keyBinding.key, keySequence);
       return result;
@@ -273,22 +282,31 @@ export class Vim {
     logger.debug(["Received input: %s", input]);
 
     //
-    const targetCommand = this.getCommandName(input);
+    const targetCommandName = this.getCommandName(input);
 
-    if (targetCommand === "enterInsertTextMode") {
+    if (targetCommandName === "enterInsertTextMode") {
       this.enterInsertTextMode();
-      return { commandOutput: null, targetCommand };
-    } else if (targetCommand === "enterNormalTextMode") {
+      return { commandOutput: null, targetCommand: targetCommandName };
+    } else if (targetCommandName === "enterNormalTextMode") {
       this.enterNormalTextMode();
-      return { commandOutput: null, targetCommand };
+      return { commandOutput: null, targetCommand: targetCommandName };
     }
 
     //
-    const commandOutput = this.executeCommand(targetCommand, input);
+    const commandOutput = this.executeCommand(targetCommandName, input);
+    this.setVimState(commandOutput);
 
     //
-    const result = { commandOutput, targetCommand };
+    const result = { commandOutput, targetCommand: targetCommandName };
+
+    logger.debug(["Result of input: %s is: %o", input, result], {
+      onlyVerbose: true,
+    });
+
     return result;
+  }
+  setVimState(commandOutput: VimCommandOutput) {
+    this.vimCommandOutput = commandOutput;
   }
   /** */
   queueInputSequence(

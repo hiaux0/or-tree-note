@@ -35,10 +35,6 @@ export abstract class AbstractTextMode {
 
     //
     const newLeft = newCursorValue.col * this.caretWidth;
-    const activeChildText = this.children[newCursorValue.line].textContent;
-    if (!isValidHorizontalPosition(newCursorValue.col, activeChildText)) {
-      return;
-    }
 
     this.caretElement.style.left = `${newLeft}px`;
   }

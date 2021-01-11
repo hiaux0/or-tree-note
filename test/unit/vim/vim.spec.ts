@@ -132,15 +132,15 @@ describe("C: Mode - Insert", () => {
     it("F: Modifier key Escape", () => {
       const result = vim.findPotentialCommand("Escape");
       expect(result.targetCommand).toEqual({
-        key: "Escape",
+        key: "<Escape>",
         command: "enterNormalTextMode",
       });
     });
     //
-    it("F: Modifier key Escape (<esc>)", () => {
+    fit("F: Modifier key Escape (<esc>)", () => {
       const result = vim.findPotentialCommand("<esc>");
       expect(result.targetCommand).toEqual({
-        key: "Escape",
+        key: "<Escape>",
         command: "enterNormalTextMode",
       });
     });

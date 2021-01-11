@@ -111,4 +111,14 @@ describe("Aurelia skeleton app", () => {
         expect(updatedContent).equal(`ABCDEF${initialContent}`);
       });
   });
+  const input2 = `i^{esc}${"l".repeat(9)}`;
+  it(`DEV: ${input2}`, () => {
+    cy.vim(input2);
+    cy.getCssVar("--caret-size-width").then((caretWidth) => {
+      cy.get("%caret")
+        .should("exist")
+        .invoke({ timeout: 100 }, "attr", "style")
+        .should("contain", caretWidth * 10);
+    });
+  });
 });

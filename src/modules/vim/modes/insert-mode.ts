@@ -6,11 +6,15 @@ export class InsertMode extends AbstractMode {
   currentMode = VimMode.INSERT;
 
   type(newInput: string): VimCommandOutput {
-    const updatedInput = insert(this.activeInput, this.cursor.col, newInput);
+    const updatedInput = insert(
+      this.vimCommandOutput.text,
+      this.vimCommandOutput.cursor.col,
+      newInput
+    );
     super.cursorRight();
     return {
       text: updatedInput,
-      cursor: { ...this.cursor },
+      cursor: { ...this.vimCommandOutput.cursor },
     };
   }
 
@@ -20,25 +24,33 @@ export class InsertMode extends AbstractMode {
 
   shift() {
     return {
-      text: this.activeInput,
-      cursor: { ...this.cursor },
+      text: this.vimCommandOutput.text,
+      cursor: { ...this.vimCommandOutput.cursor },
     };
   }
 
   backspace(): VimCommandOutput {
-    const updatedInput = replaceAt(this.activeInput, this.cursor.col, "");
+    const updatedInput = replaceAt(
+      this.vimCommandOutput.text,
+      this.vimCommandOutput.cursor.col,
+      ""
+    );
     super.cursorLeft();
     return {
       text: updatedInput,
-      cursor: { ...this.cursor },
+      cursor: { ...this.vimCommandOutput.cursor },
     };
   }
 
   delete(): VimCommandOutput {
-    const updatedInput = replaceAt(this.activeInput, this.cursor.col + 1, "");
+    const updatedInput = replaceAt(
+      this.vimCommandOutput.text,
+      this.vimCommandOutput.cursor.col + 1,
+      ""
+    );
     return {
       text: updatedInput,
-      cursor: { ...this.cursor },
+      cursor: { ...this.vimCommandOutput.cursor },
     };
   }
 }
