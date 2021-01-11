@@ -18,6 +18,13 @@ export class InsertMode extends AbstractMode {
     return super.executeCommand(commandName, commandValue, this.currentMode);
   }
 
+  shift() {
+    return {
+      text: this.activeInput,
+      cursor: { ...this.cursor },
+    };
+  }
+
   backspace(): VimCommandOutput {
     const updatedInput = replaceAt(this.activeInput, this.cursor.col, "");
     super.cursorLeft();

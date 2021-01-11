@@ -20,6 +20,7 @@ export default {
     { key: "<Escape>", command: "enterNormalTextMode" },
     { key: "<Backspace>", command: "backspace" },
     { key: "<Delete>", command: "delete" },
+    { key: "<Shift>", command: "shift" },
   ],
   synonyms: {
     "<esc>": "<Escape>",

@@ -85,7 +85,7 @@ describe("Aurelia skeleton app", () => {
         expect(updatedContent).equal(`^${initialContent}`);
       });
   });
-  it.only("DEV: iAB{esc}", () => {
+  it("DEV: iAB{esc}", () => {
     cy.vim("iAB{esc}");
     cy.get(".editor-line")
       .invoke("text")
