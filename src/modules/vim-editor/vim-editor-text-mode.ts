@@ -64,9 +64,6 @@ export class VimEditorTextMode {
     hotkeys("*", (ev) => {
       logger.debug(["-------------- Key pressed: %s", ev.key]);
 
-      if (this.isModifierKey(ev.key)) {
-        return;
-      }
       //
       if (
         ev.key === INSERT_MODE &&

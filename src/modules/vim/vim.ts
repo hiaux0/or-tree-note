@@ -6,6 +6,7 @@ import { InsertMode } from "modules/vim/modes/insert-mode";
 import { InsertTextModeKeybindings } from "./modes/insert-mode-commands";
 import keyBindingsJson from "../../resources/keybindings/key-bindings";
 import { groupBy } from "lodash";
+import { SPECIAL_KEYS } from "resources/keybindings/app.keys";
 
 const logger = new Logger({ scope: "Vim" });
 
@@ -153,6 +154,9 @@ export class Vim {
    */
   findPotentialCommand(input: string): FindPotentialCommandReturn {
     //
+    input = this.ensureVimModifier(input);
+
+    //
     let targetKeyBinding;
 
     if (this.potentialCommands?.length) {
@@ -169,8 +173,8 @@ export class Vim {
 
     if (this.queuedKeys.length) {
       keySequence = this.queuedKeys.join("").concat(input);
-    } else if (input.startsWith("<")) {
-      const synonymInput = this.keyBindings.synonyms[input.toLowerCase()];
+    } else if (this.getSynonymModifier(input)) {
+      const synonymInput = this.getSynonymModifier(input);
       if (synonymInput) {
         keySequence = synonymInput;
       }
@@ -268,6 +272,7 @@ export class Vim {
   queueInput(input: string): QueueInputReturn {
     logger.debug(["Received input: %s", input]);
 
+    //
     const targetCommand = this.getCommandName(input);
 
     if (targetCommand === "enterInsertTextMode") {
@@ -277,8 +282,11 @@ export class Vim {
       this.enterNormalTextMode();
       return { commandOutput: null, targetCommand };
     }
+
+    //
     const commandOutput = this.executeCommand(targetCommand, input);
 
+    //
     const result = { commandOutput, targetCommand };
     return result;
   }
@@ -306,6 +314,31 @@ export class Vim {
     }
 
     return this.batchResults(resultList);
+  }
+
+  /** */
+  ensureVimModifier(input: string) {
+    SPECIAL_KEYS;
+    if (SPECIAL_KEYS.includes(input)) {
+      const asVimModifier = `<${input}>`;
+
+      logger.debug(["Converted to vim modifier key: %s", asVimModifier], {
+        onlyVerbose: true,
+      });
+      return asVimModifier;
+    }
+    return input;
+  }
+
+  getSynonymModifier(input: string) {
+    const synonymInput = this.keyBindings.synonyms[input.toLowerCase()];
+
+    if (synonymInput) {
+      logger.debug(["Found synonym: %s for %s", synonymInput, input]);
+      return synonymInput;
+    } else {
+      return input;
+    }
   }
 
   /** */

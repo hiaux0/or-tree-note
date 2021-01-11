@@ -59,6 +59,7 @@ export const MODIFIERS = [
   "⇪",
   "Caps Lock(Capital)",
   "↩︎",
+  "Escape",
   "Enter",
   "Backspace",
   "CapsLock",

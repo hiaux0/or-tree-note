@@ -93,4 +93,22 @@ describe("Aurelia skeleton app", () => {
         expect(updatedContent).equal(`AB${initialContent}`);
       });
   });
+  const input = "iA{esc}";
+  it(`DEV: ${input}`, () => {
+    cy.vim(input);
+    cy.get(".editor-line")
+      .invoke("text")
+      .then((updatedContent) => {
+        expect(updatedContent).equal(`A${initialContent}`);
+      });
+  });
+  const input1 = "iABCDEF{esc}";
+  it(`DEV: ${input1}`, () => {
+    cy.vim(input1);
+    cy.get(".editor-line")
+      .invoke("text")
+      .then((updatedContent) => {
+        expect(updatedContent).equal(`ABCDEF${initialContent}`);
+      });
+  });
 });

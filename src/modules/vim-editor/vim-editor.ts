@@ -35,6 +35,9 @@ export class VimEditor {
       vimEditorTextMode.initKeys();
       this.vim = vimEditorTextMode.getVim();
     }
+
+    // vimEditorTextMode.executeCommandSequenceInEditor("llli^");
+    // vimEditorTextMode.executeCommandSequenceInEditor("l");
   }
 
   getMode() {
