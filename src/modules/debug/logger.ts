@@ -1,6 +1,7 @@
 const debugMode = true;
 
 interface LogOptions {
+  /////////////// Log
   logMethod?: "log" | "trace" | "error";
   log?: boolean;
   logLevel?: "info" | "verbose";
@@ -9,11 +10,14 @@ interface LogOptions {
    * Even in debug mode, only log, when explicitely set via `log`.
    */
   focusedLogging?: boolean;
+  /////////////// Error
   throwOnError?: boolean;
   /** Mark a logger as error */
   isError?: boolean;
+  /////////////// Custom output
   /** */
   scope?: string;
+  prefix?: number;
 }
 
 const defautLogOptions: LogOptions = {
@@ -45,11 +49,14 @@ export class Logger {
       }
 
       //
-      const [withPlaceholder, ...placeholderValues] = messages;
-      const messageWithLogScope = [
-        `[${logOpt.scope}] ${withPlaceholder}`,
-        ...placeholderValues,
-      ];
+      const [withSubstitutions, ...placeholderValues] = messages;
+      let updatedSubstitutions = `[${logOpt.scope}] ${withSubstitutions}`;
+
+      if (logOpt.prefix) {
+        updatedSubstitutions = `- (${logOpt.prefix}.) - ${updatedSubstitutions}`;
+      }
+
+      const messageWithLogScope = [updatedSubstitutions, ...placeholderValues];
 
       //
       if (logOpt.throwOnError && logOpt.isError) {
