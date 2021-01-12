@@ -2,7 +2,8 @@ const debugMode = true;
 
 interface LogOptions {
   /////////////// Log
-  logMethod?: "log" | "trace" | "error";
+  // logMethod?: "log" | "trace" | "error";
+  logMethod?: string;
   log?: boolean;
   logLevel?: "info" | "verbose";
   onlyVerbose?: boolean;
@@ -18,12 +19,14 @@ interface LogOptions {
   /** */
   scope?: string;
   prefix?: number;
+  useTable?: boolean;
 }
 
 const defautLogOptions: LogOptions = {
   logMethod: "log",
   logLevel: "verbose",
   focusedLogging: false,
+  useTable: true,
   throwOnError: true,
 };
 
@@ -73,6 +76,13 @@ export class Logger {
 
       //
       console[logOpt.logMethod](...messageWithLogScope);
+
+      //
+      if (logOpt.useTable) {
+        if (Array.isArray(messageWithLogScope[1])) {
+          console.table(messageWithLogScope[1]);
+        }
+      }
     }
   }
 }
