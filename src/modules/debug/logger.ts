@@ -7,6 +7,11 @@ interface LogOptions {
   logLevel?: "info" | "verbose";
   onlyVerbose?: boolean;
   /**
+   * Unless specified by `expandGroupBasedOnString`
+   * TODO: `expandGroupBasedOnString` could be renamed to sth more suitable
+   */
+  dontLogUnlessSpecified?: boolean;
+  /**
    * Even in debug mode, only log, when explicitely set via `log`.
    */
   focusedLogging?: boolean;
@@ -30,6 +35,7 @@ interface LogOptions {
 const defautLogOptions: LogOptions = {
   logMethod: "log",
   logLevel: "verbose",
+  dontLogUnlessSpecified: true,
   focusedLogging: false,
   useTable: true,
   allGroupsCollapsedButSpecified: true,
@@ -84,10 +90,18 @@ export class Logger {
       }
 
       //
+      const isExpandGroupBasedOnString = placeholderValues.includes(
+        logOpt.expandGroupBasedOnString
+      );
+
+      const dontLog =
+        logOpt.dontLogUnlessSpecified && !isExpandGroupBasedOnString;
+      if (dontLog) {
+        return;
+      }
+
+      //
       if (logOpt.startGroupId) {
-        const isExpandGroupBasedOnString = placeholderValues.includes(
-          logOpt.expandGroupBasedOnString
-        );
         const onlyExpandSpecified =
           logOpt.allGroupsCollapsedButSpecified && isExpandGroupBasedOnString;
 
