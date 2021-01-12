@@ -27,23 +27,30 @@ export class NormalMode extends AbstractMode {
   }
 
   getTokenAtIndex(index: number) {
+    if (index < 0) {
+      index = 0;
+    } else if (index > this.tokenizedInput.length - 1) {
+      index = this.tokenizedInput.length - 1;
+    }
+
     const targetToken = this.tokenizedInput[index];
+
     return targetToken;
   }
 
   cursorWordForwardEnd(): VimCommandOutput {
-    let token = this.getTokenUnderCursor();
-    const isAtEnd = token.end === this.vimCommandOutput.cursor.col;
+    let currentToken = this.getTokenUnderCursor();
+    const isAtEnd = currentToken.end === this.vimCommandOutput.cursor.col; /*?*/
 
     let resultCol;
     if (isAtEnd) {
-      token = this.getTokenAtIndex(token.index + 1);
-      resultCol = token.end - 1;
+      const nextToken = this.getTokenAtIndex(currentToken.index + 1); /*?*/
+      resultCol = nextToken.end;
     } else {
-      resultCol = token.end;
+      resultCol = currentToken.end;
     }
 
-    if (token) {
+    if (currentToken) {
       this.vimCommandOutput.cursor.col = resultCol;
     }
 

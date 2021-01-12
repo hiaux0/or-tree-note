@@ -1,3 +1,5 @@
+// Naming based on https://vim.rtorr.com/
+
 export default {
   normal: [
     { key: "h", command: "cursorLeft" },
@@ -5,6 +7,7 @@ export default {
     { key: "k", command: "cursorUp" },
     { key: "l", command: "cursorRight" },
     { key: "u", command: "cursorDown" },
+    { key: "b", command: "cursorBackwordsStartWord" }, // jump backwards to the start of a word
     { key: "e", command: "cursorWordForwardEnd" },
     { key: "w", command: "cursorWordForwardStart" },
     { key: "<ArrowLeft>", command: "cursorLeft" },

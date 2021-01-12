@@ -86,7 +86,7 @@ describe("C: Normal Mode", () => {
 
   //
   describe("C: Cursor", () => {
-    describe("C: #isCursorInWord", () => {
+    describe("C: #getTokenUnderCursor", () => {
       it("F: true - 1", () => {
         const vimCommandOut: VimCommandOutput = {
           text: "foo bar",
@@ -103,7 +103,7 @@ describe("C: Normal Mode", () => {
         };
         normalMode = new NormalMode(vimCommandOut);
         const result = normalMode.getTokenUnderCursor();
-        expect(result).toEqual({ end: 7, start: 4, string: "bar", index: 1 });
+        expect(result).toEqual({ end: 6, start: 4, string: "bar", index: 1 });
       });
 
       it("F: false", () => {
@@ -115,6 +115,36 @@ describe("C: Normal Mode", () => {
         const result = normalMode.getTokenUnderCursor();
         expect(result).toBeUndefined();
       });
+    });
+  });
+
+  describe("#cursorWordForwardEnd", () => {
+    it("F: e", () => {
+      let vimCommandOut: VimCommandOutput = {
+        text: "foo bar",
+        cursor: { col: 0, line: 0 },
+      };
+      normalMode = new NormalMode(vimCommandOut);
+      const result = normalMode.cursorWordForwardEnd();
+      expect(result).toEqual({ cursor: { col: 2, line: 0 }, text: "foo bar" });
+    });
+    it("F: ee", () => {
+      let vimCommandOut: VimCommandOutput = {
+        text: "foo bar",
+        cursor: { col: 2, line: 0 },
+      };
+      normalMode = new NormalMode(vimCommandOut);
+      const result = normalMode.cursorWordForwardEnd();
+      expect(result).toEqual({ cursor: { col: 6, line: 0 }, text: "foo bar" });
+    });
+    it("F: eee - e at end of line", () => {
+      let vimCommandOut: VimCommandOutput = {
+        text: "foo bar",
+        cursor: { col: 6, line: 0 },
+      };
+      normalMode = new NormalMode(vimCommandOut);
+      const result = normalMode.cursorWordForwardEnd();
+      expect(result).toEqual({ cursor: { col: 6, line: 0 }, text: "foo bar" });
     });
   });
 });

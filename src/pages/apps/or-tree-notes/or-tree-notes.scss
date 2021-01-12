@@ -63,10 +63,17 @@ or-tree-notes {
       // z-index: -1;
 
       &.caret-NORMAL {
-        background: $caretBackgroundColor;
         border: 1px solid black;
         &.caret-blinking {
           @include caretBlinking(blinkNormal);
+        }
+        &::after {
+          content: ".";
+          background: red;
+          width: 2px;
+          display: block;
+          z-index: 2;
+          position: relative;
         }
       }
 

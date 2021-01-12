@@ -39,7 +39,7 @@ export function tokenizeInput(input: string): TokenizedString[] {
     const token: TokenizedString = {
       string: matchedString,
       start: matchIndex,
-      end: resultIndex + matchIndex + matchedString.length - 1,
+      end: matchIndex + matchedString.length - 1,
       index: resultIndex,
     };
     return token;

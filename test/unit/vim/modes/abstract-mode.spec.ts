@@ -72,7 +72,7 @@ describe("Vim", () => {
         const result = tokenizeInput(input);
         expect(result).toEqual([
           { end: 2, start: 0, string: "foo", index: 0 },
-          { end: 7, start: 4, string: "bar", index: 1 },
+          { end: 6, start: 4, string: "bar", index: 1 },
         ]);
       });
     });
