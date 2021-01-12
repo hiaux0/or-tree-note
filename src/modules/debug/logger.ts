@@ -7,6 +7,11 @@ interface LogOptions {
   logLevel?: "info" | "verbose";
   onlyVerbose?: boolean;
   /**
+   * TODO
+   * Don't use console.log(obj), use console.log(JSON.parse(JSON.stringify(obj))).
+   */
+  deepLogObjects?: boolean;
+  /**
    * Unless specified by `expandGroupBasedOnString`
    * TODO: `expandGroupBasedOnString` could be renamed to sth more suitable
    */
