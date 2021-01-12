@@ -26,14 +26,29 @@ export class NormalMode extends AbstractMode {
     return targetToken;
   }
 
+  getTokenAtIndex(index: number) {
+    const targetToken = this.tokenizedInput[index];
+    return targetToken;
+  }
+
   cursorWordForwardEnd(): VimCommandOutput {
-    const token = this.getTokenUnderCursor();
+    let token = this.getTokenUnderCursor();
+    const isAtEnd = token.end === this.vimCommandOutput.cursor.col;
+
+    let resultCol;
+    if (isAtEnd) {
+      token = this.getTokenAtIndex(token.index + 1);
+      resultCol = token.end - 1;
+    } else {
+      resultCol = token.end;
+    }
+
     if (token) {
       return {
         ...this.vimCommandOutput,
         cursor: {
           ...this.vimCommandOutput.cursor,
-          col: token.end,
+          col: resultCol,
         },
       };
     }

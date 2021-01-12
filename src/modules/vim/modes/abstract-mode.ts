@@ -7,12 +7,13 @@ export function isValidHorizontalPosition(
   cursorCol: number,
   activeInput: string
 ) {
-  let result = true;
-  if (cursorCol > activeInput.length - 1) {
-    result = false;
-  } else if (cursorCol < 0) {
-    result = false;
-  }
+  const isBigger = cursorCol > activeInput.length;
+  /**
+   * Should be > technically, but conceptionally, cursor and text index are off by one.
+   */
+  const isZero = cursorCol === 0;
+  const result = !isBigger && !isZero;
+
   return result;
 }
 
@@ -20,6 +21,7 @@ export interface TokenizedString {
   string: string;
   start: number;
   end: number;
+  index: number;
 }
 
 export function tokenizeInput(input: string): TokenizedString[] {
@@ -31,13 +33,14 @@ export function tokenizeInput(input: string): TokenizedString[] {
     matchResult.push(match);
   }
 
-  const tokens = matchResult.map((result) => {
+  const tokens = matchResult.map((result, index) => {
     const matchedString = result[0];
-    const { index } = result;
+    const { index: matchIndex } = result;
     const token: TokenizedString = {
       string: matchedString,
-      start: index,
-      end: index + matchedString.length - 1,
+      start: matchIndex,
+      end: index + matchIndex + matchedString.length - 1,
+      index,
     };
     return token;
   });
@@ -80,16 +83,46 @@ export abstract class AbstractMode {
 
     const result = this[commandName](commandValue) as VimCommandOutput;
 
+    try {
+      this.validateHorizontalCursor(result);
+    } catch {
+      return;
+    }
+
     this.vimCommandOutput = result;
 
     return result;
+  }
+
+  validateHorizontalCursor(vimCommandOutput: VimCommandOutput) {
+    const curCol = vimCommandOutput.cursor.col + 1;
+    const isValid = isValidHorizontalPosition(curCol, vimCommandOutput.text);
+
+    if (!isValid) {
+      logger.debug(
+        [
+          "[INVALID] Cursor col will be: %d, but should be between [0,%d].",
+          curCol,
+          vimCommandOutput.text.length,
+        ],
+        {
+          isError: true,
+        }
+      );
+      throw "";
+    }
+
+    return isValid;
   }
 
   cursorRight(): VimCommandOutput {
     const updaterCursorCol = this.vimCommandOutput.cursor.col + 1;
 
     if (
-      !isValidHorizontalPosition(updaterCursorCol, this.vimCommandOutput.text)
+      !isValidHorizontalPosition(
+        updaterCursorCol + 1,
+        this.vimCommandOutput.text
+      )
     ) {
       return {
         cursor: { ...this.vimCommandOutput.cursor },
@@ -107,7 +140,10 @@ export abstract class AbstractMode {
     const updaterCursorCol = this.vimCommandOutput.cursor.col - 1;
 
     if (
-      !isValidHorizontalPosition(updaterCursorCol, this.vimCommandOutput.text)
+      !isValidHorizontalPosition(
+        updaterCursorCol + 1,
+        this.vimCommandOutput.text
+      )
     ) {
       return {
         cursor: { ...this.vimCommandOutput.cursor },
