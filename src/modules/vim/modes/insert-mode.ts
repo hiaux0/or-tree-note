@@ -11,11 +11,9 @@ export class InsertMode extends AbstractMode {
       this.vimCommandOutput.cursor.col,
       newInput
     );
+    this.vimCommandOutput.text = updatedInput;
     super.cursorRight();
-    return {
-      text: updatedInput,
-      cursor: { ...this.vimCommandOutput.cursor },
-    };
+    return this.vimCommandOutput;
   }
 
   executeCommand(commandName: string, commandValue: string): VimCommandOutput {
@@ -23,10 +21,7 @@ export class InsertMode extends AbstractMode {
   }
 
   shift() {
-    return {
-      text: this.vimCommandOutput.text,
-      cursor: { ...this.vimCommandOutput.cursor },
-    };
+    return this.vimCommandOutput;
   }
 
   backspace(): VimCommandOutput {
@@ -35,11 +30,10 @@ export class InsertMode extends AbstractMode {
       this.vimCommandOutput.cursor.col,
       ""
     );
+
     super.cursorLeft();
-    return {
-      text: updatedInput,
-      cursor: { ...this.vimCommandOutput.cursor },
-    };
+    this.vimCommandOutput.text = updatedInput;
+    return this.vimCommandOutput;
   }
 
   delete(): VimCommandOutput {
@@ -48,9 +42,8 @@ export class InsertMode extends AbstractMode {
       this.vimCommandOutput.cursor.col + 1,
       ""
     );
-    return {
-      text: updatedInput,
-      cursor: { ...this.vimCommandOutput.cursor },
-    };
+
+    this.vimCommandOutput.text = updatedInput;
+    return this.vimCommandOutput;
   }
 }

@@ -33,14 +33,14 @@ export function tokenizeInput(input: string): TokenizedString[] {
     matchResult.push(match);
   }
 
-  const tokens = matchResult.map((result, index) => {
+  const tokens = matchResult.map((result, resultIndex) => {
     const matchedString = result[0];
     const { index: matchIndex } = result;
     const token: TokenizedString = {
       string: matchedString,
       start: matchIndex,
-      end: index + matchIndex + matchedString.length - 1,
-      index,
+      end: resultIndex + matchIndex + matchedString.length - 1,
+      index: resultIndex,
     };
     return token;
   });
@@ -86,7 +86,8 @@ export abstract class AbstractMode {
     try {
       this.validateHorizontalCursor(result);
     } catch {
-      return;
+      const previousOutput = this.vimCommandOutput;
+      return previousOutput;
     }
 
     this.vimCommandOutput = result;
@@ -124,17 +125,11 @@ export abstract class AbstractMode {
         this.vimCommandOutput.text
       )
     ) {
-      return {
-        cursor: { ...this.vimCommandOutput.cursor },
-        text: this.vimCommandOutput.text,
-      };
+      return this.vimCommandOutput;
     }
 
     this.vimCommandOutput.cursor.col = updaterCursorCol;
-    return {
-      cursor: { ...this.vimCommandOutput.cursor },
-      text: this.vimCommandOutput.text,
-    };
+    return this.vimCommandOutput;
   }
   cursorLeft(): VimCommandOutput {
     const updaterCursorCol = this.vimCommandOutput.cursor.col - 1;
@@ -145,30 +140,18 @@ export abstract class AbstractMode {
         this.vimCommandOutput.text
       )
     ) {
-      return {
-        cursor: { ...this.vimCommandOutput.cursor },
-        text: this.vimCommandOutput.text,
-      };
+      return this.vimCommandOutput;
     }
 
     this.vimCommandOutput.cursor.col = updaterCursorCol;
-    return {
-      cursor: { ...this.vimCommandOutput.cursor },
-      text: this.vimCommandOutput.text,
-    };
+    return this.vimCommandOutput;
   }
   cursorUp(): VimCommandOutput {
     this.vimCommandOutput.cursor.line -= 1;
-    return {
-      cursor: { ...this.vimCommandOutput.cursor },
-      text: this.vimCommandOutput.text,
-    };
+    return this.vimCommandOutput;
   }
   cursorDown(): VimCommandOutput {
     this.vimCommandOutput.cursor.line += 1;
-    return {
-      cursor: { ...this.vimCommandOutput.cursor },
-      text: this.vimCommandOutput.text,
-    };
+    return this.vimCommandOutput;
   }
 }

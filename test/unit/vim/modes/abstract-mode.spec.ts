@@ -8,15 +8,16 @@ const cursor = { line: 0, col: 0 };
 
 describe("Vim", () => {
   let vim: Vim;
-  beforeEach(() => {
-    vim = new Vim(cloneDeep(input), cloneDeep(cursor));
-  });
 
   /** *******/
   /** Modes */
   /** *******/
 
   describe("C: Modes", () => {
+    beforeEach(() => {
+      vim = new Vim(cloneDeep(input), cloneDeep(cursor));
+    });
+
     it("F: Switch to insert mode", () => {
       vim.enterInsertTextMode();
       expect(vim.activeMode).toBe(VimMode.INSERT);
@@ -32,6 +33,10 @@ describe("Vim", () => {
   /** *************/
 
   describe("C: Input Queue", () => {
+    beforeEach(() => {
+      vim = new Vim(cloneDeep(input), cloneDeep(cursor));
+    });
+
     it("F: Should execute command in Input Queue", () => {
       vim.enterInsertTextMode();
       const result = vim.queueInput("@");
@@ -62,12 +67,12 @@ describe("Vim", () => {
   /** *************/
   describe("C: Tokenizing", () => {
     describe("C: tokenizeInput", () => {
-      fit("F: Simple tokenize", () => {
+      it("F: Simple tokenize", () => {
         const input = "foo bar";
         const result = tokenizeInput(input);
         expect(result).toEqual([
-          { end: 2, start: 0, string: "foo" },
-          { end: 6, start: 4, string: "bar" },
+          { end: 2, start: 0, string: "foo", index: 0 },
+          { end: 7, start: 4, string: "bar", index: 1 },
         ]);
       });
     });

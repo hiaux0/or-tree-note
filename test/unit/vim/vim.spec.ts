@@ -8,31 +8,35 @@ let vim: Vim;
 describe("C: Mode - Normal", () => {
   describe("C: Sequenced commands", () => {
     beforeEach(() => {
-      const keyBindings: KeyBindingModes = {
-        normal: [
-          {
-            key: "foo",
-            command: "cursorDown",
-          },
-          {
-            key: "far",
-            command: "yank",
-          },
-          {
-            key: "u",
-            command: "cursorDown",
-          },
-        ],
-        insert: [],
-        synonyms: {},
-      };
-      vim = new Vim(cloneDeep(input), cloneDeep(cursor), {
-        keyBindings,
-      });
+      vim = new Vim(cloneDeep(input), cloneDeep(cursor));
       vim.enterNormalTextMode();
     });
 
     describe("Finding", () => {
+      beforeEach(() => {
+        const keyBindings: KeyBindingModes = {
+          normal: [
+            {
+              key: "foo",
+              command: "cursorDown",
+            },
+            {
+              key: "far",
+              command: "yank",
+            },
+            {
+              key: "u",
+              command: "cursorDown",
+            },
+          ],
+          insert: [],
+          synonyms: {},
+        };
+        vim = new Vim(cloneDeep(input), cloneDeep(cursor), {
+          keyBindings,
+        });
+        vim.enterNormalTextMode();
+      });
       it("F: Find potential sequenced commands - 1 char - (sideeffect)", () => {
         const result = vim.findPotentialCommand("f");
         expect(map(result.potentialCommands, "command")).toEqual([
@@ -75,6 +79,28 @@ describe("C: Mode - Normal", () => {
          * Relates to #findPotentialCommand test
          */
         it("F: Get command - Sequence", () => {
+          const keyBindings: KeyBindingModes = {
+            normal: [
+              {
+                key: "foo",
+                command: "cursorDown",
+              },
+              {
+                key: "far",
+                command: "yank",
+              },
+              {
+                key: "u",
+                command: "cursorDown",
+              },
+            ],
+            insert: [],
+            synonyms: {},
+          };
+          vim = new Vim(cloneDeep(input), cloneDeep(cursor), {
+            keyBindings,
+          });
+          vim.enterNormalTextMode();
           //
           vim.getCommandName("f");
           vim.getCommandName("o");
@@ -96,18 +122,31 @@ describe("C: Mode - Normal", () => {
         it("F: Input sequence - 1", () => {
           const result = vim.queueInputSequence("u")[0];
           expect(result.targetCommand).toBe("cursorDown");
-          expect(result.commandOutput.cursor).toEqual({ col: 0, line: 1 });
         });
-        it("F: Input sequence - lli!", () => {
-          vim = new Vim(cloneDeep(input), cloneDeep(cursor));
-          const result = vim.queueInputSequence("lli!");
+        it("F: Input sequence - ll", () => {
+          const result = vim.queueInputSequence("ll");
+
           expect(result).toEqual([
             {
-              commandOutput: { cursor: { col: 1, line: 0 } },
+              commandOutput: { cursor: { col: 1, line: 0 }, text: "foo" },
               targetCommand: "cursorRight",
             },
             {
-              commandOutput: { cursor: { col: 2, line: 0 } },
+              commandOutput: { cursor: { col: 2, line: 0 }, text: "foo" },
+              targetCommand: "cursorRight",
+            },
+          ]);
+        });
+        it("F: Input sequence - lli!", () => {
+          const result = vim.queueInputSequence("lli!");
+
+          expect(result).toEqual([
+            {
+              commandOutput: { cursor: { col: 1, line: 0 }, text: "foo" },
+              targetCommand: "cursorRight",
+            },
+            {
+              commandOutput: { cursor: { col: 2, line: 0 }, text: "foo" },
               targetCommand: "cursorRight",
             },
             { commandOutput: null, targetCommand: "enterInsertTextMode" },
@@ -137,12 +176,24 @@ describe("C: Mode - Insert", () => {
       });
     });
     //
-    fit("F: Modifier key Escape (<esc>)", () => {
+    it("F: Modifier key Escape (<esc>)", () => {
       const result = vim.findPotentialCommand("<esc>");
       expect(result.targetCommand).toEqual({
         key: "<Escape>",
         command: "enterNormalTextMode",
       });
+    });
+  });
+
+  describe("#queueInput", () => {
+    it("F: Single Input", () => {
+      const result = vim.queueInputSequence("@");
+      expect(result).toEqual([
+        {
+          commandOutput: { cursor: { col: 1, line: 0 }, text: "@foo" },
+          targetCommand: "type",
+        },
+      ]);
     });
   });
 
@@ -156,7 +207,7 @@ describe("C: Mode - Insert", () => {
         },
         { commandOutput: null, targetCommand: "enterNormalTextMode" },
         {
-          commandOutput: { cursor: { col: 2, line: 0 } },
+          commandOutput: { cursor: { col: 2, line: 0 }, text: "@foo" },
           targetCommand: "cursorRight",
         },
       ]);
@@ -174,7 +225,7 @@ describe("C: Mode - Insert", () => {
         },
         { commandOutput: null, targetCommand: "enterNormalTextMode" },
         {
-          commandOutput: { cursor: { col: 3, line: 0 } },
+          commandOutput: { cursor: { col: 3, line: 0 }, text: "@#foo" },
           targetCommand: "cursorRight",
         },
       ]);
@@ -189,7 +240,7 @@ describe("C: Mode - Insert", () => {
         },
         { commandOutput: null, targetCommand: "enterNormalTextMode" },
         {
-          commandOutput: { cursor: { col: 2, line: 0 } },
+          commandOutput: { cursor: { col: 2, line: 0 }, text: "@foo" },
           targetCommand: "cursorRight",
         },
       ]);

@@ -5,7 +5,7 @@ import { NormalMode } from "modules/vim/modes/normal-mode";
 import { InsertMode } from "modules/vim/modes/insert-mode";
 import { InsertTextModeKeybindings } from "./modes/insert-mode-commands";
 import keyBindingsJson from "../../resources/keybindings/key-bindings";
-import { groupBy } from "lodash";
+import { cloneDeep, groupBy } from "lodash";
 import { SPECIAL_KEYS } from "resources/keybindings/app.keys";
 
 const logger = new Logger({ scope: "Vim" });
@@ -156,7 +156,7 @@ export class Vim {
       commandInput
     ) as CommandType;
 
-    return commandOutput;
+    return cloneDeep(commandOutput);
   }
 
   /**
@@ -181,7 +181,7 @@ export class Vim {
     }
 
     //
-    let keySequence;
+    let keySequence: string;
 
     if (this.queuedKeys.length) {
       keySequence = this.queuedKeys.join("").concat(input);
@@ -193,7 +193,7 @@ export class Vim {
     } else {
       keySequence = input;
     }
-    logger.debug(["keySequence: %o", keySequence], {
+    logger.debug(["keySequence: %s", keySequence], {
       onlyVerbose: true,
     });
 

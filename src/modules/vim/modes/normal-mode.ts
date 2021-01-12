@@ -44,13 +44,7 @@ export class NormalMode extends AbstractMode {
     }
 
     if (token) {
-      return {
-        ...this.vimCommandOutput,
-        cursor: {
-          ...this.vimCommandOutput.cursor,
-          col: resultCol,
-        },
-      };
+      this.vimCommandOutput.cursor.col = resultCol;
     }
 
     return this.vimCommandOutput;

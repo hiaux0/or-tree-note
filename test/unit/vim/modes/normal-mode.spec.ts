@@ -94,7 +94,7 @@ describe("C: Normal Mode", () => {
         };
         normalMode = new NormalMode(vimCommandOut);
         const result = normalMode.getTokenUnderCursor();
-        expect(result).toEqual({ end: 2, start: 0, string: "foo" });
+        expect(result).toEqual({ end: 2, start: 0, string: "foo", index: 0 });
       });
       it("F: true - 2", () => {
         const vimCommandOut: VimCommandOutput = {
@@ -103,7 +103,7 @@ describe("C: Normal Mode", () => {
         };
         normalMode = new NormalMode(vimCommandOut);
         const result = normalMode.getTokenUnderCursor();
-        expect(result).toEqual({ end: 6, start: 4, string: "bar" });
+        expect(result).toEqual({ end: 7, start: 4, string: "bar", index: 1 });
       });
 
       it("F: false", () => {
