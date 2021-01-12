@@ -1,5 +1,6 @@
+import { NormalMode } from "modules/vim/modes/normal-mode";
 import { cloneDeep } from "lodash";
-import { Cursor, Vim } from "modules/vim/vim";
+import { Cursor, Vim, VimCommandOutput } from "modules/vim/vim";
 
 const input = ["foo"];
 const cursor: Cursor = { line: 0, col: 0 };
@@ -76,6 +77,44 @@ describe("C: Mode - Normal", () => {
           "[ILLEGAL]: Cursor out of bound: Must not be negative, but column is -9"
         );
       }
+    });
+  });
+});
+
+describe("C: Normal Mode", () => {
+  let normalMode: NormalMode;
+
+  //
+  describe("C: Cursor", () => {
+    describe("C: #isCursorInWord", () => {
+      it("F: true - 1", () => {
+        const vimCommandOut: VimCommandOutput = {
+          text: "foo bar",
+          cursor: { col: 0, line: 0 },
+        };
+        normalMode = new NormalMode(vimCommandOut);
+        const result = normalMode.getTokenUnderCursor();
+        expect(result).toEqual({ end: 2, start: 0, string: "foo" });
+      });
+      it("F: true - 2", () => {
+        const vimCommandOut: VimCommandOutput = {
+          text: "foo bar",
+          cursor: { col: 4, line: 0 },
+        };
+        normalMode = new NormalMode(vimCommandOut);
+        const result = normalMode.getTokenUnderCursor();
+        expect(result).toEqual({ end: 6, start: 4, string: "bar" });
+      });
+
+      it("F: false", () => {
+        const vimCommandOut: VimCommandOutput = {
+          text: "foo bar",
+          cursor: { col: 3, line: 0 },
+        };
+        normalMode = new NormalMode(vimCommandOut);
+        const result = normalMode.getTokenUnderCursor();
+        expect(result).toBeUndefined();
+      });
     });
   });
 });

@@ -51,6 +51,9 @@ export abstract class AbstractTextMode {
   cursorLeft(commandOutput: VimCommandOutput) {
     this.cursorHorizontalMovement(commandOutput?.cursor);
   }
+  cursorWordForwardEnd(commandOutput: VimCommandOutput) {
+    this.cursorHorizontalMovement(commandOutput?.cursor);
+  }
 
   commenKeyFunctionality() {
     this.resetCaretBlinking();

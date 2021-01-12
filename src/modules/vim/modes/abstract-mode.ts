@@ -16,6 +16,35 @@ export function isValidHorizontalPosition(
   return result;
 }
 
+export interface TokenizedString {
+  string: string;
+  start: number;
+  end: number;
+}
+
+export function tokenizeInput(input: string): TokenizedString[] {
+  const regExp = /(\w+)/g;
+  const matchResult: RegExpExecArray[] = [];
+  let match: RegExpExecArray;
+
+  while ((match = regExp.exec(input))) {
+    matchResult.push(match);
+  }
+
+  const tokens = matchResult.map((result) => {
+    const matchedString = result[0];
+    const { index } = result;
+    const token: TokenizedString = {
+      string: matchedString,
+      start: index,
+      end: index + matchedString.length - 1,
+    };
+    return token;
+  });
+
+  return tokens;
+}
+
 export abstract class AbstractMode {
   /**
    * Firstly: The active input, is the eg. "active line".
@@ -23,10 +52,12 @@ export abstract class AbstractMode {
    * TODO:
    * - multiple cursors
    */
-  activeInput: string;
   currentMode: VimMode;
+  tokenizedInput: TokenizedString[];
 
-  constructor(public vimCommandOutput: VimCommandOutput) {}
+  constructor(public vimCommandOutput: VimCommandOutput) {
+    this.tokenizedInput = tokenizeInput(vimCommandOutput.text);
+  }
 
   executeCommand(
     commandName: string,

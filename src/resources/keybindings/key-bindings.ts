@@ -5,6 +5,8 @@ export default {
     { key: "k", command: "cursorUp" },
     { key: "l", command: "cursorRight" },
     { key: "u", command: "cursorDown" },
+    { key: "e", command: "cursorWordForwardEnd" },
+    { key: "w", command: "cursorWordForwardStart" },
     { key: "<ArrowLeft>", command: "cursorLeft" },
     { key: "<ArrowUp>", command: "cursorUp" },
     { key: "<ArrowRight>", command: "cursorRight" },

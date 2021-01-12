@@ -1,5 +1,6 @@
 import { cloneDeep } from "lodash";
 import { sendKeyEvent } from "modules/keys/keys";
+import { tokenizeInput } from "modules/vim/modes/abstract-mode";
 import { Cursor, Vim, VimMode } from "modules/vim/vim";
 
 const input = ["foo"];
@@ -53,6 +54,22 @@ describe("Vim", () => {
           targetCommand: "type",
         },
       ]);
+    });
+  });
+
+  /** *************/
+  /** Input Queue */
+  /** *************/
+  describe("C: Tokenizing", () => {
+    describe("C: tokenizeInput", () => {
+      fit("F: Simple tokenize", () => {
+        const input = "foo bar";
+        const result = tokenizeInput(input);
+        expect(result).toEqual([
+          { end: 2, start: 0, string: "foo" },
+          { end: 6, start: 4, string: "bar" },
+        ]);
+      });
     });
   });
 });
