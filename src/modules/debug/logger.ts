@@ -19,8 +19,12 @@ interface LogOptions {
   scope?: string;
   prefix?: number;
   useTable?: boolean;
+  /////////////// Grouping
   startGroupId?: string;
   endGroupId?: string;
+  /** Specified by `expandGroupBasedOnString` */
+  allGroupsCollapsedButSpecified?: boolean;
+  expandGroupBasedOnString?: string;
 }
 
 const defautLogOptions: LogOptions = {
@@ -28,6 +32,8 @@ const defautLogOptions: LogOptions = {
   logLevel: "verbose",
   focusedLogging: false,
   useTable: true,
+  allGroupsCollapsedButSpecified: true,
+  expandGroupBasedOnString: "b",
   throwOnError: true,
 };
 
@@ -79,7 +85,17 @@ export class Logger {
 
       //
       if (logOpt.startGroupId) {
-        console.group();
+        const isExpandGroupBasedOnString = placeholderValues.includes(
+          logOpt.expandGroupBasedOnString
+        );
+        const onlyExpandSpecified =
+          logOpt.allGroupsCollapsedButSpecified && isExpandGroupBasedOnString;
+
+        if (onlyExpandSpecified) {
+          console.group();
+        } else {
+          console.groupCollapsed();
+        }
         groupId.push(logOpt.startGroupId);
       } else if (logOpt.endGroupId === groupId[0]) {
         console.groupEnd();
