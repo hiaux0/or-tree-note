@@ -1,5 +1,8 @@
+import { Logger } from "modules/debug/logger";
 import { VimCommandOutput, VimMode } from "../vim";
 import { AbstractMode, TokenizedString } from "./abstract-mode";
+
+const logger = new Logger({ scope: "NormalMode" });
 
 export class NormalMode extends AbstractMode {
   currentMode = VimMode.NORMAL;
@@ -15,6 +18,11 @@ export class NormalMode extends AbstractMode {
 
       return isUnderCursor;
     });
+
+    logger.debug(["Token under curor: %o", targetToken], {
+      onlyVerbose: true,
+    });
+
     return targetToken;
   }
 

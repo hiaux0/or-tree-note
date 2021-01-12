@@ -57,6 +57,8 @@ export abstract class AbstractMode {
 
   constructor(public vimCommandOutput: VimCommandOutput) {
     this.tokenizedInput = tokenizeInput(vimCommandOutput.text);
+
+    logger.debug(["Tokens: %o", this.tokenizedInput], { onlyVerbose: true });
   }
 
   executeCommand(
@@ -78,9 +80,7 @@ export abstract class AbstractMode {
 
     const result = this[commandName](commandValue) as VimCommandOutput;
 
-    if (result.text) {
-      this.vimCommandOutput.text = result.text;
-    }
+    this.vimCommandOutput = result;
 
     return result;
   }

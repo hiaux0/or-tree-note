@@ -20,4 +20,14 @@ describe("Aurelia skeleton app", () => {
         .should("contain", caretWidth * 9);
     });
   });
+  const input1 = "eh";
+  it.only(`DEV: ${input1}`, () => {
+    cy.vim(input1);
+    cy.getCssVar("--caret-size-width").then((caretWidth) => {
+      cy.get("%caret")
+        .should("exist")
+        .invoke({ timeout: 100 }, "attr", "style")
+        .should("contain", caretWidth * 8);
+    });
+  });
 });
