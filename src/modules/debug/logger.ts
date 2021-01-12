@@ -114,22 +114,24 @@ export class Logger {
       }
 
       //
-      if (logOpt.allGroupsCollapsedButSpecified) {
-        if (logOpt.startGroupId) {
-          //
+      if (logOpt.startGroupId) {
+        if (logOpt.allGroupsCollapsedButSpecified) {
           if (!logOpt.expandGroupBasedOnString) {
             console.warn("Pleace specifiy `expandGroupBasedOnString`");
           }
 
-          //
           if (isExpandGroupBasedOnString) {
             console.group();
           } else {
             console[logOpt.logMethod](...messageWithLogScope);
             console.groupCollapsed();
           }
-          groupId.push(logOpt.startGroupId);
+          //
+        } else {
+          console[logOpt.logMethod](...messageWithLogScope);
+          console.group();
         }
+        groupId.push(logOpt.startGroupId);
       }
 
       //
