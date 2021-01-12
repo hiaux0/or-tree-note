@@ -2,8 +2,7 @@ const debugMode = true;
 
 interface LogOptions {
   /////////////// Log
-  // logMethod?: "log" | "trace" | "error";
-  logMethod?: string;
+  logMethod?: "log" | "trace" | "error" | "group" | "groupEnd";
   log?: boolean;
   logLevel?: "info" | "verbose";
   onlyVerbose?: boolean;
@@ -20,6 +19,8 @@ interface LogOptions {
   scope?: string;
   prefix?: number;
   useTable?: boolean;
+  startGroupId?: string;
+  endGroupId?: string;
 }
 
 const defautLogOptions: LogOptions = {
@@ -29,6 +30,8 @@ const defautLogOptions: LogOptions = {
   useTable: true,
   throwOnError: true,
 };
+
+const groupId: string[] = [];
 
 export class Logger {
   constructor(private globalLogOptions: LogOptions) {}
@@ -72,6 +75,14 @@ export class Logger {
 
       if (logOpt.logLevel !== "verbose" && logOpt.onlyVerbose) {
         return;
+      }
+
+      //
+      if (logOpt.startGroupId) {
+        console.group();
+        groupId.push(logOpt.startGroupId);
+      } else if (logOpt.endGroupId === groupId[0]) {
+        console.groupEnd();
       }
 
       //
