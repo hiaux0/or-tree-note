@@ -94,10 +94,18 @@ export class Logger {
         logOpt.expandGroupBasedOnString
       );
 
-      const dontLog =
-        logOpt.dontLogUnlessSpecified && !isExpandGroupBasedOnString;
-      if (dontLog) {
-        return;
+      if (logOpt.dontLogUnlessSpecified) {
+        //
+        if (!logOpt.expandGroupBasedOnString) {
+          console.warn("Pleace specifiy `expandGroupBasedOnString`");
+        }
+
+        //
+        const onlyLogBasedOnString = isExpandGroupBasedOnString;
+
+        if (!onlyLogBasedOnString) {
+          return;
+        }
       }
 
       //
@@ -105,18 +113,27 @@ export class Logger {
         const onlyExpandSpecified =
           logOpt.allGroupsCollapsedButSpecified && isExpandGroupBasedOnString;
 
+        //
+        if (!logOpt.expandGroupBasedOnString) {
+          console.warn("Pleace specifiy `expandGroupBasedOnString`");
+        }
+
+        //
         if (onlyExpandSpecified) {
           console.group();
         } else {
+          console[logOpt.logMethod](...messageWithLogScope);
           console.groupCollapsed();
         }
         groupId.push(logOpt.startGroupId);
-      } else if (logOpt.endGroupId === groupId[0]) {
-        console.groupEnd();
       }
 
       //
       console[logOpt.logMethod](...messageWithLogScope);
+
+      if (logOpt.endGroupId === groupId[0]) {
+        console.groupEnd();
+      }
 
       //
       if (logOpt.useTable) {
