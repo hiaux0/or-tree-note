@@ -116,7 +116,17 @@ describe("C: Normal Mode", () => {
         expect(result).toBeUndefined();
       });
     });
-
+    describe('C: #cursorDown', () => {
+      it('F: line down at start', () => {
+        const vimCommandOut: VimCommandOutput = {
+          text: "foo bar",
+          cursor: { col: 0, line: 0 },
+        };
+        normalMode = new NormalMode(vimCommandOut);
+        const result = normalMode.getNexToken();
+        expect(result).toEqual({ end: 6, index: 1, start: 4, string: "bar" }); 
+      });
+    });
     describe("C: #getNexToken", () => {
       it("F: Get next when on word", () => {
         const vimCommandOut: VimCommandOutput = {

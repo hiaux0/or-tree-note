@@ -63,7 +63,7 @@ describe("Vim", () => {
   });
 
   /** *************/
-  /** Input Queue */
+  /** Tokenizing */
   /** *************/
   describe("C: Tokenizing", () => {
     describe("C: tokenizeInput", () => {
