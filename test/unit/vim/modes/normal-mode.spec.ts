@@ -116,6 +116,36 @@ describe("C: Normal Mode", () => {
         expect(result).toBeUndefined();
       });
     });
+
+    describe("C: #getNexToken", () => {
+      it("F: Get next when on word", () => {
+        const vimCommandOut: VimCommandOutput = {
+          text: "foo bar",
+          cursor: { col: 2, line: 0 },
+        };
+        normalMode = new NormalMode(vimCommandOut);
+        const result = normalMode.getNexToken();
+        expect(result).toEqual({ end: 6, index: 1, start: 4, string: "bar" });
+      });
+      it("F: Get next when space", () => {
+        const vimCommandOut: VimCommandOutput = {
+          text: "foo bar",
+          cursor: { col: 3, line: 0 },
+        };
+        normalMode = new NormalMode(vimCommandOut);
+        const result = normalMode.getNexToken();
+        expect(result).toEqual({ end: 6, index: 1, start: 4, string: "bar" });
+      });
+      it("F: Get next when at end", () => {
+        const vimCommandOut: VimCommandOutput = {
+          text: "foo bar",
+          cursor: { col: 6, line: 0 },
+        };
+        normalMode = new NormalMode(vimCommandOut);
+        const result = normalMode.getNexToken();
+        expect(result).toEqual({ end: 6, index: 1, start: 4, string: "bar" });
+      });
+    });
   });
 
   describe("#cursorWordForwardEnd", () => {
@@ -127,6 +157,15 @@ describe("C: Normal Mode", () => {
       normalMode = new NormalMode(vimCommandOut);
       const result = normalMode.cursorWordForwardEnd();
       expect(result).toEqual({ cursor: { col: 2, line: 0 }, text: "foo bar" });
+    });
+    it("F: e - in between words", () => {
+      let vimCommandOut: VimCommandOutput = {
+        text: "foo bar",
+        cursor: { col: 3, line: 0 },
+      };
+      normalMode = new NormalMode(vimCommandOut);
+      const result = normalMode.cursorWordForwardEnd();
+      expect(result).toEqual({ cursor: { col: 6, line: 0 }, text: "foo bar" });
     });
     it("F: ee", () => {
       let vimCommandOut: VimCommandOutput = {
