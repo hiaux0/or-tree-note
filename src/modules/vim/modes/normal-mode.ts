@@ -53,6 +53,20 @@ export class NormalMode extends AbstractMode {
     return targetToken;
   }
 
+  getPreviousToken() {
+    const curCol = this.vimCommandOutput.cursor.col;
+    const currentToken = this.tokenizedInput.find((input) => {
+      return input.end <= curCol;
+    });
+
+    if (!currentToken) {
+      logger.debug(["Could not find next target token: %o", currentToken], {
+        isError: true,
+      });
+    }
+    return currentToken;
+  }
+
   cursorWordForwardEnd(): VimCommandOutput {
     let currentToken = this.getTokenUnderCursor();
 
@@ -72,6 +86,32 @@ export class NormalMode extends AbstractMode {
     resultCol;
 
     if (resultCol) {
+      this.vimCommandOutput.cursor.col = resultCol;
+    }
+
+    return this.vimCommandOutput;
+  }
+
+  cursorBackwordsStartWord(): VimCommandOutput {
+    let currentToken = this.getTokenUnderCursor(); /*?*/
+
+    this.vimCommandOutput.cursor; /*?*/
+    const isAtStart =
+      currentToken?.start === this.vimCommandOutput.cursor.col; /*?*/
+    const tokenNotUnderCursor = currentToken === undefined;
+
+    let resultCol;
+    if (isAtStart) {
+      const previousToken = this.getTokenAtIndex(currentToken.index - 1);
+      resultCol = previousToken.start;
+    } else if (tokenNotUnderCursor) {
+      const nextToken = this.getPreviousToken();
+      resultCol = nextToken.start;
+    } else {
+      resultCol = currentToken.start;
+    }
+
+    if (resultCol !== undefined) {
       this.vimCommandOutput.cursor.col = resultCol;
     }
 

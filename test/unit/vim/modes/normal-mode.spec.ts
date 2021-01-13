@@ -146,6 +146,85 @@ describe("C: Normal Mode", () => {
         expect(result).toEqual({ end: 6, index: 1, start: 4, string: "bar" });
       });
     });
+    describe("C: #getPreviousToken", () => {
+      it("F: Get previous when on word", () => {
+        const vimCommandOut: VimCommandOutput = {
+          text: "foo bar",
+          cursor: { col: 2, line: 0 },
+        };
+        normalMode = new NormalMode(vimCommandOut);
+        const result = normalMode.getPreviousToken();
+        expect(result).toEqual({ end: 2, index: 0, start: 0, string: "foo" });
+      });
+      it("F: Get previous when space", () => {
+        const vimCommandOut: VimCommandOutput = {
+          text: "foo bar",
+          cursor: { col: 3, line: 0 },
+        };
+        normalMode = new NormalMode(vimCommandOut);
+        const result = normalMode.getPreviousToken();
+        expect(result).toEqual({ end: 2, index: 0, start: 0, string: "foo" });
+      });
+      it("F: Get previous when at end", () => {
+        const vimCommandOut: VimCommandOutput = {
+          text: "foo bar",
+          cursor: { col: 6, line: 0 },
+        };
+        normalMode = new NormalMode(vimCommandOut);
+        const result = normalMode.getPreviousToken();
+        expect(result).toEqual({ end: 2, index: 0, start: 0, string: "foo" });
+      });
+    });
+    describe("#cursorBackwordsStartWord", () => {
+      it("F: b", () => {
+        let vimCommandOut: VimCommandOutput = {
+          text: "012 456",
+          cursor: { col: 6, line: 0 },
+        };
+        normalMode = new NormalMode(vimCommandOut);
+        const result = normalMode.cursorBackwordsStartWord();
+        expect(result).toEqual({
+          cursor: { col: 4, line: 0 },
+          text: "012 456",
+        });
+      });
+      it("F: b - in between words", () => {
+        let vimCommandOut: VimCommandOutput = {
+          text: "012 456",
+          cursor: { col: 3, line: 0 },
+        };
+        normalMode = new NormalMode(vimCommandOut);
+        const result = normalMode.cursorBackwordsStartWord();
+        expect(result).toEqual({
+          cursor: { col: 0, line: 0 },
+          text: "012 456",
+        });
+      });
+      it("F: bb", () => {
+        let vimCommandOut: VimCommandOutput = {
+          text: "012 456",
+          cursor: { col: 4, line: 0 },
+        };
+        normalMode = new NormalMode(vimCommandOut);
+        const result = normalMode.cursorBackwordsStartWord();
+        expect(result).toEqual({
+          cursor: { col: 0, line: 0 },
+          text: "012 456",
+        });
+      });
+      it("F: bbb - b at end of line", () => {
+        let vimCommandOut: VimCommandOutput = {
+          text: "012 456",
+          cursor: { col: 0, line: 0 },
+        };
+        normalMode = new NormalMode(vimCommandOut);
+        const result = normalMode.cursorBackwordsStartWord();
+        expect(result).toEqual({
+          cursor: { col: 0, line: 0 },
+          text: "012 456",
+        });
+      });
+    });
   });
 
   describe("#cursorWordForwardEnd", () => {
