@@ -40,15 +40,23 @@ interface LogOptions {
 const defautLogOptions: LogOptions = {
   logMethod: "log",
   logLevel: "verbose",
-  dontLogUnlessSpecified: true,
+  // dontLogUnlessSpecified: true,
   focusedLogging: false,
   useTable: true,
-  allGroupsCollapsedButSpecified: true,
-  expandGroupBasedOnString: "b",
+  // allGroupsCollapsedButSpecified: true,
+  // expandGroupBasedOnString: "h",
   throwOnError: true,
 };
 
+interface BugLogOptions {
+  isStart?: boolean;
+  isEnd?: boolean;
+  //
+  color?: string;
+}
+
 const groupId: string[] = [];
+let bugGroupId: string[] = [];
 
 export class Logger {
   constructor(private globalLogOptions: LogOptions) {}
@@ -67,7 +75,8 @@ export class Logger {
         return;
       }
 
-      if (this.globalLogOptions.focusedLogging && !logOptions?.log) {
+      const onlyFocusedLogging = logOpt.focusedLogging && !logOpt?.log;
+      if (onlyFocusedLogging) {
         return;
       }
 
@@ -101,9 +110,9 @@ export class Logger {
 
       if (logOpt.dontLogUnlessSpecified) {
         //
-        if (!logOpt.expandGroupBasedOnString) {
-          console.warn("Pleace specifiy `expandGroupBasedOnString`");
-        }
+        // if (!logOpt.expandGroupBasedOnString) {
+        //   console.warn("Pleace specifiy `expandGroupBasedOnString`");
+        // }
 
         //
         const onlyLogBasedOnString = isExpandGroupBasedOnString;
@@ -147,6 +156,23 @@ export class Logger {
           console.table(messageWithLogScope[1]);
         }
       }
+    }
+  }
+
+  bug(message: string, logOptions: BugLogOptions = {}) {
+    //
+    if (logOptions.isStart) {
+      console.group(message);
+
+      bugGroupId.push(message);
+    }
+
+    //
+    const isEnd =
+      logOptions.isEnd && message === bugGroupId[bugGroupId.length - 1];
+    if (isEnd) {
+      console.groupEnd();
+      bugGroupId = bugGroupId.slice(0, bugGroupId.length - 1);
     }
   }
 }
