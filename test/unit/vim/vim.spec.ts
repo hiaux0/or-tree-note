@@ -113,7 +113,7 @@ describe("C: Mode - Normal", () => {
         it("F: Single input", () => {
           const result = vim.queueInput("u");
           expect(result.targetCommand).toBe("cursorDown");
-          expect(result.commandOutput.cursor).toEqual({ col: 0, line: 1 });
+          expect(result.vimState.cursor).toEqual({ col: 0, line: 1 });
         });
         //
       });
@@ -128,11 +128,11 @@ describe("C: Mode - Normal", () => {
 
           expect(result).toEqual([
             {
-              commandOutput: { cursor: { col: 1, line: 0 }, text: "foo" },
+              vimState: { cursor: { col: 1, line: 0 }, text: "foo" },
               targetCommand: "cursorRight",
             },
             {
-              commandOutput: { cursor: { col: 2, line: 0 }, text: "foo" },
+              vimState: { cursor: { col: 2, line: 0 }, text: "foo" },
               targetCommand: "cursorRight",
             },
           ]);
@@ -142,16 +142,16 @@ describe("C: Mode - Normal", () => {
 
           expect(result).toEqual([
             {
-              commandOutput: { cursor: { col: 1, line: 0 }, text: "foo" },
+              vimState: { cursor: { col: 1, line: 0 }, text: "foo" },
               targetCommand: "cursorRight",
             },
             {
-              commandOutput: { cursor: { col: 2, line: 0 }, text: "foo" },
+              vimState: { cursor: { col: 2, line: 0 }, text: "foo" },
               targetCommand: "cursorRight",
             },
-            { commandOutput: null, targetCommand: "enterInsertTextMode" },
+            { vimState: null, targetCommand: "enterInsertTextMode" },
             {
-              commandOutput: { cursor: { col: 3, line: 0 }, text: "fo!o" },
+              vimState: { cursor: { col: 3, line: 0 }, text: "fo!o" },
               targetCommand: "type",
             },
           ]);
@@ -190,7 +190,7 @@ describe("C: Mode - Insert", () => {
       const result = vim.queueInputSequence("@");
       expect(result).toEqual([
         {
-          commandOutput: { cursor: { col: 1, line: 0 }, text: "@foo" },
+          vimState: { cursor: { col: 1, line: 0 }, text: "@foo" },
           targetCommand: "type",
         },
       ]);
@@ -202,12 +202,12 @@ describe("C: Mode - Insert", () => {
       const result = vim.queueInputSequence("@<esc>l");
       expect(result).toEqual([
         {
-          commandOutput: { cursor: { col: 1, line: 0 }, text: "@foo" },
+          vimState: { cursor: { col: 1, line: 0 }, text: "@foo" },
           targetCommand: "type",
         },
-        { commandOutput: null, targetCommand: "enterNormalTextMode" },
+        { vimState: null, targetCommand: "enterNormalTextMode" },
         {
-          commandOutput: { cursor: { col: 2, line: 0 }, text: "@foo" },
+          vimState: { cursor: { col: 2, line: 0 }, text: "@foo" },
           targetCommand: "cursorRight",
         },
       ]);
@@ -216,16 +216,16 @@ describe("C: Mode - Insert", () => {
       const result = vim.queueInputSequence("@#<esc>l");
       expect(result).toEqual([
         {
-          commandOutput: { cursor: { col: 1, line: 0 }, text: "@foo" },
+          vimState: { cursor: { col: 1, line: 0 }, text: "@foo" },
           targetCommand: "type",
         },
         {
-          commandOutput: { cursor: { col: 2, line: 0 }, text: "@#foo" },
+          vimState: { cursor: { col: 2, line: 0 }, text: "@#foo" },
           targetCommand: "type",
         },
-        { commandOutput: null, targetCommand: "enterNormalTextMode" },
+        { vimState: null, targetCommand: "enterNormalTextMode" },
         {
-          commandOutput: { cursor: { col: 3, line: 0 }, text: "@#foo" },
+          vimState: { cursor: { col: 3, line: 0 }, text: "@#foo" },
           targetCommand: "cursorRight",
         },
       ]);
@@ -235,12 +235,12 @@ describe("C: Mode - Insert", () => {
       const result = vim.queueInputSequence(["@", "<esc>", "l"]);
       expect(result).toEqual([
         {
-          commandOutput: { cursor: { col: 1, line: 0 }, text: "@foo" },
+          vimState: { cursor: { col: 1, line: 0 }, text: "@foo" },
           targetCommand: "type",
         },
-        { commandOutput: null, targetCommand: "enterNormalTextMode" },
+        { vimState: null, targetCommand: "enterNormalTextMode" },
         {
-          commandOutput: { cursor: { col: 2, line: 0 }, text: "@foo" },
+          vimState: { cursor: { col: 2, line: 0 }, text: "@foo" },
           targetCommand: "cursorRight",
         },
       ]);

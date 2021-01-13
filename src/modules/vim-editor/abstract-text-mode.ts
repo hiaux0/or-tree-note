@@ -1,4 +1,4 @@
-import { VimCommandOutput } from "./../vim/vim";
+import { VimState } from "./../vim/vim";
 import { Logger } from "modules/debug/logger";
 import { Cursor } from "modules/vim/vim";
 import {
@@ -44,18 +44,18 @@ export abstract class AbstractTextMode {
   cursorDown() {
     this.commenKeyFunctionality();
   }
-  cursorRight(commandOutput: VimCommandOutput) {
-    this.cursorHorizontalMovement(commandOutput?.cursor);
+  cursorRight(vimState: VimState) {
+    this.cursorHorizontalMovement(vimState?.cursor);
     return;
   }
-  cursorLeft(commandOutput: VimCommandOutput) {
-    this.cursorHorizontalMovement(commandOutput?.cursor);
+  cursorLeft(vimState: VimState) {
+    this.cursorHorizontalMovement(vimState?.cursor);
   }
-  cursorWordForwardEnd(commandOutput: VimCommandOutput) {
-    this.cursorHorizontalMovement(commandOutput?.cursor);
+  cursorWordForwardEnd(vimState: VimState) {
+    this.cursorHorizontalMovement(vimState?.cursor);
   }
-  cursorBackwordsStartWord(commandOutput: VimCommandOutput) {
-    this.cursorHorizontalMovement(commandOutput?.cursor);
+  cursorBackwordsStartWord(vimState: VimState) {
+    this.cursorHorizontalMovement(vimState?.cursor);
   }
 
   commenKeyFunctionality() {

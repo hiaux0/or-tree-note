@@ -1,49 +1,49 @@
 import { AbstractMode } from "./abstract-mode";
 import { insert, replaceAt } from "modules/string/string";
-import { VimCommandOutput, VimMode } from "../vim";
+import { VimState, VimMode } from "../vim";
 
 export class InsertMode extends AbstractMode {
   currentMode = VimMode.INSERT;
 
-  type(newInput: string): VimCommandOutput {
+  type(newInput: string): VimState {
     const updatedInput = insert(
-      this.vimCommandOutput.text,
-      this.vimCommandOutput.cursor.col,
+      this.vimState.text,
+      this.vimState.cursor.col,
       newInput
     );
-    this.vimCommandOutput.text = updatedInput;
+    this.vimState.text = updatedInput;
     super.cursorRight();
-    return this.vimCommandOutput;
+    return this.vimState;
   }
 
-  executeCommand(commandName: string, commandValue: string): VimCommandOutput {
+  executeCommand(commandName: string, commandValue: string): VimState {
     return super.executeCommand(commandName, commandValue, this.currentMode);
   }
 
   shift() {
-    return this.vimCommandOutput;
+    return this.vimState;
   }
 
-  backspace(): VimCommandOutput {
+  backspace(): VimState {
     const updatedInput = replaceAt(
-      this.vimCommandOutput.text,
-      this.vimCommandOutput.cursor.col,
+      this.vimState.text,
+      this.vimState.cursor.col,
       ""
     );
 
     super.cursorLeft();
-    this.vimCommandOutput.text = updatedInput;
-    return this.vimCommandOutput;
+    this.vimState.text = updatedInput;
+    return this.vimState;
   }
 
-  delete(): VimCommandOutput {
+  delete(): VimState {
     const updatedInput = replaceAt(
-      this.vimCommandOutput.text,
-      this.vimCommandOutput.cursor.col + 1,
+      this.vimState.text,
+      this.vimState.cursor.col + 1,
       ""
     );
 
-    this.vimCommandOutput.text = updatedInput;
-    return this.vimCommandOutput;
+    this.vimState.text = updatedInput;
+    return this.vimState;
   }
 }

@@ -1,5 +1,5 @@
 import { Logger } from "modules/debug/logger";
-import { Cursor, VimCommandOutput, VimMode } from "../vim";
+import { Cursor, VimState, VimMode } from "../vim";
 
 const logger = new Logger({ scope: "AbstractMode" });
 
@@ -58,8 +58,8 @@ export abstract class AbstractMode {
   currentMode: VimMode;
   tokenizedInput: TokenizedString[];
 
-  constructor(public vimCommandOutput: VimCommandOutput) {
-    this.tokenizedInput = tokenizeInput(vimCommandOutput.text);
+  constructor(public vimState: VimState) {
+    this.tokenizedInput = tokenizeInput(vimState.text);
 
     logger.debug(["Tokens: %o", this.tokenizedInput], { onlyVerbose: true });
   }
@@ -68,7 +68,7 @@ export abstract class AbstractMode {
     commandName: string,
     commandValue: string,
     currentMode: VimMode
-  ): VimCommandOutput {
+  ): VimState {
     if (!this[commandName]) {
       logger.debug(
         [
@@ -81,30 +81,30 @@ export abstract class AbstractMode {
       );
     }
 
-    const result = this[commandName](commandValue) as VimCommandOutput;
+    const result = this[commandName](commandValue) as VimState;
 
     try {
       this.validateHorizontalCursor(result);
     } catch {
-      const previousOutput = this.vimCommandOutput;
+      const previousOutput = this.vimState;
       return previousOutput;
     }
 
-    this.vimCommandOutput = result;
+    this.vimState = result;
 
     return result;
   }
 
-  validateHorizontalCursor(vimCommandOutput: VimCommandOutput) {
-    const curCol = vimCommandOutput.cursor.col + 1;
-    const isValid = isValidHorizontalPosition(curCol, vimCommandOutput.text);
+  validateHorizontalCursor(vimState: VimState) {
+    const curCol = vimState.cursor.col + 1;
+    const isValid = isValidHorizontalPosition(curCol, vimState.text);
 
     if (!isValid) {
       logger.debug(
         [
           "[INVALID] Cursor col will be: %d, but should be between [0,%d].",
           curCol,
-          vimCommandOutput.text.length,
+          vimState.text.length,
         ],
         {
           isError: true,
@@ -116,42 +116,32 @@ export abstract class AbstractMode {
     return isValid;
   }
 
-  cursorRight(): VimCommandOutput {
-    const updaterCursorCol = this.vimCommandOutput.cursor.col + 1;
+  cursorRight(): VimState {
+    const updaterCursorCol = this.vimState.cursor.col + 1;
 
-    if (
-      !isValidHorizontalPosition(
-        updaterCursorCol + 1,
-        this.vimCommandOutput.text
-      )
-    ) {
-      return this.vimCommandOutput;
+    if (!isValidHorizontalPosition(updaterCursorCol + 1, this.vimState.text)) {
+      return this.vimState;
     }
 
-    this.vimCommandOutput.cursor.col = updaterCursorCol;
-    return this.vimCommandOutput;
+    this.vimState.cursor.col = updaterCursorCol;
+    return this.vimState;
   }
-  cursorLeft(): VimCommandOutput {
-    const updaterCursorCol = this.vimCommandOutput.cursor.col - 1;
+  cursorLeft(): VimState {
+    const updaterCursorCol = this.vimState.cursor.col - 1;
 
-    if (
-      !isValidHorizontalPosition(
-        updaterCursorCol + 1,
-        this.vimCommandOutput.text
-      )
-    ) {
-      return this.vimCommandOutput;
+    if (!isValidHorizontalPosition(updaterCursorCol + 1, this.vimState.text)) {
+      return this.vimState;
     }
 
-    this.vimCommandOutput.cursor.col = updaterCursorCol;
-    return this.vimCommandOutput;
+    this.vimState.cursor.col = updaterCursorCol;
+    return this.vimState;
   }
-  cursorUp(): VimCommandOutput {
-    this.vimCommandOutput.cursor.line -= 1;
-    return this.vimCommandOutput;
+  cursorUp(): VimState {
+    this.vimState.cursor.line -= 1;
+    return this.vimState;
   }
-  cursorDown(): VimCommandOutput {
-    this.vimCommandOutput.cursor.line += 1;
-    return this.vimCommandOutput;
+  cursorDown(): VimState {
+    this.vimState.cursor.line += 1;
+    return this.vimState;
   }
 }

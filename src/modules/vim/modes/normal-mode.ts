@@ -1,5 +1,5 @@
 import { Logger } from "modules/debug/logger";
-import { VimCommandOutput, VimMode } from "../vim";
+import { VimState, VimMode } from "../vim";
 import { AbstractMode, TokenizedString } from "./abstract-mode";
 
 const logger = new Logger({ scope: "NormalMode" });
@@ -7,13 +7,13 @@ const logger = new Logger({ scope: "NormalMode" });
 export class NormalMode extends AbstractMode {
   currentMode = VimMode.NORMAL;
 
-  executeCommand(commandName: string, commandValue: string): VimCommandOutput {
+  executeCommand(commandName: string, commandValue: string): VimState {
     return super.executeCommand(commandName, commandValue, this.currentMode);
   }
 
   getTokenUnderCursor(): TokenizedString | undefined {
     const targetToken = this.tokenizedInput.find((input) => {
-      const curCol = this.vimCommandOutput.cursor.col;
+      const curCol = this.vimState.cursor.col;
       const isUnderCursor = input.start <= curCol && curCol <= input.end;
 
       return isUnderCursor;
@@ -39,7 +39,7 @@ export class NormalMode extends AbstractMode {
   }
 
   getNexToken() {
-    const curCol = this.vimCommandOutput.cursor.col;
+    const curCol = this.vimState.cursor.col;
     const currentTokenIndex = this.tokenizedInput.findIndex((input) => {
       return input.end <= curCol;
     });
@@ -54,7 +54,7 @@ export class NormalMode extends AbstractMode {
   }
 
   getPreviousToken() {
-    const curCol = this.vimCommandOutput.cursor.col;
+    const curCol = this.vimState.cursor.col;
     const currentToken = this.tokenizedInput.find((input) => {
       return input.end <= curCol;
     });
@@ -67,10 +67,10 @@ export class NormalMode extends AbstractMode {
     return currentToken;
   }
 
-  cursorWordForwardEnd(): VimCommandOutput {
+  cursorWordForwardEnd(): VimState {
     let tokenUnderCursor = this.getTokenUnderCursor();
 
-    const isAtEnd = tokenUnderCursor?.end === this.vimCommandOutput.cursor.col;
+    const isAtEnd = tokenUnderCursor?.end === this.vimState.cursor.col;
     const isNotAtEnd = tokenUnderCursor === undefined;
 
     let resultCol;
@@ -86,18 +86,18 @@ export class NormalMode extends AbstractMode {
     resultCol;
 
     if (resultCol) {
-      this.vimCommandOutput.cursor.col = resultCol;
+      this.vimState.cursor.col = resultCol;
     }
 
-    return this.vimCommandOutput;
+    return this.vimState;
   }
 
-  cursorBackwordsStartWord(): VimCommandOutput {
+  cursorBackwordsStartWord(): VimState {
     let tokenUnderCursor = this.getTokenUnderCursor(); /*?*/
 
-    this.vimCommandOutput.cursor; /*?*/
+    this.vimState.cursor; /*?*/
     const isAtStart =
-      tokenUnderCursor?.start === this.vimCommandOutput.cursor.col; /*?*/
+      tokenUnderCursor?.start === this.vimState.cursor.col; /*?*/
     const tokenNotUnderCursor = tokenUnderCursor === undefined;
 
     let resultCol;
@@ -112,9 +112,9 @@ export class NormalMode extends AbstractMode {
     }
 
     if (resultCol !== undefined) {
-      this.vimCommandOutput.cursor.col = resultCol;
+      this.vimState.cursor.col = resultCol;
     }
 
-    return this.vimCommandOutput;
+    return this.vimState;
   }
 }

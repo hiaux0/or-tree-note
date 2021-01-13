@@ -1,6 +1,6 @@
 import { NormalMode } from "modules/vim/modes/normal-mode";
 import { cloneDeep } from "lodash";
-import { Cursor, Vim, VimCommandOutput } from "modules/vim/vim";
+import { Cursor, Vim, VimState } from "modules/vim/vim";
 
 const input = ["foo"];
 const cursor: Cursor = { line: 0, col: 0 };
@@ -88,7 +88,7 @@ describe("C: Normal Mode", () => {
   describe("C: Cursor", () => {
     describe("C: #getTokenUnderCursor", () => {
       it("F: true - 1", () => {
-        const vimCommandOut: VimCommandOutput = {
+        const vimCommandOut: VimState = {
           text: "foo bar",
           cursor: { col: 0, line: 0 },
         };
@@ -97,7 +97,7 @@ describe("C: Normal Mode", () => {
         expect(result).toEqual({ end: 2, start: 0, string: "foo", index: 0 });
       });
       it("F: true - 2", () => {
-        const vimCommandOut: VimCommandOutput = {
+        const vimCommandOut: VimState = {
           text: "foo bar",
           cursor: { col: 4, line: 0 },
         };
@@ -107,7 +107,7 @@ describe("C: Normal Mode", () => {
       });
 
       it("F: false", () => {
-        const vimCommandOut: VimCommandOutput = {
+        const vimCommandOut: VimState = {
           text: "foo bar",
           cursor: { col: 3, line: 0 },
         };
@@ -116,20 +116,20 @@ describe("C: Normal Mode", () => {
         expect(result).toBeUndefined();
       });
     });
-    describe('C: #cursorDown', () => {
-      it('F: line down at start', () => {
-        const vimCommandOut: VimCommandOutput = {
+    describe("C: #cursorDown", () => {
+      it("F: line down at start", () => {
+        const vimCommandOut: VimState = {
           text: "foo bar",
           cursor: { col: 0, line: 0 },
         };
         normalMode = new NormalMode(vimCommandOut);
         const result = normalMode.getNexToken();
-        expect(result).toEqual({ end: 6, index: 1, start: 4, string: "bar" }); 
+        expect(result).toEqual({ end: 6, index: 1, start: 4, string: "bar" });
       });
     });
     describe("C: #getNexToken", () => {
       it("F: Get next when on word", () => {
-        const vimCommandOut: VimCommandOutput = {
+        const vimCommandOut: VimState = {
           text: "foo bar",
           cursor: { col: 2, line: 0 },
         };
@@ -138,7 +138,7 @@ describe("C: Normal Mode", () => {
         expect(result).toEqual({ end: 6, index: 1, start: 4, string: "bar" });
       });
       it("F: Get next when space", () => {
-        const vimCommandOut: VimCommandOutput = {
+        const vimCommandOut: VimState = {
           text: "foo bar",
           cursor: { col: 3, line: 0 },
         };
@@ -147,7 +147,7 @@ describe("C: Normal Mode", () => {
         expect(result).toEqual({ end: 6, index: 1, start: 4, string: "bar" });
       });
       it("F: Get next when at end", () => {
-        const vimCommandOut: VimCommandOutput = {
+        const vimCommandOut: VimState = {
           text: "foo bar",
           cursor: { col: 6, line: 0 },
         };
@@ -158,7 +158,7 @@ describe("C: Normal Mode", () => {
     });
     describe("C: #getPreviousToken", () => {
       it("F: Get previous when on word", () => {
-        const vimCommandOut: VimCommandOutput = {
+        const vimCommandOut: VimState = {
           text: "foo bar",
           cursor: { col: 2, line: 0 },
         };
@@ -167,7 +167,7 @@ describe("C: Normal Mode", () => {
         expect(result).toEqual({ end: 2, index: 0, start: 0, string: "foo" });
       });
       it("F: Get previous when space", () => {
-        const vimCommandOut: VimCommandOutput = {
+        const vimCommandOut: VimState = {
           text: "foo bar",
           cursor: { col: 3, line: 0 },
         };
@@ -176,7 +176,7 @@ describe("C: Normal Mode", () => {
         expect(result).toEqual({ end: 2, index: 0, start: 0, string: "foo" });
       });
       it("F: Get previous when at end", () => {
-        const vimCommandOut: VimCommandOutput = {
+        const vimCommandOut: VimState = {
           text: "foo bar",
           cursor: { col: 6, line: 0 },
         };
@@ -187,7 +187,7 @@ describe("C: Normal Mode", () => {
     });
     describe("#cursorBackwordsStartWord", () => {
       it("F: b", () => {
-        let vimCommandOut: VimCommandOutput = {
+        let vimCommandOut: VimState = {
           text: "012 456",
           cursor: { col: 6, line: 0 },
         };
@@ -199,7 +199,7 @@ describe("C: Normal Mode", () => {
         });
       });
       it("F: b - in between words", () => {
-        let vimCommandOut: VimCommandOutput = {
+        let vimCommandOut: VimState = {
           text: "012 456",
           cursor: { col: 3, line: 0 },
         };
@@ -211,7 +211,7 @@ describe("C: Normal Mode", () => {
         });
       });
       it("F: bb", () => {
-        let vimCommandOut: VimCommandOutput = {
+        let vimCommandOut: VimState = {
           text: "012 456",
           cursor: { col: 4, line: 0 },
         };
@@ -223,7 +223,7 @@ describe("C: Normal Mode", () => {
         });
       });
       it("F: bbb - b at end of line", () => {
-        let vimCommandOut: VimCommandOutput = {
+        let vimCommandOut: VimState = {
           text: "012 456",
           cursor: { col: 0, line: 0 },
         };
@@ -239,7 +239,7 @@ describe("C: Normal Mode", () => {
 
   describe("#cursorWordForwardEnd", () => {
     it("F: e", () => {
-      let vimCommandOut: VimCommandOutput = {
+      let vimCommandOut: VimState = {
         text: "foo bar",
         cursor: { col: 0, line: 0 },
       };
@@ -248,7 +248,7 @@ describe("C: Normal Mode", () => {
       expect(result).toEqual({ cursor: { col: 2, line: 0 }, text: "foo bar" });
     });
     it("F: e - in between words", () => {
-      let vimCommandOut: VimCommandOutput = {
+      let vimCommandOut: VimState = {
         text: "foo bar",
         cursor: { col: 3, line: 0 },
       };
@@ -257,7 +257,7 @@ describe("C: Normal Mode", () => {
       expect(result).toEqual({ cursor: { col: 6, line: 0 }, text: "foo bar" });
     });
     it("F: ee", () => {
-      let vimCommandOut: VimCommandOutput = {
+      let vimCommandOut: VimState = {
         text: "foo bar",
         cursor: { col: 2, line: 0 },
       };
@@ -266,7 +266,7 @@ describe("C: Normal Mode", () => {
       expect(result).toEqual({ cursor: { col: 6, line: 0 }, text: "foo bar" });
     });
     it("F: eee - e at end of line", () => {
-      let vimCommandOut: VimCommandOutput = {
+      let vimCommandOut: VimState = {
         text: "foo bar",
         cursor: { col: 6, line: 0 },
       };

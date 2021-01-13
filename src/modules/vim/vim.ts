@@ -37,13 +37,13 @@ interface FindPotentialCommandReturn {
   potentialCommands: VimCommand[];
 }
 
-export type VimCommandOutput = {
+export type VimState = {
   cursor?: Cursor;
   text?: string;
 };
 
 export interface QueueInputReturn {
-  commandOutput: VimCommandOutput | null;
+  vimState: VimState | null;
   targetCommand: VimCommandNames;
 }
 
@@ -79,7 +79,7 @@ export class Vim {
   potentialCommands: VimCommand[];
   /** If a command did not trigger, save key */
   queuedKeys: string[] = [];
-  vimCommandOutput: VimCommandOutput;
+  vimState: VimState;
 
   constructor(
     public wholeInput: string[],
@@ -87,13 +87,13 @@ export class Vim {
     public vimOptions: VimOptions = defaultVimOptions
   ) {
     const activeInput = wholeInput[cursor.line];
-    const vimCommandOutput: VimCommandOutput = {
+    const vimState: VimState = {
       text: activeInput,
       cursor,
     };
 
-    this.normalMode = new NormalMode(vimCommandOutput);
-    this.insertMode = new InsertMode(vimCommandOutput);
+    this.normalMode = new NormalMode(vimState);
+    this.insertMode = new InsertMode(vimState);
 
     this.keyBindings = vimOptions.keyBindings;
 
@@ -149,14 +149,14 @@ export class Vim {
   executeCommand<CommandType = any>(
     commandName: VimCommandNames,
     commandInput?: string
-  ): VimCommandOutput {
+  ): VimState {
     const currentMode = this.getCurrentMode();
-    const commandOutput = currentMode.executeCommand(
+    const vimState = currentMode.executeCommand(
       commandName,
       commandInput
     ) as CommandType;
 
-    return cloneDeep(commandOutput);
+    return cloneDeep(vimState);
   }
 
   /**
@@ -286,18 +286,18 @@ export class Vim {
 
     if (targetCommandName === "enterInsertTextMode") {
       this.enterInsertTextMode();
-      return { commandOutput: null, targetCommand: targetCommandName };
+      return { vimState: null, targetCommand: targetCommandName };
     } else if (targetCommandName === "enterNormalTextMode") {
       this.enterNormalTextMode();
-      return { commandOutput: null, targetCommand: targetCommandName };
+      return { vimState: null, targetCommand: targetCommandName };
     }
 
     //
-    const commandOutput = this.executeCommand(targetCommandName, input);
-    this.setVimState(commandOutput);
+    const vimState = this.executeCommand(targetCommandName, input);
+    this.setVimState(vimState);
 
     //
-    const result = { commandOutput, targetCommand: targetCommandName };
+    const result = { vimState, targetCommand: targetCommandName };
 
     logger.debug(["Result of input: %s is: %o", input, result], {
       onlyVerbose: true,
@@ -305,8 +305,8 @@ export class Vim {
 
     return result;
   }
-  setVimState(commandOutput: VimCommandOutput) {
-    this.vimCommandOutput = commandOutput;
+  setVimState(vimState: VimState) {
+    this.vimState = vimState;
   }
   /** */
   queueInputSequence(
@@ -389,9 +389,7 @@ export class Vim {
   }
   /** */
   batchResults(resultList: QueueInputReturn[]): QueueInputReturn[] {
-    const accumulatedResult = resultList.filter(
-      (result) => result.commandOutput
-    );
+    const accumulatedResult = resultList.filter((result) => result.vimState);
 
     //
     function groupByCommand(input: any[]) {

@@ -103,7 +103,7 @@ export class VimEditorTextMode {
     const currentMode = this.getCurrentTextMode();
 
     if (currentMode[result.targetCommand]) {
-      currentMode[result.targetCommand](result.commandOutput);
+      currentMode[result.targetCommand](result.vimState);
     }
   }
 
@@ -117,7 +117,7 @@ export class VimEditorTextMode {
       const currentMode = this.getCurrentTextMode();
 
       if (currentMode[result.targetCommand]) {
-        currentMode[result.targetCommand](result.commandOutput);
+        currentMode[result.targetCommand](result.vimState);
       }
     });
   }
