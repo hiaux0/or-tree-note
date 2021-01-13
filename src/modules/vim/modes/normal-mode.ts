@@ -68,20 +68,20 @@ export class NormalMode extends AbstractMode {
   }
 
   cursorWordForwardEnd(): VimCommandOutput {
-    let currentToken = this.getTokenUnderCursor();
+    let tokenUnderCursor = this.getTokenUnderCursor();
 
-    const isAtEnd = currentToken?.end === this.vimCommandOutput.cursor.col;
-    const isNotAtEnd = currentToken === undefined;
+    const isAtEnd = tokenUnderCursor?.end === this.vimCommandOutput.cursor.col;
+    const isNotAtEnd = tokenUnderCursor === undefined;
 
     let resultCol;
     if (isAtEnd) {
-      const nextToken = this.getTokenAtIndex(currentToken.index + 1);
+      const nextToken = this.getTokenAtIndex(tokenUnderCursor.index + 1);
       resultCol = nextToken.end;
     } else if (isNotAtEnd) {
       const nextToken = this.getNexToken();
       resultCol = nextToken.end;
     } else {
-      resultCol = currentToken.end;
+      resultCol = tokenUnderCursor.end;
     }
     resultCol;
 
@@ -93,22 +93,22 @@ export class NormalMode extends AbstractMode {
   }
 
   cursorBackwordsStartWord(): VimCommandOutput {
-    let currentToken = this.getTokenUnderCursor(); /*?*/
+    let tokenUnderCursor = this.getTokenUnderCursor(); /*?*/
 
     this.vimCommandOutput.cursor; /*?*/
     const isAtStart =
-      currentToken?.start === this.vimCommandOutput.cursor.col; /*?*/
-    const tokenNotUnderCursor = currentToken === undefined;
+      tokenUnderCursor?.start === this.vimCommandOutput.cursor.col; /*?*/
+    const tokenNotUnderCursor = tokenUnderCursor === undefined;
 
     let resultCol;
     if (isAtStart) {
-      const previousToken = this.getTokenAtIndex(currentToken.index - 1);
+      const previousToken = this.getTokenAtIndex(tokenUnderCursor.index - 1);
       resultCol = previousToken.start;
     } else if (tokenNotUnderCursor) {
       const nextToken = this.getPreviousToken();
       resultCol = nextToken.start;
     } else {
-      resultCol = currentToken.start;
+      resultCol = tokenUnderCursor.start;
     }
 
     if (resultCol !== undefined) {
