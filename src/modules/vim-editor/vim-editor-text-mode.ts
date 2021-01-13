@@ -63,7 +63,6 @@ export class VimEditorTextMode {
   initKeys() {
     hotkeys("*", (ev) => {
       logger.debug(["-------------- Key pressed: %s", ev.key], {
-        startGroupId: "keypressed",
         log: true,
       });
 

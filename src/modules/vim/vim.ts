@@ -301,7 +301,6 @@ export class Vim {
 
     logger.debug(["Result of input: %s is: %o", input, result], {
       onlyVerbose: true,
-      endGroupId: "keypressed",
     });
 
     return result;
