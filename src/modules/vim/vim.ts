@@ -45,6 +45,7 @@ export type VimState = {
 export interface QueueInputReturn {
   vimState: VimState | null;
   targetCommand: VimCommandNames;
+  wholeInput: string[];
 }
 
 export interface Cursor {
@@ -92,8 +93,8 @@ export class Vim {
       cursor,
     };
 
-    this.normalMode = new NormalMode(vimState);
-    this.insertMode = new InsertMode(vimState);
+    this.normalMode = new NormalMode(vimState, this.wholeInput);
+    this.insertMode = new InsertMode(vimState, this.wholeInput);
 
     this.keyBindings = vimOptions.keyBindings;
 
@@ -155,7 +156,7 @@ export class Vim {
       commandName,
       commandInput
     ) as CommandType;
-
+    vimState; /*?*/
     return cloneDeep(vimState);
   }
 
@@ -286,10 +287,18 @@ export class Vim {
 
     if (targetCommandName === "enterInsertTextMode") {
       this.enterInsertTextMode();
-      return { vimState: null, targetCommand: targetCommandName };
+      return {
+        vimState: null,
+        targetCommand: targetCommandName,
+        wholeInput: this.wholeInput,
+      };
     } else if (targetCommandName === "enterNormalTextMode") {
       this.enterNormalTextMode();
-      return { vimState: null, targetCommand: targetCommandName };
+      return {
+        vimState: null,
+        targetCommand: targetCommandName,
+        wholeInput: this.wholeInput,
+      };
     }
 
     //
@@ -297,7 +306,11 @@ export class Vim {
     this.setVimState(vimState);
 
     //
-    const result = { vimState, targetCommand: targetCommandName };
+    const result = {
+      vimState,
+      targetCommand: targetCommandName,
+      wholeInput: this.wholeInput,
+    };
 
     logger.debug(["Result of input: %s is: %o", input, result], {
       onlyVerbose: true,

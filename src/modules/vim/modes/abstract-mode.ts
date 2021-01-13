@@ -58,7 +58,7 @@ export abstract class AbstractMode {
   currentMode: VimMode;
   tokenizedInput: TokenizedString[];
 
-  constructor(public vimState: VimState) {
+  constructor(public vimState: VimState, public wholeInput?: string[]) {
     this.tokenizedInput = tokenizeInput(vimState.text);
 
     logger.debug(["Tokens: %o", this.tokenizedInput], { onlyVerbose: true });
@@ -141,7 +141,10 @@ export abstract class AbstractMode {
     return this.vimState;
   }
   cursorDown(): VimState {
-    this.vimState.cursor.line += 1;
+    const newCurLine = this.vimState.cursor.line + 1;
+
+    this.vimState.text = this.wholeInput[newCurLine];
+    this.vimState.cursor.line = newCurLine;
     return this.vimState;
   }
 }

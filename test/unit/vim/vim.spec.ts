@@ -130,10 +130,12 @@ describe("C: Mode - Normal", () => {
             {
               vimState: { cursor: { col: 1, line: 0 }, text: "foo" },
               targetCommand: "cursorRight",
+              wholeInput: ["foo"],
             },
             {
               vimState: { cursor: { col: 2, line: 0 }, text: "foo" },
               targetCommand: "cursorRight",
+              wholeInput: ["foo"],
             },
           ]);
         });
@@ -144,15 +146,22 @@ describe("C: Mode - Normal", () => {
             {
               vimState: { cursor: { col: 1, line: 0 }, text: "foo" },
               targetCommand: "cursorRight",
+              wholeInput: ["foo"],
             },
             {
               vimState: { cursor: { col: 2, line: 0 }, text: "foo" },
               targetCommand: "cursorRight",
+              wholeInput: ["foo"],
             },
-            { vimState: null, targetCommand: "enterInsertTextMode" },
+            {
+              vimState: null,
+              targetCommand: "enterInsertTextMode",
+              wholeInput: ["foo"],
+            },
             {
               vimState: { cursor: { col: 3, line: 0 }, text: "fo!o" },
               targetCommand: "type",
+              wholeInput: ["foo"],
             },
           ]);
         });
@@ -192,6 +201,7 @@ describe("C: Mode - Insert", () => {
         {
           vimState: { cursor: { col: 1, line: 0 }, text: "@foo" },
           targetCommand: "type",
+          wholeInput: ["foo"],
         },
       ]);
     });
@@ -204,11 +214,17 @@ describe("C: Mode - Insert", () => {
         {
           vimState: { cursor: { col: 1, line: 0 }, text: "@foo" },
           targetCommand: "type",
+          wholeInput: ["foo"],
         },
-        { vimState: null, targetCommand: "enterNormalTextMode" },
+        {
+          vimState: null,
+          targetCommand: "enterNormalTextMode",
+          wholeInput: ["foo"],
+        },
         {
           vimState: { cursor: { col: 2, line: 0 }, text: "@foo" },
           targetCommand: "cursorRight",
+          wholeInput: ["foo"],
         },
       ]);
     });
@@ -218,15 +234,22 @@ describe("C: Mode - Insert", () => {
         {
           vimState: { cursor: { col: 1, line: 0 }, text: "@foo" },
           targetCommand: "type",
+          wholeInput: ["foo"],
         },
         {
           vimState: { cursor: { col: 2, line: 0 }, text: "@#foo" },
           targetCommand: "type",
+          wholeInput: ["foo"],
         },
-        { vimState: null, targetCommand: "enterNormalTextMode" },
+        {
+          vimState: null,
+          targetCommand: "enterNormalTextMode",
+          wholeInput: ["foo"],
+        },
         {
           vimState: { cursor: { col: 3, line: 0 }, text: "@#foo" },
           targetCommand: "cursorRight",
+          wholeInput: ["foo"],
         },
       ]);
     });
@@ -237,11 +260,17 @@ describe("C: Mode - Insert", () => {
         {
           vimState: { cursor: { col: 1, line: 0 }, text: "@foo" },
           targetCommand: "type",
+          wholeInput: ["foo"],
         },
-        { vimState: null, targetCommand: "enterNormalTextMode" },
+        {
+          vimState: null,
+          targetCommand: "enterNormalTextMode",
+          wholeInput: ["foo"],
+        },
         {
           vimState: { cursor: { col: 2, line: 0 }, text: "@foo" },
           targetCommand: "cursorRight",
+          wholeInput: ["foo"],
         },
       ]);
     });
