@@ -20,7 +20,9 @@
       (Most of the time it should be just moving cursor, as text gets updated automatically(?))
 
 3. Add commandName as method to `abstract-mode.ts` (Actual Vim implementation)
-   1.
+
+4. Add command to `vim-commands.ts`
+
 
 ---
 
