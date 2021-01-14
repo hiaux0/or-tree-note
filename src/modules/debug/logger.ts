@@ -32,6 +32,8 @@ interface LogOptions {
   /////////////// Grouping
   startGroupId?: string;
   endGroupId?: string;
+  isOnlyGroup?: boolean;
+  clearPreviousGroupsWhen_isOnlyGroup_True?: boolean;
   /** Specified by `expandGroupBasedOnString` */
   allGroupsCollapsedButSpecified?: boolean;
   expandGroupBasedOnString?: string;
@@ -40,6 +42,7 @@ interface LogOptions {
 const defautLogOptions: LogOptions = {
   logMethod: "log",
   logLevel: "verbose",
+  clearPreviousGroupsWhen_isOnlyGroup_True: true,
   // dontLogUnlessSpecified: true,
   focusedLogging: false,
   useTable: true,
@@ -55,11 +58,15 @@ interface BugLogOptions {
   color?: string;
 }
 
+const loggerDevelopmentDebugLog: string[][] = [];
 const groupId: string[] = [];
+let onlyGroup: string[] = [];
 let bugGroupId: string[] = [];
 
 export class Logger {
-  constructor(private globalLogOptions: LogOptions) {}
+  constructor(private globalLogOptions: LogOptions) {
+    (<any>window).loggerDevelopmentDebugLog = loggerDevelopmentDebugLog;
+  }
 
   debug(messages: [string, ...any[]], logOptions?: LogOptions) {
     if (debugMode) {
@@ -144,9 +151,32 @@ export class Logger {
       }
 
       //
-      console[logOpt.logMethod](...messageWithLogScope);
+      if (logOpt.isOnlyGroup) {
+        if (logOpt.clearPreviousGroupsWhen_isOnlyGroup_True) {
+          console.clear();
+        }
 
-      if (logOpt.endGroupId === groupId[0]) {
+        if (onlyGroup.length === 0) {
+          onlyGroup.push(messageWithLogScope[0]);
+          console.group(...messageWithLogScope);
+          loggerDevelopmentDebugLog.push(["group", ...messageWithLogScope]);
+        } else {
+          onlyGroup = [];
+          console.groupEnd();
+          loggerDevelopmentDebugLog.push(["groupEnd", ...messageWithLogScope]);
+          console.group(...messageWithLogScope);
+          onlyGroup.push(messageWithLogScope[0]);
+          loggerDevelopmentDebugLog.push(["group", ...messageWithLogScope]);
+        }
+      }
+      // >>> Actual log
+      console[logOpt.logMethod](...messageWithLogScope);
+      loggerDevelopmentDebugLog.push([
+        logOpt.logMethod,
+        ...messageWithLogScope,
+      ]);
+
+      if (logOpt.endGroupId !== undefined && logOpt.endGroupId === groupId[0]) {
         console.groupEnd();
       }
 
