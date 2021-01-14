@@ -35,9 +35,11 @@ export abstract class AbstractTextMode {
     //
     const newTop = newCursorValue.line * this.caretHeight;
     this.caretElement.style.top = `${newTop}px`;
+    this.currentLineNumber = newCursorValue.line;
 
     const newLeft = newCursorValue.col * this.caretWidth;
     this.caretElement.style.left = `${newLeft}px`;
+    this.currentCaretCol = newCursorValue.col;
   }
 
   cursorUp(vimState?: VimState) {
