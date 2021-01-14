@@ -170,6 +170,30 @@ describe("C: Mode - Normal", () => {
   });
 });
 
+/** *********************/
+/** Normal - Multi line */
+/** *********************/
+describe("C: Mode - Normal - Multi line", () => {
+  const multiLineInput = ["foo", "bar"];
+
+  beforeEach(() => {
+    vim = new Vim(cloneDeep(multiLineInput), cloneDeep(cursor));
+    vim.enterNormalTextMode();
+  });
+
+  fit("C: Cursor down", () => {
+    const result = vim.queueInput("u");
+    expect(result).toEqual({
+      vimState: {
+        cursor: { col: 0, line: 1 },
+        text: "bar",
+      },
+      targetCommand: "cursorDown",
+      wholeInput: ["foo", "bar"],
+    });
+  });
+});
+
 describe("C: Mode - Insert", () => {
   beforeEach(() => {
     vim = new Vim(cloneDeep(input), cloneDeep(cursor));
