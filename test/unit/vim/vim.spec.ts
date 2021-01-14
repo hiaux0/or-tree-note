@@ -207,14 +207,13 @@ describe("C: Mode - Normal - Multi line", () => {
         wholeInput: ["foo", "bar"],
       });
     });
-    fit("F: uee", () => {
+    it("F: uee", () => {
       const cursor: Cursor = { line: 1, col: 0 };
       const multiLineInput = ["hi", "012 456"];
       vim = new Vim(cloneDeep(multiLineInput), cloneDeep(cursor));
       vim.enterNormalTextMode();
 
       const result = vim.queueInputSequence("uee");
-      // expect(1).toEqual(2);
       expect(result).toEqual([
         {
           targetCommand: "cursorDown",
@@ -232,6 +231,19 @@ describe("C: Mode - Normal - Multi line", () => {
           wholeInput: multiLineInput,
         },
       ]);
+    });
+    it("F: ueek - Upper line shorter lower line", () => {
+      const cursor: Cursor = { col: 6, line: 1 };
+      const multiLineInput = ["hi", "012 456"];
+      vim = new Vim(cloneDeep(multiLineInput), cloneDeep(cursor));
+      vim.enterNormalTextMode();
+
+      const result = vim.queueInput("k");
+      expect(result).toEqual({
+        targetCommand: "cursorUp",
+        vimState: { cursor: { col: 1, line: 0 }, text: multiLineInput[0] },
+        wholeInput: multiLineInput,
+      });
     });
   });
   describe("C: Cursor up", () => {

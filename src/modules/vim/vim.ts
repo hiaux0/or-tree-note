@@ -280,7 +280,7 @@ export class Vim {
 
   /** */
   queueInput(input: string): QueueInputReturn {
-    logger.debug(["Received input: %s", input]);
+    logger.debug(["Received input: %s", input], { isOnlyGroup: true });
 
     //
     const targetCommandName = this.getCommandName(input);

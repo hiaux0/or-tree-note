@@ -28,44 +28,36 @@ export abstract class AbstractTextMode {
     this.caretHeight = getCssVar("--caret-size-height");
   }
 
-  cursorHorizontalMovement(newCursorValue?: Cursor) {
-    //
-    this.commenKeyFunctionality();
-
-    //
-    const newLeft = newCursorValue.col * this.caretWidth;
-
-    this.caretElement.style.left = `${newLeft}px`;
-  }
-
-  cursorVerticalMovement(newCursorValue?: Cursor) {
+  setCursorMovement(newCursorValue?: Cursor) {
     //
     this.commenKeyFunctionality();
 
     //
     const newTop = newCursorValue.line * this.caretHeight;
-
     this.caretElement.style.top = `${newTop}px`;
+
+    const newLeft = newCursorValue.col * this.caretWidth;
+    this.caretElement.style.left = `${newLeft}px`;
   }
 
   cursorUp(vimState?: VimState) {
-    this.cursorVerticalMovement(vimState?.cursor);
+    this.setCursorMovement(vimState?.cursor);
   }
   cursorDown(vimState?: VimState) {
-    this.cursorVerticalMovement(vimState?.cursor);
+    this.setCursorMovement(vimState?.cursor);
   }
   cursorRight(vimState: VimState) {
-    this.cursorHorizontalMovement(vimState?.cursor);
+    this.setCursorMovement(vimState?.cursor);
     return;
   }
   cursorLeft(vimState: VimState) {
-    this.cursorHorizontalMovement(vimState?.cursor);
+    this.setCursorMovement(vimState?.cursor);
   }
   cursorWordForwardEnd(vimState: VimState) {
-    this.cursorHorizontalMovement(vimState?.cursor);
+    this.setCursorMovement(vimState?.cursor);
   }
   cursorBackwordsStartWord(vimState: VimState) {
-    this.cursorHorizontalMovement(vimState?.cursor);
+    this.setCursorMovement(vimState?.cursor);
   }
 
   commenKeyFunctionality() {

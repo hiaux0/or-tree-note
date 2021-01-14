@@ -1,5 +1,6 @@
+import { cloneDeep } from "lodash";
 import { Logger } from "modules/debug/logger";
-import { Cursor, VimState, VimMode } from "../vim";
+import { VimState, VimMode } from "../vim";
 
 const logger = new Logger({ scope: "AbstractMode" });
 
@@ -17,17 +18,15 @@ export function isValidHorizontalPosition(
   return result;
 }
 
-export function isValidVerticalPosition(
-  line: number,
-  wholeInputLength: number
-) {
-  const isBigger = line > wholeInputLength;
+export function isValidVerticalPosition(line: number, wholeInput: string[]) {
+  const isBigger = line > wholeInput.length;
   /**
    * Should be > technically, but conceptionally, line and text index are off by one.
    */
   const isZero = line === 0;
-  const result = !isBigger && !isZero;
 
+  //
+  const result = !isBigger && !isZero;
   return result;
 }
 
@@ -95,12 +94,12 @@ export abstract class AbstractMode {
       );
     }
 
+    const previousOutput = cloneDeep(this.vimState);
     const result = this[commandName](commandValue) as VimState;
 
     try {
       this.validateHorizontalCursor(result);
     } catch {
-      const previousOutput = this.vimState;
       return previousOutput;
     }
 
@@ -125,17 +124,21 @@ export abstract class AbstractMode {
     const isValid = isValidHorizontalPosition(curCol, vimState.text);
 
     if (!isValid) {
-      logger.debug(
-        [
-          "[INVALID] Cursor col will be: %d, but should be between [0,%d].",
-          curCol,
-          vimState.text.length,
-        ],
-        {
-          isError: true,
-        }
-      );
-      throw "";
+      !isValid; /*?*/
+      try {
+        logger.debug(
+          [
+            "[INVALID] Cursor col will be: %d, but should be between [0,%d].",
+            curCol,
+            vimState.text.length,
+          ],
+          {
+            isError: true,
+          }
+        );
+      } catch {
+        throw "";
+      }
     }
 
     return isValid;
@@ -143,7 +146,7 @@ export abstract class AbstractMode {
 
   validateVerticalCursor(vimState: VimState) {
     const line = vimState.cursor.line + 1;
-    const isValid = isValidVerticalPosition(line, this.wholeInput.length);
+    const isValid = isValidVerticalPosition(line, this.wholeInput);
 
     if (!isValid) {
       logger.debug(
@@ -184,9 +187,24 @@ export abstract class AbstractMode {
   }
   cursorUp(): VimState {
     const newCurLine = this.vimState.cursor.line - 1; /*?*/
+    const isValidVertical = isValidVerticalPosition(
+      newCurLine + 1,
+      this.wholeInput
+    );
 
-    if (!isValidVerticalPosition(newCurLine + 1, this.wholeInput.length)) {
+    if (!isValidVertical) {
       return this.vimState;
+    }
+
+    const newActiveLine = this.wholeInput[newCurLine];
+    const isValidHorizontalAfterMovedVertically = isValidHorizontalPosition(
+      this.vimState.cursor.col + 1,
+      newActiveLine
+    );
+
+    if (!isValidHorizontalAfterMovedVertically) {
+      // TODO: Call "$" to put cursor to end of line
+      this.vimState.cursor.col = newActiveLine.length - 1;
     }
 
     const newActiveText = this.wholeInput[newCurLine];
@@ -199,8 +217,12 @@ export abstract class AbstractMode {
   }
   cursorDown(): VimState {
     const newCurLine = this.vimState.cursor.line + 1; /*?*/
+    const isValidVertical = isValidVerticalPosition(
+      newCurLine + 1,
+      this.wholeInput
+    );
 
-    if (!isValidVerticalPosition(newCurLine + 1, this.wholeInput.length)) {
+    if (!isValidVertical) {
       return this.vimState;
     }
 
