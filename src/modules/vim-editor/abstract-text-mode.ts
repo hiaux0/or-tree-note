@@ -38,11 +38,21 @@ export abstract class AbstractTextMode {
     this.caretElement.style.left = `${newLeft}px`;
   }
 
-  cursorUp() {
+  cursorVerticalMovement(newCursorValue?: Cursor) {
+    //
     this.commenKeyFunctionality();
+
+    //
+    const newTop = newCursorValue.line * this.caretHeight;
+
+    this.caretElement.style.top = `${newTop}px`;
   }
-  cursorDown() {
-    this.commenKeyFunctionality();
+
+  cursorUp(vimState?: VimState) {
+    this.cursorVerticalMovement(vimState?.cursor);
+  }
+  cursorDown(vimState?: VimState) {
+    this.cursorVerticalMovement(vimState?.cursor);
   }
   cursorRight(vimState: VimState) {
     this.cursorHorizontalMovement(vimState?.cursor);

@@ -17,6 +17,20 @@ export function isValidHorizontalPosition(
   return result;
 }
 
+export function isValidVerticalPosition(
+  line: number,
+  wholeInputLength: number
+) {
+  const isBigger = line > wholeInputLength;
+  /**
+   * Should be > technically, but conceptionally, line and text index are off by one.
+   */
+  const isZero = line === 0;
+  const result = !isBigger && !isZero;
+
+  return result;
+}
+
 export interface TokenizedString {
   string: string;
   start: number;
@@ -95,6 +109,17 @@ export abstract class AbstractMode {
     return result;
   }
 
+  reTokenizeInput(input: string) {
+    const tokenizedInput = tokenizeInput(input);
+
+    logger.debug(["reTokenizeInput: %o", tokenizedInput], {
+      onlyVerbose: true,
+    });
+
+    this.tokenizedInput = tokenizedInput;
+    return tokenizedInput;
+  }
+
   validateHorizontalCursor(vimState: VimState) {
     const curCol = vimState.cursor.col + 1;
     const isValid = isValidHorizontalPosition(curCol, vimState.text);
@@ -105,6 +130,27 @@ export abstract class AbstractMode {
           "[INVALID] Cursor col will be: %d, but should be between [0,%d].",
           curCol,
           vimState.text.length,
+        ],
+        {
+          isError: true,
+        }
+      );
+      throw "";
+    }
+
+    return isValid;
+  }
+
+  validateVerticalCursor(vimState: VimState) {
+    const line = vimState.cursor.line + 1;
+    const isValid = isValidVerticalPosition(line, this.wholeInput.length);
+
+    if (!isValid) {
+      logger.debug(
+        [
+          "[INVALID] Line will be: %d, but should be between [0,%d].",
+          line,
+          this.wholeInput.length,
         ],
         {
           isError: true,
@@ -137,14 +183,33 @@ export abstract class AbstractMode {
     return this.vimState;
   }
   cursorUp(): VimState {
-    this.vimState.cursor.line -= 1;
+    const newCurLine = this.vimState.cursor.line - 1; /*?*/
+
+    if (!isValidVerticalPosition(newCurLine + 1, this.wholeInput.length)) {
+      return this.vimState;
+    }
+
+    const newActiveText = this.wholeInput[newCurLine];
+
+    this.vimState.text = newActiveText;
+    this.vimState.cursor.line = newCurLine;
+    this.reTokenizeInput(newActiveText);
+
     return this.vimState;
   }
   cursorDown(): VimState {
-    const newCurLine = this.vimState.cursor.line + 1;
+    const newCurLine = this.vimState.cursor.line + 1; /*?*/
 
-    this.vimState.text = this.wholeInput[newCurLine];
+    if (!isValidVerticalPosition(newCurLine + 1, this.wholeInput.length)) {
+      return this.vimState;
+    }
+
+    const newActiveText = this.wholeInput[newCurLine];
+
+    this.vimState.text = newActiveText;
     this.vimState.cursor.line = newCurLine;
+    this.reTokenizeInput(newActiveText);
+
     return this.vimState;
   }
 }

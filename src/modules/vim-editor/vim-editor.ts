@@ -37,7 +37,7 @@ export class VimEditor {
     }
 
     // vimEditorTextMode.executeCommandSequenceInEditor("llli^");
-    vimEditorTextMode.executeCommandSequenceInEditor("u");
+    vimEditorTextMode.executeCommandSequenceInEditor("uee");
   }
 
   getMode() {

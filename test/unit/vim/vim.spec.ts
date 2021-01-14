@@ -113,7 +113,7 @@ describe("C: Mode - Normal", () => {
         it("F: Single input", () => {
           const result = vim.queueInput("u");
           expect(result.targetCommand).toBe("cursorDown");
-          expect(result.vimState.cursor).toEqual({ col: 0, line: 1 });
+          expect(result.vimState.cursor).toEqual({ col: 0, line: 0 });
         });
         //
       });
@@ -174,22 +174,98 @@ describe("C: Mode - Normal", () => {
 /** Normal - Multi line */
 /** *********************/
 describe("C: Mode - Normal - Multi line", () => {
-  const multiLineInput = ["foo", "bar"];
+  describe("C: Cursor down", () => {
+    it("F: Cursor down", () => {
+      const cursor: Cursor = { line: 1, col: 0 };
+      const multiLineInput = ["foo", "bar"];
+      vim = new Vim(cloneDeep(multiLineInput), cloneDeep(cursor));
+      vim.enterNormalTextMode();
 
-  beforeEach(() => {
-    vim = new Vim(cloneDeep(multiLineInput), cloneDeep(cursor));
-    vim.enterNormalTextMode();
+      const result = vim.queueInput("u");
+      expect(result).toEqual({
+        vimState: {
+          cursor: { col: 0, line: 1 },
+          text: "bar",
+        },
+        targetCommand: "cursorDown",
+        wholeInput: ["foo", "bar"],
+      });
+    });
+    it("F: Cursor down - last line", () => {
+      const cursor: Cursor = { line: 1, col: 0 };
+      const multiLineInput = ["foo", "bar"];
+      vim = new Vim(cloneDeep(multiLineInput), cloneDeep(cursor));
+      vim.enterNormalTextMode();
+
+      const result = vim.queueInput("u");
+      expect(result).toEqual({
+        vimState: {
+          cursor: { col: 0, line: 1 },
+          text: "bar",
+        },
+        targetCommand: "cursorDown",
+        wholeInput: ["foo", "bar"],
+      });
+    });
+    fit("F: uee", () => {
+      const cursor: Cursor = { line: 1, col: 0 };
+      const multiLineInput = ["hi", "012 456"];
+      vim = new Vim(cloneDeep(multiLineInput), cloneDeep(cursor));
+      vim.enterNormalTextMode();
+
+      const result = vim.queueInputSequence("uee");
+      // expect(1).toEqual(2);
+      expect(result).toEqual([
+        {
+          targetCommand: "cursorDown",
+          vimState: { cursor: { col: 0, line: 1 }, text: multiLineInput[1] },
+          wholeInput: multiLineInput,
+        },
+        {
+          targetCommand: "cursorWordForwardEnd",
+          vimState: { cursor: { col: 2, line: 1 }, text: multiLineInput[1] },
+          wholeInput: multiLineInput,
+        },
+        {
+          targetCommand: "cursorWordForwardEnd",
+          vimState: { cursor: { col: 6, line: 1 }, text: multiLineInput[1] },
+          wholeInput: multiLineInput,
+        },
+      ]);
+    });
   });
+  describe("C: Cursor up", () => {
+    it("F: Cursor up", () => {
+      const cursor: Cursor = { line: 1, col: 0 };
+      const multiLineInput = ["foo", "bar"];
+      vim = new Vim(cloneDeep(multiLineInput), cloneDeep(cursor));
+      vim.enterNormalTextMode();
 
-  fit("C: Cursor down", () => {
-    const result = vim.queueInput("u");
-    expect(result).toEqual({
-      vimState: {
-        cursor: { col: 0, line: 1 },
-        text: "bar",
-      },
-      targetCommand: "cursorDown",
-      wholeInput: ["foo", "bar"],
+      const result = vim.queueInput("k");
+      expect(result).toEqual({
+        vimState: {
+          cursor: { col: 0, line: 0 },
+          text: "foo",
+        },
+        targetCommand: "cursorUp",
+        wholeInput: ["foo", "bar"],
+      });
+    });
+    it("F: Cursor up - first line", () => {
+      const cursor: Cursor = { line: 1, col: 0 };
+      const multiLineInput = ["foo", "bar"];
+      vim = new Vim(cloneDeep(multiLineInput), cloneDeep(cursor));
+      vim.enterNormalTextMode();
+
+      const result = vim.queueInput("k");
+      expect(result).toEqual({
+        vimState: {
+          cursor: { col: 0, line: 0 },
+          text: "foo",
+        },
+        targetCommand: "cursorUp",
+        wholeInput: ["foo", "bar"],
+      });
     });
   });
 });
