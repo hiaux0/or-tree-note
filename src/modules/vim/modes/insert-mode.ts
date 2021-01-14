@@ -12,6 +12,7 @@ export class InsertMode extends AbstractMode {
       newInput
     );
     this.vimState.text = updatedInput;
+    this.wholeInput[this.vimState.cursor.line] = updatedInput;
     super.cursorRight();
     return this.vimState;
   }
