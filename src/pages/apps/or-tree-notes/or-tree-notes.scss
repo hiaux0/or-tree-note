@@ -52,6 +52,10 @@ or-tree-notes {
     height: 80vh;
     width: 80vw;
 
+    .editor-line{
+      white-space: pre;
+    }
+
     #caret {
       position: absolute;
       top: 0;
