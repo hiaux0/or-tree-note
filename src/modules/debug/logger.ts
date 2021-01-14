@@ -168,6 +168,9 @@ export class Logger {
     }
 
     //
+    console.log(`%c ${message}`, `background: ${logOptions.color ?? "blue"}`);
+
+    //
     const isEnd =
       logOptions.isEnd && message === bugGroupId[bugGroupId.length - 1];
     if (isEnd) {
