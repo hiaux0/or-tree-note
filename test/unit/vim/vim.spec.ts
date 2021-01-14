@@ -279,6 +279,20 @@ describe("C: Mode - Normal - Multi line", () => {
         wholeInput: ["foo", "bar"],
       });
     });
+
+    it("F: eeu - Upper line longer lower line", () => {
+      const cursor: Cursor = { col: 6, line: 0 };
+      const multiLineInput = ["012 456", "hi"];
+      vim = new Vim(cloneDeep(multiLineInput), cloneDeep(cursor));
+      vim.enterNormalTextMode();
+
+      const result = vim.queueInput("u");
+      expect(result).toEqual({
+        targetCommand: "cursorDown",
+        vimState: { cursor: { col: 1, line: 1 }, text: multiLineInput[1] },
+        wholeInput: multiLineInput,
+      });
+    });
   });
 });
 

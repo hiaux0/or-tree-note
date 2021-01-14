@@ -226,6 +226,17 @@ export abstract class AbstractMode {
       return this.vimState;
     }
 
+    const newActiveLine = this.wholeInput[newCurLine];
+    const isValidHorizontalAfterMovedVertically = isValidHorizontalPosition(
+      this.vimState.cursor.col + 1,
+      newActiveLine
+    );
+
+    if (!isValidHorizontalAfterMovedVertically) {
+      // TODO: Call "$" to put cursor to end of line
+      this.vimState.cursor.col = newActiveLine.length - 1;
+    }
+
     const newActiveText = this.wholeInput[newCurLine];
 
     this.vimState.text = newActiveText;
