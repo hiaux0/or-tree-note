@@ -45,6 +45,7 @@ export const LETTERS = [
 export const ESCAPE = "Escape";
 export const SHIFT = "Shift";
 export const SHIFT_KEY_CODE = 16;
+export const SPACE = "Space";
 
 export const MODIFIERS = [
   "⌘",
@@ -64,6 +65,7 @@ export const MODIFIERS = [
   "Backspace",
   "CapsLock",
   "Delete",
+  SPACE,
 ] as const;
 
 export type ModifiersType = typeof MODIFIERS[number];

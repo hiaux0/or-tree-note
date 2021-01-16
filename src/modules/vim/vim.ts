@@ -1,3 +1,4 @@
+import { SPACE } from "./../../resources/keybindings/app.keys";
 import { VimCommandNames, VimCommand, SynonymKey } from "./vim-commands";
 import { filterStringByCharSequence } from "modules/string/string";
 import { Logger } from "./../debug/logger";
@@ -58,10 +59,12 @@ export enum VimMode {
 }
 export interface VimOptions {
   keyBindings: KeyBindingModes;
+  leader?: string;
 }
 
 const defaultVimOptions: VimOptions = {
   keyBindings,
+  leader: SPACE,
 };
 
 /**
@@ -168,6 +171,10 @@ export class Vim {
   findPotentialCommand(input: string): FindPotentialCommandReturn {
     //
     input = this.ensureVimModifier(input);
+
+    logger.debug(["Finding potential command for: ", input], {
+      isOnlyGroup: true,
+    });
 
     //
     let targetKeyBinding;
@@ -280,7 +287,7 @@ export class Vim {
 
   /** */
   queueInput(input: string): QueueInputReturn {
-    logger.debug(["Received input: %s", input], { isOnlyGroup: true });
+    logger.debug(["Received input: %s", input]);
 
     //
     const targetCommandName = this.getCommandName(input);

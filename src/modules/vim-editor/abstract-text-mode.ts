@@ -28,6 +28,13 @@ export abstract class AbstractTextMode {
     this.caretHeight = getCssVar("--caret-size-height");
   }
 
+  openCommandPalette(vimState: VimState) {
+    console.log(
+      "TCL: AbstractTextMode -> openCommandPalette -> vimState",
+      vimState
+    );
+  }
+
   setCursorMovement(newCursorValue?: Cursor) {
     //
     this.commenKeyFunctionality();
