@@ -1,5 +1,11 @@
 import { cloneDeep, map } from "lodash";
-import { Cursor, KeyBindingModes, Vim } from "modules/vim/vim";
+import {
+  Cursor,
+  KeyBindingModes,
+  Vim,
+  VimPlugin,
+  VimState,
+} from "modules/vim/vim";
 
 const input = ["foo"];
 const cursor: Cursor = { line: 0, col: 0 };
@@ -154,14 +160,14 @@ describe("C: Mode - Normal", () => {
               wholeInput: ["foo"],
             },
             {
-              vimState: null,
+              vimState: { cursor: { col: 2, line: 0 }, text: "foo" },
               targetCommand: "enterInsertTextMode",
               wholeInput: ["foo"],
             },
             {
               vimState: { cursor: { col: 3, line: 0 }, text: "fo!o" },
               targetCommand: "type",
-              wholeInput: ["foo"],
+              wholeInput: ["fo!o"],
             },
           ]);
         });
@@ -327,7 +333,7 @@ describe("C: Mode - Insert", () => {
         {
           vimState: { cursor: { col: 1, line: 0 }, text: "@foo" },
           targetCommand: "type",
-          wholeInput: ["foo"],
+          wholeInput: ["@foo"],
         },
       ]);
     });
@@ -340,17 +346,17 @@ describe("C: Mode - Insert", () => {
         {
           vimState: { cursor: { col: 1, line: 0 }, text: "@foo" },
           targetCommand: "type",
-          wholeInput: ["foo"],
+          wholeInput: ["@foo"],
         },
         {
-          vimState: null,
+          vimState: { cursor: { col: 1, line: 0 }, text: "@foo" },
           targetCommand: "enterNormalTextMode",
-          wholeInput: ["foo"],
+          wholeInput: ["@foo"],
         },
         {
           vimState: { cursor: { col: 2, line: 0 }, text: "@foo" },
           targetCommand: "cursorRight",
-          wholeInput: ["foo"],
+          wholeInput: ["@foo"],
         },
       ]);
     });
@@ -360,22 +366,22 @@ describe("C: Mode - Insert", () => {
         {
           vimState: { cursor: { col: 1, line: 0 }, text: "@foo" },
           targetCommand: "type",
-          wholeInput: ["foo"],
+          wholeInput: ["@foo"],
         },
         {
           vimState: { cursor: { col: 2, line: 0 }, text: "@#foo" },
           targetCommand: "type",
-          wholeInput: ["foo"],
+          wholeInput: ["@#foo"],
         },
         {
-          vimState: null,
+          vimState: { cursor: { col: 2, line: 0 }, text: "@#foo" },
           targetCommand: "enterNormalTextMode",
-          wholeInput: ["foo"],
+          wholeInput: ["@#foo"],
         },
         {
           vimState: { cursor: { col: 3, line: 0 }, text: "@#foo" },
           targetCommand: "cursorRight",
-          wholeInput: ["foo"],
+          wholeInput: ["@#foo"],
         },
       ]);
     });
@@ -386,17 +392,17 @@ describe("C: Mode - Insert", () => {
         {
           vimState: { cursor: { col: 1, line: 0 }, text: "@foo" },
           targetCommand: "type",
-          wholeInput: ["foo"],
+          wholeInput: ["@foo"],
         },
         {
-          vimState: null,
+          vimState: { cursor: { col: 1, line: 0 }, text: "@foo" },
           targetCommand: "enterNormalTextMode",
-          wholeInput: ["foo"],
+          wholeInput: ["@foo"],
         },
         {
           vimState: { cursor: { col: 2, line: 0 }, text: "@foo" },
           targetCommand: "cursorRight",
-          wholeInput: ["foo"],
+          wholeInput: ["@foo"],
         },
       ]);
     });
@@ -422,5 +428,41 @@ describe("Methods", () => {
       const result = vim.splitInputSequence("1><23>");
       expect(result).toEqual(["1", ">", "<23>"]);
     });
+  });
+});
+
+/** ************/
+/** Vim Plugin */
+/** ************/
+
+describe("C: Vim Plugin", () => {
+  it("F: Execute plugin", () => {
+    const plugin: VimPlugin = {
+      commandName: "openCommandPalette",
+      execute: () => {},
+    };
+    vim = new Vim(cloneDeep(input), cloneDeep(cursor), {
+      vimPlugins: [plugin],
+    });
+    spyOn(plugin, "execute");
+    const result = vim.queueInput("<Space>cp");
+    expect(result.targetCommand).toBe("openCommandPalette");
+    expect(plugin.execute).toHaveBeenCalled();
+  });
+  it("F: Execute plugin - modify vimState", () => {
+    const plugin: VimPlugin = {
+      commandName: "openCommandPalette",
+      execute: (vimState, commandInput) => {
+        vimState.text = commandInput;
+        return vimState;
+      },
+    };
+    vim = new Vim(cloneDeep(input), cloneDeep(cursor), {
+      vimPlugins: [plugin],
+    });
+    //
+    const inputValue = "<Space>cp";
+    const result = vim.queueInput(inputValue);
+    expect(result.vimState.text).toBe(inputValue);
   });
 });
