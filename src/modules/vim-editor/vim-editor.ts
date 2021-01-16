@@ -1,8 +1,6 @@
 import { inject } from "aurelia-dependency-injection";
-import { Vim, VimMode } from "modules/vim/vim";
-import { rootContainer } from "../root-container";
+import { Vim, VimExecutingMode } from "modules/vim/vim";
 import { VimEditorTextMode } from "./vim-editor-text-mode";
-import hotkeys from "hotkeys-js";
 
 export interface VimEditorOptions {
   // Input / Setup
@@ -17,6 +15,7 @@ export interface VimEditorOptions {
    */
   isElementMode?: boolean;
   isTextMode?: boolean;
+  vimExecutingMode?: VimExecutingMode;
 }
 const defaultVimEditorOptions: VimEditorOptions = {
   isTextMode: true,
@@ -36,6 +35,8 @@ export class VimEditor {
       vimEditorTextMode.initKeys();
       this.vim = vimEditorTextMode.getVim();
     }
+
+    vimEditorTextMode.executeCommandSequenceInEditor("ueek");
   }
 
   getMode() {

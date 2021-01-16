@@ -52,6 +52,10 @@ or-tree-notes {
     height: 80vh;
     width: 80vw;
 
+    .editor-line{
+      white-space: pre;
+    }
+
     #caret {
       position: absolute;
       top: 0;
@@ -60,13 +64,20 @@ or-tree-notes {
       width: $caretSizeWidth;
 
       opacity: 0.5;
-      z-index: -1;
+      // z-index: -1;
 
       &.caret-NORMAL {
-        background: $caretBackgroundColor;
         border: 1px solid black;
         &.caret-blinking {
           @include caretBlinking(blinkNormal);
+        }
+        &::after {
+          content: ".";
+          background: red;
+          width: 2px;
+          display: block;
+          z-index: 2;
+          position: relative;
         }
       }
 

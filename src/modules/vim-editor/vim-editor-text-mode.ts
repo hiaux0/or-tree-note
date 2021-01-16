@@ -1,16 +1,19 @@
-import { ModifiersType } from "./../../resources/keybindings/app.keys";
-import { InsertMode } from "./../vim/modes/insert-mode";
-import { NormalMode } from "./../vim/modes/normal-mode";
-import { inject, Container } from "aurelia-dependency-injection";
 import "aurelia-polyfills";
-import { QueueInputReturn, Vim, VimMode } from "modules/vim/vim";
-import { VimEditor, VimEditorOptions } from "./vim-editor";
+import { Vim, VimMode } from "modules/vim/vim";
+import { VimEditorOptions } from "./vim-editor";
 import hotkeys from "hotkeys-js";
-import { logger } from "modules/debug/logger";
-import { ESCAPE, INSERT_MODE, MODIFIERS } from "resources/keybindings/app.keys";
+import { Logger } from "modules/debug/logger";
+import {
+  ESCAPE,
+  INSERT_MODE,
+  MODIFIERS,
+  ModifiersType,
+} from "resources/keybindings/app.keys";
 import { NormalTextMode } from "./normal-text-mode/normal-text-mode";
 import { InsertTextMode } from "./insert-text-mode/insert-text-mode";
 import { AbstractTextMode } from "./abstract-text-mode";
+
+const logger = new Logger({ scope: "VimEditorTextMode" });
 
 const CARET_NORMAL_CLASS = "caret-NORMAL";
 const CARET_INSERT_CLASS = "caret-INSERT";
@@ -53,27 +56,15 @@ export class VimEditorTextMode {
     });
   }
 
-  isModifierKey(input: string): input is ModifiersType {
-    const modifierInput = input as ModifiersType;
-    return MODIFIERS.includes(modifierInput);
-  }
-
   initVim() {
     this.vim = new Vim(this.elementText);
   }
 
   initKeys() {
     hotkeys("*", (ev) => {
-      logger.debug(["-------------- Key pressed: %s", ev.key]);
-
-      if (
-        this.isModifierKey(ev.key) &&
-        this.vim.getCurrentMode().currentMode === VimMode.INSERT
-      ) {
-        // this.modifierKeyPressed(ev.key);
-        console.log("TODO: modifierKeyPressed");
-        return;
-      }
+      logger.debug(["-------------- Key pressed: %s", ev.key], {
+        log: true,
+      });
 
       //
       if (
@@ -95,16 +86,44 @@ export class VimEditorTextMode {
         );
       }
 
-      const result = this.vim.queueInput(ev.key);
-      this.executeCommandInEditor(result);
+      this.executeCommandInEditor(ev.key);
     });
   }
 
-  executeCommandInEditor(result: QueueInputReturn) {
+  isModifierKey(input: string): input is ModifiersType {
+    const modifierInput = input as ModifiersType;
+    return MODIFIERS.includes(modifierInput);
+  }
+
+  executeCommandInEditor(input: string) {
+    //
+    const result = this.vim.queueInput(input);
+    logger.debug(["Received result from vim: %o", result], {
+      onlyVerbose: true,
+    });
+
+    //
     const currentMode = this.getCurrentTextMode();
+    currentMode;
+
     if (currentMode[result.targetCommand]) {
-      currentMode[result.targetCommand](result.commandOutput);
+      currentMode[result.targetCommand](result.vimState);
     }
+  }
+
+  executeCommandSequenceInEditor(inputSequence: string | string[]) {
+    const resultList = this.vim.queueInputSequence(
+      inputSequence,
+      this.vimEditorOptions.vimExecutingMode
+    );
+
+    resultList.forEach((result) => {
+      const currentMode = this.getCurrentTextMode();
+
+      if (currentMode[result.targetCommand]) {
+        currentMode[result.targetCommand](result.vimState);
+      }
+    });
   }
 
   getVim() {

@@ -1,5 +1,6 @@
 import { AbstractTextMode } from "../abstract-text-mode";
 import { replaceAt } from "modules/string/string";
+import { VimState } from "modules/vim/vim";
 
 const CARET_NORMAL_CLASS = "caret-normal";
 const CARET_INSERT_CLASS = "caret-insert";
@@ -9,21 +10,7 @@ export class InsertTextMode extends AbstractTextMode {
     super(parentElement, childSelector, caretElement);
   }
 
-  keyPressed(pressedKey: string, targetCommandName?: string) {
-    if (targetCommandName) {
-      super[targetCommandName]();
-      return;
-    }
-    this.type(pressedKey);
-  }
-
-  modifierKeyPressed(modifierKey: string) {
-    if (this[modifierKey.toLowerCase()]) {
-      this[modifierKey.toLowerCase()]();
-    }
-  }
-
-  backspace() {
+  backspace(vimState?: VimState) {
     const currentLine = this.children[this.currentLineNumber];
     const curLineText = currentLine.textContent;
     const currentCaretCol = this.getCurrentCaretCol();
@@ -31,7 +18,7 @@ export class InsertTextMode extends AbstractTextMode {
     const result = replaceAt(curLineText, currentCaretCol - 1, "");
     currentLine.textContent = result;
 
-    super.cursorLeft();
+    super.cursorLeft(vimState);
   }
 
   delete() {
@@ -43,10 +30,10 @@ export class InsertTextMode extends AbstractTextMode {
     currentLine.textContent = result;
   }
 
-  type(newContent: string) {
+  type(vimState?: VimState) {
     const currentLine = this.children[this.currentLineNumber];
 
-    currentLine.textContent = newContent;
-    super.cursorRight();
+    currentLine.textContent = vimState.text;
+    super.cursorRight(vimState);
   }
 }

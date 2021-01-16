@@ -16,9 +16,11 @@
 // Import commands.js using ES2015 syntax:
 import "./commands";
 
-import "./commands/app";
+import "./commands/e2e-app";
 //
 import "./commands/css/e2e-css-variables";
+//
+import "./commands/vim/e2e-vim";
 
 // Alternatively you can use CommonJS syntax:
 // require('./commands');
@@ -26,5 +28,5 @@ import "./commands/css/e2e-css-variables";
 Cypress.on("uncaught:exception", (err, runnable) => {
   // returning false here prevents Cypress from
   // failing the test
-  return false;
+  // return false;
 });

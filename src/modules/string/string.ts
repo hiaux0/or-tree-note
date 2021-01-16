@@ -80,5 +80,12 @@ export function filterListByCharSequence(inputList: string[], value: string) {
  */
 export function filterStringByCharSequence(input: string, value: string) {
   const regex = new RegExp(`^${value}`);
-  return regex.exec(input) !== null;
+  const execedRegex = regex.exec(input);
+
+  if (Array.isArray(execedRegex)) {
+    const hasMatch = !!execedRegex[0];
+    return hasMatch;
+  }
+
+  return execedRegex !== null;
 }

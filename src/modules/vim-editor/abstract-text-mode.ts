@@ -1,12 +1,12 @@
-import { logger } from "modules/debug/logger";
+import { VimState } from "./../vim/vim";
+import { Logger } from "modules/debug/logger";
+import { Cursor } from "modules/vim/vim";
 import {
   getComputedValueFromPixelString,
   getCssVar,
-  getValueFromPixelString,
 } from "../css/css-variables";
 
-const CARET_NORMAL_CLASS = "caret-normal";
-const CARET_INSERT_CLASS = "caret-insert";
+const logger = new Logger({ scope: "AbstractTextMode" });
 
 export abstract class AbstractTextMode {
   children: NodeListOf<Element>;
@@ -28,48 +28,38 @@ export abstract class AbstractTextMode {
     this.caretHeight = getCssVar("--caret-size-height");
   }
 
-  keyPressed(_pressedKey: string, _targetCommandName?: string) {}
-
-  cursorUp() {
-    this.commenKeyFunctionality();
-  }
-  cursorDown() {
-    this.commenKeyFunctionality();
-  }
-  cursorRight() {
+  setCursorMovement(newCursorValue?: Cursor) {
+    //
     this.commenKeyFunctionality();
 
-    const currentCaretLeft = getValueFromPixelString(
-      this.caretElement.style.left
-    );
+    //
+    const newTop = newCursorValue.line * this.caretHeight;
+    this.caretElement.style.top = `${newTop}px`;
+    this.currentLineNumber = newCursorValue.line;
 
-    const newLeft = currentCaretLeft + this.caretWidth;
-    const parentWidth = getValueFromPixelString(
-      getComputedStyle(this.parentElement).width
-    );
-
-    /**
-     * TODO: Only until word end
-     */
-    if (newLeft > parentWidth) {
-      return;
-    }
-
+    const newLeft = newCursorValue.col * this.caretWidth;
     this.caretElement.style.left = `${newLeft}px`;
+    this.currentCaretCol = newCursorValue.col;
   }
 
-  cursorLeft() {
-    this.commenKeyFunctionality();
-    const currentCaretLeft = getValueFromPixelString(
-      this.caretElement.style.left
-    );
-
-    const newLeft = currentCaretLeft - this.caretWidth;
-
-    if (newLeft < 0) {
-      return;
-    }
-    this.caretElement.style.left = `${newLeft}px`;
+  cursorUp(vimState?: VimState) {
+    this.setCursorMovement(vimState?.cursor);
+  }
+  cursorDown(vimState?: VimState) {
+    this.setCursorMovement(vimState?.cursor);
+  }
+  cursorRight(vimState: VimState) {
+    this.setCursorMovement(vimState?.cursor);
+    return;
+  }
+  cursorLeft(vimState: VimState) {
+    this.setCursorMovement(vimState?.cursor);
+  }
+  cursorWordForwardEnd(vimState: VimState) {
+    this.setCursorMovement(vimState?.cursor);
+  }
+  cursorBackwordsStartWord(vimState: VimState) {
+    this.setCursorMovement(vimState?.cursor);
   }
 
   commenKeyFunctionality() {

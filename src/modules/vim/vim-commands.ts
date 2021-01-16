@@ -8,6 +8,7 @@ export const VIM_COMMANDS = [
   "type",
   "enterInsertTextMode",
   "enterNormalTextMode",
+  "cursorWordForwardEnd",
 ] as const;
 
 export type VimCommandNames = typeof VIM_COMMANDS[number];

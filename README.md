@@ -1,3 +1,35 @@
+# How to add a new command
+
+1. Add to key-bindings.ts
+   1. Choose which mode for new command and add (here, we add to `Normal`)
+
+      ```ts
+        { key: "b", command: "cursorBackwordsStartWord" }, // jump backwards to the start of a word
+      ```
+
+   2. Specify synonyms if you want
+
+      ```ts
+        synonyms: {
+          "<esc>": "<Escape>",
+        },
+      ```
+
+2. Add commandName as method to `abstract-text-mode.ts` (the UI part)
+   1. Handle logic that takes input from the vim module and translate to UI actions
+      (Most of the time it should be just moving cursor, as text gets updated automatically(?))
+
+3. Add commandName as method to `abstract-mode.ts` (Actual Vim implementation)
+
+4. Add command to `vim-commands.ts`
+
+
+---
+
+# Auto generated
+
+vvvvvvvvvvvvvvvv
+
 # `or-tree-note`
 
 This project is bootstrapped by [aurelia-cli](https://github.com/aurelia/cli).
