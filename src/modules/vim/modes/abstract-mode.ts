@@ -108,13 +108,6 @@ export abstract class AbstractMode {
     return result;
   }
 
-  openCommandPalette(vimState: VimState) {
-    console.log(
-      "TCL: AbstractMode -> openCommandPalette -> vimState",
-      vimState
-    );
-  }
-
   reTokenizeInput(input: string) {
     const tokenizedInput = tokenizeInput(input);
 
