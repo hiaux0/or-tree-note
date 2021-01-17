@@ -18,7 +18,7 @@ const keyBindings = (keyBindingsJson as unknown) as KeyBindingModes;
 
 export const vim = "vim";
 
-const defaultVimOptions: VimOptions = {
+export const defaultVimOptions: VimOptions = {
   keyBindings,
   leader: SPACE,
 };
@@ -85,7 +85,7 @@ export class Vim {
       targetCommandName = this.vimCommandManager.getCommandName(input);
     } catch (error) {
       console.log("TCL: Vim -> queueInput -> error", error);
-      return;
+      return null;
     }
 
     if (!targetCommandName) {
@@ -105,7 +105,7 @@ export class Vim {
     }
 
     //
-    // this.setVimState(vimState);
+    this.vimCommandManager.setVimState(vimState);
 
     //
     const result = {
@@ -120,9 +120,7 @@ export class Vim {
 
     return result;
   }
-  // private setVimState(vimState: VimState) {
-  //   this.vimState = vimState;
-  // }
+
   /** */
   queueInputSequence(
     inputSequence: string | string[],
@@ -153,5 +151,11 @@ export class Vim {
 
   getCurrentMode() {
     return this.vimCommandManager.getCurrentMode();
+  }
+  enterInsertTextMode() {
+    return this.vimCommandManager.enterInsertTextMode();
+  }
+  enterNormalTextMode() {
+    return this.vimCommandManager.enterNormalTextMode();
   }
 }

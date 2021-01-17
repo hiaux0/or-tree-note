@@ -1,8 +1,8 @@
 import { cloneDeep, groupBy } from "lodash";
-import { logger } from "modules/debug/logger";
+import { Logger } from "modules/debug/logger";
 import { filterStringByCharSequence } from "modules/string/string";
 import { SPECIAL_KEYS } from "resources/keybindings/app.keys";
-import { VimError } from "./vim";
+import { defaultVimOptions, VimError } from "./vim";
 import { VimCommandNames, VimCommand } from "./vim-commands";
 import { NormalMode } from "modules/vim/modes/normal-mode";
 import { InsertMode } from "modules/vim/modes/insert-mode";
@@ -16,26 +16,28 @@ import {
   VimOptions,
 } from "./vim.types";
 
+const logger = new Logger({ scope: "VimCommandManager" });
+
 /**
  * I know about the "manager" naming, but `VimCommand` interface also makes sense
  */
 export class VimCommandManager {
-  private activeMode: VimMode = VimMode.NORMAL;
-  private normalMode: NormalMode;
-  private insertMode: InsertMode;
+  activeMode: VimMode = VimMode.NORMAL;
+  normalMode: NormalMode;
+  insertMode: InsertMode;
 
   /** Alias for vimOptions.keyBindings */
-  private keyBindings: KeyBindingModes;
+  keyBindings: KeyBindingModes;
 
-  private potentialCommands: VimCommand[];
+  potentialCommands: VimCommand[];
   /** If a command did not trigger, save key */
-  private queuedKeys: string[] = [];
-  private vimState: VimState;
+  queuedKeys: string[] = [];
+  vimState: VimState;
 
   constructor(
     public wholeInput: string[],
     public cursor: Cursor = { line: 0, col: 0 },
-    public vimOptions?: VimOptions
+    public vimOptions: VimOptions = defaultVimOptions
   ) {
     const activeInput = wholeInput[cursor.line];
     const vimState: VimState = {
@@ -55,6 +57,10 @@ export class VimCommandManager {
     );
 
     this.keyBindings = this.vimOptions.keyBindings;
+  }
+
+  setVimState(vimState: VimState) {
+    this.vimState = vimState;
   }
 
   /** *******/
@@ -176,7 +182,7 @@ export class VimCommandManager {
     try {
       ({ targetCommand, potentialCommands } = this.findPotentialCommand(input));
     } catch (error) {
-      logger.debug(["Error: %s", error], { isError: true, onlyVerbose: true });
+      logger.debug(["Error: %s", error], { onlyVerbose: true });
     }
 
     //
