@@ -4,8 +4,11 @@
   <h1>${value}</h1>
 
   <div ref="notesContainerRef" class="notes-container">
-    <div class="${editorLineClass}" ref="lineSpanRef">012 456</div>
-    <div class="${editorLineClass}" ref="lineSpanRef">ABCDEF 01234</div>
+    <template repeat.for="line of lines">
+      <div class="${editorLineClass}" ref="lineSpanRef">${line.text}</div>
+    </template>
+    <!-- <div class="${editorLineClass}" ref="lineSpanRef">012 456</div>
+    <div class="${editorLineClass}" ref="lineSpanRef">ABCDEF 01234</div> -->
     <span
       ref="caretRef"
       id="caret"

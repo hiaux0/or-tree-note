@@ -1,28 +1,28 @@
-enum LineMarkup {
+export enum LineMarkup {
   "BOLD",
   "ITALICS",
   "HEADING1",
 }
 
-interface LineMacros {
+export interface LineMacros {
   name: string;
   type: MacroType;
 }
 
-enum MacroType {
+export enum MacroType {
   "CHECKBOX" = "CHECKBOX",
   "MARK" = "MARK",
   "DEFINITIONS" = "DEFINITIONS",
   "SNIPPETS" = "SNIPPETS",
 }
 
-interface EditorLine {
+export interface EditorLine {
   text: string;
   markup?: LineMarkup;
   macros?: LineMacros;
 }
 
-interface VimEditorState {
+export interface VimEditorState {
   lines: EditorLine[];
 }
 

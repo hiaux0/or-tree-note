@@ -1,10 +1,21 @@
+import { autoinject } from "aurelia-dependency-injection";
+import { Store, dispatchify, connectTo } from "aurelia-store";
+import { pluck } from "rxjs/operators";
 import { VimEditor, VimEditorOptions } from "modules/vim-editor/vim-editor";
 import { bindable } from "aurelia-framework";
 import "./or-tree-notes.scss";
 import { rootContainer } from "modules/root-container";
 import { VimEditorTextMode } from "modules/vim-editor/vim-editor-text-mode";
 import { VimMode, VimExecutingMode } from "modules/vim/vim.types";
+import { VimEditorState } from "store/initial-state";
+import { changeText } from "store/or-tree-notes/actions-or-tree-notes";
 
+@autoinject()
+@connectTo({
+  selector: {
+    lines: (store) => store.state.pipe(pluck("lines")),
+  },
+})
 export class OrTreeNotes {
   @bindable value = "OrTreeNotes";
 
@@ -14,6 +25,8 @@ export class OrTreeNotes {
 
   editorLineClass: string = "editor-line";
   currentModeName: VimMode;
+
+  constructor(private store: Store<VimEditorState>) {}
 
   bind() {}
 
@@ -27,9 +40,7 @@ export class OrTreeNotes {
       plugins: [
         {
           commandName: "toggleCheckbox",
-          execute: () => {
-            this.toggleCheckbox();
-          },
+          execute: () => {},
         },
       ],
     };
@@ -47,7 +58,7 @@ export class OrTreeNotes {
     this.currentModeName = vimEditor.getMode();
   }
 
-  toggleCheckbox() {
-    console.log("Hello from OTN");
+  changeText() {
+    dispatchify(changeText)("hey");
   }
 }
