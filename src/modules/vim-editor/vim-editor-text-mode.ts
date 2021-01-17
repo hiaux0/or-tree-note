@@ -8,6 +8,7 @@ import {
   INSERT_MODE,
   MODIFIERS,
   ModifiersType,
+  SPACE,
 } from "resources/keybindings/app.keys";
 import { NormalTextMode } from "./normal-text-mode/normal-text-mode";
 import { InsertTextMode } from "./insert-text-mode/insert-text-mode";
@@ -62,13 +63,20 @@ export class VimEditorTextMode {
 
   initKeys() {
     hotkeys("*", (ev) => {
+      let pressedKey: string;
+      if (ev.code === SPACE) {
+        pressedKey = ev.code;
+      } else {
+        pressedKey = ev.key;
+      }
+
       logger.debug(["-------------- Key pressed: %s", ev.key], {
         log: true,
       });
 
       //
       if (
-        ev.key === INSERT_MODE &&
+        pressedKey === INSERT_MODE &&
         this.vim.getCurrentMode().currentMode === VimMode.NORMAL
       ) {
         this.vimEditorOptions.caretElements[0].classList.remove(
@@ -77,7 +85,7 @@ export class VimEditorTextMode {
         this.vimEditorOptions.caretElements[0].classList.add(
           CARET_INSERT_CLASS
         );
-      } else if (ev.key === ESCAPE) {
+      } else if (pressedKey === ESCAPE) {
         this.vimEditorOptions.caretElements[0].classList.remove(
           CARET_INSERT_CLASS
         );
@@ -86,7 +94,7 @@ export class VimEditorTextMode {
         );
       }
 
-      this.executeCommandInEditor(ev.key);
+      this.executeCommandInEditor(pressedKey);
     });
   }
 

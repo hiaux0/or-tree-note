@@ -1,3 +1,4 @@
+import { VimOptions, VimPlugin } from "./../vim";
 import { cloneDeep } from "lodash";
 import { Logger } from "modules/debug/logger";
 import { VimState, VimMode } from "../vim";
@@ -71,7 +72,11 @@ export abstract class AbstractMode {
   currentMode: VimMode;
   tokenizedInput: TokenizedString[];
 
-  constructor(public vimState: VimState, public wholeInput?: string[]) {
+  constructor(
+    public vimState: VimState,
+    public wholeInput: string[],
+    public vimOptions?: VimOptions
+  ) {
     this.tokenizedInput = tokenizeInput(vimState.text);
 
     logger.debug(["Tokens: %o", this.tokenizedInput], { onlyVerbose: true });
@@ -79,9 +84,25 @@ export abstract class AbstractMode {
 
   executeCommand(
     commandName: string,
-    commandValue: string,
+    commandInput: string,
     currentMode: VimMode
   ): VimState {
+    const targetVimPluginCommand = this.vimOptions.vimPlugins?.find(
+      (plugin) => {
+        return plugin.commandName === commandName;
+      }
+    );
+    if (targetVimPluginCommand) {
+      const pluginResult = this.executeVimPluginCommand(
+        targetVimPluginCommand,
+        commandInput
+      );
+      if (pluginResult) {
+        return pluginResult;
+      }
+      return;
+    }
+
     if (!this[commandName]) {
       logger.debug(
         [
@@ -95,7 +116,7 @@ export abstract class AbstractMode {
     }
 
     const previousOutput = cloneDeep(this.vimState);
-    const result = this[commandName](commandValue) as VimState;
+    const result = this[commandName](commandInput) as VimState;
 
     try {
       this.validateHorizontalCursor(result);
@@ -106,6 +127,10 @@ export abstract class AbstractMode {
     this.vimState = result;
 
     return result;
+  }
+
+  executeVimPluginCommand(targetVimPlugin: VimPlugin, commandValue: string) {
+    return targetVimPlugin.execute(this.vimState, commandValue);
   }
 
   reTokenizeInput(input: string) {

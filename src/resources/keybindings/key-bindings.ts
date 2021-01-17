@@ -2,6 +2,8 @@
 
 export default {
   normal: [
+    // { key: "<Space>", command: "vimLeader" },
+    { key: "<Space>cp", command: "openCommandPalette" },
     { key: "h", command: "cursorLeft" },
     { key: "i", command: "enterInsertTextMode" },
     { key: "k", command: "cursorUp" },

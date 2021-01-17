@@ -32,6 +32,7 @@ interface LogOptions {
   /////////////// Grouping
   startGroupId?: string;
   endGroupId?: string;
+  /** Only in the sense of "just one" */
   isOnlyGroup?: boolean;
   clearPreviousGroupsWhen_isOnlyGroup_True?: boolean;
   /** Specified by `expandGroupBasedOnString` */
@@ -103,7 +104,7 @@ export class Logger {
          * We console.error AND throw, because we want to keep the formatting of the console.**
          */
         console.error(...messageWithLogScope);
-        throw "ERROR";
+        throw `!!! [[ERROR]] Check above message !!!`;
       }
 
       if (logOpt.logLevel !== "verbose" && logOpt.onlyVerbose) {

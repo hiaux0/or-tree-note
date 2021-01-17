@@ -1,3 +1,4 @@
+import { SPACE } from "./../../resources/keybindings/app.keys";
 import { VimCommandNames, VimCommand, SynonymKey } from "./vim-commands";
 import { filterStringByCharSequence } from "modules/string/string";
 import { Logger } from "./../debug/logger";
@@ -57,11 +58,19 @@ export enum VimMode {
   "INSERT" = "INSERT",
 }
 export interface VimOptions {
-  keyBindings: KeyBindingModes;
+  keyBindings?: KeyBindingModes;
+  leader?: string;
+  vimPlugins?: VimPlugin[];
+}
+
+export interface VimPlugin {
+  commandName: string;
+  execute: (vimState?: VimState, commandValue?: string) => VimState | void;
 }
 
 const defaultVimOptions: VimOptions = {
   keyBindings,
+  leader: SPACE,
 };
 
 /**
@@ -85,18 +94,30 @@ export class Vim {
   constructor(
     public wholeInput: string[],
     public cursor: Cursor = { line: 0, col: 0 },
-    public vimOptions: VimOptions = defaultVimOptions
+    public vimOptions?: VimOptions
   ) {
+    const finalVimOptions = {
+      ...defaultVimOptions,
+      ...this.vimOptions,
+    };
     const activeInput = wholeInput[cursor.line];
     const vimState: VimState = {
       text: activeInput,
       cursor,
     };
 
-    this.normalMode = new NormalMode(vimState, this.wholeInput);
-    this.insertMode = new InsertMode(vimState, this.wholeInput);
+    this.normalMode = new NormalMode(
+      vimState,
+      this.wholeInput,
+      finalVimOptions
+    );
+    this.insertMode = new InsertMode(
+      vimState,
+      this.wholeInput,
+      finalVimOptions
+    );
 
-    this.keyBindings = vimOptions.keyBindings;
+    this.keyBindings = finalVimOptions.keyBindings;
 
     this.verifyValidCursorPosition();
   }
@@ -130,10 +151,12 @@ export class Vim {
   enterInsertTextMode() {
     logger.debug(["Enter Insert mode"]);
     this.activeMode = VimMode.INSERT;
+    return this.vimState;
   }
   enterNormalTextMode() {
     logger.debug(["Enter Normal mode"]);
     this.activeMode = VimMode.NORMAL;
+    return this.vimState;
   }
   getCurrentMode() {
     if (this.activeMode === VimMode.NORMAL) {
@@ -168,6 +191,10 @@ export class Vim {
   findPotentialCommand(input: string): FindPotentialCommandReturn {
     //
     input = this.ensureVimModifier(input);
+
+    logger.debug(["Finding potential command for: ", input], {
+      isOnlyGroup: true,
+    });
 
     //
     let targetKeyBinding;
@@ -280,36 +307,28 @@ export class Vim {
 
   /** */
   queueInput(input: string): QueueInputReturn {
-    logger.debug(["Received input: %s", input], { isOnlyGroup: true });
+    logger.debug(["Received input: %s", input]);
 
     //
     const targetCommandName = this.getCommandName(input);
 
+    let vimState;
     if (targetCommandName === "enterInsertTextMode") {
-      this.enterInsertTextMode();
-      return {
-        vimState: null,
-        targetCommand: targetCommandName,
-        wholeInput: this.wholeInput,
-      };
+      vimState = this.enterInsertTextMode();
     } else if (targetCommandName === "enterNormalTextMode") {
-      this.enterNormalTextMode();
-      return {
-        vimState: null,
-        targetCommand: targetCommandName,
-        wholeInput: this.wholeInput,
-      };
+      vimState = this.enterNormalTextMode();
+    } else {
+      vimState = this.executeCommand(targetCommandName, input);
     }
 
     //
-    const vimState = this.executeCommand(targetCommandName, input);
     this.setVimState(vimState);
 
     //
     const result = {
       vimState,
       targetCommand: targetCommandName,
-      wholeInput: this.wholeInput,
+      wholeInput: [...this.wholeInput],
     };
 
     logger.debug(["Result of input: %s is: %o", input, result], {
