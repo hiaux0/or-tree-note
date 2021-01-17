@@ -1,74 +1,26 @@
 import { SPACE } from "./../../resources/keybindings/app.keys";
-import { VimCommandNames, VimCommand, SynonymKey } from "./vim-commands";
-import { filterStringByCharSequence } from "modules/string/string";
+import { VimCommand } from "./vim-commands";
 import { Logger } from "./../debug/logger";
 import { NormalMode } from "modules/vim/modes/normal-mode";
 import { InsertMode } from "modules/vim/modes/insert-mode";
-import { InsertTextModeKeybindings } from "./modes/insert-mode-commands";
 import keyBindingsJson from "../../resources/keybindings/key-bindings";
-import { cloneDeep, groupBy } from "lodash";
-import { SPECIAL_KEYS } from "resources/keybindings/app.keys";
+import {
+  VimOptions,
+  VimMode,
+  VimState,
+  Cursor,
+  QueueInputReturn,
+  KeyBindingModes,
+  VimExecutingMode,
+} from "./vim.types";
 
 const logger = new Logger({ scope: "Vim" });
 
 export class VimError extends Error {}
 
-export interface KeyBindingModes {
-  normal: VimCommand[];
-  insert: InsertTextModeKeybindings[];
-  synonyms: SynonymKey;
-}
-
-export enum VimExecutingMode {
-  "INDIVIDUAL" = "INDIVIDUAL",
-  "BATCH" = "BATCH",
-}
-
 const keyBindings = (keyBindingsJson as unknown) as KeyBindingModes;
 
 export const vim = "vim";
-
-/**
- * Given a string 'Hello, World'
- * And I'm in normal mode
- * When I type "l"
- * Then the cursor should move one right
- */
-
-interface FindPotentialCommandReturn {
-  targetCommand: VimCommand;
-  potentialCommands: VimCommand[];
-}
-
-export type VimState = {
-  cursor?: Cursor;
-  text?: string;
-};
-
-export interface QueueInputReturn {
-  vimState: VimState | null;
-  targetCommand: VimCommandNames;
-  wholeInput: string[];
-}
-
-export interface Cursor {
-  col: number;
-  line: number;
-}
-export enum VimMode {
-  "NORMAL" = "NORMAL",
-  "INSERT" = "INSERT",
-}
-export interface VimOptions {
-  keyBindings?: KeyBindingModes;
-  leader?: string;
-  vimPlugins?: VimPlugin[];
-}
-
-export interface VimPlugin {
-  commandName: string;
-  execute: (vimState?: VimState, commandValue?: string) => VimState | void;
-}
 
 const defaultVimOptions: VimOptions = {
   keyBindings,

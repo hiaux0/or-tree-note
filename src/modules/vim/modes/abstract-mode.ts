@@ -1,7 +1,7 @@
-import { VimOptions, VimPlugin } from "./../vim";
+import { VimOptions, VimPlugin } from "../vim.types";
 import { cloneDeep } from "lodash";
 import { Logger } from "modules/debug/logger";
-import { VimState, VimMode } from "../vim";
+import { VimState, VimMode } from "../vim.types";
 
 const logger = new Logger({ scope: "AbstractMode" });
 

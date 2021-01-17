@@ -1,5 +1,6 @@
 import "aurelia-polyfills";
-import { Vim, VimMode } from "modules/vim/vim";
+import { Vim } from "modules/vim/vim";
+import { VimMode } from "modules/vim/vim.types";
 import { VimEditorOptions } from "./vim-editor";
 import hotkeys from "hotkeys-js";
 import { Logger } from "modules/debug/logger";

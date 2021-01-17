@@ -1,6 +1,6 @@
-import { VimState } from "./../vim/vim";
+import { VimState } from "../vim/vim.types";
 import { Logger } from "modules/debug/logger";
-import { Cursor } from "modules/vim/vim";
+import { Cursor } from "modules/vim/vim.types";
 import {
   getComputedValueFromPixelString,
   getCssVar,

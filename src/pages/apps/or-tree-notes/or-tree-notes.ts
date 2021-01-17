@@ -3,7 +3,7 @@ import { bindable } from "aurelia-framework";
 import "./or-tree-notes.scss";
 import { rootContainer } from "modules/root-container";
 import { VimEditorTextMode } from "modules/vim-editor/vim-editor-text-mode";
-import { VimExecutingMode, VimMode } from "modules/vim/vim";
+import { VimMode, VimExecutingMode } from "modules/vim/vim.types";
 
 export class OrTreeNotes {
   @bindable value = "OrTreeNotes";

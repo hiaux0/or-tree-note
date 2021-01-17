@@ -1,7 +1,8 @@
 import { cloneDeep } from "lodash";
 import { sendKeyEvent } from "modules/keys/keys";
 import { tokenizeInput } from "modules/vim/modes/abstract-mode";
-import { Cursor, Vim, VimMode } from "modules/vim/vim";
+import { Vim } from "modules/vim/vim";
+import { Cursor, VimMode } from "modules/vim/vim.types";
 
 const input = ["foo"];
 const cursor = { line: 0, col: 0 };

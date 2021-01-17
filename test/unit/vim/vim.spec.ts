@@ -1,11 +1,6 @@
 import { cloneDeep, map } from "lodash";
-import {
-  Cursor,
-  KeyBindingModes,
-  Vim,
-  VimPlugin,
-  VimState,
-} from "modules/vim/vim";
+import { Vim, VimError } from "modules/vim/vim";
+import { Cursor, VimPlugin, KeyBindingModes } from "modules/vim/vim.types";
 
 const input = ["foo"];
 const cursor: Cursor = { line: 0, col: 0 };
