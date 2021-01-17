@@ -117,7 +117,6 @@ describe("C: Mode - Normal - Multi line", () => {
       const cursor: Cursor = { line: 1, col: 0 };
       const multiLineInput = ["hi", "012 456"];
       vim = new Vim(cloneDeep(multiLineInput), cloneDeep(cursor));
-      vim.enterNormalTextMode();
 
       const result = vim.queueInputSequence("uee");
       expect(result).toEqual([
@@ -213,6 +212,7 @@ describe("Methods", () => {
 
   describe("#queueInput", () => {
     it("F: Single Input", () => {
+      vim.enterInsertTextMode();
       const result = vim.queueInputSequence("@");
       expect(result).toEqual([
         {
@@ -226,6 +226,7 @@ describe("Methods", () => {
 
   describe("#queueInputSequence", () => {
     it("F: Input sequence - string", () => {
+      vim.enterInsertTextMode();
       const result = vim.queueInputSequence("@<esc>l");
       expect(result).toEqual([
         {
@@ -246,6 +247,7 @@ describe("Methods", () => {
       ]);
     });
     it("F: Input sequence - string - multiple typing", () => {
+      vim.enterInsertTextMode();
       const result = vim.queueInputSequence("@#<esc>l");
       expect(result).toEqual([
         {
@@ -272,6 +274,7 @@ describe("Methods", () => {
     });
 
     it("F: Input sequence - string[]", () => {
+      vim.enterInsertTextMode();
       const result = vim.queueInputSequence(["@", "<esc>", "l"]);
       expect(result).toEqual([
         {
@@ -294,7 +297,7 @@ describe("Methods", () => {
 
     //
     const input = "i@#<esc>e";
-    fit(`Sequence: ${input}`, () => {
+    it(`Sequence: ${input}`, () => {
       const result = vim.queueInputSequence(input);
       expect(result).toEqual([
         {
