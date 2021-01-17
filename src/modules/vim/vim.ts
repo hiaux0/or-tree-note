@@ -11,6 +11,8 @@ import { SPECIAL_KEYS } from "resources/keybindings/app.keys";
 
 const logger = new Logger({ scope: "Vim" });
 
+export class VimError extends Error {}
+
 export interface KeyBindingModes {
   normal: VimCommand[];
   insert: InsertTextModeKeybindings[];
@@ -79,17 +81,17 @@ const defaultVimOptions: VimOptions = {
  * - the cursor location
  */
 export class Vim {
-  activeMode: VimMode = VimMode.NORMAL;
-  normalMode: NormalMode;
-  insertMode: InsertMode;
+  private activeMode: VimMode = VimMode.NORMAL;
+  private normalMode: NormalMode;
+  private insertMode: InsertMode;
 
   /** Alias for vimOptions.keyBindings */
-  keyBindings: KeyBindingModes;
+  private keyBindings: KeyBindingModes;
 
-  potentialCommands: VimCommand[];
+  private potentialCommands: VimCommand[];
   /** If a command did not trigger, save key */
-  queuedKeys: string[] = [];
-  vimState: VimState;
+  private queuedKeys: string[] = [];
+  private vimState: VimState;
 
   constructor(
     public wholeInput: string[],
@@ -122,7 +124,7 @@ export class Vim {
     this.verifyValidCursorPosition();
   }
 
-  verifyValidCursorPosition() {
+  private verifyValidCursorPosition() {
     const cursorCol = this.cursor.col;
     const cursorLine = this.cursor.line;
     if (cursorCol < 0) {
@@ -170,17 +172,20 @@ export class Vim {
   /** Commands */
   /** **********/
 
-  executeCommand<CommandType = any>(
+  private executeVimCommand<CommandType = any>(
     commandName: VimCommandNames,
     commandInput?: string
   ): VimState {
     const currentMode = this.getCurrentMode();
-    const vimState = currentMode.executeCommand(
-      commandName,
-      commandInput
-    ) as CommandType;
-    vimState; /*?*/
-    return cloneDeep(vimState);
+    try {
+      const vimState = currentMode.executeCommand(
+        commandName,
+        commandInput
+      ) as CommandType;
+      return cloneDeep(vimState);
+    } catch (error) {
+      throw new VimError(error);
+    }
   }
 
   /**
@@ -188,13 +193,11 @@ export class Vim {
    * @sideeffect queuedKeys
    * @sideeffect potentialCommands
    */
-  findPotentialCommand(input: string): FindPotentialCommandReturn {
+  private findPotentialCommand(input: string): FindPotentialCommandReturn {
     //
     input = this.ensureVimModifier(input);
 
-    logger.debug(["Finding potential command for: ", input], {
-      isOnlyGroup: true,
-    });
+    logger.debug(["Finding potential command for: ", input]);
 
     //
     let targetKeyBinding;
@@ -255,14 +258,14 @@ export class Vim {
   }
 
   /** */
-  getCommandName(input: string): VimCommandNames {
+  private getCommandName(input: string): VimCommandNames {
     let targetCommand;
     let potentialCommands: FindPotentialCommandReturn["potentialCommands"];
 
     try {
       ({ targetCommand, potentialCommands } = this.findPotentialCommand(input));
     } catch (error) {
-      logger.debug(["Error: %s", error], { onlyVerbose: true });
+      logger.debug(["Error: %s", error], { isError: true, onlyVerbose: true });
     }
 
     //
@@ -296,7 +299,7 @@ export class Vim {
     return targetCommand.command;
   }
 
-  emptyQueuedKeys() {
+  private emptyQueuedKeys() {
     this.queuedKeys = [];
     this.potentialCommands = [];
   }
@@ -310,7 +313,17 @@ export class Vim {
     logger.debug(["Received input: %s", input]);
 
     //
-    const targetCommandName = this.getCommandName(input);
+    let targetCommandName;
+    try {
+      targetCommandName = this.getCommandName(input);
+    } catch (error) {
+      console.log("TCL: Vim -> queueInput -> error", error);
+      return;
+    }
+
+    if (!targetCommandName) {
+      return null;
+    }
 
     let vimState;
     if (targetCommandName === "enterInsertTextMode") {
@@ -318,7 +331,7 @@ export class Vim {
     } else if (targetCommandName === "enterNormalTextMode") {
       vimState = this.enterNormalTextMode();
     } else {
-      vimState = this.executeCommand(targetCommandName, input);
+      vimState = this.executeVimCommand(targetCommandName, input);
     }
 
     //
@@ -337,7 +350,7 @@ export class Vim {
 
     return result;
   }
-  setVimState(vimState: VimState) {
+  private setVimState(vimState: VimState) {
     this.vimState = vimState;
   }
   /** */
@@ -367,7 +380,7 @@ export class Vim {
   }
 
   /** */
-  ensureVimModifier(input: string) {
+  private ensureVimModifier(input: string) {
     SPECIAL_KEYS;
     if (SPECIAL_KEYS.includes(input)) {
       const asVimModifier = `<${input}>`;
@@ -380,7 +393,7 @@ export class Vim {
     return input;
   }
 
-  getSynonymModifier(input: string) {
+  private getSynonymModifier(input: string) {
     const synonymInput = this.keyBindings.synonyms[input.toLowerCase()];
 
     if (synonymInput) {
@@ -392,7 +405,7 @@ export class Vim {
   }
 
   /** */
-  splitInputSequence(inputSequence: string) {
+  private splitInputSequence(inputSequence: string) {
     /**
      * 1st part: match char after > (positive lookbehind)
      * 2nd part: match < with char following (positive lookahead)
@@ -420,7 +433,7 @@ export class Vim {
     return result;
   }
   /** */
-  batchResults(resultList: QueueInputReturn[]): QueueInputReturn[] {
+  private batchResults(resultList: QueueInputReturn[]): QueueInputReturn[] {
     const accumulatedResult = resultList.filter((result) => result.vimState);
 
     //
