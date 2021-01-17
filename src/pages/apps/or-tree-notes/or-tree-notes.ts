@@ -24,6 +24,14 @@ export class OrTreeNotes {
       caretElements: [this.caretRef],
       isTextMode: true,
       vimExecutingMode: VimExecutingMode.BATCH,
+      plugins: [
+        {
+          commandName: "openCommandPalette",
+          execute: () => {
+            console.log("Hi from OTN");
+          },
+        },
+      ],
     };
     rootContainer.registerInstance(
       VimEditorTextMode,

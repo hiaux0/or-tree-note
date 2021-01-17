@@ -1,6 +1,6 @@
 import "aurelia-polyfills";
 import { Vim } from "modules/vim/vim";
-import { VimMode } from "modules/vim/vim.types";
+import { Cursor, VimMode } from "modules/vim/vim.types";
 import { VimEditorOptions } from "./vim-editor";
 import hotkeys from "hotkeys-js";
 import { Logger } from "modules/debug/logger";
@@ -59,7 +59,10 @@ export class VimEditorTextMode {
   }
 
   initVim() {
-    this.vim = new Vim(this.elementText);
+    const startCursor: Cursor = { col: 0, line: 0 };
+    this.vim = new Vim(this.elementText, startCursor, {
+      vimPlugins: this.vimEditorOptions.plugins,
+    });
   }
 
   initKeys() {
