@@ -70,11 +70,13 @@ export class VimCommandManager {
   enterInsertTextMode() {
     logger.debug(["Enter Insert mode"]);
     this.activeMode = VimMode.INSERT;
+    this.insertMode.reTokenizeInput(this.vimState?.text);
     return this.vimState;
   }
   enterNormalTextMode() {
     logger.debug(["Enter Normal mode"]);
     this.activeMode = VimMode.NORMAL;
+    this.normalMode.reTokenizeInput(this.vimState?.text);
     return this.vimState;
   }
   getCurrentMode() {
