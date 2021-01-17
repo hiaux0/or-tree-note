@@ -202,10 +202,13 @@ describe("C: Mode - Normal - Multi line", () => {
   });
 });
 
-describe("C: Mode - Insert", () => {
+/** ***********/
+/** Methods   */
+/** ***********/
+
+describe("Methods", () => {
   beforeEach(() => {
     vim = new Vim(cloneDeep(input), cloneDeep(cursor));
-    vim.enterInsertTextMode();
   });
 
   describe("#queueInput", () => {
@@ -285,6 +288,39 @@ describe("C: Mode - Insert", () => {
           vimState: { cursor: { col: 2, line: 0 }, text: "@foo" },
           targetCommand: "cursorRight",
           wholeInput: ["@foo"],
+        },
+      ]);
+    });
+
+    //
+    const input = "i@#<esc>e";
+    fit(`Sequence: ${input}`, () => {
+      const result = vim.queueInputSequence(input);
+      expect(result).toEqual([
+        {
+          targetCommand: "enterInsertTextMode",
+          vimState: undefined,
+          wholeInput: ["foo"],
+        },
+        {
+          targetCommand: "type",
+          vimState: { cursor: { col: 1, line: 0 }, text: "@foo" },
+          wholeInput: ["@foo"],
+        },
+        {
+          targetCommand: "type",
+          vimState: { cursor: { col: 2, line: 0 }, text: "@#foo" },
+          wholeInput: ["@#foo"],
+        },
+        {
+          targetCommand: "enterNormalTextMode",
+          vimState: { cursor: { col: 2, line: 0 }, text: "@#foo" },
+          wholeInput: ["@#foo"],
+        },
+        {
+          targetCommand: "cursorWordForwardEnd",
+          vimState: { cursor: { col: 4, line: 0 }, text: "@#foo" },
+          wholeInput: ["@#foo"],
         },
       ]);
     });

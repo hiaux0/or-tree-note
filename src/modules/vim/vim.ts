@@ -84,7 +84,6 @@ export class Vim {
     try {
       targetCommandName = this.vimCommandManager.getCommandName(input);
     } catch (error) {
-      console.log("TCL: Vim -> queueInput -> error", error);
       return null;
     }
 
