@@ -117,7 +117,7 @@ export class VimCommandManager {
     logger.debug(["Finding potential command for: ", input]);
 
     //
-    let targetKeyBinding;
+    let targetKeyBinding: VimCommand[];
 
     if (this.potentialCommands?.length) {
       targetKeyBinding = this.potentialCommands;

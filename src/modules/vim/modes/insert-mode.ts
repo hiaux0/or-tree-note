@@ -1,3 +1,4 @@
+import { SPACE } from "./../../../resources/keybindings/app.keys";
 import { AbstractMode } from "./abstract-mode";
 import { insert, replaceAt } from "modules/string/string";
 import { VimState, VimMode } from "../vim.types";
@@ -6,6 +7,10 @@ export class InsertMode extends AbstractMode {
   currentMode = VimMode.INSERT;
 
   type(newInput: string): VimState {
+    if (newInput === SPACE) {
+      newInput = " ";
+    }
+
     const updatedInput = insert(
       this.vimState.text,
       this.vimState.cursor.col,
