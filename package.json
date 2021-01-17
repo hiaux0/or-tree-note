@@ -11,7 +11,8 @@
     "aurelia-animator-css": "^1.0.4",
     "aurelia-bootstrapper": "^2.3.3",
     "aurelia-store": "^1.6.0",
-    "hotkeys-js": "^3.8.1"
+    "hotkeys-js": "^3.8.1",
+    "immer": "^8.0.0"
   },
   "devDependencies": {
     "@cypress/webpack-preprocessor": "^4.1.2",
