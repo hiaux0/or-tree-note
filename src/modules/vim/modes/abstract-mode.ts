@@ -1,7 +1,7 @@
-import { VimOptions, VimPlugin } from "./../vim";
+import { VimOptions, VimPlugin } from "../vim.types";
 import { cloneDeep } from "lodash";
 import { Logger } from "modules/debug/logger";
-import { VimState, VimMode } from "../vim";
+import { VimState, VimMode } from "../vim.types";
 
 const logger = new Logger({ scope: "AbstractMode" });
 
@@ -39,7 +39,7 @@ export interface TokenizedString {
 }
 
 export function tokenizeInput(input: string): TokenizedString[] {
-  const regExp = /(\w+)/g;
+  const regExp = /(\S+)/g;
   const matchResult: RegExpExecArray[] = [];
   let match: RegExpExecArray;
 
@@ -134,6 +134,8 @@ export abstract class AbstractMode {
   }
 
   reTokenizeInput(input: string) {
+    // logger.bug("reTokenizeInput");
+    // console.log("TCL: AbstractMode -> reTokenizeInput -> input", input);
     const tokenizedInput = tokenizeInput(input);
 
     logger.debug(["reTokenizeInput: %o", tokenizedInput], {

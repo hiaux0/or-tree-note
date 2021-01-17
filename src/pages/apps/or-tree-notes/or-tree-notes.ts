@@ -3,7 +3,7 @@ import { bindable } from "aurelia-framework";
 import "./or-tree-notes.scss";
 import { rootContainer } from "modules/root-container";
 import { VimEditorTextMode } from "modules/vim-editor/vim-editor-text-mode";
-import { VimExecutingMode, VimMode } from "modules/vim/vim";
+import { VimMode, VimExecutingMode } from "modules/vim/vim.types";
 
 export class OrTreeNotes {
   @bindable value = "OrTreeNotes";
@@ -24,6 +24,14 @@ export class OrTreeNotes {
       caretElements: [this.caretRef],
       isTextMode: true,
       vimExecutingMode: VimExecutingMode.BATCH,
+      plugins: [
+        {
+          commandName: "toggleCheckbox",
+          execute: () => {
+            this.toggleCheckbox();
+          },
+        },
+      ],
     };
     rootContainer.registerInstance(
       VimEditorTextMode,
@@ -37,5 +45,9 @@ export class OrTreeNotes {
 
     const vimEditor = rootContainer.get(VimEditor);
     this.currentModeName = vimEditor.getMode();
+  }
+
+  toggleCheckbox() {
+    console.log("Hello from OTN");
   }
 }

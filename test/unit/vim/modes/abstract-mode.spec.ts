@@ -1,32 +1,12 @@
 import { cloneDeep } from "lodash";
-import { sendKeyEvent } from "modules/keys/keys";
 import { tokenizeInput } from "modules/vim/modes/abstract-mode";
-import { Cursor, Vim, VimMode } from "modules/vim/vim";
+import { Vim } from "modules/vim/vim";
 
 const input = ["foo"];
 const cursor = { line: 0, col: 0 };
 
 describe("Vim", () => {
   let vim: Vim;
-
-  /** *******/
-  /** Modes */
-  /** *******/
-
-  describe("C: Modes", () => {
-    beforeEach(() => {
-      vim = new Vim(cloneDeep(input), cloneDeep(cursor));
-    });
-
-    it("F: Switch to insert mode", () => {
-      vim.enterInsertTextMode();
-      expect(vim.activeMode).toBe(VimMode.INSERT);
-    });
-    it("F: Switch to insert mode", () => {
-      vim.enterNormalTextMode();
-      expect(vim.activeMode).toBe(VimMode.NORMAL);
-    });
-  });
 
   /** *************/
   /** Input Queue */
@@ -49,17 +29,17 @@ describe("Vim", () => {
         {
           vimState: { cursor: { col: 1, line: 0 }, text: "3foo" },
           targetCommand: "type",
-          wholeInput: ["foo"],
+          wholeInput: ["3foo"],
         },
         {
           vimState: { cursor: { col: 2, line: 0 }, text: "34foo" },
           targetCommand: "type",
-          wholeInput: ["foo"],
+          wholeInput: ["34foo"],
         },
         {
           vimState: { cursor: { col: 3, line: 0 }, text: "345foo" },
           targetCommand: "type",
-          wholeInput: ["foo"],
+          wholeInput: ["345foo"],
         },
       ]);
     });

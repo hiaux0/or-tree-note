@@ -1,5 +1,5 @@
 import { Logger } from "modules/debug/logger";
-import { VimState, VimMode } from "../vim";
+import { VimState, VimMode } from "../vim.types";
 import { AbstractMode, TokenizedString } from "./abstract-mode";
 
 const logger = new Logger({ scope: "NormalMode" });

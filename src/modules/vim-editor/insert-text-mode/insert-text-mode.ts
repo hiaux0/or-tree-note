@@ -1,6 +1,6 @@
 import { AbstractTextMode } from "../abstract-text-mode";
 import { replaceAt } from "modules/string/string";
-import { VimState } from "modules/vim/vim";
+import { VimState } from "modules/vim/vim.types";
 
 const CARET_NORMAL_CLASS = "caret-normal";
 const CARET_INSERT_CLASS = "caret-insert";

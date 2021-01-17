@@ -1,5 +1,6 @@
 import { inject } from "aurelia-dependency-injection";
-import { Vim, VimExecutingMode } from "modules/vim/vim";
+import { Vim } from "modules/vim/vim";
+import { VimExecutingMode, VimPlugin } from "modules/vim/vim.types";
 import { VimEditorTextMode } from "./vim-editor-text-mode";
 
 export interface VimEditorOptions {
@@ -16,6 +17,7 @@ export interface VimEditorOptions {
   isElementMode?: boolean;
   isTextMode?: boolean;
   vimExecutingMode?: VimExecutingMode;
+  plugins?: VimPlugin[];
 }
 const defaultVimEditorOptions: VimEditorOptions = {
   isTextMode: true,
@@ -36,7 +38,7 @@ export class VimEditor {
       this.vim = vimEditorTextMode.getVim();
     }
 
-    vimEditorTextMode.executeCommandSequenceInEditor("ueek");
+    vimEditorTextMode.executeCommandSequenceInEditor("<Space>tc");
   }
 
   getMode() {

@@ -1,4 +1,4 @@
-const debugMode = true;
+const debugMode = false;
 
 interface LogOptions {
   /////////////// Log
@@ -42,7 +42,7 @@ interface LogOptions {
 
 const defautLogOptions: LogOptions = {
   logMethod: "log",
-  logLevel: "verbose",
+  // logLevel: "verbose",
   clearPreviousGroupsWhen_isOnlyGroup_True: true,
   // dontLogUnlessSpecified: true,
   focusedLogging: false,
@@ -57,6 +57,7 @@ interface BugLogOptions {
   isEnd?: boolean;
   //
   color?: string;
+  index?: number;
 }
 
 const loggerDevelopmentDebugLog: string[][] = [];
@@ -198,8 +199,18 @@ export class Logger {
       bugGroupId.push(message);
     }
 
+    let finalMessage: string;
+    if (logOptions.index) {
+      finalMessage = `[(${logOptions.index})]: ${message}`;
+    } else {
+      finalMessage = message;
+    }
+
     //
-    console.log(`%c ${message}`, `background: ${logOptions.color ?? "blue"}`);
+    console.log(
+      `%c ${finalMessage}`,
+      `background: ${logOptions.color ?? "blue"}`
+    );
 
     //
     const isEnd =
