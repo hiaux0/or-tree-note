@@ -1,26 +1,30 @@
 import { cloneDeep } from "lodash";
 import { Vim } from "modules/vim/vim";
+import { VimCommandManager } from "modules/vim/vim-command-manager";
 import { Cursor } from "modules/vim/vim.types";
 
 const input = ["foo"];
 const cursor: Cursor = { line: 0, col: 0 };
 
 describe("C: Mode - Insert", () => {
-  let vim: Vim;
+  let vimCommandManager: VimCommandManager;
 
   beforeEach(() => {
-    vim = new Vim(cloneDeep(input), cloneDeep(cursor));
+    vimCommandManager = new VimCommandManager(
+      cloneDeep(input),
+      cloneDeep(cursor)
+    );
   });
 
   describe("C: Typing characters", () => {
     it("F: Update input with typed character", () => {
-      vim.enterInsertTextMode();
-      const result = vim.executeCommand("type", "!");
+      vimCommandManager.enterInsertTextMode();
+      const result = vimCommandManager.executeVimCommand("type", "!");
       expect(result.text).toBe(`!${input[0]}`); // !foo
     });
     it("F: Cursor updated after character input", () => {
-      vim.enterInsertTextMode();
-      const result = vim.executeCommand("type", "!");
+      vimCommandManager.enterInsertTextMode();
+      const result = vimCommandManager.executeVimCommand("type", "!");
       expect(result.cursor).toEqual({ col: 1, line: 0 }); // !foo
     });
   });
