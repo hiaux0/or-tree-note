@@ -76,7 +76,7 @@ export class Vim {
   /** *************/
 
   /** */
-  queueInput(input: string): QueueInputReturn {
+  queueInput(input: string): QueueInputReturn | null {
     logger.debug(["Received input: %s", input]);
 
     //
