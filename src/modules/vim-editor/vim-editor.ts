@@ -38,7 +38,7 @@ export class VimEditor {
       this.vim = vimEditorTextMode.getVim();
     }
 
-    vimEditorTextMode.executeCommandSequenceInEditor("<Space>cp");
+    vimEditorTextMode.executeCommandSequenceInEditor("<Space>tc");
   }
 
   getMode() {

@@ -26,9 +26,9 @@ export class OrTreeNotes {
       vimExecutingMode: VimExecutingMode.BATCH,
       plugins: [
         {
-          commandName: "openCommandPalette",
+          commandName: "toggleCheckbox",
           execute: () => {
-            console.log("Hi from OTN");
+            this.toggleCheckbox();
           },
         },
       ],
@@ -45,5 +45,9 @@ export class OrTreeNotes {
 
     const vimEditor = rootContainer.get(VimEditor);
     this.currentModeName = vimEditor.getMode();
+  }
+
+  toggleCheckbox() {
+    console.log("Hello from OTN");
   }
 }
