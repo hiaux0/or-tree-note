@@ -76,20 +76,14 @@ export class Vim {
   /** *************/
 
   /** */
-  queueInput(input: string): QueueInputReturn | null {
+  queueInput(input: string): QueueInputReturn {
     logger.debug(["Received input: %s", input]);
 
     //
     let targetCommandName;
     try {
       targetCommandName = this.vimCommandManager.getCommandName(input);
-    } catch (error) {
-      return null;
-    }
-
-    if (!targetCommandName) {
-      return null;
-    }
+    } catch {}
 
     let vimState;
     if (targetCommandName === "enterInsertTextMode") {

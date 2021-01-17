@@ -103,7 +103,8 @@ export class VimCommandManager {
       ) as CommandType;
       return cloneDeep(vimState);
     } catch (error) {
-      throw new VimError(error);
+      const previousState = this.vimState;
+      return previousState;
     }
   }
 
