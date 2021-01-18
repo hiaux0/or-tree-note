@@ -1,5 +1,5 @@
 import { autoinject } from "aurelia-dependency-injection";
-import { Store, dispatchify, connectTo } from "aurelia-store";
+import { Store, jump, connectTo, StateHistory } from "aurelia-store";
 import { pluck } from "rxjs/operators";
 import { VimEditor, VimEditorOptions } from "modules/vim-editor/vim-editor";
 import { bindable } from "aurelia-framework";
@@ -13,7 +13,7 @@ import { changeText } from "store/or-tree-notes/actions-or-tree-notes";
 @autoinject()
 @connectTo({
   selector: {
-    lines: (store) => store.state.pipe(pluck("lines")),
+    lines: (store) => store.state.pipe(pluck("present", "lines")),
   },
 })
 export class OrTreeNotes {
@@ -26,7 +26,9 @@ export class OrTreeNotes {
   editorLineClass: string = "editor-line";
   currentModeName: VimMode;
 
-  constructor(private store: Store<VimEditorState>) {}
+  constructor(private store: Store<StateHistory<VimEditorState>>) {
+    this.store.registerAction("changeText", changeText);
+  }
 
   bind() {}
 
@@ -40,7 +42,9 @@ export class OrTreeNotes {
       plugins: [
         {
           commandName: "toggleCheckbox",
-          execute: () => {},
+          execute: () => {
+            this.changeText();
+          },
         },
       ],
     };
@@ -59,6 +63,10 @@ export class OrTreeNotes {
   }
 
   changeText() {
-    dispatchify(changeText)("hey");
+    this.store.dispatch(changeText, "hey");
+  }
+
+  undo() {
+    this.store.dispatch(jump, -1);
   }
 }
