@@ -57,7 +57,7 @@ export class OrTreeNotes {
     };
     rootContainer.registerInstance(
       VimEditorTextMode,
-      new VimEditorTextMode(vimEditorOptions)
+      new VimEditorTextMode(vimEditorOptions, this.store)
     );
     const vimEditorTextMode = rootContainer.get(VimEditorTextMode);
     rootContainer.registerInstance(
