@@ -9,7 +9,7 @@ import {
 const logger = new Logger({ scope: "AbstractTextMode" });
 
 export abstract class AbstractTextMode {
-  children: NodeListOf<Element>;
+  children: NodeListOf<HTMLElement>;
 
   caretWidth: number;
   caretHeight: number;
@@ -22,7 +22,9 @@ export abstract class AbstractTextMode {
     public childSelector: string,
     public caretElement: HTMLElement
   ) {
-    this.children = parentElement.querySelectorAll(`.${childSelector}`);
+    this.children = parentElement.querySelectorAll<HTMLElement>(
+      `.${childSelector}`
+    );
 
     this.caretWidth = getCssVar("--caret-size-width");
     this.caretHeight = getCssVar("--caret-size-height");
@@ -30,16 +32,28 @@ export abstract class AbstractTextMode {
 
   setCursorMovement(newCursorValue?: Cursor) {
     //
+    this.currentLineNumber = newCursorValue.line;
+    this.currentCaretCol = newCursorValue.col;
+
     this.commenKeyFunctionality();
+    const lineOffsetLeft = this.getLineRectOffsetLeft();
 
     //
     const newTop = newCursorValue.line * this.caretHeight;
     this.caretElement.style.top = `${newTop}px`;
-    this.currentLineNumber = newCursorValue.line;
 
     const newLeft = newCursorValue.col * this.caretWidth;
-    this.caretElement.style.left = `${newLeft}px`;
-    this.currentCaretCol = newCursorValue.col;
+    this.caretElement.style.left = `${lineOffsetLeft + newLeft}px`;
+  }
+
+  getLineRectOffsetLeft() {
+    const currentChild = this.children[this.currentLineNumber];
+    const childOffsetLeft = currentChild.offsetLeft;
+
+    if (childOffsetLeft > 0) {
+      return childOffsetLeft;
+    }
+    return 0;
   }
 
   cursorUp(vimState?: VimState) {
