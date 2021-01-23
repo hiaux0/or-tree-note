@@ -35,6 +35,7 @@ export abstract class AbstractTextMode {
       this.children = parentElement.querySelectorAll<HTMLElement>(
         `.${this.childSelector}`
       );
+      this.setCursorMovement();
     });
 
     this.caretWidth = getCssVar("--caret-size-width");
@@ -43,17 +44,29 @@ export abstract class AbstractTextMode {
 
   setCursorMovement(newCursorValue?: Cursor) {
     //
-    this.currentLineNumber = newCursorValue.line;
-    this.currentCaretCol = newCursorValue.col;
+    let newCursorLine;
+    let newCursorCol;
+
+    if (newCursorValue) {
+      newCursorLine = newCursorValue.line;
+      newCursorCol = newCursorValue.col;
+    } else {
+      // just use old values
+      newCursorLine = this.currentLineNumber;
+      newCursorCol = this.currentCaretCol;
+    }
+
+    this.currentLineNumber = newCursorLine;
+    this.currentCaretCol = newCursorCol;
 
     this.commenKeyFunctionality();
     const lineOffsetLeft = this.getLineRectOffsetLeft();
 
     //
-    const newTop = newCursorValue.line * this.caretHeight;
+    const newTop = newCursorLine * this.caretHeight;
     this.caretElement.style.top = `${newTop}px`;
 
-    const newLeft = newCursorValue.col * this.caretWidth;
+    const newLeft = newCursorCol * this.caretWidth;
     this.caretElement.style.left = `${lineOffsetLeft + newLeft}px`;
   }
 
