@@ -1,3 +1,4 @@
+import { inject } from "aurelia-dependency-injection";
 import { rootContainer } from "modules/root-container";
 import { VimState } from "../vim/vim.types";
 import { Logger } from "modules/debug/logger";
@@ -7,9 +8,12 @@ import {
   getCssVar,
 } from "../css/css-variables";
 import { ChildrenMutationObserver } from "./children-mutation-observer";
+import { StateHistory, Store } from "aurelia-store";
+import { VimEditorState } from "store/initial-state";
 
 const logger = new Logger({ scope: "AbstractTextMode" });
 
+@inject(Store)
 export abstract class AbstractTextMode {
   children: NodeListOf<HTMLElement>;
 
@@ -24,7 +28,8 @@ export abstract class AbstractTextMode {
   constructor(
     public parentElement: HTMLElement,
     public childSelector: string,
-    public caretElement: HTMLElement
+    public caretElement: HTMLElement,
+    public store?: Store<StateHistory<VimEditorState>>
   ) {
     this.children = parentElement.querySelectorAll<HTMLElement>(
       `.${childSelector}`
@@ -71,7 +76,10 @@ export abstract class AbstractTextMode {
   }
 
   getLineRectOffsetLeft() {
-    const currentChild = this.children[this.currentLineNumber];
+    const children = this.parentElement.querySelectorAll<HTMLElement>(
+      `.${this.childSelector}`
+    );
+    const currentChild = children[this.currentLineNumber];
     const childOffsetLeft = currentChild.offsetLeft;
 
     logger.debug(["Child offset: %d", childOffsetLeft]);

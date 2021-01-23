@@ -302,7 +302,7 @@ describe("Methods", () => {
       expect(result).toEqual([
         {
           targetCommand: "enterInsertTextMode",
-          vimState: undefined,
+          vimState: { cursor: { col: 0, line: 0 }, text: "foo" },
           wholeInput: ["foo"],
         },
         {
@@ -337,20 +337,20 @@ describe("Methods", () => {
 describe("C: Vim Plugin", () => {
   it("F: Execute plugin", () => {
     const plugin: VimPlugin = {
-      commandName: "openCommandPalette",
+      commandName: "toggleCheckbox",
       execute: () => {},
     };
     vim = new Vim(cloneDeep(input), cloneDeep(cursor), {
       vimPlugins: [plugin],
     });
     spyOn(plugin, "execute");
-    const result = vim.queueInput("<Space>cp");
-    expect(result.targetCommand).toBe("openCommandPalette");
+    const result = vim.queueInput("<Space>tc");
+    expect(result.targetCommand).toBe("toggleCheckbox");
     expect(plugin.execute).toHaveBeenCalled();
   });
   it("F: Execute plugin - modify vimState", () => {
     const plugin: VimPlugin = {
-      commandName: "openCommandPalette",
+      commandName: "toggleCheckbox",
       execute: (vimState, commandInput) => {
         vimState.text = commandInput;
         return vimState;
@@ -360,8 +360,8 @@ describe("C: Vim Plugin", () => {
       vimPlugins: [plugin],
     });
     //
-    const inputValue = "<Space>cp";
+    const inputValue = "<Space>tc";
     const result = vim.queueInput(inputValue);
-    expect(result.vimState.text).toBe(inputValue);
+    expect(result.vimState.text).toBe(inputValue); // Because in the test we set the `text` to be the command
   });
 });

@@ -1,6 +1,6 @@
 import { autoinject } from "aurelia-dependency-injection";
 import { Store, jump, connectTo, StateHistory } from "aurelia-store";
-import { pluck } from "rxjs/operators";
+import { distinctUntilChanged, pluck } from "rxjs/operators";
 import { VimEditor, VimEditorOptions } from "modules/vim-editor/vim-editor";
 import { bindable } from "aurelia-framework";
 import "./or-tree-notes.scss";
@@ -16,7 +16,8 @@ const logger = new Logger({ scope: "OrTreeNotes" });
 @autoinject()
 @connectTo({
   selector: {
-    lines: (store) => store.state.pipe(pluck("present", "lines")),
+    lines: (store) =>
+      store.state.pipe(pluck("present", "lines"), distinctUntilChanged()),
   },
 })
 export class OrTreeNotes {
@@ -57,7 +58,7 @@ export class OrTreeNotes {
     };
     rootContainer.registerInstance(
       VimEditorTextMode,
-      new VimEditorTextMode(vimEditorOptions)
+      new VimEditorTextMode(vimEditorOptions, this.store)
     );
     const vimEditorTextMode = rootContainer.get(VimEditorTextMode);
     rootContainer.registerInstance(

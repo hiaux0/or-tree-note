@@ -14,6 +14,9 @@ import {
 import { NormalTextMode } from "./normal-text-mode/normal-text-mode";
 import { InsertTextMode } from "./insert-text-mode/insert-text-mode";
 import { AbstractTextMode } from "./abstract-text-mode";
+import { StateHistory, Store } from "aurelia-store";
+import { VimEditorState } from "store/initial-state";
+import { changeText } from "./actions/actions-vim-editor";
 
 const logger = new Logger({ scope: "VimEditorTextMode" });
 
@@ -27,16 +30,26 @@ export class VimEditorTextMode {
 
   getCurrentTextMode: () => AbstractTextMode;
 
-  constructor(public vimEditorOptions: VimEditorOptions) {
+  /**
+   * Injected in or-tree-notes.ts
+   */
+  constructor(
+    public vimEditorOptions: VimEditorOptions,
+    public store: Store<StateHistory<VimEditorState>>
+  ) {
+    store.registerAction("changeText", changeText);
+
     const normalTextMode = new NormalTextMode(
       this.vimEditorOptions.parentHtmlElement,
       this.vimEditorOptions.childSelectors[0],
-      this.vimEditorOptions.caretElements[0]
+      this.vimEditorOptions.caretElements[0],
+      store
     );
     const insertTextMode = new InsertTextMode(
       this.vimEditorOptions.parentHtmlElement,
       this.vimEditorOptions.childSelectors[0],
-      this.vimEditorOptions.caretElements[0]
+      this.vimEditorOptions.caretElements[0],
+      store
     );
     this.getCurrentTextMode = () => {
       if (this.vim.getCurrentMode().currentMode === VimMode.INSERT) {
