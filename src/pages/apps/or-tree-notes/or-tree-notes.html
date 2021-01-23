@@ -10,7 +10,10 @@
     <!-- Lines -->
     <template repeat.for="line of lines">
       <!-- Checkbox -->
-      <label if.bind="line.macro.checkbox">
+      <label
+        if.bind="line.macro.checkbox"
+        class="${line.macro.checkbox.value ? 'checkbox--checked' : ''}"
+      >
         <input type="checkbox" checked.bind="line.macro.checkbox.value" />
         <span class="${editorLineClass}" ref="lineSpanRef">${line.text}</span>
       </label>
