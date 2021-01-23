@@ -12,9 +12,11 @@ export function configure(aurelia: Aurelia) {
     .standardConfiguration()
     .feature(PLATFORM.moduleName("resources/index"));
 
+  const localStorageState = JSON.parse(window.localStorage.getItem("otn"));
+
   aurelia.use.developmentLogging(environment.debug ? "debug" : "warn");
   aurelia.use.plugin(PLATFORM.moduleName("aurelia-store"), {
-    initialState: initialVimEditorState,
+    initialState: localStorageState || initialVimEditorState,
     history: {
       undoable: true,
     },

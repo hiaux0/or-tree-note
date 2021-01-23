@@ -77,8 +77,18 @@ export class VimEditorTextMode {
     });
   }
 
+  checkAllowedBrowserShortcuts(ev: KeyboardEvent) {
+    if (ev.key === "r" && ev.ctrlKey) {
+      return;
+    }
+
+    ev.preventDefault();
+  }
+
   initKeys() {
     hotkeys("*", (ev) => {
+      this.checkAllowedBrowserShortcuts(ev);
+
       let pressedKey: string;
       if (ev.code === SPACE) {
         pressedKey = ev.code;
@@ -111,7 +121,7 @@ export class VimEditorTextMode {
         );
       }
 
-      this.executeCommandInEditor(pressedKey);
+      this.executeCommandInEditor(pressedKey, ev);
     });
   }
 
@@ -120,7 +130,7 @@ export class VimEditorTextMode {
     return MODIFIERS.includes(modifierInput);
   }
 
-  executeCommandInEditor(input: string) {
+  executeCommandInEditor(input: string, ev: KeyboardEvent) {
     //
     const result = this.vim.queueInput(input);
     logger.debug(["Received result from vim: %o", result], {
@@ -136,6 +146,7 @@ export class VimEditorTextMode {
 
     if (currentMode[result?.targetCommand]) {
       currentMode[result.targetCommand](result.vimState);
+      ev.preventDefault();
     }
   }
 

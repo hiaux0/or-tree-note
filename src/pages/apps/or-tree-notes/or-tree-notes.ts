@@ -1,5 +1,5 @@
-import { autoinject } from "aurelia-dependency-injection";
 import { Store, jump, connectTo, StateHistory } from "aurelia-store";
+import { autoinject } from "aurelia-dependency-injection";
 import { distinctUntilChanged, pluck } from "rxjs/operators";
 import { VimEditor, VimEditorOptions } from "modules/vim-editor/vim-editor";
 import { bindable } from "aurelia-framework";
@@ -18,6 +18,7 @@ const logger = new Logger({ scope: "OrTreeNotes" });
   selector: {
     lines: (store) =>
       store.state.pipe(pluck("present", "lines"), distinctUntilChanged()),
+    state: (store) => store.state,
   },
 })
 export class OrTreeNotes {
@@ -25,6 +26,7 @@ export class OrTreeNotes {
 
   lines: EditorLine[];
   line: EditorLine;
+  state: StateHistory<VimEditorState>;
 
   notesContainerRef: HTMLDivElement;
   lineSpanRef: HTMLSpanElement;
@@ -54,6 +56,12 @@ export class OrTreeNotes {
             this.toggleCheckbox();
           },
         },
+        {
+          commandName: "save",
+          execute: () => {
+            this.saveToLocalStorage();
+          },
+        },
       ],
     };
     rootContainer.registerInstance(
@@ -68,6 +76,15 @@ export class OrTreeNotes {
 
     this.vimEditor = rootContainer.get(VimEditor);
     this.currentModeName = this.vimEditor.getMode();
+  }
+
+  saveToLocalStorage() {
+    try {
+      const currentState = JSON.stringify(this.state.present);
+      window.localStorage.setItem("otn", currentState);
+    } catch (error) {
+      console.warn(error);
+    }
   }
 
   hasCheckboxMacro(line: EditorLine) {
