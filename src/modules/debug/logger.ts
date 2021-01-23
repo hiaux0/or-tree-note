@@ -1,4 +1,4 @@
-const debugMode = false;
+const debugMode = true;
 
 interface LogOptions {
   /////////////// Log
@@ -42,7 +42,7 @@ interface LogOptions {
 
 const defautLogOptions: LogOptions = {
   logMethod: "log",
-  // logLevel: "verbose",
+  logLevel: "verbose",
   clearPreviousGroupsWhen_isOnlyGroup_True: true,
   // dontLogUnlessSpecified: true,
   focusedLogging: false,
@@ -219,6 +219,10 @@ export class Logger {
       console.groupEnd();
       bugGroupId = bugGroupId.slice(0, bugGroupId.length - 1);
     }
+  }
+
+  todo(message: string) {
+    console.log(`>>>> [TODO]: %c${message}`, `background: ${"darkgreen"}`);
   }
 }
 
