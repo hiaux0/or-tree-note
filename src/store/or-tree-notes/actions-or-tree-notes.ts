@@ -1,5 +1,5 @@
 import produce from "immer";
-import { VimEditorState } from "store/initial-state";
+import { EditorLine, VimEditorState } from "store/initial-state";
 import { nextStateHistory, StateHistory } from "aurelia-store";
 
 /** @typedef {Wellplate.CompositeToolbar['legend']} CompositeToolbarLegend */
@@ -15,9 +15,14 @@ import { nextStateHistory, StateHistory } from "aurelia-store";
 
 export const toggleCheckbox = (
   state: StateHistory<VimEditorState>,
-  newText: string
+  targetLineNumber: number
 ) => {
-  return nextStateHistory(state, {
-    lines: [{ text: "hsitory" }, { text: newText }],
-  });
+  return nextStateHistory(
+    state,
+    produce(state.present, (draftState) => {
+      const targetDraftLine = draftState.lines[targetLineNumber];
+      targetDraftLine.macro.checkbox.value = !targetDraftLine.macro.checkbox
+        .value;
+    })
+  );
 };

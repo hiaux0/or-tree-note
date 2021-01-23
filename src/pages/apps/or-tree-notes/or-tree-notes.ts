@@ -80,13 +80,9 @@ export class OrTreeNotes {
 
   toggleCheckbox() {
     const { vimState } = this.vimEditor.vim;
+    const { line: targetLineNumber } = vimState.cursor;
 
-    const { line } = vimState.cursor;
-
-    this.lines[line].macro.checkbox.value = !this.lines[line].macro.checkbox
-      .value;
-
-    // this.store.dispatch(toggleCheckbox, "hey");
+    this.store.dispatch(toggleCheckbox, targetLineNumber);
   }
 
   undo() {
