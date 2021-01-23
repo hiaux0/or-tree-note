@@ -1,3 +1,5 @@
+import { Cursor } from "modules/vim/vim.types";
+
 export enum LineMarkup {
   "BOLD",
   "ITALICS",
@@ -31,6 +33,7 @@ export interface EditorLine {
 
 export interface VimEditorState {
   lines: EditorLine[];
+  cursorBeforeRefresh?: Cursor;
 }
 
 /**

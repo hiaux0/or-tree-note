@@ -1,5 +1,6 @@
-import { autoinject } from "aurelia-dependency-injection";
+import { initialVimEditorState } from "./../../../store/initial-state";
 import { Store, jump, connectTo, StateHistory } from "aurelia-store";
+import { autoinject } from "aurelia-dependency-injection";
 import { distinctUntilChanged, pluck } from "rxjs/operators";
 import { VimEditor, VimEditorOptions } from "modules/vim-editor/vim-editor";
 import { bindable } from "aurelia-framework";
@@ -10,14 +11,16 @@ import { VimMode, VimExecutingMode } from "modules/vim/vim.types";
 import { EditorLine, MacroType, VimEditorState } from "store/initial-state";
 import { toggleCheckbox } from "store/or-tree-notes/actions-or-tree-notes";
 import { Logger } from "modules/debug/logger";
+import { OTN_STATE as OTN_STATE_KEY } from "local-storage";
 
 const logger = new Logger({ scope: "OrTreeNotes" });
 
 @autoinject()
-@connectTo({
+@connectTo<StateHistory<VimEditorState>>({
   selector: {
     lines: (store) =>
       store.state.pipe(pluck("present", "lines"), distinctUntilChanged()),
+    state: (store) => store.state,
   },
 })
 export class OrTreeNotes {
@@ -25,6 +28,7 @@ export class OrTreeNotes {
 
   lines: EditorLine[];
   line: EditorLine;
+  state: StateHistory<VimEditorState>;
 
   notesContainerRef: HTMLDivElement;
   lineSpanRef: HTMLSpanElement;
@@ -54,6 +58,12 @@ export class OrTreeNotes {
             this.toggleCheckbox();
           },
         },
+        {
+          commandName: "save",
+          execute: () => {
+            this.saveToLocalStorage();
+          },
+        },
       ],
     };
     rootContainer.registerInstance(
@@ -68,6 +78,18 @@ export class OrTreeNotes {
 
     this.vimEditor = rootContainer.get(VimEditor);
     this.currentModeName = this.vimEditor.getMode();
+  }
+
+  saveToLocalStorage() {
+    try {
+      this.state.present.cursorBeforeRefresh = this.vimEditor.vim.vimState.cursor;
+
+      const currentState = JSON.stringify(this.state.present);
+
+      window.localStorage.setItem(OTN_STATE_KEY, currentState);
+    } catch (error) {
+      console.warn(error);
+    }
   }
 
   hasCheckboxMacro(line: EditorLine) {
@@ -91,5 +113,13 @@ export class OrTreeNotes {
 
   undo() {
     this.store.dispatch(jump, -1);
+  }
+
+  resetStore() {
+    window.localStorage.setItem(
+      OTN_STATE_KEY,
+      JSON.stringify(initialVimEditorState)
+    );
+    window.location.reload();
   }
 }

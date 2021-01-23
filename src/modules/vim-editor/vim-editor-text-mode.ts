@@ -1,3 +1,4 @@
+import { take } from "rxjs/operators";
 import "aurelia-polyfills";
 import { Vim } from "modules/vim/vim";
 import { Cursor, VimMode } from "modules/vim/vim.types";
@@ -17,6 +18,7 @@ import { AbstractTextMode } from "./abstract-text-mode";
 import { StateHistory, Store } from "aurelia-store";
 import { VimEditorState } from "store/initial-state";
 import { changeText } from "./actions/actions-vim-editor";
+import { pluck } from "rxjs/operators";
 
 const logger = new Logger({ scope: "VimEditorTextMode" });
 
@@ -71,14 +73,32 @@ export class VimEditorTextMode {
   }
 
   initVim() {
-    const startCursor: Cursor = { col: 0, line: 0 };
-    this.vim = new Vim(this.elementText, startCursor, {
-      vimPlugins: this.vimEditorOptions.plugins,
-    });
+    this.store.state
+      .pipe(pluck("present", "cursorBeforeRefresh"), take(1))
+      .subscribe((cursorBeforeRefresh) => {
+        const startCursor: Cursor = { col: 0, line: 0 };
+        const shouldCursor = cursorBeforeRefresh || startCursor;
+
+        this.vim = new Vim(this.elementText, shouldCursor, {
+          vimPlugins: this.vimEditorOptions.plugins,
+        });
+
+        this.getCurrentTextMode().setCursorMovement(cursorBeforeRefresh);
+      });
+  }
+
+  checkAllowedBrowserShortcuts(ev: KeyboardEvent) {
+    if (ev.key === "r" && ev.ctrlKey) {
+      return;
+    }
+
+    ev.preventDefault();
   }
 
   initKeys() {
     hotkeys("*", (ev) => {
+      this.checkAllowedBrowserShortcuts(ev);
+
       let pressedKey: string;
       if (ev.code === SPACE) {
         pressedKey = ev.code;
@@ -111,7 +131,7 @@ export class VimEditorTextMode {
         );
       }
 
-      this.executeCommandInEditor(pressedKey);
+      this.executeCommandInEditor(pressedKey, ev);
     });
   }
 
@@ -120,7 +140,7 @@ export class VimEditorTextMode {
     return MODIFIERS.includes(modifierInput);
   }
 
-  executeCommandInEditor(input: string) {
+  executeCommandInEditor(input: string, ev: KeyboardEvent) {
     //
     const result = this.vim.queueInput(input);
     logger.debug(["Received result from vim: %o", result], {
@@ -136,6 +156,7 @@ export class VimEditorTextMode {
 
     if (currentMode[result?.targetCommand]) {
       currentMode[result.targetCommand](result.vimState);
+      ev.preventDefault();
     }
   }
 

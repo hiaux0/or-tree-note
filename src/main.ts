@@ -3,6 +3,7 @@ import * as environment from "../config/environment.json";
 import { PLATFORM } from "aurelia-pal";
 import { initialVimEditorState } from "store/initial-state";
 import { setAutoFreeze } from "immer";
+import { OTN_STATE } from "local-storage";
 
 // This is required to allow Aurelia to add its observer on objects in the state.
 setAutoFreeze(false);
@@ -12,9 +13,11 @@ export function configure(aurelia: Aurelia) {
     .standardConfiguration()
     .feature(PLATFORM.moduleName("resources/index"));
 
+  const localStorageState = JSON.parse(window.localStorage.getItem(OTN_STATE));
+
   aurelia.use.developmentLogging(environment.debug ? "debug" : "warn");
   aurelia.use.plugin(PLATFORM.moduleName("aurelia-store"), {
-    initialState: initialVimEditorState,
+    initialState: localStorageState || initialVimEditorState,
     history: {
       undoable: true,
     },

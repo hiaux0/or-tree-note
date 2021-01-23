@@ -18,6 +18,7 @@ export default {
     { key: "<ArrowDown>", command: "cursorDown" },
     { key: "y", command: "yank" },
     { key: "gh", command: "hint" },
+    { key: "<Control>s", command: "save" },
   ],
   insert: [
     { key: "<ArrowLeft>", command: "cursorLeft" },
