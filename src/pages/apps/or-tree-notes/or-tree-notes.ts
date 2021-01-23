@@ -9,6 +9,9 @@ import { VimEditorTextMode } from "modules/vim-editor/vim-editor-text-mode";
 import { VimMode, VimExecutingMode } from "modules/vim/vim.types";
 import { EditorLine, MacroType, VimEditorState } from "store/initial-state";
 import { toggleCheckbox } from "store/or-tree-notes/actions-or-tree-notes";
+import { Logger } from "modules/debug/logger";
+
+const logger = new Logger({ scope: "OrTreeNotes" });
 
 @autoinject()
 @connectTo({
