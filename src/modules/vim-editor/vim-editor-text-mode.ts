@@ -38,12 +38,11 @@ export class VimEditorTextMode {
       this.vimEditorOptions.childSelectors[0],
       this.vimEditorOptions.caretElements[0]
     );
-
     this.getCurrentTextMode = () => {
       if (this.vim.getCurrentMode().currentMode === VimMode.INSERT) {
         return insertTextMode;
       } else if (this.vim.getCurrentMode().currentMode === VimMode.NORMAL) {
-        return insertTextMode;
+        return normalTextMode;
       }
     };
   }
@@ -76,6 +75,7 @@ export class VimEditorTextMode {
 
       logger.debug(["-------------- Key pressed: %s", ev.key], {
         log: true,
+        isOnlyGroup: true,
       });
 
       //
