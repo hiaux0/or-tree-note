@@ -58,10 +58,14 @@ or-tree-notes {
       transform: scale(2);
     }
 
-    .checkbox--checked {
-      .editor-line {
-        text-decoration: line-through;
-        color: #635249;
+    .checkbox-label {
+      display: block;
+
+      &.checkbox--checked {
+        .editor-line {
+          text-decoration: line-through;
+          color: #635249;
+        }
       }
     }
 

@@ -12,7 +12,7 @@
       <!-- Checkbox -->
       <label
         if.bind="line.macro.checkbox"
-        class="${line.macro.checkbox.value ? 'checkbox--checked' : ''}"
+        class="checkbox-label ${line.macro.checkbox.value ? 'checkbox--checked' : ''}"
       >
         <input type="checkbox" checked.bind="line.macro.checkbox.value" />
         <span class="${editorLineClass}" ref="lineSpanRef">${line.text}</span>
