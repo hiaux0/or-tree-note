@@ -8,7 +8,7 @@ import { rootContainer } from "modules/root-container";
 import { VimEditorTextMode } from "modules/vim-editor/vim-editor-text-mode";
 import { VimMode, VimExecutingMode } from "modules/vim/vim.types";
 import { EditorLine, MacroType, VimEditorState } from "store/initial-state";
-import { changeText } from "store/or-tree-notes/actions-or-tree-notes";
+import { toggleCheckbox } from "store/or-tree-notes/actions-or-tree-notes";
 
 @autoinject()
 @connectTo({
@@ -31,7 +31,7 @@ export class OrTreeNotes {
   vimEditor: VimEditor;
 
   constructor(private store: Store<StateHistory<VimEditorState>>) {
-    this.store.registerAction("changeText", changeText);
+    this.store.registerAction("toggleCheckbox", toggleCheckbox);
   }
 
   bind() {}
@@ -47,7 +47,7 @@ export class OrTreeNotes {
         {
           commandName: "toggleCheckbox",
           execute: () => {
-            this.changeText();
+            this.toggleCheckbox();
           },
         },
       ],
@@ -78,7 +78,7 @@ export class OrTreeNotes {
     return isDefault;
   }
 
-  changeText() {
+  toggleCheckbox() {
     const { vimState } = this.vimEditor.vim;
 
     const { line } = vimState.cursor;
@@ -86,7 +86,7 @@ export class OrTreeNotes {
     this.lines[line].macro.checkbox.value = !this.lines[line].macro.checkbox
       .value;
 
-    // this.store.dispatch(changeText, "hey");
+    // this.store.dispatch(toggleCheckbox, "hey");
   }
 
   undo() {

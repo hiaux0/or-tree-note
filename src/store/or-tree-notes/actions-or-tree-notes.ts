@@ -6,14 +6,14 @@ import { nextStateHistory, StateHistory } from "aurelia-store";
 
 // /**
 //  */
-// export function changeText(state: VimEditorState, newText: string) {
+// export function toggleCheckbox(state: VimEditorState, newText: string) {
 //   return produce(state, (draftState) => {
 //     draftState.lines[0].text = "AURELIA STORE CHANGED";
 //     draftState.lines[1].text = newText;
 //   });
 // }
 
-export const changeText = (
+export const toggleCheckbox = (
   state: StateHistory<VimEditorState>,
   newText: string
 ) => {
