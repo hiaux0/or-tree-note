@@ -2,10 +2,9 @@ import { cloneDeep } from "lodash";
 import { Vim } from "modules/vim/vim";
 import { VimCommandManager } from "modules/vim/vim-command-manager";
 import { Cursor } from "modules/vim/vim.types";
-import { createVimState } from "../../vim-state-utils";
+import { createVimState } from "test/vim-state-utils";
 
 const input = ["foo"];
-const cursor: Cursor = { line: 0, col: 0 };
 
 describe("C: Mode - Insert", () => {
   let vimCommandManager: VimCommandManager;
@@ -27,6 +26,20 @@ describe("C: Mode - Insert", () => {
       vimCommandManager.enterInsertTextMode();
       const result = vimCommandManager.executeVimCommand("type", "!");
       expect(result.cursor).toEqual({ col: 1, line: 0 }); // !foo
+    });
+  });
+
+  describe("C: Deleting characetrs", () => {
+    it("F: delete", () => {
+      vimCommandManager.enterInsertTextMode();
+      const result = vimCommandManager.executeVimCommand("delete");
+      expect(result).toEqual({ cursor: { col: 0, line: 0 }, text: "oo" });
+    });
+    it("F: backspace", () => {
+      vimCommandManager.vimState.cursor = { col: 1, line: 0 };
+      vimCommandManager.enterInsertTextMode();
+      const result = vimCommandManager.executeVimCommand("backspace");
+      expect(result).toEqual({ cursor: { col: 0, line: 0 }, text: "oo" });
     });
   });
 });

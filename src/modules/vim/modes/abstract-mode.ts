@@ -243,7 +243,7 @@ export abstract class AbstractMode {
     return this.vimState;
   }
   cursorDown(): VimState {
-    const newCurLine = this.vimState.cursor.line + 1; /*?*/
+    const newCurLine = this.vimState.cursor.line + 1;
     const isValidVertical = isValidVerticalPosition(
       newCurLine + 1,
       this.wholeInput

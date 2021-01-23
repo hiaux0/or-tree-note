@@ -33,7 +33,7 @@ export class InsertMode extends AbstractMode {
   backspace(): VimState {
     const updatedInput = replaceAt(
       this.vimState.text,
-      this.vimState.cursor.col,
+      this.vimState.cursor.col - 1,
       ""
     );
 
@@ -45,7 +45,7 @@ export class InsertMode extends AbstractMode {
   delete(): VimState {
     const updatedInput = replaceAt(
       this.vimState.text,
-      this.vimState.cursor.col + 1,
+      this.vimState.cursor.col,
       ""
     );
 
