@@ -38,7 +38,12 @@ export class VimEditor {
       this.vim = vimEditorTextMode.getVim();
     }
 
-    // vimEditorTextMode.executeCommandSequenceInEditor("<Space>tc");
+    setTimeout(() => {
+      vimEditorTextMode.executeCommandSequenceInEditor("u<Space>tc");
+      // vimEditorTextMode.executeCommandSequenceInEditor("l");
+      // vimEditorTextMode.executeCommandSequenceInEditor("u<Space>t");
+      // vimEditorTextMode.executeCommandSequenceInEditor("u");
+    }, 1000);
   }
 
   getMode() {
