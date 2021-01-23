@@ -6,7 +6,7 @@ import {
   VimMode,
   VimState,
 } from "modules/vim/vim.types";
-import { createVimState } from "../vim-state-utils";
+import { createVimState } from "test/vim-state-utils";
 
 const input = ["foo"];
 const cursor = { line: 0, col: 0 };
