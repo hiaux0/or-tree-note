@@ -7,7 +7,7 @@ import "./or-tree-notes.scss";
 import { rootContainer } from "modules/root-container";
 import { VimEditorTextMode } from "modules/vim-editor/vim-editor-text-mode";
 import { VimMode, VimExecutingMode } from "modules/vim/vim.types";
-import { VimEditorState } from "store/initial-state";
+import { EditorLine, MacroType, VimEditorState } from "store/initial-state";
 import { changeText } from "store/or-tree-notes/actions-or-tree-notes";
 
 @autoinject()
@@ -19,12 +19,16 @@ import { changeText } from "store/or-tree-notes/actions-or-tree-notes";
 export class OrTreeNotes {
   @bindable value = "OrTreeNotes";
 
+  lines: EditorLine[];
+  line: EditorLine;
+
   notesContainerRef: HTMLDivElement;
   lineSpanRef: HTMLSpanElement;
   caretRef: HTMLSpanElement;
 
   editorLineClass: string = "editor-line";
   currentModeName: VimMode;
+  vimEditor: VimEditor;
 
   constructor(private store: Store<StateHistory<VimEditorState>>) {
     this.store.registerAction("changeText", changeText);
@@ -58,12 +62,31 @@ export class OrTreeNotes {
       new VimEditor(vimEditorOptions, vimEditorTextMode)
     );
 
-    const vimEditor = rootContainer.get(VimEditor);
-    this.currentModeName = vimEditor.getMode();
+    this.vimEditor = rootContainer.get(VimEditor);
+    this.currentModeName = this.vimEditor.getMode();
+  }
+
+  hasCheckboxMacro(line: EditorLine) {
+    const hasCheckbox = line.macros?.find(
+      (macro) => macro.type === MacroType.CHECKBOX
+    );
+    return hasCheckbox;
+  }
+
+  isDefaultLine(line: EditorLine) {
+    const isDefault = line.macro?.checkbox === undefined;
+    return isDefault;
   }
 
   changeText() {
-    this.store.dispatch(changeText, "hey");
+    const { vimState } = this.vimEditor.vim;
+
+    const { line } = vimState.cursor;
+
+    this.lines[line].macro.checkbox.value = !this.lines[line].macro.checkbox
+      .value;
+
+    // this.store.dispatch(changeText, "hey");
   }
 
   undo() {

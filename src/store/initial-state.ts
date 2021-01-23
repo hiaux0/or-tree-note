@@ -4,9 +4,15 @@ export enum LineMarkup {
   "HEADING1",
 }
 
-export interface LineMacros {
-  name: string;
-  type: MacroType;
+export interface CheckboxMacro {
+  value: boolean;
+}
+
+export interface LineMacro {
+  checkbox: CheckboxMacro;
+  name?: string;
+  type?: MacroType;
+  value?: boolean;
 }
 
 export enum MacroType {
@@ -19,7 +25,8 @@ export enum MacroType {
 export interface EditorLine {
   text: string;
   markup?: LineMarkup;
-  macros?: LineMacros;
+  macros?: LineMacro[];
+  macro?: LineMacro;
 }
 
 export interface VimEditorState {
@@ -42,6 +49,11 @@ export const initialVimEditorState: VimEditorState = {
   lines: [
     {
       text: "012 456",
+      macro: {
+        checkbox: {
+          value: true,
+        },
+      },
     },
     {
       text: "abcdef 89",

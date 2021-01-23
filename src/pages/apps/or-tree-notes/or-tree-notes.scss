@@ -52,6 +52,10 @@ or-tree-notes {
     height: 80vh;
     width: 80vw;
 
+    input[type='checkbox'] {
+      transform: scale(2);
+    }
+
     .editor-line{
       white-space: pre;
     }

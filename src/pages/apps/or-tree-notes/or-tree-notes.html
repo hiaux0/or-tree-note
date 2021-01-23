@@ -7,9 +7,24 @@
   <button click.delegate="undo()">Undo</button>
 
   <div ref="notesContainerRef" class="notes-container">
+    <!-- Lines -->
     <template repeat.for="line of lines">
-      <div class="${editorLineClass}" ref="lineSpanRef">${line.text}</div>
+      <!-- Checkbox -->
+      <label if.bind="line.macro.checkbox">
+        <input type="checkbox" checked.bind="line.macro.checkbox.value" />
+        <span class="${editorLineClass}" ref="lineSpanRef">${line.text}</span>
+      </label>
+      <!-- Default line -->
+      <!-- display: inline -->
+      <div
+        if.bind="isDefaultLine(line)"
+        class="${editorLineClass}"
+        ref="lineSpanRef"
+        >${line.text}</div
+      >
     </template>
+
+    <!-- Caret -->
     <span
       ref="caretRef"
       id="caret"
