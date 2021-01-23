@@ -21,8 +21,17 @@ export const toggleCheckbox = (
     state,
     produce(state.present, (draftState) => {
       const targetDraftLine = draftState.lines[targetLineNumber];
-      targetDraftLine.macro.checkbox.value = !targetDraftLine.macro.checkbox
-        .value;
+
+      if (targetDraftLine.macro) {
+        targetDraftLine.macro.checkbox.value = !targetDraftLine.macro.checkbox
+          .value;
+      } else {
+        targetDraftLine.macro = {
+          checkbox: {
+            value: true,
+          },
+        };
+      }
     })
   );
 };
