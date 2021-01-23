@@ -25,6 +25,10 @@ export const defaultVimOptions: VimOptions = {
   leader: SPACE,
 };
 
+const defaultCursor = {
+  col: 0,
+  line: 0,
+};
 /**
  * First iteration: All vim needs is
  * - the input
@@ -36,7 +40,7 @@ export class Vim {
 
   constructor(
     private wholeInput: string[],
-    private cursor: Cursor = { line: 0, col: 0 },
+    private cursor: Cursor = defaultCursor,
     private vimOptions?: VimOptions
   ) {
     const finalVimOptions = {
@@ -44,11 +48,8 @@ export class Vim {
       ...this.vimOptions,
     };
     const initialVimState: VimState = {
-      text: this.wholeInput[0],
-      cursor: {
-        col: 0,
-        line: 0,
-      },
+      text: this.wholeInput[this.cursor.line],
+      cursor: this.cursor,
     };
     this.vimCommandManager = new VimCommandManager(
       this.wholeInput,
