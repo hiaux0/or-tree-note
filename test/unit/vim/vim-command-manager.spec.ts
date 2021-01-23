@@ -1,6 +1,12 @@
 import { VimCommandManager } from "modules/vim/vim-command-manager";
 import { cloneDeep, map } from "lodash";
-import { Cursor, KeyBindingModes, VimMode } from "modules/vim/vim.types";
+import {
+  Cursor,
+  KeyBindingModes,
+  VimMode,
+  VimState,
+} from "modules/vim/vim.types";
+import { createVimState } from "../vim-state-utils";
 
 const input = ["foo"];
 const cursor = { line: 0, col: 0 };
@@ -11,7 +17,7 @@ describe("Vim - General", () => {
   beforeEach(() => {
     vimCommandManager = new VimCommandManager(
       cloneDeep(input),
-      cloneDeep(cursor)
+      cloneDeep(createVimState())
     );
   });
 
@@ -36,18 +42,24 @@ describe("Vim - General", () => {
       expect(result.cursor.col).toBe(cursor.col + 1);
     });
     it("F: Update cursor on move left", () => {
-      const customV = new VimCommandManager(cloneDeep(input), {
-        col: 2,
-        line: 0,
-      });
+      const customV = new VimCommandManager(
+        cloneDeep(input),
+        createVimState({
+          col: 2,
+          line: 0,
+        })
+      );
       const result = customV.executeVimCommand<Cursor>("cursorLeft");
       expect(result.cursor.col).toBe(1);
     });
     it("F: Cursor stays in horizontal boundaries - Right", () => {
-      const customV = new VimCommandManager(cloneDeep(input), {
-        col: 3,
-        line: 0,
-      });
+      const customV = new VimCommandManager(
+        cloneDeep(input),
+        createVimState({
+          col: 3,
+          line: 0,
+        })
+      );
       const result = customV.executeVimCommand<Cursor>("cursorRight");
       expect(result.cursor.col).toBe(3);
     });
@@ -65,7 +77,7 @@ describe("C: Mode - Normal", () => {
     beforeEach(() => {
       vimCommandManager = new VimCommandManager(
         cloneDeep(input),
-        cloneDeep(cursor)
+        cloneDeep(createVimState())
       );
       vimCommandManager.enterNormalTextMode();
     });
@@ -92,7 +104,7 @@ describe("C: Mode - Normal", () => {
         };
         vimCommandManager = new VimCommandManager(
           cloneDeep(input),
-          cloneDeep(cursor),
+          cloneDeep(createVimState()),
           {
             keyBindings,
           }
@@ -161,7 +173,7 @@ describe("C: Mode - Normal", () => {
           };
           vimCommandManager = new VimCommandManager(
             cloneDeep(input),
-            cloneDeep(cursor),
+            cloneDeep(createVimState()),
             {
               keyBindings,
             }
@@ -185,7 +197,7 @@ describe("Methods", () => {
   beforeEach(() => {
     vimCommandManager = new VimCommandManager(
       cloneDeep(input),
-      cloneDeep(cursor)
+      cloneDeep(createVimState())
     );
     vimCommandManager.enterInsertTextMode();
   });
