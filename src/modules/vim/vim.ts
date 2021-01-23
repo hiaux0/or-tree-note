@@ -110,20 +110,22 @@ export class Vim {
     if (vimState) {
       this.vimCommandManager.setVimState(vimState);
       this.vimState = vimState;
-
-      //
-      const result = {
-        vimState,
-        targetCommand: targetCommandName,
-        wholeInput: [...this.wholeInput],
-      };
-
-      logger.debug(["Result of input: %s is: %o", input, result], {
-        onlyVerbose: true,
-      });
-
-      return result;
+    } else {
+      vimState = this.vimState;
     }
+
+    //
+    const result = {
+      vimState,
+      targetCommand: targetCommandName,
+      wholeInput: [...this.wholeInput],
+    };
+
+    logger.debug(["Result of input: %s is: %o", input, result], {
+      onlyVerbose: true,
+    });
+
+    return result;
   }
 
   /** */
