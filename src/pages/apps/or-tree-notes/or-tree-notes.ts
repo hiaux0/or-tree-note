@@ -10,6 +10,7 @@ import { VimMode, VimExecutingMode } from "modules/vim/vim.types";
 import { EditorLine, MacroType, VimEditorState } from "store/initial-state";
 import { toggleCheckbox } from "store/or-tree-notes/actions-or-tree-notes";
 import { Logger } from "modules/debug/logger";
+import { initRxDb } from "db/init-rxdb";
 
 const logger = new Logger({ scope: "OrTreeNotes" });
 
@@ -41,6 +42,9 @@ export class OrTreeNotes {
   bind() {}
 
   attached() {
+    //
+    initRxDb();
+    //
     const vimEditorOptions: VimEditorOptions = {
       parentHtmlElement: this.notesContainerRef,
       childSelectors: [this.editorLineClass],
