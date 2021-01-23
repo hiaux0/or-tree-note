@@ -121,7 +121,7 @@ export class VimEditorTextMode {
       return;
     }
 
-    if (currentMode[result.targetCommand]) {
+    if (currentMode[result?.targetCommand]) {
       currentMode[result.targetCommand](result.vimState);
     }
   }

@@ -107,21 +107,23 @@ export class Vim {
     }
 
     //
-    this.vimCommandManager.setVimState(vimState);
-    this.vimState = vimState;
+    if (vimState) {
+      this.vimCommandManager.setVimState(vimState);
+      this.vimState = vimState;
 
-    //
-    const result = {
-      vimState,
-      targetCommand: targetCommandName,
-      wholeInput: [...this.wholeInput],
-    };
+      //
+      const result = {
+        vimState,
+        targetCommand: targetCommandName,
+        wholeInput: [...this.wholeInput],
+      };
 
-    logger.debug(["Result of input: %s is: %o", input, result], {
-      onlyVerbose: true,
-    });
+      logger.debug(["Result of input: %s is: %o", input, result], {
+        onlyVerbose: true,
+      });
 
-    return result;
+      return result;
+    }
   }
 
   /** */
