@@ -1,4 +1,4 @@
-@import '../../../common/variables.scss';
+@import "../../../common/variables.scss";
 
 // @mixin caretBlinking {
 //   animation-name: blink;
@@ -22,7 +22,8 @@ $caretSizeHeight: 1.2 * $fontSize;
 }
 
 @keyframes blinkInsert {
-  from, to {
+  from,
+  to {
     border-left: $carentWidth solid $caretColor;
   }
 
@@ -32,8 +33,9 @@ $caretSizeHeight: 1.2 * $fontSize;
 }
 
 @keyframes blinkNormal {
-  from, to {
-    background: $caretBackgroundColor
+  from,
+  to {
+    background: $caretBackgroundColor;
   }
 
   50% {
@@ -52,7 +54,22 @@ or-tree-notes {
     height: 80vh;
     width: 80vw;
 
-    .editor-line{
+    input[type="checkbox"] {
+      transform: scale(2);
+    }
+
+    .checkbox-label {
+      display: block;
+
+      &.checkbox--checked {
+        .editor-line {
+          text-decoration: line-through;
+          color: #635249;
+        }
+      }
+    }
+
+    .editor-line {
       white-space: pre;
     }
 
@@ -88,8 +105,6 @@ or-tree-notes {
           @include caretBlinking(blinkInsert);
         }
       }
-
     }
   }
 }
-

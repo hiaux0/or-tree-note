@@ -32,18 +32,14 @@ export class VimCommandManager {
   potentialCommands: VimCommand[];
   /** If a command did not trigger, save key */
   queuedKeys: string[] = [];
-  vimState: VimState;
+  cursor: Cursor;
 
   constructor(
     public wholeInput: string[],
-    public cursor: Cursor = { line: 0, col: 0 },
+    public vimState: VimState,
     public vimOptions: VimOptions = defaultVimOptions
   ) {
-    const activeInput = wholeInput[cursor.line];
-    const vimState: VimState = {
-      text: activeInput,
-      cursor,
-    };
+    this.cursor = vimState.cursor;
 
     this.normalMode = new NormalMode(
       vimState,

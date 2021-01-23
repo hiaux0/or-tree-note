@@ -2,6 +2,7 @@ import { cloneDeep } from "lodash";
 import { Vim } from "modules/vim/vim";
 import { VimCommandManager } from "modules/vim/vim-command-manager";
 import { Cursor } from "modules/vim/vim.types";
+import { createVimState } from "../../vim-state-utils";
 
 const input = ["foo"];
 const cursor: Cursor = { line: 0, col: 0 };
@@ -12,7 +13,7 @@ describe("C: Mode - Insert", () => {
   beforeEach(() => {
     vimCommandManager = new VimCommandManager(
       cloneDeep(input),
-      cloneDeep(cursor)
+      cloneDeep(createVimState())
     );
   });
 

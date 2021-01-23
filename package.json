@@ -10,7 +10,10 @@
   "dependencies": {
     "aurelia-animator-css": "^1.0.4",
     "aurelia-bootstrapper": "^2.3.3",
-    "hotkeys-js": "^3.8.1"
+    "aurelia-store": "^1.6.0",
+    "hotkeys-js": "^3.8.1",
+    "immer": "^8.0.0",
+    "rxjs": "^6.6.3"
   },
   "devDependencies": {
     "@cypress/webpack-preprocessor": "^4.1.2",
@@ -85,5 +88,8 @@
   },
   "engines": {
     "node": ">=8.9.0"
+  },
+  "prettier": {
+    "htmlWhitespaceSensitivity": "strict"
   }
 }

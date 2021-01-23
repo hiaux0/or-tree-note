@@ -7,6 +7,7 @@ import {
   QueueInputReturn,
   KeyBindingModes,
   VimExecutingMode,
+  VimState,
 } from "./vim.types";
 import { VimCommandManager } from "./vim-command-manager";
 
@@ -29,20 +30,28 @@ export const defaultVimOptions: VimOptions = {
  * - the cursor location
  */
 export class Vim {
-  vimCommandManager: VimCommandManager;
+  private vimCommandManager: VimCommandManager;
+  public vimState: VimState;
 
   constructor(
-    public wholeInput: string[],
-    public cursor: Cursor = { line: 0, col: 0 },
-    public vimOptions?: VimOptions
+    private wholeInput: string[],
+    private cursor: Cursor = { line: 0, col: 0 },
+    private vimOptions?: VimOptions
   ) {
     const finalVimOptions = {
       ...defaultVimOptions,
       ...this.vimOptions,
     };
+    const initialVimState: VimState = {
+      text: this.wholeInput[0],
+      cursor: {
+        col: 0,
+        line: 0,
+      },
+    };
     this.vimCommandManager = new VimCommandManager(
       this.wholeInput,
-      this.cursor,
+      initialVimState,
       finalVimOptions
     );
 
@@ -98,7 +107,12 @@ export class Vim {
     }
 
     //
-    this.vimCommandManager.setVimState(vimState);
+    if (vimState) {
+      this.vimCommandManager.setVimState(vimState);
+      this.vimState = vimState;
+    } else {
+      vimState = this.vimState;
+    }
 
     //
     const result = {
