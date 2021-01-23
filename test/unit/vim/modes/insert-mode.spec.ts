@@ -35,6 +35,14 @@ describe("C: Mode - Insert", () => {
       const result = vimCommandManager.executeVimCommand("delete");
       expect(result).toEqual({ cursor: { col: 0, line: 0 }, text: "oo" });
     });
+    it("F: delete all", () => {
+      vimCommandManager.enterInsertTextMode();
+      vimCommandManager.executeVimCommand("delete");
+      vimCommandManager.executeVimCommand("delete");
+      const result = vimCommandManager.executeVimCommand("delete");
+      expect(result).toEqual({ cursor: { col: 0, line: 0 }, text: "" });
+    });
+    //
     it("F: backspace", () => {
       vimCommandManager.vimState.cursor = { col: 1, line: 0 };
       vimCommandManager.enterInsertTextMode();

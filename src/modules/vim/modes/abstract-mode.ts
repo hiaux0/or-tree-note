@@ -9,6 +9,8 @@ export function isValidHorizontalPosition(
   cursorCol: number,
   activeInput: string
 ) {
+  if (cursorCol === activeInput.length + 1) return true;
+
   const isBigger = cursorCol > activeInput.length;
   /**
    * Should be > technically, but conceptionally, cursor and text index are off by one.
@@ -151,7 +153,6 @@ export abstract class AbstractMode {
     const isValid = isValidHorizontalPosition(curCol, vimState.text);
 
     if (!isValid) {
-      !isValid; /*?*/
       try {
         logger.debug(
           [
