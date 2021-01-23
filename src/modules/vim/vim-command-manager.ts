@@ -1,8 +1,8 @@
-import { cloneDeep, groupBy } from "lodash";
+import { groupBy } from "lodash";
 import { Logger } from "modules/debug/logger";
 import { filterStringByCharSequence } from "modules/string/string";
 import { SPECIAL_KEYS } from "resources/keybindings/app.keys";
-import { defaultVimOptions, VimError } from "./vim";
+import { defaultVimOptions } from "./vim";
 import { VimCommandNames, VimCommand } from "./vim-commands";
 import { NormalMode } from "modules/vim/modes/normal-mode";
 import { InsertMode } from "modules/vim/modes/insert-mode";
@@ -97,7 +97,7 @@ export class VimCommandManager {
         commandName,
         commandInput
       ) as CommandType;
-      return cloneDeep(vimState);
+      return vimState;
     } catch (error) {
       const previousState = this.vimState;
       return previousState;

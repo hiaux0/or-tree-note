@@ -10,6 +10,7 @@ import {
   VimState,
 } from "./vim.types";
 import { VimCommandManager } from "./vim-command-manager";
+import { cloneDeep } from "lodash";
 
 const logger = new Logger({ scope: "Vim" });
 
@@ -116,7 +117,7 @@ export class Vim {
 
     //
     const result = {
-      vimState,
+      vimState: cloneDeep(vimState),
       targetCommand: targetCommandName,
       wholeInput: [...this.wholeInput],
     };

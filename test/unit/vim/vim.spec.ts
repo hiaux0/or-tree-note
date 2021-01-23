@@ -302,7 +302,7 @@ describe("Methods", () => {
       expect(result).toEqual([
         {
           targetCommand: "enterInsertTextMode",
-          vimState: undefined,
+          vimState: { cursor: { col: 0, line: 0 }, text: "foo" },
           wholeInput: ["foo"],
         },
         {
