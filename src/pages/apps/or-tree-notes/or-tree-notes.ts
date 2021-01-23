@@ -14,7 +14,7 @@ import { Logger } from "modules/debug/logger";
 const logger = new Logger({ scope: "OrTreeNotes" });
 
 @autoinject()
-@connectTo({
+@connectTo<StateHistory<VimEditorState>>({
   selector: {
     lines: (store) =>
       store.state.pipe(pluck("present", "lines"), distinctUntilChanged()),
@@ -80,7 +80,10 @@ export class OrTreeNotes {
 
   saveToLocalStorage() {
     try {
+      this.state.present.cursorBeforeRefresh = this.vimEditor.vim.vimState.cursor;
+
       const currentState = JSON.stringify(this.state.present);
+
       window.localStorage.setItem("otn", currentState);
     } catch (error) {
       console.warn(error);
