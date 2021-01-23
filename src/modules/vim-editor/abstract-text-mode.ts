@@ -1,3 +1,4 @@
+import { rootContainer } from "modules/root-container";
 import { VimState } from "../vim/vim.types";
 import { Logger } from "modules/debug/logger";
 import { Cursor } from "modules/vim/vim.types";
@@ -5,6 +6,7 @@ import {
   getComputedValueFromPixelString,
   getCssVar,
 } from "../css/css-variables";
+import { ChildrenMutationObserver } from "./children-mutation-observer";
 
 const logger = new Logger({ scope: "AbstractTextMode" });
 
@@ -17,6 +19,8 @@ export abstract class AbstractTextMode {
   currentLineNumber: number = 0;
   currentCaretCol: number = 0;
 
+  childrenMutationObserver: ChildrenMutationObserver;
+
   constructor(
     public parentElement: HTMLElement,
     public childSelector: string,
@@ -25,6 +29,13 @@ export abstract class AbstractTextMode {
     this.children = parentElement.querySelectorAll<HTMLElement>(
       `.${childSelector}`
     );
+
+    this.childrenMutationObserver = rootContainer.get(ChildrenMutationObserver);
+    this.childrenMutationObserver.createObserver(parentElement, () => {
+      this.children = parentElement.querySelectorAll<HTMLElement>(
+        `.${this.childSelector}`
+      );
+    });
 
     this.caretWidth = getCssVar("--caret-size-width");
     this.caretHeight = getCssVar("--caret-size-height");
@@ -49,6 +60,8 @@ export abstract class AbstractTextMode {
   getLineRectOffsetLeft() {
     const currentChild = this.children[this.currentLineNumber];
     const childOffsetLeft = currentChild.offsetLeft;
+
+    logger.debug(["Child offset: %d", childOffsetLeft]);
 
     if (childOffsetLeft > 0) {
       return childOffsetLeft;
