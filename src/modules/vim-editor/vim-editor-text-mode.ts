@@ -74,16 +74,16 @@ export class VimEditorTextMode {
 
   initVim() {
     this.store.state
-      .pipe(pluck("present", "cursorBeforeRefresh"), take(1))
-      .subscribe((cursorBeforeRefresh) => {
+      .pipe(pluck("present", "cursorPosition"), take(1))
+      .subscribe((cursorPosition) => {
         const startCursor: Cursor = { col: 0, line: 0 };
-        const shouldCursor = cursorBeforeRefresh || startCursor;
+        const shouldCursor = cursorPosition || startCursor;
 
         this.vim = new Vim(this.elementText, shouldCursor, {
           vimPlugins: this.vimEditorOptions.plugins,
         });
 
-        this.getCurrentTextMode().setCursorMovement(cursorBeforeRefresh);
+        this.getCurrentTextMode().setCursorMovement(cursorPosition);
       });
   }
 

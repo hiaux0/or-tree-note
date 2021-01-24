@@ -33,7 +33,7 @@ export interface EditorLine {
 
 export interface VimEditorState {
   lines: EditorLine[];
-  cursorBeforeRefresh?: Cursor;
+  cursorPosition?: Cursor;
 }
 
 /**

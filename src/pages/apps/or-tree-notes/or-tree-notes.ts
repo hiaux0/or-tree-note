@@ -80,7 +80,7 @@ export class OrTreeNotes {
 
   saveToLocalStorage() {
     try {
-      this.state.present.cursorBeforeRefresh = this.vimEditor.vim.vimState.cursor;
+      this.state.present.cursorPosition = this.vimEditor.vim.vimState.cursor;
 
       const currentState = JSON.stringify(this.state.present);
 
