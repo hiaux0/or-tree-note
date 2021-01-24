@@ -5,7 +5,7 @@ import { Vim } from "modules/vim/vim";
 const input = ["foo"];
 const cursor = { line: 0, col: 0 };
 
-describe("Vim", () => {
+describe("Vim - Abstract Mode", () => {
   let vim: Vim;
 
   /** *************/

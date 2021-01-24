@@ -70,7 +70,7 @@ module.exports = function(wallaby) {
     tests: [
       // { pattern: 'test/unit/**/*.spec.ts', load: false },
       // { pattern: 'test/unit/**/abstract-mode.spec.ts', load: false }
-      { pattern: 'test/unit/**/insert-mode.spec.ts', load: false }
+      { pattern: 'test/unit/**/normal-mode.spec.ts', load: false }
       // { pattern: 'test/unit/**/vim.spec.ts', load: false }
     ],
 

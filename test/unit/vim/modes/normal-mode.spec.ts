@@ -250,3 +250,28 @@ describe("C: Normal Mode", () => {
     });
   });
 });
+
+describe("[Normal Mode] Bug hunting", () => {
+  it("C: Move up to empty line", () => {
+    const lines = ["012 456", "", "Hello"];
+    const vimState = {
+      cursor: { line: 2, col: 4 },
+      text: "Hello",
+    };
+
+    const nm = new NormalMode(vimState, lines);
+    const result = nm.executeCommand("cursorUp");
+    expect(result).toEqual({ cursor: { col: 0, line: 1 }, text: "" });
+  });
+  it("C: Move down to empty line", () => {
+    const lines = ["012 456", "", "Hello"];
+    const vimState = {
+      cursor: { line: 0, col: 4 },
+      text: "Hello",
+    };
+
+    const nm = new NormalMode(vimState, lines);
+    const result = nm.executeCommand("cursorDown");
+    expect(result).toEqual({ cursor: { col: 0, line: 1 }, text: "" });
+  });
+});

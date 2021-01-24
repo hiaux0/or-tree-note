@@ -77,7 +77,7 @@ export abstract class AbstractMode {
   constructor(
     public vimState: VimState,
     public lines: string[],
-    public vimOptions?: VimOptions
+    public vimOptions: VimOptions = {}
   ) {
     this.tokenizedInput = tokenizeInput(vimState.text);
 
@@ -123,6 +123,10 @@ export abstract class AbstractMode {
     try {
       this.validateHorizontalCursor(result);
     } catch {
+      logger.debug([
+        "Not valid state. Returning to previous state: %o",
+        previousOutput,
+      ]);
       return previousOutput;
     }
 
@@ -212,7 +216,7 @@ export abstract class AbstractMode {
     return this.vimState;
   }
   cursorUp(): VimState {
-    const newCurLine = this.vimState.cursor.line - 1; /*?*/
+    const newCurLine = this.vimState.cursor.line - 1;
     const isValidVertical = isValidVerticalPosition(newCurLine + 1, this.lines);
 
     if (!isValidVertical) {
@@ -227,7 +231,7 @@ export abstract class AbstractMode {
 
     if (!isValidHorizontalAfterMovedVertically) {
       // TODO: Call "$" to put cursor to end of line
-      this.vimState.cursor.col = newActiveLine.length - 1;
+      this.vimState.cursor.col = Math.max(newActiveLine.length - 1, 0);
     }
 
     const newActiveText = this.lines[newCurLine];
@@ -254,7 +258,7 @@ export abstract class AbstractMode {
 
     if (!isValidHorizontalAfterMovedVertically) {
       // TODO: Call "$" to put cursor to end of line
-      this.vimState.cursor.col = newActiveLine.length - 1;
+      this.vimState.cursor.col = Math.max(newActiveLine.length - 1, 0);
     }
 
     const newActiveText = this.lines[newCurLine];
