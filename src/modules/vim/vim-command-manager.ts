@@ -35,22 +35,14 @@ export class VimCommandManager {
   cursor: Cursor;
 
   constructor(
-    public wholeInput: string[],
+    public lines: string[],
     public vimState: VimState,
     public vimOptions: VimOptions = defaultVimOptions
   ) {
     this.cursor = vimState.cursor;
 
-    this.normalMode = new NormalMode(
-      vimState,
-      this.wholeInput,
-      this.vimOptions
-    );
-    this.insertMode = new InsertMode(
-      vimState,
-      this.wholeInput,
-      this.vimOptions
-    );
+    this.normalMode = new NormalMode(vimState, this.lines, this.vimOptions);
+    this.insertMode = new InsertMode(vimState, this.lines, this.vimOptions);
 
     this.keyBindings = this.vimOptions.keyBindings;
   }
@@ -299,7 +291,7 @@ export class VimCommandManager {
     const currentMode = this.getCurrentMode();
 
     currentMode.reTokenizeInput(newLineMessage);
-    this.wholeInput.splice(newLineCursorLine, 0, newLineMessage);
+    this.lines.splice(newLineCursorLine, 0, newLineMessage);
     this.vimState.text = newLineMessage;
     this.vimState.cursor = {
       line: newLineCursorLine,

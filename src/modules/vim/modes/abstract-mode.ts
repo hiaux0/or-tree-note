@@ -21,8 +21,8 @@ export function isValidHorizontalPosition(
   return result;
 }
 
-export function isValidVerticalPosition(line: number, wholeInput: string[]) {
-  const isBigger = line > wholeInput.length;
+export function isValidVerticalPosition(line: number, lines: string[]) {
+  const isBigger = line > lines.length;
   /**
    * Should be > technically, but conceptionally, line and text index are off by one.
    */
@@ -76,7 +76,7 @@ export abstract class AbstractMode {
 
   constructor(
     public vimState: VimState,
-    public wholeInput: string[],
+    public lines: string[],
     public vimOptions?: VimOptions
   ) {
     this.tokenizedInput = tokenizeInput(vimState.text);
@@ -172,14 +172,14 @@ export abstract class AbstractMode {
 
   validateVerticalCursor(vimState: VimState) {
     const line = vimState.cursor.line + 1;
-    const isValid = isValidVerticalPosition(line, this.wholeInput);
+    const isValid = isValidVerticalPosition(line, this.lines);
 
     if (!isValid) {
       logger.debug(
         [
           "[INVALID] Line will be: %d, but should be between [0,%d].",
           line,
-          this.wholeInput.length,
+          this.lines.length,
         ],
         {
           isError: true,
@@ -213,16 +213,13 @@ export abstract class AbstractMode {
   }
   cursorUp(): VimState {
     const newCurLine = this.vimState.cursor.line - 1; /*?*/
-    const isValidVertical = isValidVerticalPosition(
-      newCurLine + 1,
-      this.wholeInput
-    );
+    const isValidVertical = isValidVerticalPosition(newCurLine + 1, this.lines);
 
     if (!isValidVertical) {
       return this.vimState;
     }
 
-    const newActiveLine = this.wholeInput[newCurLine];
+    const newActiveLine = this.lines[newCurLine];
     const isValidHorizontalAfterMovedVertically = isValidHorizontalPosition(
       this.vimState.cursor.col + 1,
       newActiveLine
@@ -233,7 +230,7 @@ export abstract class AbstractMode {
       this.vimState.cursor.col = newActiveLine.length - 1;
     }
 
-    const newActiveText = this.wholeInput[newCurLine];
+    const newActiveText = this.lines[newCurLine];
 
     this.vimState.text = newActiveText;
     this.vimState.cursor.line = newCurLine;
@@ -243,16 +240,13 @@ export abstract class AbstractMode {
   }
   cursorDown(): VimState {
     const newCurLine = this.vimState.cursor.line + 1;
-    const isValidVertical = isValidVerticalPosition(
-      newCurLine + 1,
-      this.wholeInput
-    );
+    const isValidVertical = isValidVerticalPosition(newCurLine + 1, this.lines);
 
     if (!isValidVertical) {
       return this.vimState;
     }
 
-    const newActiveLine = this.wholeInput[newCurLine];
+    const newActiveLine = this.lines[newCurLine];
     const isValidHorizontalAfterMovedVertically = isValidHorizontalPosition(
       this.vimState.cursor.col + 1,
       newActiveLine
@@ -263,7 +257,7 @@ export abstract class AbstractMode {
       this.vimState.cursor.col = newActiveLine.length - 1;
     }
 
-    const newActiveText = this.wholeInput[newCurLine];
+    const newActiveText = this.lines[newCurLine];
 
     this.vimState.text = newActiveText;
     this.vimState.cursor.line = newCurLine;

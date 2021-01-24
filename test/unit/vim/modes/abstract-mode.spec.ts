@@ -29,17 +29,17 @@ describe("Vim", () => {
         {
           vimState: { cursor: { col: 1, line: 0 }, text: "3foo" },
           targetCommand: "type",
-          wholeInput: ["3foo"],
+          lines: ["3foo"],
         },
         {
           vimState: { cursor: { col: 2, line: 0 }, text: "34foo" },
           targetCommand: "type",
-          wholeInput: ["34foo"],
+          lines: ["34foo"],
         },
         {
           vimState: { cursor: { col: 3, line: 0 }, text: "345foo" },
           targetCommand: "type",
-          wholeInput: ["345foo"],
+          lines: ["345foo"],
         },
       ]);
     });

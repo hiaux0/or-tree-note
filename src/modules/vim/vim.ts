@@ -39,7 +39,7 @@ export class Vim {
   public vimState: VimState;
 
   constructor(
-    private wholeInput: string[],
+    private lines: string[],
     private cursor: Cursor = defaultCursor,
     private vimOptions?: VimOptions
   ) {
@@ -48,11 +48,11 @@ export class Vim {
       ...this.vimOptions,
     };
     const initialVimState: VimState = {
-      text: this.wholeInput[this.cursor.line],
+      text: this.lines[this.cursor.line],
       cursor: this.cursor,
     };
     this.vimCommandManager = new VimCommandManager(
-      this.wholeInput,
+      this.lines,
       initialVimState,
       finalVimOptions
     );
@@ -71,14 +71,14 @@ export class Vim {
       throw new Error(
         `[ILLEGAL]: Cursor out of bound: Must not be negative, but line is ${cursorLine}`
       );
-    } else if (this.wholeInput[cursorLine] == undefined) {
+    } else if (this.lines[cursorLine] == undefined) {
       // == for null and undefined
       throw new Error(
-        `[ILLEGAL]: Cursor out of bound: Your input has ${this.wholeInput.length} lines, but cursor line is: ${cursorLine}`
+        `[ILLEGAL]: Cursor out of bound: Your input has ${this.lines.length} lines, but cursor line is: ${cursorLine}`
       );
-    } else if (cursorCol > this.wholeInput[cursorLine].length) {
+    } else if (cursorCol > this.lines[cursorLine].length) {
       throw new Error(
-        `[ILLEGAL]: Cursor out of bound: Your input has ${this.wholeInput[cursorLine].length} columns, but cursor column is: ${cursorCol}`
+        `[ILLEGAL]: Cursor out of bound: Your input has ${this.lines[cursorLine].length} columns, but cursor column is: ${cursorCol}`
       );
     }
   }
@@ -124,7 +124,7 @@ export class Vim {
     const result = {
       vimState: cloneDeep(vimState),
       targetCommand: targetCommandName,
-      wholeInput: [...this.wholeInput],
+      lines: [...this.lines],
     };
 
     logger.debug(["Result of input: %s is: %o", input, result], {

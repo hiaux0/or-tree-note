@@ -36,12 +36,12 @@ describe("C: Mode - Normal", () => {
             {
               vimState: { cursor: { col: 1, line: 0 }, text: "foo" },
               targetCommand: "cursorRight",
-              wholeInput: ["foo"],
+              lines: ["foo"],
             },
             {
               vimState: { cursor: { col: 2, line: 0 }, text: "foo" },
               targetCommand: "cursorRight",
-              wholeInput: ["foo"],
+              lines: ["foo"],
             },
           ]);
         });
@@ -52,22 +52,22 @@ describe("C: Mode - Normal", () => {
             {
               vimState: { cursor: { col: 1, line: 0 }, text: "foo" },
               targetCommand: "cursorRight",
-              wholeInput: ["foo"],
+              lines: ["foo"],
             },
             {
               vimState: { cursor: { col: 2, line: 0 }, text: "foo" },
               targetCommand: "cursorRight",
-              wholeInput: ["foo"],
+              lines: ["foo"],
             },
             {
               vimState: { cursor: { col: 2, line: 0 }, text: "foo" },
               targetCommand: "enterInsertTextMode",
-              wholeInput: ["foo"],
+              lines: ["foo"],
             },
             {
               vimState: { cursor: { col: 3, line: 0 }, text: "fo!o" },
               targetCommand: "type",
-              wholeInput: ["fo!o"],
+              lines: ["fo!o"],
             },
           ]);
         });
@@ -94,7 +94,7 @@ describe("C: Mode - Normal - Multi line", () => {
           text: "bar",
         },
         targetCommand: "cursorDown",
-        wholeInput: ["foo", "bar"],
+        lines: ["foo", "bar"],
       });
     });
     it("F: Cursor down - last line", () => {
@@ -110,7 +110,7 @@ describe("C: Mode - Normal - Multi line", () => {
           text: "bar",
         },
         targetCommand: "cursorDown",
-        wholeInput: ["foo", "bar"],
+        lines: ["foo", "bar"],
       });
     });
     it("F: uee", () => {
@@ -123,17 +123,17 @@ describe("C: Mode - Normal - Multi line", () => {
         {
           targetCommand: "cursorDown",
           vimState: { cursor: { col: 0, line: 1 }, text: multiLineInput[1] },
-          wholeInput: multiLineInput,
+          lines: multiLineInput,
         },
         {
           targetCommand: "cursorWordForwardEnd",
           vimState: { cursor: { col: 2, line: 1 }, text: multiLineInput[1] },
-          wholeInput: multiLineInput,
+          lines: multiLineInput,
         },
         {
           targetCommand: "cursorWordForwardEnd",
           vimState: { cursor: { col: 6, line: 1 }, text: multiLineInput[1] },
-          wholeInput: multiLineInput,
+          lines: multiLineInput,
         },
       ]);
     });
@@ -147,7 +147,7 @@ describe("C: Mode - Normal - Multi line", () => {
       expect(result).toEqual({
         targetCommand: "cursorUp",
         vimState: { cursor: { col: 1, line: 0 }, text: multiLineInput[0] },
-        wholeInput: multiLineInput,
+        lines: multiLineInput,
       });
     });
   });
@@ -165,7 +165,7 @@ describe("C: Mode - Normal - Multi line", () => {
           text: "foo",
         },
         targetCommand: "cursorUp",
-        wholeInput: ["foo", "bar"],
+        lines: ["foo", "bar"],
       });
     });
     it("F: Cursor up - first line", () => {
@@ -181,7 +181,7 @@ describe("C: Mode - Normal - Multi line", () => {
           text: "foo",
         },
         targetCommand: "cursorUp",
-        wholeInput: ["foo", "bar"],
+        lines: ["foo", "bar"],
       });
     });
 
@@ -195,7 +195,7 @@ describe("C: Mode - Normal - Multi line", () => {
       expect(result).toEqual({
         targetCommand: "cursorDown",
         vimState: { cursor: { col: 1, line: 1 }, text: multiLineInput[1] },
-        wholeInput: multiLineInput,
+        lines: multiLineInput,
       });
     });
   });
@@ -218,7 +218,7 @@ describe("Methods", () => {
         {
           vimState: { cursor: { col: 1, line: 0 }, text: "@foo" },
           targetCommand: "type",
-          wholeInput: ["@foo"],
+          lines: ["@foo"],
         },
       ]);
     });
@@ -232,17 +232,17 @@ describe("Methods", () => {
         {
           vimState: { cursor: { col: 1, line: 0 }, text: "@foo" },
           targetCommand: "type",
-          wholeInput: ["@foo"],
+          lines: ["@foo"],
         },
         {
           vimState: { cursor: { col: 1, line: 0 }, text: "@foo" },
           targetCommand: "enterNormalTextMode",
-          wholeInput: ["@foo"],
+          lines: ["@foo"],
         },
         {
           vimState: { cursor: { col: 2, line: 0 }, text: "@foo" },
           targetCommand: "cursorRight",
-          wholeInput: ["@foo"],
+          lines: ["@foo"],
         },
       ]);
     });
@@ -253,22 +253,22 @@ describe("Methods", () => {
         {
           vimState: { cursor: { col: 1, line: 0 }, text: "@foo" },
           targetCommand: "type",
-          wholeInput: ["@foo"],
+          lines: ["@foo"],
         },
         {
           vimState: { cursor: { col: 2, line: 0 }, text: "@#foo" },
           targetCommand: "type",
-          wholeInput: ["@#foo"],
+          lines: ["@#foo"],
         },
         {
           vimState: { cursor: { col: 2, line: 0 }, text: "@#foo" },
           targetCommand: "enterNormalTextMode",
-          wholeInput: ["@#foo"],
+          lines: ["@#foo"],
         },
         {
           vimState: { cursor: { col: 3, line: 0 }, text: "@#foo" },
           targetCommand: "cursorRight",
-          wholeInput: ["@#foo"],
+          lines: ["@#foo"],
         },
       ]);
     });
@@ -280,17 +280,17 @@ describe("Methods", () => {
         {
           vimState: { cursor: { col: 1, line: 0 }, text: "@foo" },
           targetCommand: "type",
-          wholeInput: ["@foo"],
+          lines: ["@foo"],
         },
         {
           vimState: { cursor: { col: 1, line: 0 }, text: "@foo" },
           targetCommand: "enterNormalTextMode",
-          wholeInput: ["@foo"],
+          lines: ["@foo"],
         },
         {
           vimState: { cursor: { col: 2, line: 0 }, text: "@foo" },
           targetCommand: "cursorRight",
-          wholeInput: ["@foo"],
+          lines: ["@foo"],
         },
       ]);
     });
@@ -303,27 +303,27 @@ describe("Methods", () => {
         {
           targetCommand: "enterInsertTextMode",
           vimState: { cursor: { col: 0, line: 0 }, text: "foo" },
-          wholeInput: ["foo"],
+          lines: ["foo"],
         },
         {
           targetCommand: "type",
           vimState: { cursor: { col: 1, line: 0 }, text: "@foo" },
-          wholeInput: ["@foo"],
+          lines: ["@foo"],
         },
         {
           targetCommand: "type",
           vimState: { cursor: { col: 2, line: 0 }, text: "@#foo" },
-          wholeInput: ["@#foo"],
+          lines: ["@#foo"],
         },
         {
           targetCommand: "enterNormalTextMode",
           vimState: { cursor: { col: 2, line: 0 }, text: "@#foo" },
-          wholeInput: ["@#foo"],
+          lines: ["@#foo"],
         },
         {
           targetCommand: "cursorWordForwardEnd",
           vimState: { cursor: { col: 4, line: 0 }, text: "@#foo" },
-          wholeInput: ["@#foo"],
+          lines: ["@#foo"],
         },
       ]);
     });

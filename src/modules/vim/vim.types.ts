@@ -31,7 +31,7 @@ export type VimState = {
 export interface QueueInputReturn {
   vimState: VimState | null;
   targetCommand: VimCommandNames;
-  wholeInput: string[];
+  lines: string[];
 }
 
 export interface Cursor {
