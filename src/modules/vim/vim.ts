@@ -71,7 +71,8 @@ export class Vim {
       throw new Error(
         `[ILLEGAL]: Cursor out of bound: Must not be negative, but line is ${cursorLine}`
       );
-    } else if (!this.wholeInput[cursorLine]) {
+    } else if (this.wholeInput[cursorLine] == undefined) {
+      // == for null and undefined
       throw new Error(
         `[ILLEGAL]: Cursor out of bound: Your input has ${this.wholeInput.length} lines, but cursor line is: ${cursorLine}`
       );
