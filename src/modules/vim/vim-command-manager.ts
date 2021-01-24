@@ -295,13 +295,16 @@ export class VimCommandManager {
 
   newLine(): VimState {
     const newLineMessage = "";
-    const newLineCursorCol = this.vimState.cursor.line + 1;
+    const newLineCursorLine = this.vimState.cursor.line + 1;
     const currentMode = this.getCurrentMode();
 
     currentMode.reTokenizeInput(newLineMessage);
-    this.wholeInput.splice(newLineCursorCol, 0, newLineMessage);
+    this.wholeInput.splice(newLineCursorLine, 0, newLineMessage);
     this.vimState.text = newLineMessage;
-    this.vimState.cursor.line = newLineCursorCol;
+    this.vimState.cursor = {
+      line: newLineCursorLine,
+      col: 0,
+    };
 
     return this.vimState;
   }
