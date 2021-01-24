@@ -7,8 +7,8 @@ import { bindable } from "aurelia-framework";
 import "./or-tree-notes.scss";
 import { rootContainer } from "modules/root-container";
 import { VimEditorTextMode } from "modules/vim-editor/vim-editor-text-mode";
-import { VimMode, VimExecutingMode } from "modules/vim/vim.types";
-import { EditorLine, MacroType, VimEditorState } from "store/initial-state";
+import { VimMode, VimExecutingMode, Cursor } from "modules/vim/vim.types";
+import { EditorLine, VimEditorState } from "store/initial-state";
 import { toggleCheckbox } from "store/or-tree-notes/actions-or-tree-notes";
 import { Logger } from "modules/debug/logger";
 import { OTN_STATE as OTN_STATE_KEY } from "local-storage";
@@ -20,12 +20,18 @@ const logger = new Logger({ scope: "OrTreeNotes" });
   selector: {
     lines: (store) =>
       store.state.pipe(pluck("present", "lines"), distinctUntilChanged()),
+    cursorPosition: (store) =>
+      store.state.pipe(
+        pluck("present", "cursorPosition"),
+        distinctUntilChanged()
+      ),
     state: (store) => store.state,
   },
 })
 export class OrTreeNotes {
   @bindable value = "OrTreeNotes";
 
+  cursorPosition: Cursor;
   lines: EditorLine[];
   line: EditorLine;
   state: StateHistory<VimEditorState>;
@@ -41,8 +47,6 @@ export class OrTreeNotes {
   constructor(private store: Store<StateHistory<VimEditorState>>) {
     this.store.registerAction("toggleCheckbox", toggleCheckbox);
   }
-
-  bind() {}
 
   attached() {
     const vimEditorOptions: VimEditorOptions = {
@@ -82,21 +86,12 @@ export class OrTreeNotes {
 
   saveToLocalStorage() {
     try {
-      this.state.present.cursorBeforeRefresh = this.vimEditor.vim.vimState.cursor;
-
       const currentState = JSON.stringify(this.state.present);
 
       window.localStorage.setItem(OTN_STATE_KEY, currentState);
     } catch (error) {
       console.warn(error);
     }
-  }
-
-  hasCheckboxMacro(line: EditorLine) {
-    const hasCheckbox = line.macros?.find(
-      (macro) => macro.type === MacroType.CHECKBOX
-    );
-    return hasCheckbox;
   }
 
   isDefaultLine(line: EditorLine) {
