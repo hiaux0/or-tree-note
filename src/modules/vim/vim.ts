@@ -96,11 +96,14 @@ export class Vim {
       targetCommandName = this.vimCommandManager.getCommandName(input);
     } catch {}
 
-    let vimState;
+    let vimState: VimState;
+
     if (targetCommandName === "enterInsertTextMode") {
       vimState = this.vimCommandManager.enterInsertTextMode();
     } else if (targetCommandName === "enterNormalTextMode") {
       vimState = this.vimCommandManager.enterNormalTextMode();
+    } else if (targetCommandName === "newLine") {
+      vimState = this.vimCommandManager.newLine();
     } else {
       vimState = this.vimCommandManager.executeVimCommand(
         targetCommandName,

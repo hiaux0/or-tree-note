@@ -136,8 +136,6 @@ export abstract class AbstractMode {
   }
 
   reTokenizeInput(input: string) {
-    // logger.bug("reTokenizeInput");
-    // console.log("TCL: AbstractMode -> reTokenizeInput -> input", input);
     const tokenizedInput = tokenizeInput(input);
 
     logger.debug(["reTokenizeInput: %o", tokenizedInput], {

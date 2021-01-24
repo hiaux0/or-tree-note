@@ -16,3 +16,18 @@ export const changeText = (
     })
   );
 };
+
+export function createNewLine(
+  state: StateHistory<VimEditorState>,
+  newLineIndex: number,
+  newText: string
+) {
+  return nextStateHistory(
+    state,
+    produce(state.present, (draftState) => {
+      draftState.lines.splice(newLineIndex, 0, {
+        text: newText,
+      });
+    })
+  );
+}
