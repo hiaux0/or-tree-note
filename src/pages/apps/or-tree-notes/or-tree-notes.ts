@@ -8,7 +8,7 @@ import "./or-tree-notes.scss";
 import { rootContainer } from "modules/root-container";
 import { VimEditorTextMode } from "modules/vim-editor/vim-editor-text-mode";
 import { VimMode, VimExecutingMode } from "modules/vim/vim.types";
-import { EditorLine, MacroType, VimEditorState } from "store/initial-state";
+import { EditorLine, VimEditorState } from "store/initial-state";
 import { toggleCheckbox } from "store/or-tree-notes/actions-or-tree-notes";
 import { Logger } from "modules/debug/logger";
 import { OTN_STATE as OTN_STATE_KEY } from "local-storage";
@@ -41,8 +41,6 @@ export class OrTreeNotes {
   constructor(private store: Store<StateHistory<VimEditorState>>) {
     this.store.registerAction("toggleCheckbox", toggleCheckbox);
   }
-
-  bind() {}
 
   attached() {
     const vimEditorOptions: VimEditorOptions = {
@@ -90,13 +88,6 @@ export class OrTreeNotes {
     } catch (error) {
       console.warn(error);
     }
-  }
-
-  hasCheckboxMacro(line: EditorLine) {
-    const hasCheckbox = line.macros?.find(
-      (macro) => macro.type === MacroType.CHECKBOX
-    );
-    return hasCheckbox;
   }
 
   isDefaultLine(line: EditorLine) {
