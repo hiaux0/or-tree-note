@@ -17,7 +17,7 @@ import { InsertTextMode } from "./insert-text-mode/insert-text-mode";
 import { AbstractTextMode } from "./abstract-text-mode";
 import { StateHistory, Store } from "aurelia-store";
 import { VimEditorState } from "store/initial-state";
-import { changeText } from "./actions/actions-vim-editor";
+import { changeCursorPosition, changeText } from "./actions/actions-vim-editor";
 import { pluck } from "rxjs/operators";
 
 const logger = new Logger({ scope: "VimEditorTextMode" });
@@ -40,6 +40,7 @@ export class VimEditorTextMode {
     public store: Store<StateHistory<VimEditorState>>
   ) {
     store.registerAction("changeText", changeText);
+    store.registerAction("changeCursorPosition", changeCursorPosition);
 
     const normalTextMode = new NormalTextMode(
       this.vimEditorOptions.parentHtmlElement,
@@ -89,6 +90,8 @@ export class VimEditorTextMode {
 
   checkAllowedBrowserShortcuts(ev: KeyboardEvent) {
     if (ev.key === "r" && ev.ctrlKey) {
+      return;
+    } else if (ev.key === "C" && ev.ctrlKey && ev.shiftKey) {
       return;
     }
 
@@ -156,6 +159,9 @@ export class VimEditorTextMode {
 
     if (currentMode[result?.targetCommand]) {
       currentMode[result.targetCommand](result.vimState);
+
+      this.store.dispatch(changeCursorPosition, result.vimState.cursor);
+
       ev.preventDefault();
     }
   }

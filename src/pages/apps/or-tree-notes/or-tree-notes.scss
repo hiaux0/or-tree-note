@@ -48,11 +48,23 @@ $caretSizeHeight: 1.2 * $fontSize;
 }
 
 or-tree-notes {
+  .otn-container {
+    display: flex;
+
+    .notes-container {
+      height: 50vh;
+      width: 60vw;
+    }
+
+    .debug-mode-container {
+      border: 1px solid black;
+      width: 40vw;
+    }
+  }
+
   .notes-container {
     position: relative;
     border: 1px solid black;
-    height: 80vh;
-    width: 80vw;
 
     input[type="checkbox"] {
       transform: scale(2);
