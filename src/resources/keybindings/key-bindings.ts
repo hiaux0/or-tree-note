@@ -20,6 +20,7 @@ export default {
     { key: "gh", command: "hint" },
     { key: "<Control>s", command: "save" },
     { key: "<Control>]", command: "indentRight" },
+    { key: "<Control>[", command: "indentLeft" },
     { key: "<Enter>", command: "newLine" },
   ],
   insert: [

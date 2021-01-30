@@ -29,4 +29,9 @@ export class NormalTextMode extends AbstractTextMode {
     this.store.dispatch(changeText, vimState.cursor.line, vimState.text);
     super.setCursorMovement(vimState.cursor);
   }
+
+  indentLeft(vimState: VimState) {
+    this.store.dispatch(changeText, vimState.cursor.line, vimState.text);
+    super.setCursorMovement(vimState.cursor);
+  }
 }

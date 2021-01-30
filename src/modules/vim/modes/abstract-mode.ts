@@ -286,4 +286,22 @@ export abstract class AbstractMode {
     return this.vimState;
   }
 
+  indentLeft(): VimState {
+    const { indentSize } = this.vimOptions;
+    const { text } = this.vimState;
+
+    const numOfWhiteSpaceAtStart = text
+      .substring(0, indentSize)
+      .split("")
+      .filter((char) => char === " ").length;
+
+    const updatedInput = text.substring(numOfWhiteSpaceAtStart); /*?*/
+
+    this.vimState.text = updatedInput;
+    this.vimState.cursor.col -= numOfWhiteSpaceAtStart;
+    this.lines[this.vimState.cursor.line] = updatedInput;
+    this.reTokenizeInput(updatedInput);
+
+    return this.vimState;
+  }
 }
