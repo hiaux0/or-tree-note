@@ -59,7 +59,7 @@ function fuzzySearch(inputList: string[], value: string) {
  */
 export function filterListByCharSequence(inputList: string[], value: string) {
   const result = inputList.filter((input) => {
-    return filterStringByCharSequence(input, value);
+    return inputContainsSequence(input, value);
   });
 
   return result;
@@ -78,8 +78,8 @@ export function filterListByCharSequence(inputList: string[], value: string) {
  * value = 'z'
  * --> true
  */
-export function filterStringByCharSequence(input: string, value: string) {
-  const regex = new RegExp(`^${escapeRegex(value)}`);
+export function inputContainsSequence(input: string, sequence: string) {
+  const regex = new RegExp(`^${escapeRegex(sequence)}`);
   const execedRegex = regex.exec(input);
 
   if (Array.isArray(execedRegex)) {

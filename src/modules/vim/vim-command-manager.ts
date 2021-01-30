@@ -1,6 +1,6 @@
 import { groupBy } from "lodash";
 import { Logger } from "modules/debug/logger";
-import { filterStringByCharSequence } from "modules/string/string";
+import { inputContainsSequence } from "modules/string/string";
 import { SPECIAL_KEYS } from "resources/keybindings/app.keys";
 import { defaultVimOptions } from "./vim";
 import { VimCommandNames, VimCommand } from "./vim-commands";
@@ -140,7 +140,7 @@ export class VimCommandManager {
     let targetCommand;
 
     const potentialCommands = targetKeyBinding.filter((keyBinding) => {
-      const result = filterStringByCharSequence(keyBinding.key, keySequence);
+      const result = inputContainsSequence(keyBinding.key, keySequence);
       return result;
     });
     logger.debug(["potentialCommands: %o", potentialCommands], {

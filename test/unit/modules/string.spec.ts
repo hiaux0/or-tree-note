@@ -1,6 +1,6 @@
 import {
   filterListByCharSequence,
-  filterStringByCharSequence,
+  inputContainsSequence,
 } from "modules/string/string";
 
 describe("filterListByCharSequence", () => {
@@ -20,14 +20,14 @@ describe("filterListByCharSequence", () => {
 describe("filterStringByCharSequence", () => {
   it("Should return one result - 1", () => {
     const input = "z";
-    expect(filterStringByCharSequence(input, "z")).toBeTrue();
+    expect(inputContainsSequence(input, "z")).toBeTrue();
   });
   it("Should return one result - 2", () => {
     const input = "foo";
-    expect(filterStringByCharSequence(input, "fo")).toBeTrue();
+    expect(inputContainsSequence(input, "fo")).toBeTrue();
   });
   it("Should not return when no match", () => {
     const input = "bar";
-    expect(filterStringByCharSequence(input, "br")).toBeFalse();
+    expect(inputContainsSequence(input, "br")).toBeFalse();
   });
 });
