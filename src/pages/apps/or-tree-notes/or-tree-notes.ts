@@ -37,7 +37,6 @@ export class OrTreeNotes {
   state: StateHistory<VimEditorState>;
 
   notesContainerRef: HTMLDivElement;
-  lineSpanRef: HTMLSpanElement;
   caretRef: HTMLSpanElement;
 
   editorLineClass: string = "editor-line";
@@ -92,11 +91,6 @@ export class OrTreeNotes {
     } catch (error) {
       console.warn(error);
     }
-  }
-
-  isDefaultLine(line: EditorLine) {
-    const isDefault = line.macro?.checkbox === undefined;
-    return isDefault;
   }
 
   toggleCheckbox() {
