@@ -19,6 +19,7 @@ export default {
     { key: "y", command: "yank" },
     { key: "gh", command: "hint" },
     { key: "<Control>s", command: "save" },
+    { key: "<Control>]", command: "indentRight" },
     { key: "<Enter>", command: "newLine" },
   ],
   insert: [

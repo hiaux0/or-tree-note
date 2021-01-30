@@ -3,7 +3,7 @@ import { Logger } from "modules/debug/logger";
 import { VimState } from "modules/vim/vim.types";
 import { VimEditorState } from "store/initial-state";
 import { AbstractTextMode } from "../abstract-text-mode";
-import { createNewLine } from "../actions/actions-vim-editor";
+import { changeText, createNewLine } from "../actions/actions-vim-editor";
 
 const logger = new Logger({ scope: "NormalTextMode" });
 
@@ -23,5 +23,10 @@ export class NormalTextMode extends AbstractTextMode {
     const newLineIndex = vimState.cursor.line;
     super.setCursorMovement(vimState.cursor);
     this.store.dispatch(createNewLine, newLineIndex, vimState.text);
+  }
+
+  indentRight(vimState: VimState) {
+    this.store.dispatch(changeText, vimState.cursor.line, vimState.text);
+    super.setCursorMovement(vimState.cursor);
   }
 }
