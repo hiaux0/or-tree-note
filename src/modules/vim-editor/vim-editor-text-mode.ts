@@ -93,6 +93,10 @@ export class VimEditorTextMode {
       return;
     } else if (ev.key === "C" && ev.ctrlKey && ev.shiftKey) {
       return;
+    } else if (ev.key === "-" && ev.ctrlKey) {
+      return;
+    } else if (ev.key === "+" && ev.ctrlKey) {
+      return;
     }
 
     ev.preventDefault();
