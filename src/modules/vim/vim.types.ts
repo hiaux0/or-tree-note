@@ -46,6 +46,7 @@ export interface VimOptions {
   keyBindings?: KeyBindingModes;
   leader?: string;
   vimPlugins?: VimPlugin[];
+  indentSize?: number;
 }
 
 export interface VimPlugin {

@@ -23,6 +23,7 @@ export const vim = "vim";
 export const defaultVimOptions: VimOptions = {
   keyBindings,
   leader: SPACE,
+  indentSize: 4,
 };
 
 const defaultCursor = {

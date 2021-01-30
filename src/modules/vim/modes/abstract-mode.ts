@@ -274,14 +274,14 @@ export abstract class AbstractMode {
   /* Text */
   /****** */
   indentRight(): VimState {
-    const indentSize = 4;
+    const { indentSize } = this.vimOptions;
     const spaces = " ".repeat(indentSize);
-    const updatedInput = `${spaces}${this.vimState.text}`
+    const updatedInput = `${spaces}${this.vimState.text}`;
 
     this.vimState.text = updatedInput;
     this.vimState.cursor.col += indentSize;
     this.lines[this.vimState.cursor.line] = updatedInput;
-    this.reTokenizeInput(updatedInput)
+    this.reTokenizeInput(updatedInput);
 
     return this.vimState;
   }
