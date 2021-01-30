@@ -79,7 +79,7 @@ export function filterListByCharSequence(inputList: string[], value: string) {
  * --> true
  */
 export function filterStringByCharSequence(input: string, value: string) {
-  const regex = new RegExp(`^${value}`);
+  const regex = new RegExp(`^${escapeRegex(value)}`);
   const execedRegex = regex.exec(input);
 
   if (Array.isArray(execedRegex)) {
@@ -88,4 +88,8 @@ export function filterStringByCharSequence(input: string, value: string) {
   }
 
   return execedRegex !== null;
+}
+
+function escapeRegex(string) {
+  return string.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
 }
