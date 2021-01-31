@@ -10,7 +10,7 @@ import {
 import { ChildrenMutationObserver } from "./children-mutation-observer";
 import { StateHistory, Store } from "aurelia-store";
 import { VimEditorState } from "store/initial-state";
-import { createNewLine, changeText } from '../actions/actions-vim-editor';
+import { createNewLine, changeText } from "../actions/actions-vim-editor";
 
 const logger = new Logger({ scope: "AbstractTextMode" });
 
@@ -41,7 +41,6 @@ export abstract class AbstractTextMode {
       this.children = parentElement.querySelectorAll<HTMLElement>(
         `.${this.childSelector}`
       );
-      this.setCursorMovement();
     });
 
     this.caretWidth = getCssVar("--caret-size-width");
@@ -83,14 +82,14 @@ export abstract class AbstractTextMode {
       `.${this.childSelector}`
     );
     const currentChild = children[this.currentLineNumber];
-    const childOffsetLeft = currentChild.offsetLeft;
+    let childOffsetLeft = 0;
+    if (currentChild) {
+      childOffsetLeft = currentChild.offsetLeft;
+    }
 
     logger.debug(["Child offset: %d", childOffsetLeft]);
 
-    if (childOffsetLeft > 0) {
-      return childOffsetLeft;
-    }
-    return 0;
+    return childOffsetLeft;
   }
 
   cursorUp(vimState?: VimState) {
