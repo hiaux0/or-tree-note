@@ -10,6 +10,7 @@ import {
 import { ChildrenMutationObserver } from "./children-mutation-observer";
 import { StateHistory, Store } from "aurelia-store";
 import { VimEditorState } from "store/initial-state";
+import { createNewLine, changeText } from '../actions/actions-vim-editor';
 
 const logger = new Logger({ scope: "AbstractTextMode" });
 
@@ -45,6 +46,8 @@ export abstract class AbstractTextMode {
 
     this.caretWidth = getCssVar("--caret-size-width");
     this.caretHeight = getCssVar("--caret-size-height");
+
+    this.store.registerAction("createNewLine", createNewLine);
   }
 
   setCursorMovement(newCursorValue?: Cursor) {
@@ -112,6 +115,22 @@ export abstract class AbstractTextMode {
 
   commenKeyFunctionality() {
     this.resetCaretBlinking();
+  }
+
+  newLine(vimState: VimState) {
+    const newLineIndex = vimState.cursor.line;
+    this.setCursorMovement(vimState.cursor);
+    this.store.dispatch(createNewLine, newLineIndex, vimState.text);
+  }
+
+  indentRight(vimState: VimState) {
+    this.store.dispatch(changeText, vimState.cursor.line, vimState.text);
+    this.setCursorMovement(vimState.cursor);
+  }
+
+  indentLeft(vimState: VimState) {
+    this.store.dispatch(changeText, vimState.cursor.line, vimState.text);
+    this.setCursorMovement(vimState.cursor);
   }
 
   resetCaretBlinking() {
