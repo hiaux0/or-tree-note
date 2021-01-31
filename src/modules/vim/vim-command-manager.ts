@@ -15,6 +15,7 @@ import {
   Cursor,
   VimOptions,
 } from './vim.types';
+import { VisualMode } from './modes/visual-mode';
 
 const logger = new Logger({ scope: 'VimCommandManager' });
 
@@ -25,6 +26,7 @@ export class VimCommandManager {
   activeMode: VimMode = VimMode.NORMAL;
   normalMode: NormalMode;
   insertMode: InsertMode;
+  visualMode: VisualMode;
 
   /** Alias for vimOptions.keyBindings */
   keyBindings: KeyBindingModes;
@@ -43,6 +45,7 @@ export class VimCommandManager {
 
     this.normalMode = new NormalMode(vimState, this.lines, this.vimOptions);
     this.insertMode = new InsertMode(vimState, this.lines, this.vimOptions);
+    this.visualMode = new VisualMode(vimState, this.lines, this.vimOptions);
 
     this.keyBindings = this.vimOptions.keyBindings;
   }
@@ -67,10 +70,18 @@ export class VimCommandManager {
     this.normalMode.reTokenizeInput(this.vimState?.text);
     return this.vimState;
   }
+  enterVisualTextMode() {
+    logger.debug(['Enter Visual mode']);
+    this.activeMode = VimMode.VISUAL;
+    // this.normalMode.reTokenizeInput(this.vimState?.text);
+    return this.vimState;
+  }
   getCurrentMode() {
     if (this.activeMode === VimMode.NORMAL) {
       return this.normalMode;
     } else if (this.activeMode === VimMode.INSERT) {
+      return this.insertMode;
+    } else if (this.activeMode === VimMode.VISUAL) {
       return this.insertMode;
     }
   }

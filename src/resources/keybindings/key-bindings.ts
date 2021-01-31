@@ -1,6 +1,6 @@
 // Naming based on https://vim.rtorr.com/
 
-export default {
+const keyBindings = {
   normal: [
     // { key: "<Space>", command: "vimLeader" },
     { key: '<Space>tc', command: 'toggleCheckbox' },
@@ -11,6 +11,7 @@ export default {
     { key: 'u', command: 'cursorDown' },
     { key: 'b', command: 'cursorBackwordsStartWord' }, // jump backwards to the start of a word
     { key: 'e', command: 'cursorWordForwardEnd' },
+    { key: 'v', command: 'enterVisualTextMode' },
     { key: 'w', command: 'cursorWordForwardStart' },
     { key: '<ArrowLeft>', command: 'cursorLeft' },
     { key: '<ArrowUp>', command: 'cursorUp' },
@@ -36,4 +37,6 @@ export default {
   synonyms: {
     '<esc>': '<Escape>',
   },
-};
+} as const;
+
+export default keyBindings;

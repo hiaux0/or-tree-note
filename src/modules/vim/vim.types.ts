@@ -26,6 +26,7 @@ export interface FindPotentialCommandReturn {
 export type VimState = {
   cursor: Cursor;
   text: string;
+  mode?: VimMode;
 };
 
 export interface QueueInputReturn {
@@ -41,6 +42,7 @@ export interface Cursor {
 export enum VimMode {
   'NORMAL' = 'NORMAL',
   'INSERT' = 'INSERT',
+  'VISUAL' = 'VISUAL',
 }
 export interface VimOptions {
   keyBindings?: KeyBindingModes;

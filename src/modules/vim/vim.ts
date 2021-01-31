@@ -11,6 +11,7 @@ import {
 } from './vim.types';
 import { VimCommandManager } from './vim-command-manager';
 import { cloneDeep } from 'lodash';
+import { VimCommandNames } from './vim-commands';
 
 const logger = new Logger({ scope: 'Vim' });
 
@@ -93,7 +94,7 @@ export class Vim {
     logger.debug(['Received input: %s', input]);
 
     //
-    let targetCommandName;
+    let targetCommandName: VimCommandNames;
     try {
       targetCommandName = this.vimCommandManager.getCommandName(input);
     } catch {}
@@ -104,6 +105,8 @@ export class Vim {
       vimState = this.vimCommandManager.enterInsertTextMode();
     } else if (targetCommandName === 'enterNormalTextMode') {
       vimState = this.vimCommandManager.enterNormalTextMode();
+    } else if (targetCommandName === 'enterVisualTextMode') {
+      vimState = this.vimCommandManager.enterVisualTextMode();
     } else if (targetCommandName === 'newLine') {
       vimState = this.vimCommandManager.newLine();
     } else {

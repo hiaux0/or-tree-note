@@ -22,6 +22,7 @@ import {
   changeText,
 } from '../actions/actions-vim-editor';
 import { pluck } from 'rxjs/operators';
+import { VisualTextMode } from './visual-text-mode';
 
 const logger = new Logger({ scope: 'VimEditorTextMode' });
 
@@ -57,11 +58,20 @@ export class VimEditorTextMode {
       this.vimEditorOptions.caretElements[0],
       store
     );
+    const visualTextMode = new VisualTextMode(
+      this.vimEditorOptions.parentHtmlElement,
+      this.vimEditorOptions.childSelectors[0],
+      this.vimEditorOptions.caretElements[0],
+      store
+    );
+
     this.getCurrentTextMode = () => {
       if (this.vim.getCurrentMode().currentMode === VimMode.INSERT) {
         return insertTextMode;
       } else if (this.vim.getCurrentMode().currentMode === VimMode.NORMAL) {
         return normalTextMode;
+      } else if (this.vim.getCurrentMode().currentMode === VimMode.VISUAL) {
+        return visualTextMode;
       }
     };
   }
