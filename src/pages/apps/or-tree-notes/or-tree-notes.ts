@@ -6,7 +6,7 @@ import { VimEditor, VimEditorOptions } from "modules/vim-editor/vim-editor";
 import { bindable } from "aurelia-framework";
 import "./or-tree-notes.scss";
 import { rootContainer } from "modules/root-container";
-import { VimEditorTextMode } from "modules/vim-editor/vim-editor-text-mode";
+import { VimEditorTextMode } from "modules/vim-editor/modes/vim-editor-text-mode";
 import { VimMode, VimExecutingMode, Cursor } from "modules/vim/vim.types";
 import { EditorLine, VimEditorState } from "store/initial-state";
 import { toggleCheckbox } from "store/or-tree-notes/actions-or-tree-notes";

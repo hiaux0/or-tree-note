@@ -1,12 +1,12 @@
 import { inject } from "aurelia-dependency-injection";
 import { rootContainer } from "modules/root-container";
-import { VimState } from "../vim/vim.types";
+import { VimState } from "../../vim/vim.types";
 import { Logger } from "modules/debug/logger";
 import { Cursor } from "modules/vim/vim.types";
 import {
   getComputedValueFromPixelString,
   getCssVar,
-} from "../css/css-variables";
+} from "../../css/css-variables";
 import { ChildrenMutationObserver } from "./children-mutation-observer";
 import { StateHistory, Store } from "aurelia-store";
 import { VimEditorState } from "store/initial-state";

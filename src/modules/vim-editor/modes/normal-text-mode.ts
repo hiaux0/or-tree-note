@@ -2,7 +2,7 @@ import { StateHistory, Store } from "aurelia-store";
 import { Logger } from "modules/debug/logger";
 import { VimState } from "modules/vim/vim.types";
 import { VimEditorState } from "store/initial-state";
-import { AbstractTextMode } from "../abstract-text-mode";
+import { AbstractTextMode } from "./abstract-text-mode";
 import { changeText, createNewLine } from "../actions/actions-vim-editor";
 
 const logger = new Logger({ scope: "NormalTextMode" });

@@ -2,7 +2,7 @@ import { take } from "rxjs/operators";
 import "aurelia-polyfills";
 import { Vim } from "modules/vim/vim";
 import { Cursor, VimMode } from "modules/vim/vim.types";
-import { VimEditorOptions } from "./vim-editor";
+import { VimEditorOptions } from "../vim-editor";
 import hotkeys from "hotkeys-js";
 import { Logger } from "modules/debug/logger";
 import {
@@ -12,12 +12,12 @@ import {
   ModifiersType,
   SPACE,
 } from "resources/keybindings/app.keys";
-import { NormalTextMode } from "./normal-text-mode/normal-text-mode";
-import { InsertTextMode } from "./insert-text-mode/insert-text-mode";
+import { NormalTextMode } from "./normal-text-mode";
+import { InsertTextMode } from "./insert-text-mode";
 import { AbstractTextMode } from "./abstract-text-mode";
 import { StateHistory, Store } from "aurelia-store";
 import { VimEditorState } from "store/initial-state";
-import { changeCursorPosition, changeText } from "./actions/actions-vim-editor";
+import { changeCursorPosition, changeText } from "../actions/actions-vim-editor";
 import { pluck } from "rxjs/operators";
 
 const logger = new Logger({ scope: "VimEditorTextMode" });
