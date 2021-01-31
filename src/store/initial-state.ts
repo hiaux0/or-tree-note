@@ -24,10 +24,25 @@ export enum MacroType {
   "SNIPPETS" = "SNIPPETS",
 }
 
+export enum LineStageValue {
+  "BACKLOG" = "BACKLOG",
+  "CONSIDER" = "CONSIDER",
+  "DONE" = "DONE",
+  "ONHOLD" = "ONHOLD",
+}
+
+export interface LineStage {
+  value: LineStageValue;
+  /**
+   * Can customize the title of the stage.
+   * Eg. You want to name "Done" "Finished"
+   */
+  title?: string | LineStageValue;
+}
+
 export interface EditorLine {
   text: string;
   markup?: LineMarkup;
-  macros?: LineMacro[];
   macro?: LineMacro;
 }
 
