@@ -140,6 +140,8 @@ export abstract class AbstractMode {
   }
 
   reTokenizeInput(input: string) {
+    if (input === '') return;
+
     const tokenizedInput = tokenizeInput(input);
 
     logger.debug(["reTokenizeInput: %o", tokenizedInput], {
