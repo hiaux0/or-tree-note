@@ -1,22 +1,23 @@
+import { OTN_STATE } from "src/local-storage";
+
+const initialContent = "012 456";
+
 describe("Aurelia skeleton app", () => {
-  let initialContent: string;
-
   beforeEach(() => {
-    cy.visit("#/apps");
-
-    cy.get(".editor-line")
-      .invoke("text")
-      .then((lineTextContent) => {
-        initialContent = lineTextContent;
+    cy.window().then((window) => {
+      const initialTestState = JSON.stringify({
+        lines: [
+          {
+            text: initialContent,
+          },
+        ],
       });
+      window.localStorage.setItem(OTN_STATE, initialTestState);
+    });
+    cy.visit("#/apps");
   });
 
   it("Should move cursor", () => {
-    cy.get("%caret")
-      .should("exist")
-      .invoke("attr", "style")
-      .should("be.undefined");
-
     cy.vim("l");
 
     cy.getCssVar("--caret-size-width").then((caretWidth) => {
@@ -111,14 +112,15 @@ describe("Aurelia skeleton app", () => {
         expect(updatedContent).equal(`ABCDEF${initialContent}`);
       });
   });
-  const input2 = `i^{esc}${"l".repeat(9)}`;
-  it(`DEV: ${input2}`, () => {
+
+  const input2 = `i^{esc}${"l".repeat(initialContent.length + 1)}`;
+  it(`DEV (stay inside right border after text): ${input2}`, () => {
     cy.vim(input2);
     cy.getCssVar("--caret-size-width").then((caretWidth) => {
       cy.get("%caret")
         .should("exist")
         .invoke({ timeout: 100 }, "attr", "style")
-        .should("contain", caretWidth * 10);
+        .should("contain", caretWidth * (initialContent.length + 1));
     });
   });
 });
