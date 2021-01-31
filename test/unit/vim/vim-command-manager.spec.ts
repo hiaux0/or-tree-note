@@ -38,7 +38,7 @@ describe("Vim - General", () => {
 
   describe("C: Navigating", () => {
     it("F: Update cursor on move right", () => {
-      const result = vimCommandManager.executeVimCommand<Cursor>("cursorRight");
+      const result = vimCommandManager.executeVimCommand("cursorRight");
       expect(result.cursor.col).toBe(cursor.col + 1);
     });
     it("F: Update cursor on move left", () => {
@@ -49,7 +49,7 @@ describe("Vim - General", () => {
           line: 0,
         })
       );
-      const result = customV.executeVimCommand<Cursor>("cursorLeft");
+      const result = customV.executeVimCommand("cursorLeft");
       expect(result.cursor.col).toBe(1);
     });
     it("F: Cursor stays in horizontal boundaries - Right", () => {
@@ -60,11 +60,11 @@ describe("Vim - General", () => {
           line: 0,
         })
       );
-      const result = customV.executeVimCommand<Cursor>("cursorRight");
+      const result = customV.executeVimCommand("cursorRight");
       expect(result.cursor.col).toBe(3);
     });
     it("F: Cursor stays in horizontal boundaries - Left", () => {
-      const result = vimCommandManager.executeVimCommand<Cursor>("cursorLeft");
+      const result = vimCommandManager.executeVimCommand("cursorLeft");
       expect(result.cursor.col).toBe(0);
     });
   });

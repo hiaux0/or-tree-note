@@ -24,8 +24,8 @@ export interface FindPotentialCommandReturn {
 }
 
 export type VimState = {
-  cursor?: Cursor;
-  text?: string;
+  cursor: Cursor;
+  text: string;
 };
 
 export interface QueueInputReturn {

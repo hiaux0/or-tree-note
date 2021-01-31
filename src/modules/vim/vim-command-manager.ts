@@ -79,7 +79,7 @@ export class VimCommandManager {
   /** Commands */
   /** **********/
 
-  executeVimCommand<CommandType = any>(
+  executeVimCommand(
     commandName: VimCommandNames,
     commandInput?: string
   ): VimState {
@@ -88,7 +88,7 @@ export class VimCommandManager {
       const vimState = currentMode.executeCommand(
         commandName,
         commandInput
-      ) as CommandType;
+      );
       return vimState;
     } catch (error) {
       const previousState = this.vimState;
