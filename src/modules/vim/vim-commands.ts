@@ -1,10 +1,21 @@
 import { ModifiersType } from './../../resources/keybindings/app.keys';
 import keyBindings from '../../resources/keybindings/key-bindings';
 
-export const VIM_COMMANDS = keyBindings.normal.map(
-  (normalBinding) => normalBinding.command
-);
-
+export const VIM_COMMANDS = [
+  "cursorRight",
+  "cursorUp",
+  "cursorLeft",
+  "cursorDown",
+  "yank",
+  "type",
+  "enterInsertTextMode",
+  "enterNormalTextMode",
+  "enterVisualTextMode",
+  "cursorWordForwardEnd",
+  "delete",
+  "backspace",
+  "newLine",
+] as const;
 export type VimCommandNames = typeof VIM_COMMANDS[number];
 
 export interface VimCommand {
