@@ -2,9 +2,9 @@ const debugMode = true;
 
 interface LogOptions {
   /////////////// Log
-  logMethod?: "log" | "trace" | "error" | "group" | "groupEnd";
+  logMethod?: 'log' | 'trace' | 'error' | 'group' | 'groupEnd';
   log?: boolean;
-  logLevel?: "info" | "verbose";
+  logLevel?: 'info' | 'verbose';
   onlyVerbose?: boolean;
   /**
    * TODO
@@ -41,8 +41,8 @@ interface LogOptions {
 }
 
 const defautLogOptions: LogOptions = {
-  logMethod: "log",
-  logLevel: "verbose",
+  logMethod: 'log',
+  logLevel: 'verbose',
   clearPreviousGroupsWhen_isOnlyGroup_True: true,
   // dontLogUnlessSpecified: true,
   focusedLogging: false,
@@ -108,7 +108,7 @@ export class Logger {
         throw `!!! [[ERROR]] Check above message !!!`;
       }
 
-      if (logOpt.logLevel !== "verbose" && logOpt.onlyVerbose) {
+      if (logOpt.logLevel !== 'verbose' && logOpt.onlyVerbose) {
         return;
       }
 
@@ -135,7 +135,7 @@ export class Logger {
       if (logOpt.startGroupId) {
         if (logOpt.allGroupsCollapsedButSpecified) {
           if (!logOpt.expandGroupBasedOnString) {
-            console.warn("Pleace specifiy `expandGroupBasedOnString`");
+            console.warn('Pleace specifiy `expandGroupBasedOnString`');
           }
 
           if (isExpandGroupBasedOnString) {
@@ -161,14 +161,14 @@ export class Logger {
         if (onlyGroup.length === 0) {
           onlyGroup.push(messageWithLogScope[0]);
           console.group(...messageWithLogScope);
-          loggerDevelopmentDebugLog.push(["group", ...messageWithLogScope]);
+          loggerDevelopmentDebugLog.push(['group', ...messageWithLogScope]);
         } else {
           onlyGroup = [];
           console.groupEnd();
-          loggerDevelopmentDebugLog.push(["groupEnd", ...messageWithLogScope]);
+          loggerDevelopmentDebugLog.push(['groupEnd', ...messageWithLogScope]);
           console.group(...messageWithLogScope);
           onlyGroup.push(messageWithLogScope[0]);
-          loggerDevelopmentDebugLog.push(["group", ...messageWithLogScope]);
+          loggerDevelopmentDebugLog.push(['group', ...messageWithLogScope]);
         }
       }
       // >>> Actual log
@@ -209,7 +209,7 @@ export class Logger {
     //
     console.log(
       `%c ${finalMessage}`,
-      `background: ${logOptions.color ?? "blue"}`
+      `background: ${logOptions.color ?? 'blue'}`
     );
 
     //
@@ -222,7 +222,7 @@ export class Logger {
   }
 
   todo(message: string) {
-    console.log(`>>>> [TODO]: %c${message}`, `background: ${"darkgreen"}`);
+    console.log(`>>>> [TODO]: %c${message}`, `background: ${'darkgreen'}`);
   }
 }
 

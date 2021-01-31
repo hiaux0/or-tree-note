@@ -1,9 +1,9 @@
-import { Cursor } from "modules/vim/vim.types";
+import { Cursor } from 'modules/vim/vim.types';
 
 export enum LineMarkup {
-  "BOLD",
-  "ITALICS",
-  "HEADING1",
+  'BOLD',
+  'ITALICS',
+  'HEADING1',
 }
 
 export interface CheckboxMacro {
@@ -18,17 +18,17 @@ export interface LineMacro {
 }
 
 export enum MacroType {
-  "CHECKBOX" = "CHECKBOX",
-  "MARK" = "MARK",
-  "DEFINITIONS" = "DEFINITIONS",
-  "SNIPPETS" = "SNIPPETS",
+  'CHECKBOX' = 'CHECKBOX',
+  'MARK' = 'MARK',
+  'DEFINITIONS' = 'DEFINITIONS',
+  'SNIPPETS' = 'SNIPPETS',
 }
 
 export enum LineStageValue {
-  "BACKLOG" = "BACKLOG",
-  "CONSIDER" = "CONSIDER",
-  "DONE" = "DONE",
-  "ONHOLD" = "ONHOLD",
+  'BACKLOG' = 'BACKLOG',
+  'CONSIDER' = 'CONSIDER',
+  'DONE' = 'DONE',
+  'ONHOLD' = 'ONHOLD',
 }
 
 export interface LineStage {
@@ -66,7 +66,7 @@ export interface VimEditorState {
 export const initialVimEditorState: VimEditorState = {
   lines: [
     {
-      text: "012 456",
+      text: '012 456',
       macro: {
         checkbox: {
           value: true,
@@ -74,7 +74,7 @@ export const initialVimEditorState: VimEditorState = {
       },
     },
     {
-      text: "abcdef 89",
+      text: 'abcdef 89',
     },
   ],
 };

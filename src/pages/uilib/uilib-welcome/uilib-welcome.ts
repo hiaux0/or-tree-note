@@ -1,8 +1,8 @@
-import { bindable } from "aurelia-framework";
-import "./uilib-welcome.scss";
+import { bindable } from 'aurelia-framework';
+import './uilib-welcome.scss';
 
 export class UilibWelcome {
-  @bindable value = "UilibWelcome";
+  @bindable value = 'UilibWelcome';
   viewModelName: string;
   viewModel: string;
 
@@ -10,7 +10,7 @@ export class UilibWelcome {
     if (params.viewModelName) {
       const { viewModelName } = params;
       console.log(
-        "TCL: UilibWelcome -> activate -> viewModelName",
+        'TCL: UilibWelcome -> activate -> viewModelName',
         viewModelName
       );
       this.viewModelName = viewModelName as string;

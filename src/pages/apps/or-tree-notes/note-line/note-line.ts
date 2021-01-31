@@ -1,9 +1,9 @@
-import { EditorLine } from "store/initial-state";
-import { bindable } from "aurelia-framework";
-import "./note-line.scss";
+import { EditorLine } from 'store/initial-state';
+import { bindable } from 'aurelia-framework';
+import './note-line.scss';
 
 export class NoteLine {
-  @bindable value = "NoteLine";
+  @bindable value = 'NoteLine';
 
   @bindable line: EditorLine;
 

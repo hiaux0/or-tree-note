@@ -1,9 +1,9 @@
-import { VimOptions, VimPlugin } from "../vim.types";
-import { cloneDeep } from "lodash";
-import { Logger } from "modules/debug/logger";
-import { VimState, VimMode } from "../vim.types";
+import { VimOptions, VimPlugin } from '../vim.types';
+import { cloneDeep } from 'lodash';
+import { Logger } from 'modules/debug/logger';
+import { VimState, VimMode } from '../vim.types';
 
-const logger = new Logger({ scope: "AbstractMode" });
+const logger = new Logger({ scope: 'AbstractMode' });
 
 export function isValidHorizontalPosition(
   cursorCol: number,
@@ -81,7 +81,7 @@ export abstract class AbstractMode {
   ) {
     this.tokenizedInput = tokenizeInput(vimState.text);
 
-    logger.debug(["Tokens: %o", this.tokenizedInput], { onlyVerbose: true });
+    logger.debug(['Tokens: %o', this.tokenizedInput], { onlyVerbose: true });
   }
 
   executeCommand(
@@ -124,7 +124,7 @@ export abstract class AbstractMode {
       this.validateHorizontalCursor(result);
     } catch {
       logger.debug([
-        "Not valid state. Returning to previous state: %o",
+        'Not valid state. Returning to previous state: %o',
         previousOutput,
       ]);
       return previousOutput;
@@ -144,7 +144,7 @@ export abstract class AbstractMode {
 
     const tokenizedInput = tokenizeInput(input);
 
-    logger.debug(["reTokenizeInput: %o", tokenizedInput], {
+    logger.debug(['reTokenizeInput: %o', tokenizedInput], {
       onlyVerbose: true,
     });
 
@@ -160,7 +160,7 @@ export abstract class AbstractMode {
       try {
         logger.debug(
           [
-            "[INVALID] Cursor col will be: %d, but should be between [0,%d].",
+            '[INVALID] Cursor col will be: %d, but should be between [0,%d].',
             curCol,
             vimState.text.length,
           ],
@@ -169,7 +169,7 @@ export abstract class AbstractMode {
           }
         );
       } catch {
-        throw "";
+        throw '';
       }
     }
 
@@ -183,7 +183,7 @@ export abstract class AbstractMode {
     if (!isValid) {
       logger.debug(
         [
-          "[INVALID] Line will be: %d, but should be between [0,%d].",
+          '[INVALID] Line will be: %d, but should be between [0,%d].',
           line,
           this.lines.length,
         ],
@@ -191,7 +191,7 @@ export abstract class AbstractMode {
           isError: true,
         }
       );
-      throw "";
+      throw '';
     }
 
     return isValid;
@@ -277,7 +277,7 @@ export abstract class AbstractMode {
   /****** */
   indentRight(): VimState {
     const { indentSize } = this.vimOptions;
-    const spaces = " ".repeat(indentSize);
+    const spaces = ' '.repeat(indentSize);
     const updatedInput = `${spaces}${this.vimState.text}`;
 
     this.vimState.text = updatedInput;
@@ -294,8 +294,8 @@ export abstract class AbstractMode {
 
     const numOfWhiteSpaceAtStart = text
       .substring(0, indentSize)
-      .split("")
-      .filter((char) => char === " ").length;
+      .split('')
+      .filter((char) => char === ' ').length;
 
     const updatedInput = text.substring(numOfWhiteSpaceAtStart); /*?*/
 

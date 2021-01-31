@@ -19,7 +19,7 @@ export function setCssVariable(varName, value): void {
  * '480px' --> 480
  */
 export function getValueFromPixelString(pixelString: string): number {
-  return Number(pixelString.replace(/px$/, ""));
+  return Number(pixelString.replace(/px$/, ''));
 }
 
 export function getComputedValueFromPixelString(

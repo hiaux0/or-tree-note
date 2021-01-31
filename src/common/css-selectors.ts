@@ -1,3 +1,3 @@
 export const CSS_SELECTORS = {
-  'editor-line': 'editor-line'
-}
+  'editor-line': 'editor-line',
+};

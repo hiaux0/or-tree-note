@@ -1,6 +1,6 @@
-import { bindable } from "aurelia-framework";
-import "./home.scss";
+import { bindable } from 'aurelia-framework';
+import './home.scss';
 
 export class Home {
-  @bindable value = "Home";
+  @bindable value = 'Home';
 }

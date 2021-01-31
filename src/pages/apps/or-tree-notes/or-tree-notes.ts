@@ -1,36 +1,36 @@
 import { CSS_SELECTORS } from './../../../common/css-selectors';
-import { initialVimEditorState } from "./../../../store/initial-state";
-import { Store, jump, connectTo, StateHistory } from "aurelia-store";
-import { autoinject } from "aurelia-dependency-injection";
-import { distinctUntilChanged, pluck } from "rxjs/operators";
-import { VimEditor, VimEditorOptions } from "modules/vim-editor/vim-editor";
-import { bindable } from "aurelia-framework";
-import "./or-tree-notes.scss";
-import { rootContainer } from "modules/root-container";
-import { VimEditorTextMode } from "modules/vim-editor/modes/vim-editor-text-mode";
-import { VimMode, VimExecutingMode, Cursor } from "modules/vim/vim.types";
-import { EditorLine, VimEditorState } from "store/initial-state";
-import { toggleCheckbox } from "store/or-tree-notes/actions-or-tree-notes";
-import { Logger } from "modules/debug/logger";
-import { OTN_STATE as OTN_STATE_KEY } from "local-storage";
+import { initialVimEditorState } from './../../../store/initial-state';
+import { Store, jump, connectTo, StateHistory } from 'aurelia-store';
+import { autoinject } from 'aurelia-dependency-injection';
+import { distinctUntilChanged, pluck } from 'rxjs/operators';
+import { VimEditor, VimEditorOptions } from 'modules/vim-editor/vim-editor';
+import { bindable } from 'aurelia-framework';
+import './or-tree-notes.scss';
+import { rootContainer } from 'modules/root-container';
+import { VimEditorTextMode } from 'modules/vim-editor/modes/vim-editor-text-mode';
+import { VimMode, VimExecutingMode, Cursor } from 'modules/vim/vim.types';
+import { EditorLine, VimEditorState } from 'store/initial-state';
+import { toggleCheckbox } from 'store/or-tree-notes/actions-or-tree-notes';
+import { Logger } from 'modules/debug/logger';
+import { OTN_STATE as OTN_STATE_KEY } from 'local-storage';
 
-const logger = new Logger({ scope: "OrTreeNotes" });
+const logger = new Logger({ scope: 'OrTreeNotes' });
 
 @autoinject()
 @connectTo<StateHistory<VimEditorState>>({
   selector: {
     lines: (store) =>
-      store.state.pipe(pluck("present", "lines"), distinctUntilChanged()),
+      store.state.pipe(pluck('present', 'lines'), distinctUntilChanged()),
     cursorPosition: (store) =>
       store.state.pipe(
-        pluck("present", "cursorPosition"),
+        pluck('present', 'cursorPosition'),
         distinctUntilChanged()
       ),
     state: (store) => store.state,
   },
 })
 export class OrTreeNotes {
-  @bindable value = "OrTreeNotes";
+  @bindable value = 'OrTreeNotes';
 
   cursorPosition: Cursor;
   lines: EditorLine[];
@@ -45,7 +45,7 @@ export class OrTreeNotes {
   vimEditor: VimEditor;
 
   constructor(private store: Store<StateHistory<VimEditorState>>) {
-    this.store.registerAction("toggleCheckbox", toggleCheckbox);
+    this.store.registerAction('toggleCheckbox', toggleCheckbox);
   }
 
   attached() {
@@ -57,13 +57,13 @@ export class OrTreeNotes {
       vimExecutingMode: VimExecutingMode.BATCH,
       plugins: [
         {
-          commandName: "toggleCheckbox",
+          commandName: 'toggleCheckbox',
           execute: () => {
             this.toggleCheckbox();
           },
         },
         {
-          commandName: "save",
+          commandName: 'save',
           execute: () => {
             this.saveToLocalStorage();
           },

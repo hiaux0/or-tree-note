@@ -1,18 +1,18 @@
-import { inject } from "aurelia-dependency-injection";
-import { rootContainer } from "modules/root-container";
-import { VimState } from "../../vim/vim.types";
-import { Logger } from "modules/debug/logger";
-import { Cursor } from "modules/vim/vim.types";
+import { inject } from 'aurelia-dependency-injection';
+import { rootContainer } from 'modules/root-container';
+import { VimState } from '../../vim/vim.types';
+import { Logger } from 'modules/debug/logger';
+import { Cursor } from 'modules/vim/vim.types';
 import {
   getComputedValueFromPixelString,
   getCssVar,
-} from "../../css/css-variables";
-import { ChildrenMutationObserver } from "./children-mutation-observer";
-import { StateHistory, Store } from "aurelia-store";
-import { VimEditorState } from "store/initial-state";
-import { createNewLine, changeText } from "../actions/actions-vim-editor";
+} from '../../css/css-variables';
+import { ChildrenMutationObserver } from './children-mutation-observer';
+import { StateHistory, Store } from 'aurelia-store';
+import { VimEditorState } from 'store/initial-state';
+import { createNewLine, changeText } from '../actions/actions-vim-editor';
 
-const logger = new Logger({ scope: "AbstractTextMode" });
+const logger = new Logger({ scope: 'AbstractTextMode' });
 
 @inject(Store)
 export abstract class AbstractTextMode {
@@ -43,10 +43,10 @@ export abstract class AbstractTextMode {
       );
     });
 
-    this.caretWidth = getCssVar("--caret-size-width");
-    this.caretHeight = getCssVar("--caret-size-height");
+    this.caretWidth = getCssVar('--caret-size-width');
+    this.caretHeight = getCssVar('--caret-size-height');
 
-    this.store.registerAction("createNewLine", createNewLine);
+    this.store.registerAction('createNewLine', createNewLine);
   }
 
   setCursorMovement(newCursorValue?: Cursor) {
@@ -87,7 +87,7 @@ export abstract class AbstractTextMode {
       childOffsetLeft = currentChild.offsetLeft;
     }
 
-    logger.debug(["Child offset: %d", childOffsetLeft]);
+    logger.debug(['Child offset: %d', childOffsetLeft]);
 
     return childOffsetLeft;
   }
@@ -133,13 +133,13 @@ export abstract class AbstractTextMode {
   }
 
   resetCaretBlinking() {
-    this.caretElement.classList.remove("caret-blinking");
+    this.caretElement.classList.remove('caret-blinking');
     /**
      * Needed to restart the animation
      * https://css-tricks.com/restart-css-animation/
      */
     void this.caretElement.offsetWidth;
-    this.caretElement.classList.add("caret-blinking");
+    this.caretElement.classList.add('caret-blinking');
   }
 
   /** CARET */
@@ -147,12 +147,12 @@ export abstract class AbstractTextMode {
   getCurrentCaretCol() {
     const curCarLeft = getComputedValueFromPixelString(
       this.caretElement,
-      "left"
+      'left'
     );
 
     const currentCaretCol = Math.round(curCarLeft / this.caretWidth);
 
-    logger.debug(["Current caret col: %n", currentCaretCol], { log: true });
+    logger.debug(['Current caret col: %n', currentCaretCol], { log: true });
 
     return currentCaretCol;
   }

@@ -1,4 +1,4 @@
-@import "../../../common/variables.scss";
+@import '../../../common/variables.scss';
 
 // @mixin caretBlinking {
 //   animation-name: blink;
@@ -67,7 +67,7 @@ or-tree-notes {
     position: relative;
     border: 1px solid black;
 
-    input[type="checkbox"] {
+    input[type='checkbox'] {
       transform: scale(2);
     }
 
@@ -103,7 +103,7 @@ or-tree-notes {
           @include caretBlinking(blinkNormal);
         }
         &::after {
-          content: ".";
+          content: '.';
           background: red;
           width: 2px;
           display: block;

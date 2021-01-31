@@ -4,7 +4,7 @@ export function insert(str: string, index: number, value: string): string {
 }
 
 export function replaceAt(str: string, index: number, char: string) {
-  if (char == "") {
+  if (char == '') {
     return str.slice(0, index) + str.substring(index + 1 + char.length);
   } else {
     return (
@@ -24,9 +24,9 @@ function padWithRegexWildCard(input: string) {
   /** TODO SUPPORT FOR ? */
   // const edgeCaseList = ['?'];
 
-  const splitByChar = input.split("");
-  const withWildCard = splitByChar.join(".*");
-  return withWildCard + ".*";
+  const splitByChar = input.split('');
+  const withWildCard = splitByChar.join('.*');
+  return withWildCard + '.*';
 }
 
 /**

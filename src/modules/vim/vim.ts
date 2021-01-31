@@ -1,6 +1,6 @@
-import { SPACE } from "./../../resources/keybindings/app.keys";
-import { Logger } from "./../debug/logger";
-import keyBindingsJson from "../../resources/keybindings/key-bindings";
+import { SPACE } from './../../resources/keybindings/app.keys';
+import { Logger } from './../debug/logger';
+import keyBindingsJson from '../../resources/keybindings/key-bindings';
 import {
   VimOptions,
   Cursor,
@@ -8,17 +8,17 @@ import {
   KeyBindingModes,
   VimExecutingMode,
   VimState,
-} from "./vim.types";
-import { VimCommandManager } from "./vim-command-manager";
-import { cloneDeep } from "lodash";
+} from './vim.types';
+import { VimCommandManager } from './vim-command-manager';
+import { cloneDeep } from 'lodash';
 
-const logger = new Logger({ scope: "Vim" });
+const logger = new Logger({ scope: 'Vim' });
 
 export class VimError extends Error {}
 
 const keyBindings = (keyBindingsJson as unknown) as KeyBindingModes;
 
-export const vim = "vim";
+export const vim = 'vim';
 
 export const defaultVimOptions: VimOptions = {
   keyBindings,
@@ -90,7 +90,7 @@ export class Vim {
 
   /** */
   queueInput(input: string): QueueInputReturn {
-    logger.debug(["Received input: %s", input]);
+    logger.debug(['Received input: %s', input]);
 
     //
     let targetCommandName;
@@ -100,11 +100,11 @@ export class Vim {
 
     let vimState: VimState;
 
-    if (targetCommandName === "enterInsertTextMode") {
+    if (targetCommandName === 'enterInsertTextMode') {
       vimState = this.vimCommandManager.enterInsertTextMode();
-    } else if (targetCommandName === "enterNormalTextMode") {
+    } else if (targetCommandName === 'enterNormalTextMode') {
       vimState = this.vimCommandManager.enterNormalTextMode();
-    } else if (targetCommandName === "newLine") {
+    } else if (targetCommandName === 'newLine') {
       vimState = this.vimCommandManager.newLine();
     } else {
       vimState = this.vimCommandManager.executeVimCommand(
@@ -128,7 +128,7 @@ export class Vim {
       lines: [...this.lines],
     };
 
-    logger.debug(["Result of input: %s is: %o", input, result], {
+    logger.debug(['Result of input: %s is: %o', input, result], {
       onlyVerbose: true,
     });
 
@@ -143,7 +143,7 @@ export class Vim {
     let resultList: QueueInputReturn[] = [];
     let givenInputSequence;
 
-    if (typeof inputSequence === "string") {
+    if (typeof inputSequence === 'string') {
       givenInputSequence = this.vimCommandManager.splitInputSequence(
         inputSequence
       );

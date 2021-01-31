@@ -90,6 +90,7 @@
     "node": ">=8.9.0"
   },
   "prettier": {
-    "htmlWhitespaceSensitivity": "strict"
+    "htmlWhitespaceSensitivity": "strict",
+    "singleQuote": true
   }
 }

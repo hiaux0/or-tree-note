@@ -1,14 +1,14 @@
-import { SPACE } from "./../../../resources/keybindings/app.keys";
-import { AbstractMode } from "./abstract-mode";
-import { insert, replaceAt } from "modules/string/string";
-import { VimState, VimMode } from "../vim.types";
+import { SPACE } from './../../../resources/keybindings/app.keys';
+import { AbstractMode } from './abstract-mode';
+import { insert, replaceAt } from 'modules/string/string';
+import { VimState, VimMode } from '../vim.types';
 
 export class InsertMode extends AbstractMode {
   currentMode = VimMode.INSERT;
 
   type(newInput: string): VimState {
     if (newInput === SPACE) {
-      newInput = " ";
+      newInput = ' ';
     }
 
     const updatedInput = insert(
@@ -34,7 +34,7 @@ export class InsertMode extends AbstractMode {
     const updatedInput = replaceAt(
       this.vimState.text,
       this.vimState.cursor.col - 1,
-      ""
+      ''
     );
 
     super.cursorLeft();
@@ -46,7 +46,7 @@ export class InsertMode extends AbstractMode {
     const updatedInput = replaceAt(
       this.vimState.text,
       this.vimState.cursor.col,
-      ""
+      ''
     );
 
     this.vimState.text = updatedInput;

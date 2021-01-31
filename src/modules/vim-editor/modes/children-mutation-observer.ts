@@ -1,7 +1,7 @@
-import { Logger } from "modules/debug/logger";
-import { rootContainer } from "modules/root-container";
+import { Logger } from 'modules/debug/logger';
+import { rootContainer } from 'modules/root-container';
 
-const logger = new Logger({ scope: "ChildrenMutationObserver" });
+const logger = new Logger({ scope: 'ChildrenMutationObserver' });
 
 export class ChildrenMutationObserver {
   private observer: MutationObserver;
@@ -13,13 +13,13 @@ export class ChildrenMutationObserver {
     const callback: MutationCallback = (mutationsList) => {
       // Use traditional 'for loops' for IE 11
       for (const mutation of mutationsList) {
-        if (mutation.type === "childList") {
+        if (mutation.type === 'childList') {
           /**
            * ASSUMPTION: Only care for added nodes
            */
           if (mutation.removedNodes.length > 0) return;
 
-          logger.debug(["A child node has been added or removed."]);
+          logger.debug(['A child node has been added or removed.']);
           afterObserved();
         }
       }

@@ -1,9 +1,9 @@
-import { Logger } from "modules/debug/logger";
-import { VimCommandNames } from "../vim-commands";
-import { VimState, VimMode } from "../vim.types";
-import { AbstractMode, TokenizedString } from "./abstract-mode";
+import { Logger } from 'modules/debug/logger';
+import { VimCommandNames } from '../vim-commands';
+import { VimState, VimMode } from '../vim.types';
+import { AbstractMode, TokenizedString } from './abstract-mode';
 
-const logger = new Logger({ scope: "NormalMode" });
+const logger = new Logger({ scope: 'NormalMode' });
 
 export class NormalMode extends AbstractMode {
   currentMode = VimMode.NORMAL;
@@ -23,7 +23,7 @@ export class NormalMode extends AbstractMode {
       return isUnderCursor;
     });
 
-    logger.debug(["Token under curor: %o", targetToken], {
+    logger.debug(['Token under curor: %o', targetToken], {
       onlyVerbose: true,
     });
 
@@ -50,7 +50,7 @@ export class NormalMode extends AbstractMode {
     const targetToken = this.tokenizedInput[currentTokenIndex + 1];
 
     if (!targetToken) {
-      logger.debug(["Could not find next target token: %o", targetToken], {
+      logger.debug(['Could not find next target token: %o', targetToken], {
         isError: true,
       });
     }
@@ -64,7 +64,7 @@ export class NormalMode extends AbstractMode {
     });
 
     if (!currentToken) {
-      logger.debug(["Could not find next target token: %o", currentToken], {
+      logger.debug(['Could not find next target token: %o', currentToken], {
         isError: true,
       });
     }

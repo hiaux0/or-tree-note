@@ -1,7 +1,7 @@
-import { StateHistory, nextStateHistory } from "aurelia-store";
-import produce from "immer";
-import { Cursor } from "modules/vim/vim.types";
-import { VimEditorState } from "store/initial-state";
+import { StateHistory, nextStateHistory } from 'aurelia-store';
+import produce from 'immer';
+import { Cursor } from 'modules/vim/vim.types';
+import { VimEditorState } from 'store/initial-state';
 
 export const changeText = (
   state: StateHistory<VimEditorState>,

@@ -1,5 +1,5 @@
-import { InsertTextModeKeybindings } from "./modes/insert-mode-commands";
-import { VimCommandNames, VimCommand, SynonymKey } from "./vim-commands";
+import { InsertTextModeKeybindings } from './modes/insert-mode-commands';
+import { VimCommandNames, VimCommand, SynonymKey } from './vim-commands';
 
 export interface KeyBindingModes {
   normal: VimCommand[];
@@ -8,8 +8,8 @@ export interface KeyBindingModes {
 }
 
 export enum VimExecutingMode {
-  "INDIVIDUAL" = "INDIVIDUAL",
-  "BATCH" = "BATCH",
+  'INDIVIDUAL' = 'INDIVIDUAL',
+  'BATCH' = 'BATCH',
 }
 
 /**
@@ -39,8 +39,8 @@ export interface Cursor {
   line: number;
 }
 export enum VimMode {
-  "NORMAL" = "NORMAL",
-  "INSERT" = "INSERT",
+  'NORMAL' = 'NORMAL',
+  'INSERT' = 'INSERT',
 }
 export interface VimOptions {
   keyBindings?: KeyBindingModes;

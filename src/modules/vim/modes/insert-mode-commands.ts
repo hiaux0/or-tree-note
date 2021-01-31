@@ -1,4 +1,4 @@
-import { VimCommand } from "../vim-commands";
+import { VimCommand } from '../vim-commands';
 
 export const InsertTextModeCommands = [] as const;
 
