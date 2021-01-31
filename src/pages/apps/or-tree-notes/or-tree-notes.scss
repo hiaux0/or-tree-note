@@ -15,6 +15,7 @@ $caretColor: black;
 $carentWidth: 1.6px;
 $caretSizeWidth: 0.6 * $fontSize;
 $caretSizeHeight: 1.2 * $fontSize;
+$editorLineHeight: 21.4667px;
 
 :root {
   --caret-size-width: #{$caretSizeWidth};
@@ -83,6 +84,7 @@ or-tree-notes {
 
     .editor-line {
       white-space: pre;
+      height: $editorLineHeight;
     }
 
     #caret {
