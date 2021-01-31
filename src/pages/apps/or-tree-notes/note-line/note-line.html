@@ -1,6 +1,9 @@
 <template>
   <!-- Default line -->
-  <div if.bind="isDefaultLine(line)" class="${editorLineClass}"
+  <div
+    if.bind="isDefaultLine(line)"
+    class="${editorLineClass}"
+    data-test="${editorLineClass}"
     >${line.text}</div
   >
 
@@ -10,6 +13,8 @@
     class="checkbox-label ${line.macro.checkbox.value ? 'checkbox--checked' : ''}"
   >
     <input type="checkbox" checked.bind="line.macro.checkbox.value" />
-    <span class="${editorLineClass}">${line.text}</span>
+    <span class="${editorLineClass}" data-test="${editorLineClass}"
+      >${line.text}</span
+    >
   </label>
 </template>

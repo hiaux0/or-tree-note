@@ -1,3 +1,4 @@
+import { CSS_SELECTORS } from './../../../common/css-selectors';
 import { initialVimEditorState } from "./../../../store/initial-state";
 import { Store, jump, connectTo, StateHistory } from "aurelia-store";
 import { autoinject } from "aurelia-dependency-injection";
@@ -39,7 +40,7 @@ export class OrTreeNotes {
   notesContainerRef: HTMLDivElement;
   caretRef: HTMLSpanElement;
 
-  editorLineClass: string = "editor-line";
+  editorLineClass: string = CSS_SELECTORS['editor-line'];
   currentModeName: VimMode;
   vimEditor: VimEditor;
 
