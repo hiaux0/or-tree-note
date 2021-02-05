@@ -45,4 +45,15 @@ describe('C: Mode - Visual', () => {
       visualStartCursor: { col: 0, line: 0 },
     });
   });
+  it('Add cursor to visual data - eb', () => {
+    vimCommandManager.executeVimCommand('cursorWordForwardEnd');
+    const result = vimCommandManager.executeVimCommand('cursorBackwordsStartWord');
+
+    expect(result).toEqual({
+      cursor: { col: 0, line: 0 },
+      text: 'foo',
+      visualEndCursor: { col: 0, line: 0 },
+      visualStartCursor: { col: 0, line: 0 },
+    });
+  });
 });

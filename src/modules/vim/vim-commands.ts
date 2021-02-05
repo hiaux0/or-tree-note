@@ -12,6 +12,7 @@ export const VIM_COMMANDS = [
   "enterNormalTextMode",
   "enterVisualTextMode",
   "cursorWordForwardEnd",
+  "cursorBackwordsStartWord",
   "delete",
   "backspace",
   "newLine",
