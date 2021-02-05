@@ -5,6 +5,17 @@ export class VisualMode extends AbstractMode {
   currentMode = VimMode.VISUAL;
 
   executeCommand(commandName: string, commandValue: string): VimState {
-    return super.executeCommand(commandName, commandValue, this.currentMode);
+    const newVimState = super.executeCommand(
+      commandName,
+      commandValue,
+      this.currentMode
+    );
+
+    newVimState.visualEndCursor = {
+      col: newVimState.cursor.col + this.vimState.visualStartCursor.col,
+      line: newVimState.cursor.line + this.vimState.visualStartCursor.line,
+    };
+
+    return newVimState;
   }
 }

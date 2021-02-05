@@ -73,7 +73,8 @@ export class VimCommandManager {
   enterVisualTextMode() {
     logger.debug(['Enter Visual mode']);
     this.activeMode = VimMode.VISUAL;
-    // this.normalMode.reTokenizeInput(this.vimState?.text);
+    this.vimState.visualStartCursor = {...this.vimState.cursor};
+
     return this.vimState;
   }
   getCurrentMode() {
@@ -82,7 +83,7 @@ export class VimCommandManager {
     } else if (this.activeMode === VimMode.INSERT) {
       return this.insertMode;
     } else if (this.activeMode === VimMode.VISUAL) {
-      return this.insertMode;
+      return this.visualMode;
     }
   }
 

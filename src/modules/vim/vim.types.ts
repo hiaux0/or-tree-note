@@ -27,6 +27,8 @@ export type VimState = {
   cursor: Cursor;
   text: string;
   mode?: VimMode;
+  visualStartCursor?: Cursor;
+  visualEndCursor?: Cursor;
 };
 
 export interface QueueInputReturn {
