@@ -8,12 +8,10 @@ const keyBindings = {
     { key: 'i', command: 'enterInsertMode' },
     { key: 'k', command: 'cursorUp' },
     { key: 'l', command: 'cursorRight' },
-    { key: 'o', command: 'visualMoveToOtherEndOfMarkedArea' },
     { key: 'u', command: 'cursorDown' },
     { key: 'b', command: 'cursorBackwordsStartWord' }, // jump backwards to the start of a word
     { key: 'e', command: 'cursorWordForwardEnd' },
     { key: 'v', command: 'enterVisualMode' },
-    { key: 'viw', command: 'visualInnerWord' },
     { key: 'V', command: 'visualStartLineWise' },
     { key: 'w', command: 'cursorWordForwardStart' },
     { key: '<ArrowLeft>', command: 'cursorLeft' },
@@ -39,6 +37,8 @@ const keyBindings = {
   ],
   visual: [
     { key: '<Escape>', command: 'enterNormalMode' },
+    { key: 'iw', command: 'visualInnerWord' },
+    { key: 'o', command: 'visualMoveToOtherEndOfMarkedArea' },
   ],
   synonyms: {
     '<esc>': '<Escape>',
