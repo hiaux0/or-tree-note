@@ -1,5 +1,8 @@
 import { AbstractMode } from './abstract-mode';
 import { VimState, VimMode } from '../vim.types';
+import { Logger } from 'modules/debug/logger';
+
+const logger = new Logger({ scope: 'VisualMode' });
 
 export class VisualMode extends AbstractMode {
   currentMode = VimMode.VISUAL;
