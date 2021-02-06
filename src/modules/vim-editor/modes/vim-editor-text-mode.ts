@@ -21,6 +21,7 @@ import { VimEditorState } from 'store/initial-state';
 import {
   changeCursorPosition,
   changeText,
+  setVimState as changeVimState,
 } from '../actions/actions-vim-editor';
 import { pluck } from 'rxjs/operators';
 import { VisualTextMode } from './visual-text-mode';
@@ -47,6 +48,7 @@ export class VimEditorTextMode {
   ) {
     store.registerAction('changeText', changeText);
     store.registerAction('changeCursorPosition', changeCursorPosition);
+    store.registerAction('changeVimState', changeVimState);
 
     const normalTextMode = new NormalTextMode(
       this.vimEditorOptions.parentHtmlElement,
@@ -190,6 +192,7 @@ export class VimEditorTextMode {
     if (currentMode[result?.targetCommand]) {
       currentMode[result.targetCommand](result.vimState);
 
+      this.store.dispatch(changeVimState, result.vimState);
       this.store.dispatch(changeCursorPosition, result.vimState.cursor);
 
       ev.preventDefault();
