@@ -1,5 +1,10 @@
 import { Cursor } from 'modules/vim/vim.types';
 
+export interface HighlightCoords {
+  start: number;
+  end: number;
+}
+
 export enum LineMarkup {
   'BOLD',
   'ITALICS',
@@ -41,6 +46,7 @@ export interface LineStage {
 }
 
 export interface EditorLine {
+  lineHighlight?: HighlightCoords;
   text: string;
   markup?: LineMarkup;
   macro?: LineMacro;
