@@ -58,6 +58,7 @@ export class Vim {
       initialVimState,
       finalVimOptions
     );
+    this.vimState = this.vimCommandManager.vimState;
 
     this.verifyValidCursorPosition();
   }
