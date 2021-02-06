@@ -24,7 +24,6 @@ export class VisualMode extends AbstractMode {
     const isAtStartOfWord = token.start === this.vimState.cursor.col;
 
     if (!isAtStartOfWord) {
-      isAtStartOfWord; /*?*/
       this.vimState.visualStartCursor = {
         col: token.start,
         line: this.vimState.cursor.line,
@@ -32,9 +31,15 @@ export class VisualMode extends AbstractMode {
       this.vimState.cursor.col = token.start;
     }
 
-    super.cursorWordForwardEnd()
+    super.cursorWordForwardEnd();
 
     return this.vimState;
   }
 
+  visualStartLineWise(): VimState {
+    this.vimState.visualStartCursor.col = 0;
+    this.vimState.cursor.col = this.vimState.text.length
+
+    return this.vimState;
+  }
 }

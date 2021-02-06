@@ -18,6 +18,7 @@ export const VIM_COMMANDS = [
   "newLine",
   //visual
   "visualInnerWord",
+  "visualStartLineWise"
 ] as const;
 export type VimCommandNames = typeof VIM_COMMANDS[number];
 

@@ -90,4 +90,20 @@ describe('C: Mode - Visual', () => {
     });
   });
 
+  it('#visualStartLineWise', () => {
+    const input = [' @foo'];
+    vimCommandManager = new VimCommandManager(
+      input,
+      cloneDeep(createVimState(input[0]))
+    );
+    vimCommandManager.enterVisualTextMode();
+
+    const result = vimCommandManager.executeVimCommand('visualStartLineWise');
+    expect(result).toEqual({
+      cursor: { col: 5, line: 0 },
+      text: ' @foo',
+      visualStartCursor: { col: 0, line: 0 },
+      visualEndCursor: { col: 5, line: 0 },
+    });
+  });
 });
