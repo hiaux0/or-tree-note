@@ -36,6 +36,9 @@ const keyBindings = {
     { key: '<Delete>', command: 'delete' },
     { key: '<Shift>', command: 'shift' },
   ],
+  visual: [
+    { key: '<Escape>', command: 'enterNormalTextMode' },
+  ],
   synonyms: {
     '<esc>': '<Escape>',
   },

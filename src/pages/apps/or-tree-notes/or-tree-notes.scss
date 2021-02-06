@@ -119,6 +119,11 @@ or-tree-notes {
           @include caretBlinking(blinkInsert);
         }
       }
+
+      &.caret-VISUAL {
+        background: rgba(226, 190, 143, 0.63);
+        border: 1px solid black;
+      }
     }
   }
 }

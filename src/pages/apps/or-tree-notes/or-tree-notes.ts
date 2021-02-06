@@ -82,6 +82,7 @@ export class OrTreeNotes {
 
     this.vimEditor = rootContainer.get(VimEditor);
     this.currentModeName = this.vimEditor.getMode();
+    console.log('TCL: OrTreeNotes -> attached -> this.currentModeName', this.currentModeName)
   }
 
   saveToLocalStorage() {

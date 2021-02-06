@@ -11,6 +11,7 @@ import {
   MODIFIERS,
   ModifiersType,
   SPACE,
+  VISUAL_MODE,
 } from 'resources/keybindings/app.keys';
 import { NormalTextMode } from './normal-text-mode';
 import { InsertTextMode } from './insert-text-mode';
@@ -28,6 +29,7 @@ const logger = new Logger({ scope: 'VimEditorTextMode' });
 
 const CARET_NORMAL_CLASS = 'caret-NORMAL';
 const CARET_INSERT_CLASS = 'caret-INSERT';
+const CARET_VISUAL_CLASS = 'caret-VISUAL';
 
 export class VimEditorTextMode {
   childrenElementList: NodeListOf<HTMLElement>;
@@ -142,9 +144,20 @@ export class VimEditorTextMode {
         this.vimEditorOptions.caretElements[0].classList.add(
           CARET_INSERT_CLASS
         );
+      } else if (
+        pressedKey === VISUAL_MODE &&
+        this.vim.getCurrentMode().currentMode === VimMode.NORMAL
+      ) {
+        this.vimEditorOptions.caretElements[0].classList.remove(
+          CARET_NORMAL_CLASS
+        );
+        this.vimEditorOptions.caretElements[0].classList.add(
+          CARET_VISUAL_CLASS
+        );
       } else if (pressedKey === ESCAPE) {
         this.vimEditorOptions.caretElements[0].classList.remove(
-          CARET_INSERT_CLASS
+          CARET_INSERT_CLASS,
+          CARET_VISUAL_CLASS
         );
         this.vimEditorOptions.caretElements[0].classList.add(
           CARET_NORMAL_CLASS
