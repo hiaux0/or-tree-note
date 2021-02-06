@@ -68,6 +68,12 @@ export class VimCommandManager {
     logger.debug(['Enter Normal mode']);
     this.activeMode = VimMode.NORMAL;
     this.normalMode.reTokenizeInput(this.vimState?.text);
+    //
+    this.potentialCommands = [];
+    this.queuedKeys = [];
+    this.vimState.visualEndCursor = undefined;
+    this.vimState.visualStartCursor = undefined;
+
     return this.vimState;
   }
   enterVisualMode() {
