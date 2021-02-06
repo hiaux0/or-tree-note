@@ -101,12 +101,12 @@ export class Vim {
 
     let vimState: VimState;
 
-    if (targetCommandName === 'enterInsertTextMode') {
-      vimState = this.vimCommandManager.enterInsertTextMode();
-    } else if (targetCommandName === 'enterNormalTextMode') {
-      vimState = this.vimCommandManager.enterNormalTextMode();
-    } else if (targetCommandName === 'enterVisualTextMode') {
-      vimState = this.vimCommandManager.enterVisualTextMode();
+    if (targetCommandName === 'enterInsertMode') {
+      vimState = this.vimCommandManager.enterInsertMode();
+    } else if (targetCommandName === 'enterNormalMode') {
+      vimState = this.vimCommandManager.enterNormalMode();
+    } else if (targetCommandName === 'enterVisualMode') {
+      vimState = this.vimCommandManager.enterVisualMode();
     } else if (targetCommandName === 'newLine') {
       vimState = this.vimCommandManager.newLine();
     } else {
@@ -169,10 +169,10 @@ export class Vim {
   getCurrentMode() {
     return this.vimCommandManager.getCurrentMode();
   }
-  enterInsertTextMode() {
-    return this.vimCommandManager.enterInsertTextMode();
+  enterInsertMode() {
+    return this.vimCommandManager.enterInsertMode();
   }
-  enterNormalTextMode() {
-    return this.vimCommandManager.enterNormalTextMode();
+  enterNormalMode() {
+    return this.vimCommandManager.enterNormalMode();
   }
 }

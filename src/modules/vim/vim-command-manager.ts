@@ -58,19 +58,19 @@ export class VimCommandManager {
   /** Modes */
   /** *******/
 
-  enterInsertTextMode() {
+  enterInsertMode() {
     logger.debug(['Enter Insert mode']);
     this.activeMode = VimMode.INSERT;
     this.insertMode.reTokenizeInput(this.vimState?.text);
     return this.vimState;
   }
-  enterNormalTextMode() {
+  enterNormalMode() {
     logger.debug(['Enter Normal mode']);
     this.activeMode = VimMode.NORMAL;
     this.normalMode.reTokenizeInput(this.vimState?.text);
     return this.vimState;
   }
-  enterVisualTextMode() {
+  enterVisualMode() {
     logger.debug(['Enter Visual mode']);
     this.activeMode = VimMode.VISUAL;
     this.vimState.visualStartCursor = {...this.vimState.cursor};

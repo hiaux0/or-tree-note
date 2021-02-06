@@ -10,7 +10,7 @@ describe("C: Mode - Normal", () => {
   let vim: Vim;
   beforeEach(() => {
     vim = new Vim(cloneDeep(input), cloneDeep(cursor));
-    vim.enterNormalTextMode();
+    vim.enterNormalMode();
   });
 
   //

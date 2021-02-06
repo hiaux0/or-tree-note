@@ -27,11 +27,11 @@ describe("Vim - General", () => {
 
   describe("C: Modes", () => {
     it("F: Switch to insert mode", () => {
-      vimCommandManager.enterInsertTextMode();
+      vimCommandManager.enterInsertMode();
       expect(vimCommandManager.activeMode).toBe(VimMode.INSERT);
     });
     it("F: Switch to insert mode", () => {
-      vimCommandManager.enterNormalTextMode();
+      vimCommandManager.enterNormalMode();
       expect(vimCommandManager.activeMode).toBe(VimMode.NORMAL);
     });
   });
@@ -79,7 +79,7 @@ describe("C: Mode - Normal", () => {
         cloneDeep(input),
         cloneDeep(createVimState())
       );
-      vimCommandManager.enterNormalTextMode();
+      vimCommandManager.enterNormalMode();
     });
 
     describe("Finding", () => {
@@ -109,7 +109,7 @@ describe("C: Mode - Normal", () => {
             keyBindings,
           }
         );
-        vimCommandManager.enterNormalTextMode();
+        vimCommandManager.enterNormalMode();
       });
       it("F: Find potential sequenced commands - 1 char - (sideeffect)", () => {
         const result = vimCommandManager.findPotentialCommand("f");
@@ -178,7 +178,7 @@ describe("C: Mode - Normal", () => {
               keyBindings,
             }
           );
-          vimCommandManager.enterNormalTextMode();
+          vimCommandManager.enterNormalMode();
           //
           vimCommandManager.getCommandName("f");
           vimCommandManager.getCommandName("o");
@@ -199,7 +199,7 @@ describe("Methods", () => {
       cloneDeep(input),
       cloneDeep(createVimState())
     );
-    vimCommandManager.enterInsertTextMode();
+    vimCommandManager.enterInsertMode();
   });
 
   describe("#splitInputSequence", () => {
@@ -222,7 +222,7 @@ describe("Methods", () => {
       const result = vimCommandManager.findPotentialCommand("Escape");
       expect(result.targetCommand).toEqual({
         key: "<Escape>",
-        command: "enterNormalTextMode",
+        command: "enterNormalMode",
       });
     });
     //
@@ -230,7 +230,7 @@ describe("Methods", () => {
       const result = vimCommandManager.findPotentialCommand("<esc>");
       expect(result.targetCommand).toEqual({
         key: "<Escape>",
-        command: "enterNormalTextMode",
+        command: "enterNormalMode",
       });
     });
   });

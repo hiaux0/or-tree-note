@@ -10,7 +10,7 @@ describe("C: Mode - Normal", () => {
   describe("C: Sequenced commands", () => {
     beforeEach(() => {
       vim = new Vim(cloneDeep(input), cloneDeep(cursor));
-      vim.enterNormalTextMode();
+      vim.enterNormalMode();
     });
 
     describe("Getting", () => {
@@ -61,7 +61,7 @@ describe("C: Mode - Normal", () => {
             },
             {
               vimState: { cursor: { col: 2, line: 0 }, text: "foo" },
-              targetCommand: "enterInsertTextMode",
+              targetCommand: "enterInsertMode",
               lines: ["foo"],
             },
             {
@@ -85,7 +85,7 @@ describe("C: Mode - Normal - Multi line", () => {
       const cursor: Cursor = { line: 1, col: 0 };
       const multiLineInput = ["foo", "bar"];
       vim = new Vim(cloneDeep(multiLineInput), cloneDeep(cursor));
-      vim.enterNormalTextMode();
+      vim.enterNormalMode();
 
       const result = vim.queueInput("u");
       expect(result).toEqual({
@@ -101,7 +101,7 @@ describe("C: Mode - Normal - Multi line", () => {
       const cursor: Cursor = { line: 1, col: 0 };
       const multiLineInput = ["foo", "bar"];
       vim = new Vim(cloneDeep(multiLineInput), cloneDeep(cursor));
-      vim.enterNormalTextMode();
+      vim.enterNormalMode();
 
       const result = vim.queueInput("u");
       expect(result).toEqual({
@@ -141,7 +141,7 @@ describe("C: Mode - Normal - Multi line", () => {
       const cursor: Cursor = { col: 6, line: 1 };
       const multiLineInput = ["hi", "012 456"];
       vim = new Vim(cloneDeep(multiLineInput), cloneDeep(cursor));
-      vim.enterNormalTextMode();
+      vim.enterNormalMode();
 
       const result = vim.queueInput("k");
       expect(result).toEqual({
@@ -156,7 +156,7 @@ describe("C: Mode - Normal - Multi line", () => {
       const cursor: Cursor = { line: 1, col: 0 };
       const multiLineInput = ["foo", "bar"];
       vim = new Vim(cloneDeep(multiLineInput), cloneDeep(cursor));
-      vim.enterNormalTextMode();
+      vim.enterNormalMode();
 
       const result = vim.queueInput("k");
       expect(result).toEqual({
@@ -172,7 +172,7 @@ describe("C: Mode - Normal - Multi line", () => {
       const cursor: Cursor = { line: 1, col: 0 };
       const multiLineInput = ["foo", "bar"];
       vim = new Vim(cloneDeep(multiLineInput), cloneDeep(cursor));
-      vim.enterNormalTextMode();
+      vim.enterNormalMode();
 
       const result = vim.queueInput("k");
       expect(result).toEqual({
@@ -189,7 +189,7 @@ describe("C: Mode - Normal - Multi line", () => {
       const cursor: Cursor = { col: 6, line: 0 };
       const multiLineInput = ["012 456", "hi"];
       vim = new Vim(cloneDeep(multiLineInput), cloneDeep(cursor));
-      vim.enterNormalTextMode();
+      vim.enterNormalMode();
 
       const result = vim.queueInput("u");
       expect(result).toEqual({
@@ -212,7 +212,7 @@ describe("Methods", () => {
 
   describe("#queueInput", () => {
     it("F: Single Input", () => {
-      vim.enterInsertTextMode();
+      vim.enterInsertMode();
       const result = vim.queueInputSequence("@");
       expect(result).toEqual([
         {
@@ -226,7 +226,7 @@ describe("Methods", () => {
 
   describe("#queueInputSequence", () => {
     it("F: Input sequence - string", () => {
-      vim.enterInsertTextMode();
+      vim.enterInsertMode();
       const result = vim.queueInputSequence("@<esc>l");
       expect(result).toEqual([
         {
@@ -236,7 +236,7 @@ describe("Methods", () => {
         },
         {
           vimState: { cursor: { col: 1, line: 0 }, text: "@foo" },
-          targetCommand: "enterNormalTextMode",
+          targetCommand: "enterNormalMode",
           lines: ["@foo"],
         },
         {
@@ -247,7 +247,7 @@ describe("Methods", () => {
       ]);
     });
     it("F: Input sequence - string - multiple typing", () => {
-      vim.enterInsertTextMode();
+      vim.enterInsertMode();
       const result = vim.queueInputSequence("@#<esc>l");
       expect(result).toEqual([
         {
@@ -262,7 +262,7 @@ describe("Methods", () => {
         },
         {
           vimState: { cursor: { col: 2, line: 0 }, text: "@#foo" },
-          targetCommand: "enterNormalTextMode",
+          targetCommand: "enterNormalMode",
           lines: ["@#foo"],
         },
         {
@@ -274,7 +274,7 @@ describe("Methods", () => {
     });
 
     it("F: Input sequence - string[]", () => {
-      vim.enterInsertTextMode();
+      vim.enterInsertMode();
       const result = vim.queueInputSequence(["@", "<esc>", "l"]);
       expect(result).toEqual([
         {
@@ -284,7 +284,7 @@ describe("Methods", () => {
         },
         {
           vimState: { cursor: { col: 1, line: 0 }, text: "@foo" },
-          targetCommand: "enterNormalTextMode",
+          targetCommand: "enterNormalMode",
           lines: ["@foo"],
         },
         {
@@ -301,7 +301,7 @@ describe("Methods", () => {
       const result = vim.queueInputSequence(input);
       expect(result).toEqual([
         {
-          targetCommand: "enterInsertTextMode",
+          targetCommand: "enterInsertMode",
           vimState: { cursor: { col: 0, line: 0 }, text: "foo" },
           lines: ["foo"],
         },
@@ -316,7 +316,7 @@ describe("Methods", () => {
           lines: ["@#foo"],
         },
         {
-          targetCommand: "enterNormalTextMode",
+          targetCommand: "enterNormalMode",
           vimState: { cursor: { col: 2, line: 0 }, text: "@#foo" },
           lines: ["@#foo"],
         },

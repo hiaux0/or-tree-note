@@ -18,12 +18,12 @@ describe("Vim - Abstract Mode", () => {
     });
 
     it("F: Should execute command in Input Queue", () => {
-      vim.enterInsertTextMode();
+      vim.enterInsertMode();
       const result = vim.queueInput("@");
       expect(result.vimState.text).toBe(`@${input[0]}`);
     });
     it("F: Should execute command in Input Queue Sequence", () => {
-      vim.enterInsertTextMode();
+      vim.enterInsertMode();
       const result = vim.queueInputSequence("345");
       expect(result).toEqual([
         {

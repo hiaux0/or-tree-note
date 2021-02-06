@@ -12,7 +12,7 @@ describe('C: Mode - Visual - Simplest setup', () => {
       cloneDeep(VIM_TEST_WHOLEINPUT),
       cloneDeep(createVimState())
     );
-    vimCommandManager.enterVisualTextMode();
+    vimCommandManager.enterVisualMode();
   });
 
   it('Add cursor data to visual - 1 cursorRight', () => {
@@ -68,7 +68,7 @@ describe('C: Mode - Visual - Simplest setup', () => {
       input,
       cloneDeep(createVimState(input[0], { col: 2, line: 0 }))
     );
-    vimCommandManager.enterVisualTextMode();
+    vimCommandManager.enterVisualMode();
 
     const result = vimCommandManager.executeVimCommand(
       'cursorBackwordsStartWord'
@@ -141,7 +141,7 @@ describe('C: Mode - Visual - Complexer setup', () => {
       input,
       cloneDeep(createVimState(input[0]))
     );
-    vimCommandManager.enterVisualTextMode();
+    vimCommandManager.enterVisualMode();
 
     const result = vimCommandManager.executeVimCommand('visualStartLineWise');
     expect(result).toEqual({
