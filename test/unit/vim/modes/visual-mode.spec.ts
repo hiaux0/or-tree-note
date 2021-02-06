@@ -46,8 +46,10 @@ describe('C: Mode - Visual', () => {
     });
   });
   it('Add cursor data to visual - eb', () => {
-    const vimState = vimCommandManager.executeVimCommand('cursorWordForwardEnd');
-     vimState/*?*/
+    const vimState = vimCommandManager.executeVimCommand(
+      'cursorWordForwardEnd'
+    );
+    vimState; /*?*/
     vimCommandManager.setVimState(vimState);
     const result = vimCommandManager.executeVimCommand(
       'cursorBackwordsStartWord'
@@ -60,6 +62,26 @@ describe('C: Mode - Visual', () => {
       visualStartCursor: { col: 0, line: 0 },
     });
   });
+  it('Add cursor data to visual - b', () => {
+    const input = ['foo'];
+    vimCommandManager = new VimCommandManager(
+      input,
+      cloneDeep(createVimState(input[0], { col: 2, line: 0 }))
+    );
+    vimCommandManager.enterVisualTextMode();
+
+    const result = vimCommandManager.executeVimCommand(
+      'cursorBackwordsStartWord'
+    );
+
+    expect(result).toEqual({
+      cursor: { col: 0, line: 0 },
+      text: 'foo',
+      visualEndCursor: { col: 0, line: 0 },
+      visualStartCursor: { col: 2, line: 0 },
+    });
+  });
+
   describe('#visualInnerWord', () => {
     it('Start of word', () => {
       const result = vimCommandManager.executeVimCommand('visualInnerWord');

@@ -12,7 +12,7 @@ export class VisualMode extends AbstractMode {
     );
 
     newVimState.visualEndCursor = {
-      col: newVimState.cursor.col + this.vimState.visualStartCursor.col,
+      col: newVimState.cursor.col,
       line: newVimState.cursor.line + this.vimState.visualStartCursor.line,
     };
 
