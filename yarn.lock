@@ -1735,7 +1735,7 @@ aurelia-event-aggregator@^1.0.0:
   dependencies:
     aurelia-logging "^1.0.0"
 
-aurelia-framework@^1.0.0, aurelia-framework@^1.3.0:
+aurelia-framework@^1.0.0, aurelia-framework@^1.3.0, aurelia-framework@^1.3.1:
   version "1.3.1"
   resolved "https://registry.yarnpkg.com/aurelia-framework/-/aurelia-framework-1.3.1.tgz#4b309970936fb487677a3ed3b54bc153d3b24f62"
   integrity sha512-eKR+JnrVzYQ372pokHjfw+YfiGpFIO6yGOotGHkeLtIVZcVowX4oYe1HEkDe7/VXU3f6cDILoYkNIwrZUBij0g==
