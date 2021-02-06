@@ -15,7 +15,7 @@ describe('C: Mode - Visual', () => {
     vimCommandManager.enterVisualTextMode();
   });
 
-  it('Add cursor to visual data - 1 cursorRight', () => {
+  it('Add cursor data to visual - 1 cursorRight', () => {
     const result = vimCommandManager.executeVimCommand('cursorRight');
     expect(result).toEqual({
       cursor: { col: 1, line: 0 },
@@ -24,7 +24,7 @@ describe('C: Mode - Visual', () => {
       visualStartCursor: { col: 0, line: 0 },
     });
   });
-  it('Add cursor to visual data - 2 cursorRight', () => {
+  it('Add cursor data to visual - 2 cursorRight', () => {
     vimCommandManager.executeVimCommand('cursorRight');
     const result = vimCommandManager.executeVimCommand('cursorRight');
 
@@ -35,7 +35,7 @@ describe('C: Mode - Visual', () => {
       visualStartCursor: { col: 0, line: 0 },
     });
   });
-  it('Add cursor to visual data - e', () => {
+  it('Add cursor data to visual - e', () => {
     const result = vimCommandManager.executeVimCommand('cursorWordForwardEnd');
 
     expect(result).toEqual({
@@ -45,8 +45,10 @@ describe('C: Mode - Visual', () => {
       visualStartCursor: { col: 0, line: 0 },
     });
   });
-  it('Add cursor to visual data - eb', () => {
-    vimCommandManager.executeVimCommand('cursorWordForwardEnd');
+  it('Add cursor data to visual - eb', () => {
+    const vimState = vimCommandManager.executeVimCommand('cursorWordForwardEnd');
+     vimState/*?*/
+    vimCommandManager.setVimState(vimState);
     const result = vimCommandManager.executeVimCommand(
       'cursorBackwordsStartWord'
     );
