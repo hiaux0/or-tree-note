@@ -8,6 +8,7 @@ const keyBindings = {
     { key: 'i', command: 'enterInsertTextMode' },
     { key: 'k', command: 'cursorUp' },
     { key: 'l', command: 'cursorRight' },
+    { key: 'o', command: 'visualMoveToOtherEndOfMarkedArea' },
     { key: 'u', command: 'cursorDown' },
     { key: 'b', command: 'cursorBackwordsStartWord' }, // jump backwards to the start of a word
     { key: 'e', command: 'cursorWordForwardEnd' },

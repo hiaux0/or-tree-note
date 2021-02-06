@@ -113,6 +113,23 @@ describe('C: Mode - Visual - Simplest setup', () => {
       });
     });
   });
+
+  it('#visualMoveToOtherEndOfMarkedArea', () => {
+    const vimState = vimCommandManager.executeVimCommand(
+      'cursorWordForwardEnd'
+    );
+    vimCommandManager.setVimState(vimState);
+    const result = vimCommandManager.executeVimCommand(
+      'visualMoveToOtherEndOfMarkedArea'
+    );
+
+    expect(result).toEqual({
+      cursor: { col: 0, line: 0 },
+      text: 'foo',
+      visualEndCursor: { col: 0, line: 0 },
+      visualStartCursor: { col: 2, line: 0 },
+    });
+  });
 });
 
 describe('C: Mode - Visual - Complexer setup', () => {

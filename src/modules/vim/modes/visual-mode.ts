@@ -19,6 +19,15 @@ export class VisualMode extends AbstractMode {
     return newVimState;
   }
 
+  visualMoveToOtherEndOfMarkedArea(): VimState {
+    const curCursorCol = this.vimState.cursor.col;
+
+    this.vimState.cursor.col = this.vimState.visualStartCursor.col;
+    this.vimState.visualStartCursor.col = curCursorCol;
+
+    return this.vimState;
+  }
+
   visualInnerWord(): VimState {
     const token = super.getTokenUnderCursor();
     const isAtStartOfWord = token.start === this.vimState.cursor.col;
@@ -38,7 +47,7 @@ export class VisualMode extends AbstractMode {
 
   visualStartLineWise(): VimState {
     this.vimState.visualStartCursor.col = 0;
-    this.vimState.cursor.col = this.vimState.text.length
+    this.vimState.cursor.col = this.vimState.text.length;
 
     return this.vimState;
   }
