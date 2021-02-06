@@ -18,6 +18,8 @@
         <note-line
           line.bind="line"
           editor-line-class.bind="editorLineClass"
+          line-highlight-end.bind="($index === vimState.visualEndCursor.line) && vimState.visualEndCursor.col"
+          line-highlight-start.bind="($index === vimState.visualStartCursor.line) && vimState.visualStartCursor.col"
         ></note-line>
       </template>
 
