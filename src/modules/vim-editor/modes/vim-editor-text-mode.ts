@@ -19,9 +19,7 @@ import { AbstractTextMode } from './abstract-text-mode';
 import { StateHistory, Store } from 'aurelia-store';
 import { VimEditorState } from 'store/initial-state';
 import {
-  changeCursorPosition,
-  changeText,
-  setVimState as changeVimState,
+  changeText, changeVimState,
 } from '../actions/actions-vim-editor';
 import { pluck } from 'rxjs/operators';
 import { VisualTextMode } from './visual-text-mode';
@@ -47,8 +45,6 @@ export class VimEditorTextMode {
     public store: Store<StateHistory<VimEditorState>>
   ) {
     store.registerAction('changeText', changeText);
-    store.registerAction('changeCursorPosition', changeCursorPosition);
-    store.registerAction('changeVimState', changeVimState);
 
     const normalTextMode = new NormalTextMode(
       this.vimEditorOptions.parentHtmlElement,
@@ -193,7 +189,6 @@ export class VimEditorTextMode {
       currentMode[result.targetCommand](result.vimState);
 
       this.store.dispatch(changeVimState, result.vimState);
-      this.store.dispatch(changeCursorPosition, result.vimState.cursor);
 
       ev.preventDefault();
     }

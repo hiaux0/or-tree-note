@@ -13,6 +13,7 @@ import { EditorLine, VimEditorState } from 'store/initial-state';
 import { toggleCheckbox } from 'store/or-tree-notes/actions-or-tree-notes';
 import { Logger } from 'modules/debug/logger';
 import { OTN_STATE as OTN_STATE_KEY } from 'local-storage';
+import { changeVimState } from 'modules/vim-editor/actions/actions-vim-editor';
 
 const logger = new Logger({ scope: 'OrTreeNotes' });
 
@@ -23,7 +24,7 @@ const logger = new Logger({ scope: 'OrTreeNotes' });
       store.state.pipe(pluck('present', 'lines'), distinctUntilChanged()),
     cursorPosition: (store) =>
       store.state.pipe(
-        pluck('present', 'cursorPosition'),
+        pluck('present', 'vimState', 'cursor'),
         distinctUntilChanged()
       ),
     state: (store) => store.state,
@@ -46,6 +47,7 @@ export class OrTreeNotes {
 
   constructor(private store: Store<StateHistory<VimEditorState>>) {
     this.store.registerAction('toggleCheckbox', toggleCheckbox);
+    this.store.registerAction('changeVimState', changeVimState);
   }
 
   attached() {

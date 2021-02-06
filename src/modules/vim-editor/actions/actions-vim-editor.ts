@@ -3,7 +3,7 @@ import produce from 'immer';
 import { Cursor, VimState } from 'modules/vim/vim.types';
 import { VimEditorState } from 'store/initial-state';
 
-export function setVimState(
+export function changeVimState(
   state: StateHistory<VimEditorState>,
   newVimState: VimState
 ) {
@@ -41,22 +41,6 @@ export function createNewLine(
       draftState.lines.splice(newLineIndex, 0, {
         text: newText,
       });
-    })
-  );
-}
-
-/** ********/
-/** Cursor */
-/** ********/
-
-export function changeCursorPosition(
-  state: StateHistory<VimEditorState>,
-  newCursorPosition: Cursor
-) {
-  return nextStateHistory(
-    state,
-    produce(state.present, (draftState) => {
-      draftState.cursorPosition = newCursorPosition;
     })
   );
 }
