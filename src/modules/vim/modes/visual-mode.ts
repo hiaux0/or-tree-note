@@ -18,4 +18,23 @@ export class VisualMode extends AbstractMode {
 
     return newVimState;
   }
+
+  visualInnerWord(): VimState {
+    const token = super.getTokenUnderCursor();
+    const isAtStartOfWord = token.start === this.vimState.cursor.col;
+
+    if (!isAtStartOfWord) {
+      isAtStartOfWord; /*?*/
+      this.vimState.visualStartCursor = {
+        col: token.start,
+        line: this.vimState.cursor.line,
+      };
+      this.vimState.cursor.col = token.start;
+    }
+
+    super.cursorWordForwardEnd()
+
+    return this.vimState;
+  }
+
 }

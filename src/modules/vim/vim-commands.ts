@@ -16,6 +16,8 @@ export const VIM_COMMANDS = [
   "delete",
   "backspace",
   "newLine",
+  //visual
+  "visualInnerWord",
 ] as const;
 export type VimCommandNames = typeof VIM_COMMANDS[number];
 

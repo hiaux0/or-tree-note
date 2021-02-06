@@ -12,6 +12,8 @@ const keyBindings = {
     { key: 'b', command: 'cursorBackwordsStartWord' }, // jump backwards to the start of a word
     { key: 'e', command: 'cursorWordForwardEnd' },
     { key: 'v', command: 'enterVisualTextMode' },
+    { key: 'viw', command: 'visualInnerWord' },
+    { key: 'V', command: 'visualStartLineWise' },
     { key: 'w', command: 'cursorWordForwardStart' },
     { key: '<ArrowLeft>', command: 'cursorLeft' },
     { key: '<ArrowUp>', command: 'cursorUp' },

@@ -47,7 +47,9 @@ describe('C: Mode - Visual', () => {
   });
   it('Add cursor to visual data - eb', () => {
     vimCommandManager.executeVimCommand('cursorWordForwardEnd');
-    const result = vimCommandManager.executeVimCommand('cursorBackwordsStartWord');
+    const result = vimCommandManager.executeVimCommand(
+      'cursorBackwordsStartWord'
+    );
 
     expect(result).toEqual({
       cursor: { col: 0, line: 0 },
@@ -56,4 +58,36 @@ describe('C: Mode - Visual', () => {
       visualStartCursor: { col: 0, line: 0 },
     });
   });
+  describe('#visualInnerWord', () => {
+    it('Start of word', () => {
+      const result = vimCommandManager.executeVimCommand('visualInnerWord');
+      expect(result).toEqual({
+        cursor: { col: 2, line: 0 },
+        text: 'foo',
+        visualEndCursor: { col: 2, line: 0 },
+        visualStartCursor: { col: 0, line: 0 },
+      });
+    });
+    it('Middle of word', () => {
+      vimCommandManager.executeVimCommand('cursorRight');
+      const result = vimCommandManager.executeVimCommand('visualInnerWord');
+      expect(result).toEqual({
+        cursor: { col: 2, line: 0 },
+        text: 'foo',
+        visualEndCursor: { col: 2, line: 0 },
+        visualStartCursor: { col: 0, line: 0 },
+      });
+    });
+    it('End of word', () => {
+      vimCommandManager.executeVimCommand('cursorWordForwardEnd');
+      const result = vimCommandManager.executeVimCommand('visualInnerWord');
+      expect(result).toEqual({
+        cursor: { col: 2, line: 0 },
+        text: 'foo',
+        visualEndCursor: { col: 2, line: 0 },
+        visualStartCursor: { col: 0, line: 0 },
+      });
+    });
+  });
+
 });
