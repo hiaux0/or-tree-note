@@ -4,7 +4,7 @@ import { VimCommandManager } from 'modules/vim/vim-command-manager';
 import { Cursor } from 'modules/vim/vim.types';
 import { createVimState, VIM_TEST_WHOLEINPUT } from 'test/vim-state-utils';
 
-describe('C: Mode - Visual', () => {
+describe('C: Mode - Visual - Simplest setup', () => {
   let vimCommandManager: VimCommandManager;
 
   beforeEach(() => {
@@ -113,6 +113,10 @@ describe('C: Mode - Visual', () => {
       });
     });
   });
+});
+
+describe('C: Mode - Visual - Complexer setup', () => {
+  let vimCommandManager;
 
   it('#visualStartLineWise', () => {
     const input = [' @foo'];
