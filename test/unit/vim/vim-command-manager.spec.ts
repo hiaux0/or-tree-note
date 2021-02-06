@@ -44,7 +44,7 @@ describe("Vim - General", () => {
     it("F: Update cursor on move left", () => {
       const customV = new VimCommandManager(
         cloneDeep(input),
-        createVimState({
+        createVimState(undefined, {
           col: 2,
           line: 0,
         })
@@ -55,7 +55,7 @@ describe("Vim - General", () => {
     it("F: Cursor stays in horizontal boundaries - Right", () => {
       const customV = new VimCommandManager(
         cloneDeep(input),
-        createVimState({
+        createVimState(undefined, {
           col: 3,
           line: 0,
         })
