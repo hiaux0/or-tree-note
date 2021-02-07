@@ -1,8 +1,9 @@
+import { CSS_SELECTORS } from 'src/common/css-selectors';
 import { OTN_STATE } from 'src/local-storage';
 import { VimEditorState } from 'src/store/initial-state';
 
 const initialContent = '012 456';
-const secondContent = 'abcdef 89'
+const secondContent = 'abcdef 89';
 
 describe('VimEditor - Visual', () => {
   context('Visual - 1 line', () => {
@@ -68,8 +69,8 @@ describe('VimEditor - Visual', () => {
             { text: secondContent },
           ],
           vimState: {
-            text: secondContent,
-            cursor: { col: 2, line: 1 },
+            text: initialContent,
+            cursor: { col: 2, line: 0 },
             mode: 'NORMAL',
           },
         };
@@ -87,13 +88,24 @@ describe('VimEditor - Visual', () => {
         cy.vim('v');
 
         cy.get('.editorLine__highlight').should('have.length', 1);
+      });
+    });
+    context('Visual - Line with checkbox', () => {
+      it('Highlight should be offset correctly', () => {
+        cy.vim('v');
+
+        cy.get('.editorLine__highlight').should('have.length', 1);
 
         cy.getCssVar('--caret-size-width').then((caretWidth) => {
-          cy.contains('div', secondContent)
-            .siblings('.editorLine__highlight')
-            .invoke('attr', 'style')
-            .should('contain', `left: ${caretWidth * 2}px`)
-            .should('contain', `width: ${caretWidth * 1}px`);
+          cy.get(`%${CSS_SELECTORS['editor-line']}`).then((editorLine) => {
+            const offsetLeft = editorLine[0].offsetLeft;
+
+            cy.get(`%${CSS_SELECTORS['editor-line']}`)
+              .siblings('.editorLine__highlight')
+              .invoke('attr', 'style')
+              .should('contain', `left: ${(caretWidth * 2) + offsetLeft}px`)
+              .should('contain', `width: ${caretWidth * 1}px`);
+          });
         });
       });
     });
