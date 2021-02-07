@@ -8,6 +8,7 @@ import {
   KeyBindingModes,
   VimExecutingMode,
   VimState,
+  VimMode,
 } from './vim.types';
 import { VimCommandManager } from './vim-command-manager';
 import { cloneDeep } from 'lodash';
@@ -52,6 +53,7 @@ export class Vim {
     const initialVimState: VimState = {
       text: this.lines[this.cursor.line],
       cursor: this.cursor,
+      mode: VimMode.NORMAL
     };
     this.vimCommandManager = new VimCommandManager(
       this.lines,

@@ -62,12 +62,14 @@ export class VimCommandManager {
     logger.debug(['Enter Insert mode']);
     this.activeMode = VimMode.INSERT;
     this.insertMode.reTokenizeInput(this.vimState?.text);
+    this.vimState.mode = VimMode.INSERT;
     return this.vimState;
   }
   enterNormalMode() {
     logger.debug(['Enter Normal mode']);
     this.activeMode = VimMode.NORMAL;
     this.normalMode.reTokenizeInput(this.vimState?.text);
+    this.vimState.mode = VimMode.NORMAL;
     //
     this.potentialCommands = [];
     this.queuedKeys = [];
@@ -80,6 +82,7 @@ export class VimCommandManager {
     logger.debug(['Enter Visual mode']);
     this.activeMode = VimMode.VISUAL;
     this.vimState.visualStartCursor = {...this.vimState.cursor};
+    this.vimState.mode = VimMode.VISUAL;
 
     return this.vimState;
   }
