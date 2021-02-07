@@ -15,6 +15,7 @@ import {
   Cursor,
   VimOptions,
 } from './vim.types';
+import { VisualMode } from './modes/visual-mode';
 
 const logger = new Logger({ scope: 'VimCommandManager' });
 
@@ -25,6 +26,7 @@ export class VimCommandManager {
   activeMode: VimMode = VimMode.NORMAL;
   normalMode: NormalMode;
   insertMode: InsertMode;
+  visualMode: VisualMode;
 
   /** Alias for vimOptions.keyBindings */
   keyBindings: KeyBindingModes;
@@ -43,6 +45,7 @@ export class VimCommandManager {
 
     this.normalMode = new NormalMode(vimState, this.lines, this.vimOptions);
     this.insertMode = new InsertMode(vimState, this.lines, this.vimOptions);
+    this.visualMode = new VisualMode(vimState, this.lines, this.vimOptions);
 
     this.keyBindings = this.vimOptions.keyBindings;
   }
@@ -55,16 +58,36 @@ export class VimCommandManager {
   /** Modes */
   /** *******/
 
-  enterInsertTextMode() {
+  enterInsertMode() {
     logger.debug(['Enter Insert mode']);
     this.activeMode = VimMode.INSERT;
     this.insertMode.reTokenizeInput(this.vimState?.text);
+    this.vimState.mode = VimMode.INSERT;
     return this.vimState;
   }
-  enterNormalTextMode() {
+  enterNormalMode() {
     logger.debug(['Enter Normal mode']);
     this.activeMode = VimMode.NORMAL;
     this.normalMode.reTokenizeInput(this.vimState?.text);
+    this.vimState.mode = VimMode.NORMAL;
+    //
+    this.potentialCommands = [];
+    this.queuedKeys = [];
+    this.vimState.visualEndCursor = undefined;
+    this.vimState.visualStartCursor = undefined;
+
+    return this.vimState;
+  }
+  enterVisualMode() {
+    logger.debug(['Enter Visual mode']);
+    this.activeMode = VimMode.VISUAL;
+    this.vimState.visualStartCursor = {...this.vimState.cursor};
+    this.vimState.visualEndCursor = {
+      col: this.vimState.cursor.col,
+      line: this.vimState.cursor.line
+    };
+    this.vimState.mode = VimMode.VISUAL;
+
     return this.vimState;
   }
   getCurrentMode() {
@@ -72,6 +95,8 @@ export class VimCommandManager {
       return this.normalMode;
     } else if (this.activeMode === VimMode.INSERT) {
       return this.insertMode;
+    } else if (this.activeMode === VimMode.VISUAL) {
+      return this.visualMode;
     }
   }
 
@@ -79,7 +104,7 @@ export class VimCommandManager {
   /** Commands */
   /** **********/
 
-  executeVimCommand<CommandType = any>(
+  executeVimCommand(
     commandName: VimCommandNames,
     commandInput?: string
   ): VimState {
@@ -88,7 +113,7 @@ export class VimCommandManager {
       const vimState = currentMode.executeCommand(
         commandName,
         commandInput
-      ) as CommandType;
+      );
       return vimState;
     } catch (error) {
       const previousState = this.vimState;

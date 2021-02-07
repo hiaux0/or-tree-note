@@ -27,44 +27,44 @@ describe("Vim - General", () => {
 
   describe("C: Modes", () => {
     it("F: Switch to insert mode", () => {
-      vimCommandManager.enterInsertTextMode();
+      vimCommandManager.enterInsertMode();
       expect(vimCommandManager.activeMode).toBe(VimMode.INSERT);
     });
     it("F: Switch to insert mode", () => {
-      vimCommandManager.enterNormalTextMode();
+      vimCommandManager.enterNormalMode();
       expect(vimCommandManager.activeMode).toBe(VimMode.NORMAL);
     });
   });
 
   describe("C: Navigating", () => {
     it("F: Update cursor on move right", () => {
-      const result = vimCommandManager.executeVimCommand<Cursor>("cursorRight");
+      const result = vimCommandManager.executeVimCommand("cursorRight");
       expect(result.cursor.col).toBe(cursor.col + 1);
     });
     it("F: Update cursor on move left", () => {
       const customV = new VimCommandManager(
         cloneDeep(input),
-        createVimState({
+        createVimState(undefined, {
           col: 2,
           line: 0,
         })
       );
-      const result = customV.executeVimCommand<Cursor>("cursorLeft");
+      const result = customV.executeVimCommand("cursorLeft");
       expect(result.cursor.col).toBe(1);
     });
     it("F: Cursor stays in horizontal boundaries - Right", () => {
       const customV = new VimCommandManager(
         cloneDeep(input),
-        createVimState({
+        createVimState(undefined, {
           col: 3,
           line: 0,
         })
       );
-      const result = customV.executeVimCommand<Cursor>("cursorRight");
+      const result = customV.executeVimCommand("cursorRight");
       expect(result.cursor.col).toBe(3);
     });
     it("F: Cursor stays in horizontal boundaries - Left", () => {
-      const result = vimCommandManager.executeVimCommand<Cursor>("cursorLeft");
+      const result = vimCommandManager.executeVimCommand("cursorLeft");
       expect(result.cursor.col).toBe(0);
     });
   });
@@ -79,7 +79,7 @@ describe("C: Mode - Normal", () => {
         cloneDeep(input),
         cloneDeep(createVimState())
       );
-      vimCommandManager.enterNormalTextMode();
+      vimCommandManager.enterNormalMode();
     });
 
     describe("Finding", () => {
@@ -109,7 +109,7 @@ describe("C: Mode - Normal", () => {
             keyBindings,
           }
         );
-        vimCommandManager.enterNormalTextMode();
+        vimCommandManager.enterNormalMode();
       });
       it("F: Find potential sequenced commands - 1 char - (sideeffect)", () => {
         const result = vimCommandManager.findPotentialCommand("f");
@@ -178,7 +178,7 @@ describe("C: Mode - Normal", () => {
               keyBindings,
             }
           );
-          vimCommandManager.enterNormalTextMode();
+          vimCommandManager.enterNormalMode();
           //
           vimCommandManager.getCommandName("f");
           vimCommandManager.getCommandName("o");
@@ -199,7 +199,7 @@ describe("Methods", () => {
       cloneDeep(input),
       cloneDeep(createVimState())
     );
-    vimCommandManager.enterInsertTextMode();
+    vimCommandManager.enterInsertMode();
   });
 
   describe("#splitInputSequence", () => {
@@ -222,7 +222,7 @@ describe("Methods", () => {
       const result = vimCommandManager.findPotentialCommand("Escape");
       expect(result.targetCommand).toEqual({
         key: "<Escape>",
-        command: "enterNormalTextMode",
+        command: "enterNormalMode",
       });
     });
     //
@@ -230,7 +230,7 @@ describe("Methods", () => {
       const result = vimCommandManager.findPotentialCommand("<esc>");
       expect(result.targetCommand).toEqual({
         key: "<Escape>",
-        command: "enterNormalTextMode",
+        command: "enterNormalMode",
       });
     });
   });

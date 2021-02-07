@@ -52,52 +52,8 @@ or-tree-notes {
   .otn-container {
     display: flex;
 
-    .notes-container {
-      height: 50vh;
-      width: 60vw;
-    }
-
-    .debug-mode-container {
-      border: 1px solid black;
-      width: 40vw;
-    }
-  }
-
-  .notes-container {
-    position: relative;
-    border: 1px solid black;
-
-    input[type='checkbox'] {
-      transform: scale(2);
-    }
-
-    .checkbox-label {
-      display: block;
-
-      &.checkbox--checked {
-        .editor-line {
-          text-decoration: line-through;
-          color: #635249;
-        }
-      }
-    }
-
-    .editor-line {
-      white-space: pre;
-      height: $editorLineHeight;
-    }
-
-    #caret {
-      position: absolute;
-      top: 0;
-      left: 0;
-      height: $caretSizeHeight;
-      width: $caretSizeWidth;
-
-      opacity: 0.5;
-      // z-index: -1;
-
-      &.caret-NORMAL {
+    &.mode-NORMAL {
+      #caret {
         border: 1px solid black;
         &.caret-blinking {
           @include caretBlinking(blinkNormal);
@@ -111,14 +67,92 @@ or-tree-notes {
           position: relative;
         }
       }
-
-      &.caret-INSERT {
+    }
+    &.mode-INSERT {
+      #caret {
         background: transparent;
         border-left: $carentWidth solid $caretColor;
         &.caret-blinking {
           @include caretBlinking(blinkInsert);
         }
       }
+    }
+    &.mode-VISUAL {
+      #caret {
+        background: rgba(226, 190, 143, 0.63);
+        border: 1px solid black;
+      }
+    }
+
+    .notes-container {
+      height: 50vh;
+      width: 60vw;
+      position: relative;
+      border: 1px solid black;
+
+      input[type='checkbox'] {
+        transform: scale(2);
+      }
+
+      .checkbox-label {
+        display: block;
+
+        &.checkbox--checked {
+          .editor-line {
+            text-decoration: line-through;
+            color: #635249;
+          }
+        }
+      }
+
+      .editor-line {
+        white-space: pre;
+        height: $editorLineHeight;
+      }
+
+      #caret {
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: $caretSizeHeight;
+        width: $caretSizeWidth;
+
+        opacity: 0.5;
+        // z-index: -1;
+
+        // &.caret-NORMAL {
+        //   border: 1px solid black;
+        //   &.caret-blinking {
+        //     @include caretBlinking(blinkNormal);
+        //   }
+        //   &::after {
+        //     content: '.';
+        //     background: red;
+        //     width: 2px;
+        //     display: block;
+        //     z-index: 2;
+        //     position: relative;
+        //   }
+        // }
+
+        // &.caret-INSERT {
+        //   background: transparent;
+        //   border-left: $carentWidth solid $caretColor;
+        //   &.caret-blinking {
+        //     @include caretBlinking(blinkInsert);
+        //   }
+        // }
+
+        // &.caret-VISUAL {
+        //   background: rgba(226, 190, 143, 0.63);
+        //   border: 1px solid black;
+        // }
+      }
+    }
+
+    .debug-mode-container {
+      border: 1px solid black;
+      width: 40vw;
     }
   }
 }

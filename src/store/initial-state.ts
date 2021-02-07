@@ -1,4 +1,9 @@
-import { Cursor } from 'modules/vim/vim.types';
+import { Cursor, VimState } from 'modules/vim/vim.types';
+
+export interface HighlightCoords {
+  start: number;
+  end: number;
+}
 
 export enum LineMarkup {
   'BOLD',
@@ -41,6 +46,7 @@ export interface LineStage {
 }
 
 export interface EditorLine {
+  lineHighlight?: HighlightCoords;
   text: string;
   markup?: LineMarkup;
   macro?: LineMacro;
@@ -48,7 +54,7 @@ export interface EditorLine {
 
 export interface VimEditorState {
   lines: EditorLine[];
-  cursorPosition?: Cursor;
+  vimState?: VimState;
 }
 
 /**

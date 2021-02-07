@@ -1,20 +1,35 @@
 <template>
   <!-- Default line -->
-  <div
-    if.bind="isDefaultLine(line)"
-    class="${editorLineClass}"
-    data-test="${editorLineClass}"
-    >${line.text}</div
-  >
+  <template if.bind="isDefaultLine(line)">
+    <div class="${editorLineClass}" data-test="${editorLineClass}"
+      >${line.text}</div
+    >
+    <div
+      if.bind="lineHightlight.left && lineHightlight.width"
+      class="editorLine__highlight"
+      css="
+        width: ${lineHightlight.width};
+        left: ${lineHightlight.left};
+      "
+    ></div>
+  </template>
 
   <!-- Checkbox -->
-  <label
-    if.bind="line.macro.checkbox"
-    class="checkbox-label ${line.macro.checkbox.value ? 'checkbox--checked' : ''}"
-  >
-    <input type="checkbox" checked.bind="line.macro.checkbox.value" />
-    <span class="${editorLineClass}" data-test="${editorLineClass}"
-      >${line.text}</span
+  <template if.bind="line.macro.checkbox"
+    ><label
+      class="checkbox-label ${line.macro.checkbox.value ? 'checkbox--checked' : ''}"
     >
-  </label>
+      <input type="checkbox" checked.bind="line.macro.checkbox.value" />
+      <span class="${editorLineClass}" data-test="${editorLineClass}"
+        >${line.text}</span
+      >
+      <div
+        if.bind="lineHightlight.left && lineHightlight.width"
+        class="editorLine__highlight"
+        css="
+          width: ${lineHightlight.width};
+          left: ${lineHightlight.left};
+        "
+      ></div></label
+  ></template>
 </template>

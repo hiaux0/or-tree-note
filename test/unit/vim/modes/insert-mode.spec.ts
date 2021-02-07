@@ -18,12 +18,12 @@ describe("C: Mode - Insert", () => {
 
   describe("C: Typing characters", () => {
     it("F: Update input with typed character", () => {
-      vimCommandManager.enterInsertTextMode();
+      vimCommandManager.enterInsertMode();
       const result = vimCommandManager.executeVimCommand("type", "!");
       expect(result.text).toBe(`!${input[0]}`); // !foo
     });
     it("F: Cursor updated after character input", () => {
-      vimCommandManager.enterInsertTextMode();
+      vimCommandManager.enterInsertMode();
       const result = vimCommandManager.executeVimCommand("type", "!");
       expect(result.cursor).toEqual({ col: 1, line: 0 }); // !foo
     });
@@ -31,12 +31,12 @@ describe("C: Mode - Insert", () => {
 
   describe("C: Deleting characetrs", () => {
     it("F: delete", () => {
-      vimCommandManager.enterInsertTextMode();
+      vimCommandManager.enterInsertMode();
       const result = vimCommandManager.executeVimCommand("delete");
       expect(result).toEqual({ cursor: { col: 0, line: 0 }, text: "oo" });
     });
     it("F: delete all", () => {
-      vimCommandManager.enterInsertTextMode();
+      vimCommandManager.enterInsertMode();
       vimCommandManager.executeVimCommand("delete");
       vimCommandManager.executeVimCommand("delete");
       const result = vimCommandManager.executeVimCommand("delete");
@@ -45,7 +45,7 @@ describe("C: Mode - Insert", () => {
     //
     it("F: backspace", () => {
       vimCommandManager.vimState.cursor = { col: 1, line: 0 };
-      vimCommandManager.enterInsertTextMode();
+      vimCommandManager.enterInsertMode();
       const result = vimCommandManager.executeVimCommand("backspace");
       expect(result).toEqual({ cursor: { col: 0, line: 0 }, text: "oo" });
     });

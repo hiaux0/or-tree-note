@@ -8,9 +8,11 @@ import {
   KeyBindingModes,
   VimExecutingMode,
   VimState,
+  VimMode,
 } from './vim.types';
 import { VimCommandManager } from './vim-command-manager';
 import { cloneDeep } from 'lodash';
+import { VimCommandNames } from './vim-commands';
 
 const logger = new Logger({ scope: 'Vim' });
 
@@ -51,12 +53,14 @@ export class Vim {
     const initialVimState: VimState = {
       text: this.lines[this.cursor.line],
       cursor: this.cursor,
+      mode: VimMode.NORMAL
     };
     this.vimCommandManager = new VimCommandManager(
       this.lines,
       initialVimState,
       finalVimOptions
     );
+    this.vimState = this.vimCommandManager.vimState;
 
     this.verifyValidCursorPosition();
   }
@@ -93,17 +97,19 @@ export class Vim {
     logger.debug(['Received input: %s', input]);
 
     //
-    let targetCommandName;
+    let targetCommandName: VimCommandNames;
     try {
       targetCommandName = this.vimCommandManager.getCommandName(input);
     } catch {}
 
     let vimState: VimState;
 
-    if (targetCommandName === 'enterInsertTextMode') {
-      vimState = this.vimCommandManager.enterInsertTextMode();
-    } else if (targetCommandName === 'enterNormalTextMode') {
-      vimState = this.vimCommandManager.enterNormalTextMode();
+    if (targetCommandName === 'enterInsertMode') {
+      vimState = this.vimCommandManager.enterInsertMode();
+    } else if (targetCommandName === 'enterNormalMode') {
+      vimState = this.vimCommandManager.enterNormalMode();
+    } else if (targetCommandName === 'enterVisualMode') {
+      vimState = this.vimCommandManager.enterVisualMode();
     } else if (targetCommandName === 'newLine') {
       vimState = this.vimCommandManager.newLine();
     } else {
@@ -166,10 +172,10 @@ export class Vim {
   getCurrentMode() {
     return this.vimCommandManager.getCurrentMode();
   }
-  enterInsertTextMode() {
-    return this.vimCommandManager.enterInsertTextMode();
+  enterInsertMode() {
+    return this.vimCommandManager.enterInsertMode();
   }
-  enterNormalTextMode() {
-    return this.vimCommandManager.enterNormalTextMode();
+  enterNormalMode() {
+    return this.vimCommandManager.enterNormalMode();
   }
 }

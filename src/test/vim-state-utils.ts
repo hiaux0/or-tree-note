@@ -1,11 +1,14 @@
 import { Cursor, VimState } from 'modules/vim/vim.types';
 
-const input = ['foo'];
+export const VIM_TEST_WHOLEINPUT = ['foo'];
 const initialCursor = { line: 0, col: 0 };
 
-export function createVimState(cursor: Cursor = initialCursor): VimState {
+export function createVimState(
+  text: string = VIM_TEST_WHOLEINPUT[0],
+  cursor: Cursor = initialCursor
+): VimState {
   return {
-    text: input[0],
+    text,
     cursor,
   };
 }

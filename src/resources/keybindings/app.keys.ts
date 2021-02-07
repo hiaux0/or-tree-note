@@ -92,3 +92,4 @@ export const CURSOR_DOWN = 'u';
 
 // MODES
 export const INSERT_MODE = 'i';
+export const VISUAL_MODE = 'v';

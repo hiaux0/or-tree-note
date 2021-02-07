@@ -1,7 +1,19 @@
 import { StateHistory, nextStateHistory } from 'aurelia-store';
 import produce from 'immer';
-import { Cursor } from 'modules/vim/vim.types';
+import { Cursor, VimState } from 'modules/vim/vim.types';
 import { VimEditorState } from 'store/initial-state';
+
+export function changeVimState(
+  state: StateHistory<VimEditorState>,
+  newVimState: VimState
+) {
+  return nextStateHistory(
+    state,
+    produce(state.present, (draftState) => {
+      draftState.vimState = newVimState;
+    })
+  );
+}
 
 export const changeText = (
   state: StateHistory<VimEditorState>,
@@ -29,22 +41,6 @@ export function createNewLine(
       draftState.lines.splice(newLineIndex, 0, {
         text: newText,
       });
-    })
-  );
-}
-
-/** ********/
-/** Cursor */
-/** ********/
-
-export function changeCursorPosition(
-  state: StateHistory<VimEditorState>,
-  newCursorPosition: Cursor
-) {
-  return nextStateHistory(
-    state,
-    produce(state.present, (draftState) => {
-      draftState.cursorPosition = newCursorPosition;
     })
   );
 }

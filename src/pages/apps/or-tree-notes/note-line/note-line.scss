@@ -1,2 +1,23 @@
+@import '../or-tree-notes';
+
+.otn-container {
+  &.mode-VISUAL {
+    note-line {
+      .editorLine__highlight {
+        position: absolute;
+        top: 0px;
+
+        background: orange;
+        opacity: 0.5;
+        width: 20px;
+        height: 20px;
+      }
+    }
+  }
+}
+
 note-line {
+  position: relative;
+  height: $editorLineHeight;
+  display: block;
 }

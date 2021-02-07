@@ -7,7 +7,7 @@
   <button click.delegate="undo()">Undo</button>
   <button click.delegate="resetStore()">Reset Store</button>
 
-  <div class="otn-container">
+  <div class="otn-container mode-${vimMode}">
     <!-- *** -->
     <!-- OTN -->
     <!-- *** -->
@@ -17,8 +17,12 @@
       <template repeat.for="line of lines">
         <note-line
           line.bind="line"
+          line-index.bind="$index"
           editor-line-class.bind="editorLineClass"
-        ></note-line>
+          caret-element.bind="caretRef"
+          line-highlight-end.bind="vimState.visualEndCursor"
+          line-highlight-start.bind="vimState.visualStartCursor"
+          ></note-line>
       </template>
 
       <!-- Caret -->
