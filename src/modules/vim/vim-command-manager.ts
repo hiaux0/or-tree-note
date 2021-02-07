@@ -3,7 +3,7 @@ import { Logger } from 'modules/debug/logger';
 import { inputContainsSequence } from 'modules/string/string';
 import { SPECIAL_KEYS } from 'resources/keybindings/app.keys';
 import { defaultVimOptions } from './vim';
-import { VimCommandNames, VimCommand } from './vim-commands';
+import { VimCommandNames, VimCommand } from './vim-commands-repository';
 import { NormalMode } from './modes/normal-mode';
 import { InsertMode } from './modes/insert-mode';
 import { VisualMode } from './modes/visual-mode';

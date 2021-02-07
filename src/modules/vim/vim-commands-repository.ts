@@ -1,4 +1,4 @@
-import { ModifiersType } from './../../resources/keybindings/app.keys';
+import { ModifiersType } from '../../resources/keybindings/app.keys';
 
 export const VIM_COMMANDS = [
   "cursorRight",

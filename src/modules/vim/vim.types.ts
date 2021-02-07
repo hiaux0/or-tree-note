@@ -1,4 +1,4 @@
-import { VimCommandNames, VimCommand, SynonymKey } from './vim-commands';
+import { VimCommandNames, VimCommand, SynonymKey } from './vim-commands-repository';
 
 export interface KeyBindingModes {
   normal: VimCommand[];

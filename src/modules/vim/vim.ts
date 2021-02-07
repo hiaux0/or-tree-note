@@ -12,7 +12,7 @@ import {
 } from './vim.types';
 import { VimCommandManager } from './vim-command-manager';
 import { cloneDeep } from 'lodash';
-import { VimCommandNames } from './vim-commands';
+import { VimCommandNames } from './vim-commands-repository';
 
 const logger = new Logger({ scope: 'Vim' });
 
