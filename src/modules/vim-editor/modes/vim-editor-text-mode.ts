@@ -139,7 +139,6 @@ export class VimEditorTextMode {
   }
 
   executeCommandInEditor(input: string, ev: KeyboardEvent) {
-    logger.bug('executeCommandInEditor');
     //
     const result = this.vim.queueInput(input);
     logger.debug(['Received result from vim: %o', result], {
@@ -149,10 +148,6 @@ export class VimEditorTextMode {
     //
     const currentMode = this.getCurrentTextMode();
 
-    console.log(
-      'TCL: VimEditorTextMode -> executeCommandInEditor -> result',
-      result
-    );
     if (result === null) {
       return;
     }
