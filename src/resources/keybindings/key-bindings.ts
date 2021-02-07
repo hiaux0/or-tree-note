@@ -1,5 +1,9 @@
 // Naming based on https://vim.rtorr.com/
 
+const commandsAllModes = [
+  { key: '<Escape>', command: 'enterNormalMode' },
+]
+
 const cursorAllModes = [
   { key: '<ArrowLeft>', command: 'cursorLeft' },
   { key: '<ArrowUp>', command: 'cursorUp' },
@@ -30,20 +34,21 @@ const keyBindings = {
     { key: '<Control>]', command: 'indentRight' },
     { key: '<Control>[', command: 'indentLeft' },
     { key: '<Enter>', command: 'newLine' },
+    ...commandsAllModes,
     ...cursorAllModes,
     ...cursorNormalAndVisual,
   ],
   insert: [
-    { key: '<Escape>', command: 'enterNormalMode' },
     { key: '<Backspace>', command: 'backspace' },
     { key: '<Delete>', command: 'delete' },
     { key: '<Shift>', command: 'shift' },
+    ...commandsAllModes,
     ...cursorAllModes,
   ],
   visual: [
-    { key: '<Escape>', command: 'enterNormalMode' },
     { key: 'iw', command: 'visualInnerWord' },
     { key: 'o', command: 'visualMoveToOtherEndOfMarkedArea' },
+    ...commandsAllModes,
     ...cursorAllModes,
     ...cursorNormalAndVisual,
   ],
