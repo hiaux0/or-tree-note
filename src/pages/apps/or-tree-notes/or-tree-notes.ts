@@ -1,5 +1,4 @@
 import { CSS_SELECTORS } from './../../../common/css-selectors';
-import { initialVimEditorState } from './../../../store/initial-state';
 import { Store, jump, connectTo, StateHistory } from 'aurelia-store';
 import { autoinject } from 'aurelia-dependency-injection';
 import { distinctUntilChanged, pluck } from 'rxjs/operators';
@@ -17,7 +16,7 @@ import {
 import { EditorLine, VimEditorState } from 'store/initial-state';
 import { toggleCheckbox } from 'store/or-tree-notes/actions-or-tree-notes';
 import { Logger } from 'modules/debug/logger';
-import { OTN_STATE as OTN_STATE_KEY } from 'local-storage';
+import { CURRENT_OTN_MODE } from 'local-storage';
 import { changeVimState } from 'modules/vim-editor/actions/actions-vim-editor';
 
 const logger = new Logger({ scope: 'OrTreeNotes' });
@@ -106,8 +105,9 @@ export class OrTreeNotes {
   saveToLocalStorage() {
     try {
       const currentState = JSON.stringify(this.state.present);
+      const currentMode = window.localStorage.getItem(CURRENT_OTN_MODE);
 
-      window.localStorage.setItem(OTN_STATE_KEY, currentState);
+      window.localStorage.setItem(currentMode, currentState);
     } catch (error) {
       console.warn(error);
     }
@@ -124,11 +124,5 @@ export class OrTreeNotes {
     this.store.dispatch(jump, -1);
   }
 
-  resetStore() {
-    window.localStorage.setItem(
-      OTN_STATE_KEY,
-      JSON.stringify(initialVimEditorState)
-    );
-    window.location.reload();
-  }
+
 }
