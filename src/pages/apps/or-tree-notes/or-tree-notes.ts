@@ -35,6 +35,7 @@ declare global {
     lines: (store) =>
       store.state.pipe(pluck('present', 'lines'), distinctUntilChanged()),
     vimState: (store) => store.state.pipe(pluck('present', 'vimState'), distinctUntilChanged()),
+    vimMode: (store) => store.state.pipe(pluck('present', 'vimState', 'mode'), distinctUntilChanged()),
     cursorPosition: (store) =>
       store.state.pipe(
         pluck('present', 'vimState', 'cursor'),
@@ -99,7 +100,7 @@ export class OrTreeNotes {
     this.vimEditor = rootContainer.get(VimEditor);
     this.currentModeName = this.vimEditor.getMode();
 
-    // this.store.dispatch('changeVimState', this.vimEditor.vim.vimState);
+    this.store.dispatch('changeVimState', this.vimEditor.vim.vimState);
   }
 
   saveToLocalStorage() {

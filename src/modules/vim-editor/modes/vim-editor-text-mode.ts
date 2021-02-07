@@ -18,9 +18,7 @@ import { InsertTextMode } from './insert-text-mode';
 import { AbstractTextMode } from './abstract-text-mode';
 import { StateHistory, Store } from 'aurelia-store';
 import { VimEditorState } from 'store/initial-state';
-import {
-  changeText, changeVimState,
-} from '../actions/actions-vim-editor';
+import { changeText, changeVimState } from '../actions/actions-vim-editor';
 import { pluck } from 'rxjs/operators';
 import { VisualTextMode } from './visual-text-mode';
 
@@ -131,37 +129,6 @@ export class VimEditorTextMode {
         isOnlyGroup: true,
       });
 
-      //
-      if (
-        pressedKey === INSERT_MODE &&
-        this.vim.getCurrentMode().currentMode === VimMode.NORMAL
-      ) {
-        this.vimEditorOptions.caretElements[0].classList.remove(
-          CARET_NORMAL_CLASS
-        );
-        this.vimEditorOptions.caretElements[0].classList.add(
-          CARET_INSERT_CLASS
-        );
-      } else if (
-        pressedKey === VISUAL_MODE &&
-        this.vim.getCurrentMode().currentMode === VimMode.NORMAL
-      ) {
-        this.vimEditorOptions.caretElements[0].classList.remove(
-          CARET_NORMAL_CLASS
-        );
-        this.vimEditorOptions.caretElements[0].classList.add(
-          CARET_VISUAL_CLASS
-        );
-      } else if (pressedKey === ESCAPE) {
-        this.vimEditorOptions.caretElements[0].classList.remove(
-          CARET_INSERT_CLASS,
-          CARET_VISUAL_CLASS
-        );
-        this.vimEditorOptions.caretElements[0].classList.add(
-          CARET_NORMAL_CLASS
-        );
-      }
-
       this.executeCommandInEditor(pressedKey, ev);
     });
   }
@@ -172,6 +139,7 @@ export class VimEditorTextMode {
   }
 
   executeCommandInEditor(input: string, ev: KeyboardEvent) {
+    logger.bug('executeCommandInEditor');
     //
     const result = this.vim.queueInput(input);
     logger.debug(['Received result from vim: %o', result], {
@@ -181,17 +149,20 @@ export class VimEditorTextMode {
     //
     const currentMode = this.getCurrentTextMode();
 
+    console.log(
+      'TCL: VimEditorTextMode -> executeCommandInEditor -> result',
+      result
+    );
     if (result === null) {
       return;
     }
 
     if (currentMode[result?.targetCommand]) {
       currentMode[result.targetCommand](result.vimState);
-
-      this.store.dispatch(changeVimState, result.vimState);
-
       ev.preventDefault();
     }
+
+    this.store.dispatch(changeVimState, result.vimState);
   }
 
   executeCommandSequenceInEditor(inputSequence: string | string[]) {

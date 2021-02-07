@@ -52,6 +52,38 @@ or-tree-notes {
   .otn-container {
     display: flex;
 
+    &.mode-NORMAL {
+      #caret {
+        border: 1px solid black;
+        &.caret-blinking {
+          @include caretBlinking(blinkNormal);
+        }
+        &::after {
+          content: '.';
+          background: red;
+          width: 2px;
+          display: block;
+          z-index: 2;
+          position: relative;
+        }
+      }
+    }
+    &.mode-INSERT {
+      #caret {
+        background: transparent;
+        border-left: $carentWidth solid $caretColor;
+        &.caret-blinking {
+          @include caretBlinking(blinkInsert);
+        }
+      }
+    }
+    &.mode-VISUAL {
+      #caret {
+        background: rgba(226, 190, 143, 0.63);
+        border: 1px solid black;
+      }
+    }
+
     .notes-container {
       height: 50vh;
       width: 60vw;
@@ -88,33 +120,33 @@ or-tree-notes {
         opacity: 0.5;
         // z-index: -1;
 
-        &.caret-NORMAL {
-          border: 1px solid black;
-          &.caret-blinking {
-            @include caretBlinking(blinkNormal);
-          }
-          &::after {
-            content: '.';
-            background: red;
-            width: 2px;
-            display: block;
-            z-index: 2;
-            position: relative;
-          }
-        }
+        // &.caret-NORMAL {
+        //   border: 1px solid black;
+        //   &.caret-blinking {
+        //     @include caretBlinking(blinkNormal);
+        //   }
+        //   &::after {
+        //     content: '.';
+        //     background: red;
+        //     width: 2px;
+        //     display: block;
+        //     z-index: 2;
+        //     position: relative;
+        //   }
+        // }
 
-        &.caret-INSERT {
-          background: transparent;
-          border-left: $carentWidth solid $caretColor;
-          &.caret-blinking {
-            @include caretBlinking(blinkInsert);
-          }
-        }
+        // &.caret-INSERT {
+        //   background: transparent;
+        //   border-left: $carentWidth solid $caretColor;
+        //   &.caret-blinking {
+        //     @include caretBlinking(blinkInsert);
+        //   }
+        // }
 
-        &.caret-VISUAL {
-          background: rgba(226, 190, 143, 0.63);
-          border: 1px solid black;
-        }
+        // &.caret-VISUAL {
+        //   background: rgba(226, 190, 143, 0.63);
+        //   border: 1px solid black;
+        // }
       }
     }
 
