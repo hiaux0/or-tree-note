@@ -54,7 +54,6 @@ export interface EditorLine {
 
 export interface VimEditorState {
   lines: EditorLine[];
-  cursorPosition?: Cursor;
   vimState?: VimState;
 }
 

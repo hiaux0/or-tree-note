@@ -4,9 +4,14 @@
     <div class="${editorLineClass}" data-test="${editorLineClass}"
       >${line.text}</div
     >
-    <div class="editorLine__highlight" css="width: ${lineHightlightWidth};"
-      ></div
-    >
+    <div
+      if.bind="lineHightlight.left && lineHightlight.width"
+      class="editorLine__highlight"
+      css="
+        width: ${lineHightlight.width};
+        left: ${lineHightlight.left};
+      "
+    ></div>
   </template>
 
   <!-- Checkbox -->
@@ -18,9 +23,13 @@
       <span class="${editorLineClass}" data-test="${editorLineClass}"
         >${line.text}</span
       >
-      <div class="editorLine__highlight" css="width: ${lineHightlightWidth};"
-        ></div
-      >
-    </label></template
-  >
+      <div
+        if.bind="lineHightlight.left && lineHightlight.width"
+        class="editorLine__highlight"
+        css="
+          width: ${lineHightlight.width};
+          left: ${lineHightlight.left};
+        "
+      ></div></label
+  ></template>
 </template>

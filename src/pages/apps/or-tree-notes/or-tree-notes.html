@@ -17,10 +17,12 @@
       <template repeat.for="line of lines">
         <note-line
           line.bind="line"
+          line-index.bind="$index"
           editor-line-class.bind="editorLineClass"
-          line-highlight-end.bind="($index === vimState.visualEndCursor.line) && vimState.visualEndCursor.col"
-          line-highlight-start.bind="($index === vimState.visualStartCursor.line) && vimState.visualStartCursor.col"
-        ></note-line>
+          caret-element.bind="caretRef"
+          line-highlight-end.bind="vimState.visualEndCursor"
+          line-highlight-start.bind="vimState.visualStartCursor"
+          ></note-line>
       </template>
 
       <!-- Caret -->
