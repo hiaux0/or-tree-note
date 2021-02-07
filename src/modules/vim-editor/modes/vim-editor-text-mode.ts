@@ -88,7 +88,7 @@ export class VimEditorTextMode {
 
   initVim() {
     this.store.state
-      .pipe(pluck('present', 'cursorPosition'), take(1))
+      .pipe(pluck('present', 'vimState', 'cursor'), take(1))
       .subscribe((cursorPosition) => {
         const startCursor: Cursor = { col: 0, line: 0 };
         const shouldCursor = cursorPosition || startCursor;
