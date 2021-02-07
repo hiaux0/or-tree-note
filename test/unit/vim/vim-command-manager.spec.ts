@@ -1,10 +1,8 @@
 import { VimCommandManager } from "modules/vim/vim-command-manager";
 import { cloneDeep, map } from "lodash";
 import {
-  Cursor,
   KeyBindingModes,
   VimMode,
-  VimState,
 } from "modules/vim/vim.types";
 import { createVimState } from "test/vim-state-utils";
 
@@ -99,7 +97,6 @@ describe("C: Mode - Normal", () => {
               command: "cursorDown",
             },
           ],
-          insert: [],
           synonyms: {},
         };
         vimCommandManager = new VimCommandManager(
@@ -168,7 +165,6 @@ describe("C: Mode - Normal", () => {
                 command: "cursorDown",
               },
             ],
-            insert: [],
             synonyms: {},
           };
           vimCommandManager = new VimCommandManager(

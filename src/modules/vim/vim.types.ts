@@ -1,9 +1,7 @@
-import { InsertTextModeKeybindings } from './modes/insert-mode-commands';
 import { VimCommandNames, VimCommand, SynonymKey } from './vim-commands';
 
 export interface KeyBindingModes {
   normal: VimCommand[];
-  insert: InsertTextModeKeybindings[];
   synonyms: SynonymKey;
 }
 

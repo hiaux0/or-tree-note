@@ -6,12 +6,9 @@ import { VimEditorOptions } from '../vim-editor';
 import hotkeys from 'hotkeys-js';
 import { Logger } from 'modules/debug/logger';
 import {
-  ESCAPE,
-  INSERT_MODE,
   MODIFIERS,
   ModifiersType,
   SPACE,
-  VISUAL_MODE,
 } from 'resources/keybindings/app.keys';
 import { NormalTextMode } from './normal-text-mode';
 import { InsertTextMode } from './insert-text-mode';
@@ -23,10 +20,6 @@ import { pluck } from 'rxjs/operators';
 import { VisualTextMode } from './visual-text-mode';
 
 const logger = new Logger({ scope: 'VimEditorTextMode' });
-
-const CARET_NORMAL_CLASS = 'caret-NORMAL';
-const CARET_INSERT_CLASS = 'caret-INSERT';
-const CARET_VISUAL_CLASS = 'caret-VISUAL';
 
 export class VimEditorTextMode {
   childrenElementList: NodeListOf<HTMLElement>;

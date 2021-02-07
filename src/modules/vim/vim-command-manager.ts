@@ -4,8 +4,9 @@ import { inputContainsSequence } from 'modules/string/string';
 import { SPECIAL_KEYS } from 'resources/keybindings/app.keys';
 import { defaultVimOptions } from './vim';
 import { VimCommandNames, VimCommand } from './vim-commands';
-import { NormalMode } from 'modules/vim/modes/normal-mode';
-import { InsertMode } from 'modules/vim/modes/insert-mode';
+import { NormalMode } from './modes/normal-mode';
+import { InsertMode } from './modes/insert-mode';
+import { VisualMode } from './modes/visual-mode';
 import {
   VimState,
   FindPotentialCommandReturn,
@@ -15,7 +16,6 @@ import {
   Cursor,
   VimOptions,
 } from './vim.types';
-import { VisualMode } from './modes/visual-mode';
 
 const logger = new Logger({ scope: 'VimCommandManager' });
 
