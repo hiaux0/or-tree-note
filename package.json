@@ -17,6 +17,7 @@
     "rxjs": "^6.6.3"
   },
   "devDependencies": {
+    "@code-dependency/cli": "^0.5.0",
     "@cypress/webpack-preprocessor": "^4.1.2",
     "@types/jasmine": "^3.5.7",
     "@types/lodash": "^4.14.149",
@@ -85,7 +86,8 @@
     "analyze": "webpack --env.production --analyze",
     "test": "au test",
     "e2e": "au cypress",
-    "e2e:headless": "au cypress --start --run"
+    "e2e:headless": "au cypress --start --run",
+		"start:depTree": "./node_modules/.bin/code-dependency --exclude 'node_modules' --source ./_code-dep"
   },
   "engines": {
     "node": ">=8.9.0"
