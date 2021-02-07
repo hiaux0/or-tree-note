@@ -82,6 +82,10 @@ export class VimCommandManager {
     logger.debug(['Enter Visual mode']);
     this.activeMode = VimMode.VISUAL;
     this.vimState.visualStartCursor = {...this.vimState.cursor};
+    this.vimState.visualEndCursor = {
+      col: this.vimState.cursor.col,
+      line: this.vimState.cursor.line
+    };
     this.vimState.mode = VimMode.VISUAL;
 
     return this.vimState;
