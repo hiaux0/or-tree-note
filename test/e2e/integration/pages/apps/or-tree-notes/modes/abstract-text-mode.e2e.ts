@@ -1,5 +1,5 @@
 import { CSS_SELECTORS } from 'src/common/css-selectors';
-import { OTN_STATE } from "src/local-storage";
+import { OTN_STATE_KEY } from "src/local-storage";
 
 const firstLine = "012 456";
 const secondLine = "0ab def";
@@ -17,7 +17,7 @@ describe("[abstract-text-mode] Commands", () => {
           },
         ],
       });
-      window.localStorage.setItem(OTN_STATE, initialTestState);
+      window.localStorage.setItem(OTN_STATE_KEY, initialTestState);
     });
     cy.visit("#/apps");
   });

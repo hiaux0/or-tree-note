@@ -1,4 +1,4 @@
-import { OTN_STATE } from 'src/local-storage';
+import { OTN_STATE_KEY } from 'src/local-storage';
 
 const initialContent = "012 456";
 
@@ -13,7 +13,7 @@ describe("Aurelia skeleton app", () => {
           },
         ],
       });
-      window.localStorage.setItem(OTN_STATE, initialTestState);
+      window.localStorage.setItem(OTN_STATE_KEY, initialTestState);
     });
     cy.visit("#/apps");
   });

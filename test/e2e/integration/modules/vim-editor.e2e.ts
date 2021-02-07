@@ -1,5 +1,5 @@
 import { CSS_SELECTORS } from 'src/common/css-selectors';
-import { OTN_STATE } from 'src/local-storage';
+import { OTN_STATE_KEY } from 'src/local-storage';
 import { VimEditorState } from 'src/store/initial-state';
 
 const initialContent = '012 456';
@@ -18,7 +18,7 @@ describe('VimEditor - Visual', () => {
           },
         };
         window.localStorage.setItem(
-          OTN_STATE,
+          OTN_STATE_KEY,
           JSON.stringify(initialTestState)
         );
       });
@@ -76,7 +76,7 @@ describe('VimEditor - Visual', () => {
         };
 
         window.localStorage.setItem(
-          OTN_STATE,
+          OTN_STATE_KEY,
           JSON.stringify(initialTestState)
         );
       });
