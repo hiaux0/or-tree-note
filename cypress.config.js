@@ -11,6 +11,7 @@ module.exports = {
     pluginsFile: 'test/e2e/plugins/index.js',
     screenshotsFolder: 'test/e2e/screenshots',
     supportFile: 'test/e2e/support/index.ts',
-    videosFolder: 'test/e2e/videos'
+    videosFolder: 'test/e2e/videos',
+    experimentalStudio: true
   }
 };
