@@ -1,6 +1,9 @@
-import { SPACE } from './../../resources/keybindings/app.keys';
-import { Logger } from './../debug/logger';
-import keyBindingsJson from '../../resources/keybindings/key-bindings';
+import { cloneDeep } from 'lodash';
+
+import { SPACE } from 'resources/keybindings/app.keys';
+import keyBindingsJson from 'resources/keybindings/key-bindings';
+import { Logger } from 'modules/debug/logger';
+
 import {
   VimOptions,
   Cursor,
@@ -11,7 +14,6 @@ import {
   VimMode,
 } from './vim.types';
 import { VimCommandManager } from './vim-command-manager';
-import { cloneDeep } from 'lodash';
 import { VimCommandNames } from './vim-commands-repository';
 
 const logger = new Logger({ scope: 'Vim' });

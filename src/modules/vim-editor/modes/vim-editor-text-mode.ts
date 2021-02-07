@@ -1,23 +1,24 @@
-import { take } from 'rxjs/operators';
 import 'aurelia-polyfills';
+import { StateHistory, Store } from 'aurelia-store';
+import { pluck, take } from 'rxjs/operators';
+import hotkeys from 'hotkeys-js';
+
 import { Vim } from 'modules/vim/vim';
 import { Cursor, VimMode } from 'modules/vim/vim.types';
-import { VimEditorOptions } from '../vim-editor';
-import hotkeys from 'hotkeys-js';
 import { Logger } from 'modules/debug/logger';
 import {
   MODIFIERS,
   ModifiersType,
   SPACE,
 } from 'resources/keybindings/app.keys';
+import { VimEditorState } from 'store/initial-state';
+
+import { AbstractTextMode } from './abstract-text-mode';
 import { NormalTextMode } from './normal-text-mode';
 import { InsertTextMode } from './insert-text-mode';
-import { AbstractTextMode } from './abstract-text-mode';
-import { StateHistory, Store } from 'aurelia-store';
-import { VimEditorState } from 'store/initial-state';
-import { changeText, changeVimState } from '../actions/actions-vim-editor';
-import { pluck } from 'rxjs/operators';
 import { VisualTextMode } from './visual-text-mode';
+import { VimEditorOptions } from '../vim-editor';
+import { changeText, changeVimState } from '../actions/actions-vim-editor';
 
 const logger = new Logger({ scope: 'VimEditorTextMode' });
 

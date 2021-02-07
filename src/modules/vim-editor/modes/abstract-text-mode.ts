@@ -1,15 +1,16 @@
 import { inject } from 'aurelia-dependency-injection';
-import { rootContainer } from 'modules/root-container';
-import { VimState } from '../../vim/vim.types';
-import { Logger } from 'modules/debug/logger';
-import { Cursor } from 'modules/vim/vim.types';
+import { StateHistory, Store } from 'aurelia-store';
+
 import {
   getComputedValueFromPixelString,
   getCssVar,
-} from '../../css/css-variables';
-import { ChildrenMutationObserver } from './children-mutation-observer';
-import { StateHistory, Store } from 'aurelia-store';
+} from 'modules/css/css-variables';
+import { Logger } from 'modules/debug/logger';
+import { rootContainer } from 'modules/root-container';
+import { Cursor, VimState } from 'modules/vim/vim.types';
 import { VimEditorState } from 'store/initial-state';
+
+import { ChildrenMutationObserver } from './children-mutation-observer';
 import { createNewLine, changeText } from '../actions/actions-vim-editor';
 
 const logger = new Logger({ scope: 'AbstractTextMode' });

@@ -1,12 +1,14 @@
-import { CSS_SELECTORS } from './../../../common/css-selectors';
+import { bindable } from 'aurelia-framework';
 import { Store, jump, connectTo, StateHistory } from 'aurelia-store';
 import { autoinject } from 'aurelia-dependency-injection';
 import { distinctUntilChanged, pluck } from 'rxjs/operators';
-import { VimEditor, VimEditorOptions } from 'modules/vim-editor/vim-editor';
-import { bindable } from 'aurelia-framework';
-import './or-tree-notes.scss';
+
+import { CSS_SELECTORS } from 'common/css-selectors';
+import { Logger } from 'modules/debug/logger';
 import { rootContainer } from 'modules/root-container';
+import { VimEditor, VimEditorOptions } from 'modules/vim-editor/vim-editor';
 import { VimEditorTextMode } from 'modules/vim-editor/modes/vim-editor-text-mode';
+import { changeVimState } from 'modules/vim-editor/actions/actions-vim-editor';
 import {
   VimMode,
   VimExecutingMode,
@@ -15,9 +17,9 @@ import {
 } from 'modules/vim/vim.types';
 import { EditorLine, VimEditorState } from 'store/initial-state';
 import { toggleCheckbox } from 'store/or-tree-notes/actions-or-tree-notes';
-import { Logger } from 'modules/debug/logger';
 import { CURRENT_OTN_MODE } from 'local-storage';
-import { changeVimState } from 'modules/vim-editor/actions/actions-vim-editor';
+
+import './or-tree-notes.scss';
 
 const logger = new Logger({ scope: 'OrTreeNotes' });
 

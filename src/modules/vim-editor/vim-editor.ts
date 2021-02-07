@@ -1,6 +1,8 @@
 import { inject } from 'aurelia-dependency-injection';
+
 import { Vim } from 'modules/vim/vim';
 import { VimExecutingMode, VimPlugin } from 'modules/vim/vim.types';
+
 import { VimEditorTextMode } from './modes/vim-editor-text-mode';
 
 export interface VimEditorOptions {

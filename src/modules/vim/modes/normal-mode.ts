@@ -1,7 +1,7 @@
 import { Logger } from 'modules/debug/logger';
 import { VimCommandNames } from '../vim-commands-repository';
 import { VimState, VimMode } from '../vim.types';
-import { AbstractMode, TokenizedString } from './abstract-mode';
+import { AbstractMode } from './abstract-mode';
 
 const logger = new Logger({ scope: 'NormalMode' });
 
@@ -14,6 +14,4 @@ export class NormalMode extends AbstractMode {
   ): VimState {
     return super.executeCommand(commandName, commandValue, this.currentMode);
   }
-
-
 }

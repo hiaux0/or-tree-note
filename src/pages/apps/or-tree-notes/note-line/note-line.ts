@@ -1,12 +1,14 @@
 import { inject } from 'aurelia-dependency-injection';
 import { computedFrom } from 'aurelia-framework';
-import { EditorLine } from 'store/initial-state';
 import { bindable } from 'aurelia-framework';
-import './note-line.scss';
+
+import { CSS_SELECTORS } from 'common/css-selectors';
 import { Logger } from 'modules/debug/logger';
 import { getCssVar } from 'modules/css/css-variables';
 import { Cursor } from 'modules/vim/vim.types';
-import { CSS_SELECTORS } from 'common/css-selectors';
+import { EditorLine } from 'store/initial-state';
+
+import './note-line.scss';
 
 const logger = new Logger({ scope: 'NoteLine' });
 
@@ -50,7 +52,9 @@ export class NoteLine {
       };
     }
 
-    const editorLine = this.element.querySelector<HTMLElement>(`.${CSS_SELECTORS['editor-line']}`)
+    const editorLine = this.element.querySelector<HTMLElement>(
+      `.${CSS_SELECTORS['editor-line']}`
+    );
 
     const minCol = Math.min(endCol, startCol);
     // + 1: initial v already is "1"
@@ -58,7 +62,9 @@ export class NoteLine {
     const caretSizeWidth = getCssVar('--caret-size-width');
 
     const width = `${Math.abs(diffCol * caretSizeWidth).toFixed(2)}px`;
-    const left = `${(minCol * caretSizeWidth + editorLine.offsetLeft).toFixed(2)}px`;
+    const left = `${(minCol * caretSizeWidth + editorLine.offsetLeft).toFixed(
+      2
+    )}px`;
 
     this.cachedEndCol = endCol;
     this.cachedStartCol = startCol;
