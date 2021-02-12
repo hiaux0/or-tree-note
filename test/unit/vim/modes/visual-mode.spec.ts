@@ -160,4 +160,18 @@ describe('C: Mode - Visual - Complexer setup', () => {
       visualEndCursor: { col: 5, line: 0 },
     });
   });
+
+  it('Visual#visualInnerWord - uviw', () => {
+    const input = ['foo', '012345'];
+    const vim = new Vim(cloneDeep(input), createVimState(input[0]).cursor);
+    const result = vim.queueInputSequence('uviw').pop();
+
+    expect(result.vimState).toEqual({
+      mode: VimMode.VISUAL,
+      cursor: { col: 5, line: 1 },
+      text: input[1],
+      visualStartCursor: { col: 0, line: 1 },
+      visualEndCursor: { col: 5, line: 1 },
+    });
+  });
 });
