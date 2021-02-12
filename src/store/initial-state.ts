@@ -72,15 +72,15 @@ export interface VimEditorState {
 export const initialVimEditorState: VimEditorState = {
   lines: [
     {
+      text: 'abcdef 89',
+    },
+    {
       text: '012 456',
       macro: {
         checkbox: {
           value: true,
         },
       },
-    },
-    {
-      text: 'abcdef 89',
     },
   ],
 };
