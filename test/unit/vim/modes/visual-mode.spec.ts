@@ -1,7 +1,7 @@
 import { cloneDeep } from 'lodash';
 import { Vim } from 'modules/vim/vim';
 import { VimCommandManager } from 'modules/vim/vim-command-manager';
-import { Cursor } from 'modules/vim/vim.types';
+import { Cursor, VimMode } from 'modules/vim/vim.types';
 import { createVimState, VIM_TEST_WHOLEINPUT } from 'test/vim-state-utils';
 
 describe('C: Mode - Visual - Simplest setup', () => {
@@ -18,6 +18,7 @@ describe('C: Mode - Visual - Simplest setup', () => {
   it('Add cursor data to visual - 1 cursorRight', () => {
     const result = vimCommandManager.executeVimCommand('cursorRight');
     expect(result).toEqual({
+      mode: VimMode.VISUAL,
       cursor: { col: 1, line: 0 },
       text: 'foo',
       visualEndCursor: { col: 1, line: 0 },
@@ -29,6 +30,7 @@ describe('C: Mode - Visual - Simplest setup', () => {
     const result = vimCommandManager.executeVimCommand('cursorRight');
 
     expect(result).toEqual({
+      mode: VimMode.VISUAL,
       cursor: { col: 2, line: 0 },
       text: 'foo',
       visualEndCursor: { col: 2, line: 0 },
@@ -39,6 +41,7 @@ describe('C: Mode - Visual - Simplest setup', () => {
     const result = vimCommandManager.executeVimCommand('cursorWordForwardEnd');
 
     expect(result).toEqual({
+      mode: VimMode.VISUAL,
       cursor: { col: 2, line: 0 },
       text: 'foo',
       visualEndCursor: { col: 2, line: 0 },
@@ -49,13 +52,13 @@ describe('C: Mode - Visual - Simplest setup', () => {
     const vimState = vimCommandManager.executeVimCommand(
       'cursorWordForwardEnd'
     );
-    vimState; /*?*/
     vimCommandManager.setVimState(vimState);
     const result = vimCommandManager.executeVimCommand(
       'cursorBackwordsStartWord'
     );
 
     expect(result).toEqual({
+      mode: VimMode.VISUAL,
       cursor: { col: 0, line: 0 },
       text: 'foo',
       visualEndCursor: { col: 0, line: 0 },
@@ -75,6 +78,7 @@ describe('C: Mode - Visual - Simplest setup', () => {
     );
 
     expect(result).toEqual({
+      mode: VimMode.VISUAL,
       cursor: { col: 0, line: 0 },
       text: 'foo',
       visualEndCursor: { col: 0, line: 0 },
@@ -86,6 +90,7 @@ describe('C: Mode - Visual - Simplest setup', () => {
     it('Start of word', () => {
       const result = vimCommandManager.executeVimCommand('visualInnerWord');
       expect(result).toEqual({
+        mode: VimMode.VISUAL,
         cursor: { col: 2, line: 0 },
         text: 'foo',
         visualEndCursor: { col: 2, line: 0 },
@@ -96,6 +101,7 @@ describe('C: Mode - Visual - Simplest setup', () => {
       vimCommandManager.executeVimCommand('cursorRight');
       const result = vimCommandManager.executeVimCommand('visualInnerWord');
       expect(result).toEqual({
+        mode: VimMode.VISUAL,
         cursor: { col: 2, line: 0 },
         text: 'foo',
         visualEndCursor: { col: 2, line: 0 },
@@ -106,6 +112,7 @@ describe('C: Mode - Visual - Simplest setup', () => {
       vimCommandManager.executeVimCommand('cursorWordForwardEnd');
       const result = vimCommandManager.executeVimCommand('visualInnerWord');
       expect(result).toEqual({
+        mode: VimMode.VISUAL,
         cursor: { col: 2, line: 0 },
         text: 'foo',
         visualEndCursor: { col: 2, line: 0 },
@@ -124,6 +131,7 @@ describe('C: Mode - Visual - Simplest setup', () => {
     );
 
     expect(result).toEqual({
+      mode: VimMode.VISUAL,
       cursor: { col: 0, line: 0 },
       text: 'foo',
       visualEndCursor: { col: 0, line: 0 },
@@ -145,6 +153,7 @@ describe('C: Mode - Visual - Complexer setup', () => {
 
     const result = vimCommandManager.executeVimCommand('visualStartLineWise');
     expect(result).toEqual({
+      mode: VimMode.VISUAL,
       cursor: { col: 5, line: 0 },
       text: ' @foo',
       visualStartCursor: { col: 0, line: 0 },
