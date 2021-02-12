@@ -12,10 +12,6 @@ export class InsertTextMode extends AbstractTextMode {
     super.cursorLeft(vimState);
   }
 
-  delete(vimState: VimState) {
-    this.store.dispatch(changeText, vimState.cursor.line, vimState.text);
-  }
-
   type(vimState?: VimState) {
     this.store.dispatch(changeText, vimState.cursor.line, vimState.text);
     super.cursorRight(vimState);

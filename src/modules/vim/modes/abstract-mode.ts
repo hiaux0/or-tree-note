@@ -2,7 +2,7 @@ import { VimOptions, VimPlugin } from '../vim.types';
 import { cloneDeep } from 'lodash';
 import { Logger } from 'modules/debug/logger';
 import { VimState, VimMode } from '../vim.types';
-import { getFirstNonWhiteSpaceCharIndex } from 'modules/string/string';
+import { getFirstNonWhiteSpaceCharIndex, replaceAt } from 'modules/string/string';
 
 const logger = new Logger({ scope: 'AbstractMode' });
 
@@ -424,6 +424,16 @@ export abstract class AbstractMode {
     this.lines[this.vimState.cursor.line] = updatedInput;
     this.reTokenizeInput(updatedInput);
 
+    return this.vimState;
+  }
+  delete(): VimState {
+    const updatedInput = replaceAt(
+      this.vimState.text,
+      this.vimState.cursor.col,
+      ''
+    );
+
+    this.vimState.text = updatedInput;
     return this.vimState;
   }
 }

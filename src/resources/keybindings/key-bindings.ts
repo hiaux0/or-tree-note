@@ -30,6 +30,7 @@ const keyBindings = {
     { key: 'i', command: 'enterInsertMode' },
     { key: 'v', command: 'enterVisualMode' },
     { key: 'V', command: 'visualStartLineWise' },
+    { key: 'x', command: 'delete' },
     { key: 'y', command: 'yank' },
     { key: 'gh', command: 'hint' },
     { key: '<Control>s', command: 'save' },

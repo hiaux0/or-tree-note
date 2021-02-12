@@ -93,6 +93,9 @@ export abstract class AbstractTextMode {
     return childOffsetLeft;
   }
 
+  /******** */
+  /* Cursor */
+  /******** */
   cursorUp(vimState?: VimState) {
     this.setCursorMovement(vimState?.cursor);
   }
@@ -123,20 +126,24 @@ export abstract class AbstractTextMode {
     this.resetCaretBlinking();
   }
 
+  /****** */
+  /* Text */
+  /****** */
   newLine(vimState: VimState) {
     const newLineIndex = vimState.cursor.line;
     this.setCursorMovement(vimState.cursor);
     this.store.dispatch(createNewLine, newLineIndex, vimState.text);
   }
-
   indentRight(vimState: VimState) {
     this.store.dispatch(changeText, vimState.cursor.line, vimState.text);
     this.setCursorMovement(vimState.cursor);
   }
-
   indentLeft(vimState: VimState) {
     this.store.dispatch(changeText, vimState.cursor.line, vimState.text);
     this.setCursorMovement(vimState.cursor);
+  }
+  delete(vimState: VimState) {
+    this.store.dispatch(changeText, vimState.cursor.line, vimState.text);
   }
 
   resetCaretBlinking() {
