@@ -61,6 +61,8 @@ export function tokenizeInput(input: string): TokenizedString[] {
     return token;
   });
 
+  logger.debug(['Tokens: %o', tokens], { onlyVerbose: true });
+
   return tokens;
 }
 
@@ -72,17 +74,12 @@ export abstract class AbstractMode {
    * - multiple cursors
    */
   currentMode: VimMode;
-  tokenizedInput: TokenizedString[];
 
   constructor(
     public vimState: VimState,
     public lines: string[],
     public vimOptions: VimOptions = {}
-  ) {
-    this.tokenizedInput = tokenizeInput(vimState.text);
-
-    logger.debug(['Tokens: %o', this.tokenizedInput], { onlyVerbose: true });
-  }
+  ) {}
 
   executeCommand(
     commandName: string,
@@ -148,7 +145,6 @@ export abstract class AbstractMode {
       onlyVerbose: true,
     });
 
-    this.tokenizedInput = tokenizedInput;
     return tokenizedInput;
   }
 
@@ -248,6 +244,7 @@ export abstract class AbstractMode {
     return this.vimState;
   }
   cursorDown(): VimState {
+    1; /*?*/
     const newCurLine = this.vimState.cursor.line + 1;
     const isValidVertical = isValidVerticalPosition(newCurLine + 1, this.lines);
 
@@ -290,7 +287,6 @@ export abstract class AbstractMode {
     } else {
       resultCol = tokenUnderCursor.end;
     }
-    resultCol;
 
     if (resultCol) {
       this.vimState.cursor.col = resultCol;
@@ -328,7 +324,8 @@ export abstract class AbstractMode {
   /* Cursor Helpers */
   /**************** */
   getTokenUnderCursor(): TokenizedString | undefined {
-    const targetToken = this.tokenizedInput.find((input) => {
+    const tokenizedInput = this.reTokenizeInput(this.vimState.text);
+    const targetToken = tokenizedInput.find((input) => {
       const curCol = this.vimState.cursor.col;
       const isUnderCursor = input.start <= curCol && curCol <= input.end;
 
@@ -342,22 +339,25 @@ export abstract class AbstractMode {
     return targetToken;
   }
   getTokenAtIndex(index: number) {
+    const tokenizedInput = this.reTokenizeInput(this.vimState.text);
+
     if (index < 0) {
       index = 0;
-    } else if (index > this.tokenizedInput.length - 1) {
-      index = this.tokenizedInput.length - 1;
+    } else if (index > tokenizedInput.length - 1) {
+      index = tokenizedInput.length - 1;
     }
 
-    const targetToken = this.tokenizedInput[index];
+    const targetToken = tokenizedInput[index];
 
     return targetToken;
   }
   getNexToken() {
+    const tokenizedInput = this.reTokenizeInput(this.vimState.text);
     const curCol = this.vimState.cursor.col;
-    const currentTokenIndex = this.tokenizedInput.findIndex((input) => {
+    const currentTokenIndex = tokenizedInput.findIndex((input) => {
       return input.end <= curCol;
     });
-    const targetToken = this.tokenizedInput[currentTokenIndex + 1];
+    const targetToken = tokenizedInput[currentTokenIndex + 1];
 
     if (!targetToken) {
       logger.debug(['Could not find next target token: %o', targetToken], {
@@ -367,8 +367,9 @@ export abstract class AbstractMode {
     return targetToken;
   }
   getPreviousToken() {
+    const tokenizedInput = this.reTokenizeInput(this.vimState.text);
     const curCol = this.vimState.cursor.col;
-    const currentToken = this.tokenizedInput.find((input) => {
+    const currentToken = tokenizedInput.find((input) => {
       return input.end <= curCol;
     });
 
