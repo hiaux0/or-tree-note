@@ -1,5 +1,6 @@
+import { createVimState } from 'test/vim-state-utils';
 import { cloneDeep } from 'lodash';
-import { tokenizeInput } from 'modules/vim/modes/abstract-mode';
+import { AbstractMode, tokenizeInput } from 'modules/vim/modes/abstract-mode';
 import { Vim } from 'modules/vim/vim';
 import { VimMode } from '../../../../src/modules/vim/vim.types';
 
