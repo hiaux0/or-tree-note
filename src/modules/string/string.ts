@@ -93,3 +93,19 @@ export function inputContainsSequence(input: string, sequence: string) {
 function escapeRegex(string) {
   return string.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
 }
+
+/**
+ * @example
+ * 'foo'     -> 0
+ * ' foo'    -> 1
+ * '    foo' -> 4
+ */
+export function getFirstNonWhiteSpaceCharIndex(input: string): number {
+  if (!input.startsWith(' ')) return 0;
+  if (input.length === 0) return 0;
+
+  const nonWhiteSpaceRegexp = /\S/g;
+  const { index } = nonWhiteSpaceRegexp.exec(input);
+
+  return index;
+}

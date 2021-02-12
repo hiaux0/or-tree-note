@@ -1,5 +1,6 @@
 import {
   filterListByCharSequence,
+  getFirstNonWhiteSpaceCharIndex,
   inputContainsSequence,
 } from "modules/string/string";
 
@@ -31,3 +32,26 @@ describe("filterStringByCharSequence", () => {
     expect(inputContainsSequence(input, "br")).toBeFalse();
   });
 });
+
+describe("getFirstNonWhiteSpaceCharIndex", () => {
+  it('Should return 0, if input is empty', () => {
+    const input = '';
+    const result = getFirstNonWhiteSpaceCharIndex(input);
+    expect(result).toBe(0);
+  })
+  it('Should return 0, if string does not start with whitespace', () => {
+    const input = "foo";
+    const result = getFirstNonWhiteSpaceCharIndex(input);
+    expect(result).toBe(0)
+  });
+
+  it('Should return index of first non-whitespace char, if string starts with whitespace', () => {
+    const input = `${' '.repeat(1)}foo`;
+    const result = getFirstNonWhiteSpaceCharIndex(input);
+    expect(result).toBe(1)
+
+    const input1 = `    foo`;
+    const result1 = getFirstNonWhiteSpaceCharIndex(input1);
+    expect(result1).toBe(4)
+  });
+})
