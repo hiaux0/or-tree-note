@@ -112,6 +112,12 @@ export abstract class AbstractTextMode {
   cursorBackwordsStartWord(vimState: VimState) {
     this.setCursorMovement(vimState?.cursor);
   }
+  cursorLineEnd(vimState: VimState) {
+    this.setCursorMovement(vimState?.cursor);
+  }
+  cursorLineStart(vimState: VimState) {
+    this.setCursorMovement(vimState?.cursor);
+  }
 
   commenKeyFunctionality() {
     this.resetCaretBlinking();

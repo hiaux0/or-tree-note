@@ -19,6 +19,8 @@ const cursorNormalAndVisual = [
   { key: 'l', command: 'cursorRight' },
   { key: 'u', command: 'cursorDown' },
   { key: 'w', command: 'cursorWordForwardStart' },
+  { key: '$', command: 'cursorLineEnd' },
+  { key: '^', command: 'cursorLineStart' },
 ];
 
 const keyBindings = {

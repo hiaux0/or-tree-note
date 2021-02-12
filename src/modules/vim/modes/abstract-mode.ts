@@ -2,6 +2,7 @@ import { VimOptions, VimPlugin } from '../vim.types';
 import { cloneDeep } from 'lodash';
 import { Logger } from 'modules/debug/logger';
 import { VimState, VimMode } from '../vim.types';
+import { getFirstNonWhiteSpaceCharIndex } from 'modules/string/string';
 
 const logger = new Logger({ scope: 'AbstractMode' });
 
@@ -317,6 +318,16 @@ export abstract class AbstractMode {
       this.vimState.cursor.col = resultCol;
     }
 
+    return this.vimState;
+  }
+  cursorLineEnd(): VimState {
+    this.vimState.cursor.col = this.vimState.text.length - 1;
+    return this.vimState;
+  }
+  cursorLineStart(): VimState {
+    const nonWhiteSpaceIndex = getFirstNonWhiteSpaceCharIndex(this.vimState.text);
+
+    this.vimState.cursor.col = nonWhiteSpaceIndex;
     return this.vimState;
   }
 

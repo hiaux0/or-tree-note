@@ -12,6 +12,8 @@ export const VIM_COMMANDS = [
   "enterVisualMode",
   "cursorWordForwardEnd",
   "cursorBackwordsStartWord",
+  "cursorLineEnd",
+  "cursorLineStart",
   "delete",
   "backspace",
   "newLine",
