@@ -1,14 +1,19 @@
 module.exports = function (wallaby) {
   return {
     files: [
-      {
-        pattern: 'src/**/*.+(ts|html|json)',
-        load: false
-      },    ],
+      // {
+      //   pattern: 'src/**/*.+(ts|html|json)',
+      //   load: false,
+      // },
+      'src/**/*.+(ts|html|json)',
+      'test/**/*.feature',
+      'test/unit-cucumber/init-cucumber-testing.spec.ts',
+      'test/unit-cucumber/step-definitions/**/*.ts',
+    ],
 
     tests: [
-      'tests/testLauncher/withWallaby.spec.ts',
-      // 'tests/unit/step-definitions/embeddedLanguages/embedded-support.spec.ts',
+      'test/test-launchers/init-tests.spec.ts',
+      // 'test/unit-cucumber/index.spec.ts'
     ],
 
     testFramework: 'jest',

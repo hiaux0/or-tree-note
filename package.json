@@ -19,8 +19,10 @@
   "devDependencies": {
     "@code-dependency/cli": "^0.5.0",
     "@cypress/webpack-preprocessor": "^4.1.2",
+    "@sucrase/jest-plugin": "^2.1.1",
     "@types/jasmine": "^3.5.7",
     "@types/lodash": "^4.14.149",
+    "@types/jest": "~25.1.3",
     "@types/node": "^13.7.6",
     "@types/webpack": "^4.41.6",
     "@typescript-eslint/eslint-plugin": "^4.15.1",
@@ -50,6 +52,8 @@
     "istanbul-instrumenter-loader": "^3.0.1",
     "jasmine": "^3.6.3",
     "jasmine-core": "^3.5.0",
+    "jest": "~25.1.0",
+    "jest-cucumber": "^3.0.1",
     "jest-jasmine2": "^23.6.0",
     "jest-matchers": "^20.0.3",
     "json-loader": "^0.5.7",
@@ -71,6 +75,7 @@
     "sass": "^1.26.3",
     "sass-loader": "^8.0.2",
     "style-loader": "^1.1.3",
+    "sucrase": "^3.20.1",
     "through2": "^3.0.1",
     "tree-kill": "^1.2.1",
     "ts-loader": "^6.2.1",
@@ -106,5 +111,10 @@
   "prettier": {
     "htmlWhitespaceSensitivity": "strict",
     "singleQuote": true
+  },
+  "babel": {
+    "presets": [
+      "@babel/preset-typescript"
+    ]
   }
 }
