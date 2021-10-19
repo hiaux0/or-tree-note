@@ -1,5 +1,6 @@
 import 'aurelia-polyfills';
 import { StateHistory, Store } from 'aurelia-store';
+import { isMac } from 'common/platform/platform-check';
 import hotkeys from 'hotkeys-js';
 import { Logger } from 'modules/debug/logger';
 import { Vim } from 'modules/vim/vim';
@@ -68,9 +69,10 @@ export class VimEditorTextMode {
   }
 
   setupElementMode() {
-    this.childrenElementList = this.vimEditorOptions.parentHtmlElement.querySelectorAll<HTMLElement>(
-      `.${this.vimEditorOptions.childSelectors[0]}`
-    );
+    this.childrenElementList =
+      this.vimEditorOptions.parentHtmlElement.querySelectorAll<HTMLElement>(
+        `.${this.vimEditorOptions.childSelectors[0]}`
+      );
 
     this.childrenElementList.forEach((childElement) => {
       this.elementText.push(childElement.textContent);
@@ -93,14 +95,15 @@ export class VimEditorTextMode {
   }
 
   checkAllowedBrowserShortcuts(ev: KeyboardEvent) {
-    if (ev.key === 'r' && ev.ctrlKey) {
-      return;
-    } else if (ev.key === 'C' && ev.ctrlKey && ev.shiftKey) {
-      return;
-    } else if (ev.key === '-' && ev.ctrlKey) {
-      return;
-    } else if (ev.key === '+' && ev.ctrlKey) {
-      return;
+    const mainModifier = isMac ? ev.metaKey : ev.ctrlKey;
+    if (ev.key === 'r' && mainModifier) {
+      return true;
+    } else if (ev.key === 'C' && mainModifier && ev.shiftKey) {
+      return true;
+    } else if (ev.key === '=' && mainModifier) {
+      return true;
+    } else if (ev.key === '-' && mainModifier) {
+      return true;
     }
 
     ev.preventDefault();
@@ -108,7 +111,9 @@ export class VimEditorTextMode {
 
   initKeys() {
     hotkeys('*', (ev) => {
-      this.checkAllowedBrowserShortcuts(ev);
+      if (this.checkAllowedBrowserShortcuts(ev)) {
+        return;
+      }
 
       let pressedKey: string;
       if (ev.code === SPACE) {
@@ -117,7 +122,10 @@ export class VimEditorTextMode {
         pressedKey = ev.key;
       }
 
-      logger.debug(['-------------- Key pressed: %s', ev.key], {
+      const modifiers = `${ev.ctrlKey ? 'Ctrl+' : ''}${
+        ev.shiftKey ? 'Shift+' : ''
+      }${ev.altKey ? 'Alt+' : ''}${ev.metaKey ? 'Meta+' : ''}`;
+      logger.debug(['-------------- Key pressed: (%s) %s', modifiers, ev.key], {
         log: true,
         isOnlyGroup: true,
       });

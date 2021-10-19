@@ -1,8 +1,11 @@
 import { cloneDeep } from 'lodash';
 import { Logger } from 'modules/debug/logger';
-import { getFirstNonWhiteSpaceCharIndex, replaceAt } from 'modules/string/string';
+import {
+  getFirstNonWhiteSpaceCharIndex,
+  replaceAt,
+} from 'modules/string/string';
 
-import { VimState, VimMode , VimOptions, VimPlugin } from '../vim.types';
+import { VimState, VimMode, VimOptions, VimPlugin } from '../vim.types';
 
 const logger = new Logger({ scope: 'AbstractMode' });
 
@@ -42,6 +45,8 @@ export interface TokenizedString {
 }
 
 export function tokenizeInput(input: string): TokenizedString[] {
+  logger.bug('tokenizeInput');
+  /* prettier-ignore */ console.trace('TCL: input', input)
   const regExp = /(\S+)/g;
   const matchResult: RegExpExecArray[] = [];
   let match: RegExpExecArray;
@@ -49,6 +54,7 @@ export function tokenizeInput(input: string): TokenizedString[] {
   while ((match = regExp.exec(input))) {
     matchResult.push(match);
   }
+  /* prettier-ignore */ console.log('TCL: matchResult', matchResult)
 
   const tokens = matchResult.map((result, resultIndex) => {
     const matchedString = result[0];
@@ -106,10 +112,9 @@ export abstract class AbstractMode {
     if (!this[commandName]) {
       logger.debug(
         [
-          'No command \'%s\' found in %s Mode. ((modes.ts-executeCommand))',
+          "No command '%s' found in %s Mode. ((modes.ts-executeCommand))",
           commandName,
           currentMode,
-          this[commandName],
         ],
         { isError: true }
       );
@@ -325,7 +330,9 @@ export abstract class AbstractMode {
     return this.vimState;
   }
   cursorLineStart(): VimState {
-    const nonWhiteSpaceIndex = getFirstNonWhiteSpaceCharIndex(this.vimState.text);
+    const nonWhiteSpaceIndex = getFirstNonWhiteSpaceCharIndex(
+      this.vimState.text
+    );
 
     this.vimState.cursor.col = nonWhiteSpaceIndex;
     return this.vimState;

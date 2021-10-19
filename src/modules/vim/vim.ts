@@ -19,7 +19,7 @@ const logger = new Logger({ scope: 'Vim' });
 
 export class VimError extends Error {}
 
-const keyBindings = (keyBindingsJson as unknown) as KeyBindingModes;
+const keyBindings = keyBindingsJson as unknown as KeyBindingModes;
 
 export const vim = 'vim';
 
@@ -54,7 +54,7 @@ export class Vim {
     const initialVimState: VimState = {
       text: this.lines[this.cursor.line],
       cursor: this.cursor,
-      mode: VimMode.NORMAL
+      mode: VimMode.NORMAL,
     };
     this.vimCommandManager = new VimCommandManager(
       this.lines,
@@ -93,7 +93,9 @@ export class Vim {
   /** Input Queue */
   /** *************/
 
-  /** */
+  /**
+   * For modifier keys, pass in, eg. <escape>
+   */
   queueInput(input: string): QueueInputReturn {
     logger.debug(['Received input: %s', input]);
 
@@ -151,9 +153,8 @@ export class Vim {
     let givenInputSequence;
 
     if (typeof inputSequence === 'string') {
-      givenInputSequence = this.vimCommandManager.splitInputSequence(
-        inputSequence
-      );
+      givenInputSequence =
+        this.vimCommandManager.splitInputSequence(inputSequence);
     } else {
       givenInputSequence = inputSequence;
     }

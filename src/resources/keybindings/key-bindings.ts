@@ -1,8 +1,6 @@
 // Naming based on https://vim.rtorr.com/
 
-const commandsAllModes = [
-  { key: '<Escape>', command: 'enterNormalMode' },
-];
+const commandsAllModes = [{ key: '<Escape>', command: 'enterNormalMode' }];
 
 const cursorAllModes = [
   { key: '<ArrowLeft>', command: 'cursorLeft' },
@@ -45,6 +43,7 @@ const keyBindings = {
     { key: '<Backspace>', command: 'backspace' },
     { key: '<Delete>', command: 'delete' },
     { key: '<Shift>', command: 'shift' },
+    { key: '<Control>', command: 'nothing' },
     ...commandsAllModes,
     ...cursorAllModes,
   ],

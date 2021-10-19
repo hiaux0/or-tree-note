@@ -20,6 +20,7 @@ export const changeText = (
   targetLineNumber: number,
   newText: string
 ) => {
+  changeText;
   return nextStateHistory(
     state,
     produce(state.present, (draftState) => {

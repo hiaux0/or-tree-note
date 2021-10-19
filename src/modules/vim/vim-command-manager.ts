@@ -82,10 +82,10 @@ export class VimCommandManager {
   enterVisualMode() {
     logger.debug(['Enter Visual mode']);
     this.activeMode = VimMode.VISUAL;
-    this.vimState.visualStartCursor = {...this.vimState.cursor};
+    this.vimState.visualStartCursor = { ...this.vimState.cursor };
     this.vimState.visualEndCursor = {
       col: this.vimState.cursor.col,
-      line: this.vimState.cursor.line
+      line: this.vimState.cursor.line,
     };
     this.vimState.mode = VimMode.VISUAL;
 
@@ -111,10 +111,7 @@ export class VimCommandManager {
   ): VimState {
     const currentMode = this.getCurrentMode();
     try {
-      const vimState = currentMode.executeCommand(
-        commandName,
-        commandInput
-      );
+      const vimState = currentMode.executeCommand(commandName, commandInput);
       return vimState;
     } catch (error) {
       const previousState = this.vimState;
@@ -200,6 +197,7 @@ export class VimCommandManager {
       ({ targetCommand, potentialCommands } = this.findPotentialCommand(input));
     } catch (error) {
       logger.debug(['Error: %s', error], { onlyVerbose: true });
+      throw error;
     }
 
     //
@@ -240,7 +238,6 @@ export class VimCommandManager {
 
   /** */
   ensureVimModifier(input: string) {
-    SPECIAL_KEYS;
     if (SPECIAL_KEYS.includes(input)) {
       const asVimModifier = `<${input}>`;
 

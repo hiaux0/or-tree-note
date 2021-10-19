@@ -13,7 +13,10 @@ export class InsertTextMode extends AbstractTextMode {
   }
 
   type(vimState?: VimState) {
+    /* prettier-ignore */ console.trace('TCL: changeText')
     this.store.dispatch(changeText, vimState.cursor.line, vimState.text);
     super.cursorRight(vimState);
   }
+
+  nothing() {}
 }
