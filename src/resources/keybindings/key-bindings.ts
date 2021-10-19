@@ -2,7 +2,7 @@
 
 const commandsAllModes = [
   { key: '<Escape>', command: 'enterNormalMode' },
-]
+];
 
 const cursorAllModes = [
   { key: '<ArrowLeft>', command: 'cursorLeft' },

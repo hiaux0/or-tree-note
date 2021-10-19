@@ -1,23 +1,22 @@
+import { autoinject } from 'aurelia-dependency-injection';
 import { bindable } from 'aurelia-framework';
 import { Store, jump, connectTo, StateHistory } from 'aurelia-store';
-import { autoinject } from 'aurelia-dependency-injection';
-import { distinctUntilChanged, pluck } from 'rxjs/operators';
-
 import { CSS_SELECTORS } from 'common/css-selectors';
+import { CURRENT_OTN_MODE } from 'local-storage';
 import { Logger } from 'modules/debug/logger';
 import { rootContainer } from 'modules/root-container';
-import { VimEditor, VimEditorOptions } from 'modules/vim-editor/vim-editor';
-import { VimEditorTextMode } from 'modules/vim-editor/modes/vim-editor-text-mode';
 import { changeVimState } from 'modules/vim-editor/actions/actions-vim-editor';
+import { VimEditorTextMode } from 'modules/vim-editor/modes/vim-editor-text-mode';
+import { VimEditor, VimEditorOptions } from 'modules/vim-editor/vim-editor';
 import {
   VimMode,
   VimExecutingMode,
   Cursor,
   VimState,
 } from 'modules/vim/vim.types';
+import { distinctUntilChanged, pluck } from 'rxjs/operators';
 import { EditorLine, VimEditorState } from 'store/initial-state';
 import { toggleCheckbox } from 'store/or-tree-notes/actions-or-tree-notes';
-import { CURRENT_OTN_MODE } from 'local-storage';
 
 import './or-tree-notes.scss';
 
@@ -25,10 +24,9 @@ const logger = new Logger({ scope: 'OrTreeNotes' });
 
 declare global {
   interface Window {
-    vimState:any;
+    vimState: any;
   }
 }
-
 
 @autoinject()
 @connectTo<StateHistory<VimEditorState>>({
@@ -61,7 +59,7 @@ export class OrTreeNotes {
   vimEditor: VimEditor;
   vimState: VimState;
 
-  constructor(private store: Store<StateHistory<VimEditorState>>) {
+  constructor(private readonly store: Store<StateHistory<VimEditorState>>) {
     this.store.registerAction('toggleCheckbox', toggleCheckbox);
     this.store.registerAction('changeVimState', changeVimState);
   }
@@ -125,6 +123,5 @@ export class OrTreeNotes {
   undo() {
     this.store.dispatch(jump, -1);
   }
-
 
 }

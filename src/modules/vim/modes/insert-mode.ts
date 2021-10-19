@@ -1,7 +1,8 @@
-import { SPACE } from './../../../resources/keybindings/app.keys';
-import { AbstractMode } from './abstract-mode';
 import { insert, replaceAt } from 'modules/string/string';
+
+import { SPACE } from '../../../resources/keybindings/app.keys';
 import { VimState, VimMode } from '../vim.types';
+import { AbstractMode } from './abstract-mode';
 
 export class InsertMode extends AbstractMode {
   currentMode = VimMode.INSERT;

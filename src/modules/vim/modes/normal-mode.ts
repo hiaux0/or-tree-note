@@ -1,4 +1,5 @@
 import { Logger } from 'modules/debug/logger';
+
 import { VimCommandNames } from '../vim-commands-repository';
 import { VimState, VimMode } from '../vim.types';
 import { AbstractMode } from './abstract-mode';

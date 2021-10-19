@@ -1,8 +1,8 @@
-import { VimState } from 'modules/vim/vim.types';
 import { Logger } from 'modules/debug/logger';
+import { VimState } from 'modules/vim/vim.types';
 
-import { AbstractTextMode } from './abstract-text-mode';
 import { changeText } from '../actions/actions-vim-editor';
+import { AbstractTextMode } from './abstract-text-mode';
 
 const logger = new Logger({ scope: 'InsertTextMode' });
 

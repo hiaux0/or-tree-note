@@ -1,6 +1,7 @@
-import { AbstractMode } from './abstract-mode';
-import { VimState, VimMode } from '../vim.types';
 import { Logger } from 'modules/debug/logger';
+
+import { VimState, VimMode } from '../vim.types';
+import { AbstractMode } from './abstract-mode';
 
 const logger = new Logger({ scope: 'VisualMode' });
 

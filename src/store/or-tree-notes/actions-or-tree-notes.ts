@@ -1,6 +1,6 @@
+import { nextStateHistory, StateHistory } from 'aurelia-store';
 import produce from 'immer';
 import { VimEditorState } from 'store/initial-state';
-import { nextStateHistory, StateHistory } from 'aurelia-store';
 
 /** @typedef {Wellplate.CompositeToolbar['legend']} CompositeToolbarLegend */
 

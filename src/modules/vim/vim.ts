@@ -1,9 +1,10 @@
 import { cloneDeep } from 'lodash';
-
+import { Logger } from 'modules/debug/logger';
 import { SPACE } from 'resources/keybindings/app.keys';
 import keyBindingsJson from 'resources/keybindings/key-bindings';
-import { Logger } from 'modules/debug/logger';
 
+import { VimCommandManager } from './vim-command-manager';
+import { VimCommandNames } from './vim-commands-repository';
 import {
   VimOptions,
   Cursor,
@@ -13,8 +14,6 @@ import {
   VimState,
   VimMode,
 } from './vim.types';
-import { VimCommandManager } from './vim-command-manager';
-import { VimCommandNames } from './vim-commands-repository';
 
 const logger = new Logger({ scope: 'Vim' });
 
@@ -40,13 +39,13 @@ const defaultCursor = {
  * - the cursor location
  */
 export class Vim {
-  private vimCommandManager: VimCommandManager;
+  private readonly vimCommandManager: VimCommandManager;
   public vimState: VimState;
 
   constructor(
-    private lines: string[],
-    private cursor: Cursor = defaultCursor,
-    private vimOptions?: VimOptions
+    private readonly lines: string[],
+    private readonly cursor: Cursor = defaultCursor,
+    private readonly vimOptions?: VimOptions
   ) {
     const finalVimOptions = {
       ...defaultVimOptions,
@@ -148,7 +147,7 @@ export class Vim {
     inputSequence: string | string[],
     vimExecutingMode: VimExecutingMode = VimExecutingMode.INDIVIDUAL
   ): QueueInputReturn[] {
-    let resultList: QueueInputReturn[] = [];
+    const resultList: QueueInputReturn[] = [];
     let givenInputSequence;
 
     if (typeof inputSequence === 'string') {

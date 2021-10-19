@@ -1,5 +1,5 @@
 export function insert(str: string, index: number, value: string): string {
-  var ind = index < 0 ? this.length + index : index;
+  const ind = index < 0 ? this.length + index : index;
   return str.substr(0, ind) + value + str.substr(ind);
 }
 
@@ -26,7 +26,7 @@ function padWithRegexWildCard(input: string) {
 
   const splitByChar = input.split('');
   const withWildCard = splitByChar.join('.*');
-  return withWildCard + '.*';
+  return `${withWildCard  }.*`;
 }
 
 /**

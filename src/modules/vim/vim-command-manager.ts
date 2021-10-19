@@ -1,14 +1,13 @@
 import { groupBy } from 'lodash';
-
 import { Logger } from 'modules/debug/logger';
 import { inputContainsSequence } from 'modules/string/string';
 import { SPECIAL_KEYS } from 'resources/keybindings/app.keys';
 
+import { InsertMode } from './modes/insert-mode';
+import { NormalMode } from './modes/normal-mode';
+import { VisualMode } from './modes/visual-mode';
 import { defaultVimOptions } from './vim';
 import { VimCommandNames, VimCommand } from './vim-commands-repository';
-import { NormalMode } from './modes/normal-mode';
-import { InsertMode } from './modes/insert-mode';
-import { VisualMode } from './modes/visual-mode';
 import {
   VimState,
   FindPotentialCommandReturn,
@@ -273,13 +272,13 @@ export class VimCommandManager {
      * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions/Cheatsheet
      */
     const regex = /(?<=>).|<(?=.)/g;
-    let splitByModifier = inputSequence
+    const splitByModifier = inputSequence
       .replace(regex, (match) => {
         return `,${match}`;
       })
       .split(',');
 
-    let result = [];
+    const result = [];
     splitByModifier.forEach((splitCommands) => {
       if (splitCommands.includes('<')) {
         result.push(splitCommands);

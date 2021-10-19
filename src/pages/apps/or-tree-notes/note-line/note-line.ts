@@ -1,10 +1,8 @@
 import { inject } from 'aurelia-dependency-injection';
-import { computedFrom } from 'aurelia-framework';
-import { bindable } from 'aurelia-framework';
-
+import { computedFrom , bindable } from 'aurelia-framework';
 import { CSS_SELECTORS } from 'common/css-selectors';
-import { Logger } from 'modules/debug/logger';
 import { getCssVar } from 'modules/css/css-variables';
+import { Logger } from 'modules/debug/logger';
 import { Cursor } from 'modules/vim/vim.types';
 import { EditorLine } from 'store/initial-state';
 
@@ -31,7 +29,7 @@ export class NoteLine {
   @bindable lineHighlightStart: Cursor;
   @bindable lineHighlightEnd: Cursor;
 
-  constructor(private element: HTMLElement) {}
+  constructor(private readonly element: HTMLElement) {}
 
   @computedFrom('lineHighlightEnd', 'lineHighlightStart')
   get lineHightlight() {

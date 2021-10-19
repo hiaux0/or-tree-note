@@ -1,8 +1,8 @@
-import { VimOptions, VimPlugin } from '../vim.types';
 import { cloneDeep } from 'lodash';
 import { Logger } from 'modules/debug/logger';
-import { VimState, VimMode } from '../vim.types';
 import { getFirstNonWhiteSpaceCharIndex, replaceAt } from 'modules/string/string';
+
+import { VimState, VimMode , VimOptions, VimPlugin } from '../vim.types';
 
 const logger = new Logger({ scope: 'AbstractMode' });
 
@@ -106,7 +106,7 @@ export abstract class AbstractMode {
     if (!this[commandName]) {
       logger.debug(
         [
-          "No command '%s' found in %s Mode. ((modes.ts-executeCommand))",
+          'No command \'%s\' found in %s Mode. ((modes.ts-executeCommand))',
           commandName,
           currentMode,
           this[commandName],
@@ -194,9 +194,9 @@ export abstract class AbstractMode {
     return isValid;
   }
 
-  /******** */
+  /** ****** */
   /* Cursor */
-  /******** */
+  /** ****** */
   cursorRight(): VimState {
     const updaterCursorCol = this.vimState.cursor.col + 1;
 
@@ -245,7 +245,7 @@ export abstract class AbstractMode {
     return this.vimState;
   }
   cursorDown(): VimState {
-    1; /*?*/
+    1; /* ? */
     const newCurLine = this.vimState.cursor.line + 1;
     const isValidVertical = isValidVerticalPosition(newCurLine + 1, this.lines);
 
@@ -273,7 +273,7 @@ export abstract class AbstractMode {
     return this.vimState;
   }
   cursorWordForwardEnd(): VimState {
-    let tokenUnderCursor = this.getTokenUnderCursor();
+    const tokenUnderCursor = this.getTokenUnderCursor();
 
     const isAtEnd = tokenUnderCursor?.end === this.vimState.cursor.col;
     const isNotAtEnd = tokenUnderCursor === undefined;
@@ -296,11 +296,11 @@ export abstract class AbstractMode {
     return this.vimState;
   }
   cursorBackwordsStartWord(): VimState {
-    let tokenUnderCursor = this.getTokenUnderCursor(); /*?*/
+    const tokenUnderCursor = this.getTokenUnderCursor(); /* ? */
 
-    this.vimState.cursor; /*?*/
+    this.vimState.cursor; /* ? */
     const isAtStart =
-      tokenUnderCursor?.start === this.vimState.cursor.col; /*?*/
+      tokenUnderCursor?.start === this.vimState.cursor.col; /* ? */
     const tokenNotUnderCursor = tokenUnderCursor === undefined;
 
     let resultCol;
@@ -331,9 +331,9 @@ export abstract class AbstractMode {
     return this.vimState;
   }
 
-  /**************** */
+  /** ************** */
   /* Cursor Helpers */
-  /**************** */
+  /** ************** */
   getTokenUnderCursor(): TokenizedString | undefined {
     const tokenizedInput = this.reTokenizeInput(this.vimState.text);
     const targetToken = tokenizedInput.find((input) => {
@@ -392,9 +392,9 @@ export abstract class AbstractMode {
     return currentToken;
   }
 
-  /****** */
+  /** **** */
   /* Text */
-  /****** */
+  /** **** */
   indentRight(): VimState {
     const { indentSize } = this.vimOptions;
     const spaces = ' '.repeat(indentSize);
@@ -417,7 +417,7 @@ export abstract class AbstractMode {
       .split('')
       .filter((char) => char === ' ').length;
 
-    const updatedInput = text.substring(numOfWhiteSpaceAtStart); /*?*/
+    const updatedInput = text.substring(numOfWhiteSpaceAtStart); /* ? */
 
     this.vimState.text = updatedInput;
     this.vimState.cursor.col -= numOfWhiteSpaceAtStart;

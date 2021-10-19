@@ -1,6 +1,5 @@
 import { inject } from 'aurelia-dependency-injection';
 import { StateHistory, Store } from 'aurelia-store';
-
 import {
   getComputedValueFromPixelString,
   getCssVar,
@@ -10,8 +9,8 @@ import { rootContainer } from 'modules/root-container';
 import { Cursor, VimState } from 'modules/vim/vim.types';
 import { VimEditorState } from 'store/initial-state';
 
-import { ChildrenMutationObserver } from './children-mutation-observer';
 import { createNewLine, changeText } from '../actions/actions-vim-editor';
+import { ChildrenMutationObserver } from './children-mutation-observer';
 
 const logger = new Logger({ scope: 'AbstractTextMode' });
 
@@ -93,9 +92,9 @@ export abstract class AbstractTextMode {
     return childOffsetLeft;
   }
 
-  /******** */
+  /** ****** */
   /* Cursor */
-  /******** */
+  /** ****** */
   cursorUp(vimState?: VimState) {
     this.setCursorMovement(vimState?.cursor);
   }
@@ -126,9 +125,9 @@ export abstract class AbstractTextMode {
     this.resetCaretBlinking();
   }
 
-  /****** */
+  /** **** */
   /* Text */
-  /****** */
+  /** **** */
   newLine(vimState: VimState) {
     const newLineIndex = vimState.cursor.line;
     this.setCursorMovement(vimState.cursor);

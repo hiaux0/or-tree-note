@@ -9,7 +9,7 @@ export class App {
   constructor(private router: Router) {}
 
   /**
-   * @param {object} router https://aurelia.io/docs/api/router/class/Router
+   * @param {object} router - https://aurelia.io/docs/api/router/class/Router
    */
   configureRouter(config, router) {
     config.map([

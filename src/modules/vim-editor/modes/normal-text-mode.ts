@@ -1,5 +1,4 @@
 import { StateHistory, Store } from 'aurelia-store';
-
 import { Logger } from 'modules/debug/logger';
 import { VimEditorState } from 'store/initial-state';
 

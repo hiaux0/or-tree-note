@@ -1,9 +1,10 @@
 import { Aurelia } from 'aurelia-framework';
-import * as environment from '../config/environment.json';
 import { PLATFORM } from 'aurelia-pal';
-import { initialVimEditorState } from 'store/initial-state';
 import { setAutoFreeze } from 'immer';
 import { CURRENT_OTN_MODE } from 'local-storage';
+import { initialVimEditorState } from 'store/initial-state';
+
+import * as environment from '../config/environment.json';
 
 // This is required to allow Aurelia to add its observer on objects in the state.
 setAutoFreeze(false);

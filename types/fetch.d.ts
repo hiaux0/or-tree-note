@@ -1,3 +1,3 @@
-declare module "isomorphic-fetch" {
+declare module 'isomorphic-fetch' {
   export = fetch;
 }

@@ -1,10 +1,17 @@
 const debugMode = true;
 
-interface LogOptions {
-  /////////////// Log
+/**
+ * TODO: WARNING and ERROR mean sth else in other loggers, but here
+ * it's just a "higher level"
+ */
+type LogLevel = 'INFO' | 'DEBUG' | 'VERBOSE' | 'WARNING' | 'ERROR';
+
+export interface LogOptions {
+  /// //////////// Log
+  disableLogger?: boolean;
   logMethod?: 'log' | 'trace' | 'error' | 'group' | 'groupEnd';
   log?: boolean;
-  logLevel?: 'info' | 'verbose';
+  logLevel?: LogLevel;
   onlyVerbose?: boolean;
   /**
    * TODO
@@ -20,16 +27,16 @@ interface LogOptions {
    * Even in debug mode, only log, when explicitely set via `log`.
    */
   focusedLogging?: boolean;
-  /////////////// Error
+  /// //////////// Error
   throwOnError?: boolean;
   /** Mark a logger as error */
   isError?: boolean;
-  /////////////// Custom output
+  /// //////////// Custom output
   /** */
   scope?: string;
   prefix?: number;
   useTable?: boolean;
-  /////////////// Grouping
+  /// //////////// Grouping
   startGroupId?: string;
   endGroupId?: string;
   /** Only in the sense of "just one" */
@@ -40,9 +47,9 @@ interface LogOptions {
   expandGroupBasedOnString?: string;
 }
 
-const defautLogOptions: LogOptions = {
+let defautLogOptions: LogOptions = {
   logMethod: 'log',
-  logLevel: 'verbose',
+  logLevel: 'VERBOSE',
   clearPreviousGroupsWhen_isOnlyGroup_True: true,
   // dontLogUnlessSpecified: true,
   focusedLogging: false,
@@ -58,6 +65,22 @@ interface BugLogOptions {
   //
   color?: string;
   index?: number;
+  debugger?: boolean;
+}
+
+const LogLevelMap = {
+  INFO: 0,
+  DEBUG: 1,
+  VERBOSE: 2,
+  WARNING: 3,
+  ERROR: 4,
+};
+
+function isAllowedLogLevel(logOptions: LogOptions) {
+  const isAllowed =
+    LogLevelMap[logOptions.logLevel] <= LogLevelMap[defautLogOptions.logLevel];
+
+  return isAllowed;
 }
 
 const loggerDevelopmentDebugLog: string[][] = [];
@@ -66,132 +89,171 @@ let onlyGroup: string[] = [];
 let bugGroupId: string[] = [];
 
 export class Logger {
-  constructor(private globalLogOptions: LogOptions) {
-    (<any>window).loggerDevelopmentDebugLog = loggerDevelopmentDebugLog;
+  private readonly logTrail: any[] = [];
+  public getLogTrail() {
+    return this.logTrail;
   }
 
-  debug(messages: [string, ...any[]], logOptions?: LogOptions) {
-    if (debugMode) {
-      const logOpt = {
-        ...this.globalLogOptions,
-        ...defautLogOptions,
-        ...logOptions,
-      };
+  constructor(private globalLogOptions: LogOptions) {}
 
-      //
-      /** === false, because it is explicitly set */
-      if (logOpt.log === false) {
-        return;
-      }
+  public setLogOptions(logOptions: LogOptions) {
+    this.globalLogOptions = {
+      ...this.globalLogOptions,
+      ...logOptions,
+    };
+  }
 
-      const onlyFocusedLogging = logOpt.focusedLogging && !logOpt?.log;
-      if (onlyFocusedLogging) {
-        return;
-      }
+  public overwriteDefaultLogOtpions(logOptions: LogOptions) {
+    defautLogOptions = {
+      ...defautLogOptions,
+      ...logOptions,
+    };
+  }
 
-      //
-      const [withSubstitutions, ...placeholderValues] = messages;
-      let updatedSubstitutions = `[${logOpt.scope}] ${withSubstitutions}`;
+  public setScope(scopeName: string): void {
+    this.globalLogOptions.scope = scopeName;
+  }
 
-      if (logOpt.prefix) {
-        updatedSubstitutions = `- (${logOpt.prefix}.) - ${updatedSubstitutions}`;
-      }
-
-      const messageWithLogScope = [updatedSubstitutions, ...placeholderValues];
-
-      //
-      if (logOpt.throwOnError && logOpt.isError) {
-        /**
-         * We console.error AND throw, because we want to keep the formatting of the console.**
-         */
-        console.error(...messageWithLogScope);
-        throw `!!! [[ERROR]] Check above message !!!`;
-      }
-
-      if (logOpt.logLevel !== 'verbose' && logOpt.onlyVerbose) {
-        return;
-      }
-
-      //
-      const isExpandGroupBasedOnString = placeholderValues.includes(
-        logOpt.expandGroupBasedOnString
-      );
-
-      if (logOpt.dontLogUnlessSpecified) {
-        //
-        // if (!logOpt.expandGroupBasedOnString) {
-        //   console.warn("Pleace specifiy `expandGroupBasedOnString`");
-        // }
-
-        //
-        const onlyLogBasedOnString = isExpandGroupBasedOnString;
-
-        if (!onlyLogBasedOnString) {
-          return;
-        }
-      }
-
-      //
-      if (logOpt.startGroupId) {
-        if (logOpt.allGroupsCollapsedButSpecified) {
-          if (!logOpt.expandGroupBasedOnString) {
-            console.warn('Pleace specifiy `expandGroupBasedOnString`');
-          }
-
-          if (isExpandGroupBasedOnString) {
-            console.group();
-          } else {
-            console[logOpt.logMethod](...messageWithLogScope);
-            console.groupCollapsed();
-          }
-          //
-        } else {
-          console[logOpt.logMethod](...messageWithLogScope);
-          console.group();
-        }
-        groupId.push(logOpt.startGroupId);
-      }
-
-      //
-      if (logOpt.isOnlyGroup) {
-        if (logOpt.clearPreviousGroupsWhen_isOnlyGroup_True) {
-          console.clear();
-        }
-
-        if (onlyGroup.length === 0) {
-          onlyGroup.push(messageWithLogScope[0]);
-          console.group(...messageWithLogScope);
-          loggerDevelopmentDebugLog.push(['group', ...messageWithLogScope]);
-        } else {
-          onlyGroup = [];
-          console.groupEnd();
-          loggerDevelopmentDebugLog.push(['groupEnd', ...messageWithLogScope]);
-          console.group(...messageWithLogScope);
-          onlyGroup.push(messageWithLogScope[0]);
-          loggerDevelopmentDebugLog.push(['group', ...messageWithLogScope]);
-        }
-      }
-      // >>> Actual log
-      console[logOpt.logMethod](...messageWithLogScope);
-      loggerDevelopmentDebugLog.push([
-        logOpt.logMethod,
-        ...messageWithLogScope,
-      ]);
-
-      if (logOpt.endGroupId !== undefined && logOpt.endGroupId === groupId[0]) {
-        console.groupEnd();
-      }
-
-      //
-      if (logOpt.useTable) {
-        if (Array.isArray(messageWithLogScope[1])) {
-          console.table(messageWithLogScope[1]);
-        }
-      }
+  public enableBrowserDevelopmentLogging(): void {
+    if (window) {
+      (<any>window).loggerDevelopmentDebugLog = loggerDevelopmentDebugLog;
     }
   }
 
-  bug(message: string, logOptions: BugLogOptions = {}) {
+  public debug(messages: [string, ...any[]], logOptions?: LogOptions): any[] {
+    if (!debugMode) return;
+
+    const logOpt = {
+      ...defautLogOptions,
+      ...this.globalLogOptions,
+      ...logOptions,
+    };
+
+    if (logOpt.disableLogger === true) return;
+    if (!isAllowedLogLevel(logOpt)) return;
+
+    //
+    /** === false, because it is explicitly set */
+    if (logOpt.log === false) {
+      return;
+    }
+
+    const onlyFocusedLogging = logOpt.focusedLogging && !logOpt?.log;
+    if (onlyFocusedLogging) {
+      return;
+    }
+
+    //
+    let [withSubstitutions, ...placeholderValues] = messages;
+    let updatedSubstitutions = `[${logOpt.scope}] ${withSubstitutions}`;
+
+    if (logOpt.prefix) {
+      updatedSubstitutions = `- (${logOpt.prefix}.) - ${updatedSubstitutions}`;
+    }
+
+    //
+    if (logOpt.deepLogObjects) {
+      placeholderValues = placeholderValues.map((value) =>
+        JSON.stringify(value)
+      );
+    }
+
+    const messageWithLogScope = [updatedSubstitutions, ...placeholderValues];
+
+    //
+    if (logOpt.throwOnError && logOpt.isError) {
+      /**
+       * We console.error AND throw, because we want to keep the formatting of the console.**
+       */
+      console.error(...messageWithLogScope);
+      throw '!!! [[ERROR]] Check above message !!!';
+    }
+
+    if (logOpt.logLevel !== 'VERBOSE' && logOpt.onlyVerbose) {
+      return;
+    }
+
+    //
+    const isExpandGroupBasedOnString = placeholderValues.includes(
+      logOpt.expandGroupBasedOnString
+    );
+
+    if (logOpt.dontLogUnlessSpecified) {
+      //
+      // if (!logOpt.expandGroupBasedOnString) {
+      //   console.warn("Pleace specifiy `expandGroupBasedOnString`");
+      // }
+
+      //
+      const onlyLogBasedOnString = isExpandGroupBasedOnString;
+
+      if (!onlyLogBasedOnString) {
+        return;
+      }
+    }
+
+    //
+    if (logOpt.startGroupId) {
+      if (logOpt.allGroupsCollapsedButSpecified) {
+        if (!logOpt.expandGroupBasedOnString) {
+          console.warn('Pleace specifiy `expandGroupBasedOnString`');
+        }
+
+        if (isExpandGroupBasedOnString) {
+          console.group();
+        } else {
+          console[logOpt.logMethod](...messageWithLogScope);
+          console.groupCollapsed();
+        }
+        //
+      } else {
+        console[logOpt.logMethod](...messageWithLogScope);
+        console.group();
+      }
+      groupId.push(logOpt.startGroupId);
+    }
+
+    //
+    if (logOpt.isOnlyGroup) {
+      if (logOpt.clearPreviousGroupsWhen_isOnlyGroup_True) {
+        console.clear();
+      }
+
+      if (onlyGroup.length === 0) {
+        onlyGroup.push(messageWithLogScope[0]);
+        console.group(...messageWithLogScope);
+        loggerDevelopmentDebugLog.push(['group', ...messageWithLogScope]);
+      } else {
+        onlyGroup = [];
+        console.groupEnd();
+        loggerDevelopmentDebugLog.push(['groupEnd', ...messageWithLogScope]);
+        console.group(...messageWithLogScope);
+        onlyGroup.push(messageWithLogScope[0]);
+        loggerDevelopmentDebugLog.push(['group', ...messageWithLogScope]);
+      }
+    }
+    // >>> Actual log
+    console[logOpt.logMethod](...messageWithLogScope);
+    this.logTrail.push(messageWithLogScope);
+    loggerDevelopmentDebugLog.push([logOpt.logMethod, ...messageWithLogScope]);
+
+    if (logOpt.endGroupId !== undefined && logOpt.endGroupId === groupId[0]) {
+      console.groupEnd();
+    }
+
+    //
+    if (logOpt.useTable) {
+      if (Array.isArray(messageWithLogScope[1])) {
+        console.table(messageWithLogScope[1]);
+      }
+    }
+
+    return messageWithLogScope;
+  }
+
+  public bug(message: string, logOptions: BugLogOptions = {}): string {
+    if (!debugMode) return;
+
     //
     if (logOptions.isStart) {
       console.group(message);
@@ -219,10 +281,20 @@ export class Logger {
       console.groupEnd();
       bugGroupId = bugGroupId.slice(0, bugGroupId.length - 1);
     }
+
+    //
+    if (logOptions.debugger) {
+      debugger;
+    }
+
+    return finalMessage;
   }
 
-  todo(message: string) {
-    console.log(`>>>> [TODO]: %c${message}`, `background: ${'darkgreen'}`);
+  public todo(message: string): string {
+    const todoMessage = `>>>> [TODO]: %c${message}`;
+    console.log(todoMessage, `background: ${'darkgreen'}`);
+
+    return todoMessage;
   }
 }
 
