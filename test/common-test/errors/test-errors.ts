@@ -1,9 +1,9 @@
-export class TestError {
+export class TestError extends Error {
   message: string;
 
   constructor(message?: string) {
     const finalMessage = `[TestError] ${message}`;
-    this.message = finalMessage;
+    super(finalMessage);
   }
 
   log(message: string): void {

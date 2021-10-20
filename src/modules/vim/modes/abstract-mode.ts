@@ -45,8 +45,6 @@ export interface TokenizedString {
 }
 
 export function tokenizeInput(input: string): TokenizedString[] {
-  // logger.bug('tokenizeInput');
-  /* prettier-ignore */ console.trace('TCL: input', input)
   const regExp = /(\S+)/g;
   const matchResult: RegExpExecArray[] = [];
   let match: RegExpExecArray;
@@ -54,7 +52,6 @@ export function tokenizeInput(input: string): TokenizedString[] {
   while ((match = regExp.exec(input))) {
     matchResult.push(match);
   }
-  // /* prettier-ignore */ console.log('TCL: matchResult', matchResult)
 
   const tokens = matchResult.map((result, resultIndex) => {
     const matchedString = result[0];
