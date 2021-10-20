@@ -117,7 +117,7 @@ export abstract class AbstractMode {
       );
     }
 
-    const previousOutput = cloneDeep(this.vimState);
+    const previousOutput = cloneDeep(this.vimState); // side effect, thus clone before executing command
     const result = this[commandName](commandInput) as VimState;
 
     try {
@@ -437,6 +437,10 @@ export abstract class AbstractMode {
     );
 
     this.vimState.text = updatedInput;
+    return this.vimState;
+  }
+
+  nothing(): VimState {
     return this.vimState;
   }
 }

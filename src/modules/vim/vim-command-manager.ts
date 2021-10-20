@@ -203,23 +203,14 @@ export class VimCommandManager {
     //
     if (!targetCommand) {
       if (this.activeMode === VimMode.INSERT) {
-        logger.debug(['Default to the command: type in Insert Mode'], {
-          log: true,
-        });
+        /* prettier-ignore */ logger.debug(['Default to the command: type in Insert Mode'], { log: true, });
         return 'type';
       }
 
       if (potentialCommands?.length) {
-        logger.debug(['Awaiting potential commands: %o', potentialCommands]);
+        /* prettier-ignore */ logger.debug(['Awaiting potential commands: %o', potentialCommands]);
       } else {
-        logger.debug(
-          [
-            'No command for key: %s in Mode: %s ((vim.ts-getCommandName))',
-            input,
-            this.activeMode,
-          ],
-          { isError: true }
-        );
+        /* prettier-ignore */ logger.debug( [ 'No command for key: %s in Mode: %s ((vim.ts-getCommandName))', input, this.activeMode, ], { isError: true });
       }
 
       return;

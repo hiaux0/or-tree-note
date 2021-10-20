@@ -15,12 +15,14 @@ export const VIM_COMMANDS = [
   'cursorLineEnd',
   'cursorLineStart',
   'delete',
+  'deleteInnerWord',
   'backspace',
   'newLine',
   // visual
+  'visualDelete',
   'visualInnerWord',
   'visualStartLineWise',
-  'visualMoveToOtherEndOfMarkedArea'
+  'visualMoveToOtherEndOfMarkedArea',
 ] as const;
 export type VimCommandNames = typeof VIM_COMMANDS[number];
 

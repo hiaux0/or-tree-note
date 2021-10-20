@@ -3,12 +3,33 @@ export function insert(str: string, index: number, value: string): string {
   return str.substr(0, ind) + value + str.substr(ind);
 }
 
-export function replaceAt(str: string, index: number, char: string) {
-  if (char == '') {
-    return str.slice(0, index) + str.substring(index + 1 + char.length);
+/**
+ * @example
+ *   ​​​​​​​​replaceAt(input, 4) // 012356
+ */
+export function replaceAt(input: string, index: number, char: string) {
+  return replaceRange(input, index, index, char);
+}
+
+/**
+ * @example
+ *   replaceRange(input, 2, 4)         // 0156
+ *   replaceRange(input, 2, 4, 'x')    // 01x56
+ *   ​​​​​​​​replaceRange(input, 2, 4, 'what')​​​ // 01what56
+ */
+export function replaceRange(
+  input: string,
+  start: number,
+  end: number,
+  replace: string = ''
+) {
+  if (replace == '') {
+    return input.slice(0, start) + input.substring(end + 1 + replace.length);
   } else {
     return (
-      str.substring(0, index) + char + str.substring(index + 1, str.length)
+      input.substring(0, start) +
+      replace +
+      input.substring(end + 1, input.length)
     );
   }
 }
@@ -26,7 +47,7 @@ function padWithRegexWildCard(input: string) {
 
   const splitByChar = input.split('');
   const withWildCard = splitByChar.join('.*');
-  return `${withWildCard  }.*`;
+  return `${withWildCard}.*`;
 }
 
 /**

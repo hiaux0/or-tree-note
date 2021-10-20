@@ -25,6 +25,7 @@ const keyBindings = {
   normal: [
     // { key: "<Space>", command: "vimLeader" },
     { key: '<Space>tc', command: 'toggleCheckbox' },
+    { key: 'diw', command: 'deleteInnerWord' },
     { key: 'i', command: 'enterInsertMode' },
     { key: 'v', command: 'enterVisualMode' },
     { key: 'V', command: 'visualStartLineWise' },
@@ -35,6 +36,7 @@ const keyBindings = {
     { key: '<Control>]', command: 'indentRight' },
     { key: '<Control>[', command: 'indentLeft' },
     { key: '<Enter>', command: 'newLine' },
+    { key: '<Meta>', command: 'nothing' },
     ...commandsAllModes,
     ...cursorAllModes,
     ...cursorNormalAndVisual,
@@ -49,7 +51,9 @@ const keyBindings = {
   ],
   visual: [
     { key: 'iw', command: 'visualInnerWord' },
+    { key: 'd', command: 'visualDelete' },
     { key: 'o', command: 'visualMoveToOtherEndOfMarkedArea' },
+    { key: 'x', command: 'visualDelete' },
     ...commandsAllModes,
     ...cursorAllModes,
     ...cursorNormalAndVisual,

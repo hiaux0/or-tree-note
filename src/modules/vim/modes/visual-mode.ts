@@ -1,4 +1,5 @@
 import { Logger } from 'modules/debug/logger';
+import { replaceRange } from 'modules/string/string';
 
 import { VimState, VimMode } from '../vim.types';
 import { AbstractMode } from './abstract-mode';
@@ -55,4 +56,32 @@ export class VisualMode extends AbstractMode {
 
     return this.vimState;
   }
+
+  visualDelete(): VimState {
+    const { text, visualStartCursor, visualEndCursor } = this.vimState;
+    if (!visualStartCursor) {
+      logVisualDeleteError('Need start cursor');
+      return this.vimState;
+    }
+    if (!visualEndCursor) {
+      logVisualDeleteError('Need end cursor');
+      return this.vimState;
+    }
+
+    const replaced = replaceRange(
+      text,
+      visualStartCursor.col,
+      visualEndCursor.col
+    );
+    this.vimState.text = replaced;
+
+    // Put cursor to start of visual
+    this.vimState.cursor.col = visualStartCursor.col; /*?*/
+
+    return this.vimState;
+  }
+}
+
+function logVisualDeleteError(message: string) {
+  logger.debug([message], { isError: true });
 }

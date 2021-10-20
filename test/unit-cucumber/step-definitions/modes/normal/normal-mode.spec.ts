@@ -4,7 +4,10 @@ import {
   VIM_COMMANDS,
 } from 'modules/vim/vim-commands-repository';
 import { QueueInputReturn } from 'modules/vim/vim.types';
-import { testError } from '../../../../common-test/errors/test-errors';
+import {
+  TestError,
+  testError,
+} from '../../../../common-test/errors/test-errors';
 import { GherkinTestUtil } from '../../../../common-test/gherkin/gherkin-test-util';
 import { vim } from '../../common-steps/modes/common-vim.spec';
 
@@ -18,9 +21,10 @@ export const normalModeSteps: StepDefinitions = ({ when, then, and }) => {
   });
 
   when(/^I queueInputSequence (.*)$/, (rawInput: string) => {
-    const input = GherkinTestUtil.replaceQuotes(rawInput); /*?*/
+    const input = GherkinTestUtil.replaceQuotes(rawInput);
 
     manyQueuedInput = vim.queueInputSequence(input);
+    manyQueuedInput; /*?*/
   });
 
   then(
@@ -89,9 +93,11 @@ export const normalModeSteps: StepDefinitions = ({ when, then, and }) => {
   );
 
   and(/^the texts should be (.*)$/, (rawTexts: string) => {
-    const texts = rawTexts.split(',');
+    const rawTextsSplit = rawTexts.split(',');
     let lastExpectedText: string | null = null;
-    texts.forEach((text, index) => {
+
+    rawTextsSplit.forEach((rawText, index) => {
+      const text = GherkinTestUtil.replaceQuotes(rawText);
       lastExpectedText = memoizeExpected(text, lastExpectedText);
 
       expect(manyQueuedInput[index].vimState.text).toBe(lastExpectedText);
@@ -129,8 +135,8 @@ function verifyCommandsName(command: string) {
   const isValid = VIM_COMMANDS.includes(<VimCommandNames>command);
 
   if (!isValid) {
-    testError.log(`Command not in list, was: >> ${command} <<.`);
-    return false;
+    // testError.log(`Command not in list, was: >> ${command} <<.`);
+    throw new TestError(`Command not in list, was: >> ${command} <<.`);
   }
 
   return true;

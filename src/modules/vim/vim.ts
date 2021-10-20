@@ -39,8 +39,10 @@ const defaultCursor = {
  * - the cursor location
  */
 export class Vim {
-  private readonly vimCommandManager: VimCommandManager;
   public vimState: VimState;
+
+  private readonly vimCommandManager: VimCommandManager;
+  private activeLine: string;
 
   constructor(
     private readonly lines: string[],
@@ -66,44 +68,23 @@ export class Vim {
     this.verifyValidCursorPosition();
   }
 
-  private verifyValidCursorPosition() {
-    const cursorCol = this.cursor.col;
-    const cursorLine = this.cursor.line;
-    if (cursorCol < 0) {
-      throw new Error(
-        `[ILLEGAL]: Cursor out of bound: Must not be negative, but column is ${cursorCol}`
-      );
-    } else if (cursorLine < 0) {
-      throw new Error(
-        `[ILLEGAL]: Cursor out of bound: Must not be negative, but line is ${cursorLine}`
-      );
-    } else if (this.lines[cursorLine] == undefined) {
-      // == for null and undefined
-      throw new Error(
-        `[ILLEGAL]: Cursor out of bound: Your input has ${this.lines.length} lines, but cursor line is: ${cursorLine}`
-      );
-    } else if (cursorCol > this.lines[cursorLine].length) {
-      throw new Error(
-        `[ILLEGAL]: Cursor out of bound: Your input has ${this.lines[cursorLine].length} columns, but cursor column is: ${cursorCol}`
-      );
-    }
-  }
-
   /** *************/
   /** Input Queue */
   /** *************/
 
   /**
-   * For modifier keys, pass in, eg. <escape>
+   * For modifier keys, pass in, eg. <Escape>
    */
-  queueInput(input: string): QueueInputReturn {
+  queueInput(input: string): QueueInputReturn | undefined {
     logger.debug(['Received input: %s', input]);
 
     //
     let targetCommandName: VimCommandNames;
+
     try {
       targetCommandName = this.vimCommandManager.getCommandName(input);
     } catch {}
+    if (!targetCommandName) return;
 
     let vimState: VimState;
 
@@ -131,15 +112,14 @@ export class Vim {
     }
 
     //
-    const result = {
+    this.updateActiveLine();
+    const result: QueueInputReturn = {
       vimState: cloneDeep(vimState),
       targetCommand: targetCommandName,
       lines: [...this.lines],
     };
 
-    logger.debug(['Result of input: %s is: %o', input, result], {
-      onlyVerbose: true,
-    });
+    this.logAndVerifyQueueInputReturn(result, input);
 
     return result;
   }
@@ -161,7 +141,9 @@ export class Vim {
 
     givenInputSequence.forEach((input) => {
       const subResult = this.queueInput(input);
-      resultList.push(subResult);
+      if (subResult?.targetCommand !== undefined) {
+        resultList.push(subResult);
+      }
     });
 
     if (vimExecutingMode === VimExecutingMode.INDIVIDUAL) {
@@ -179,5 +161,60 @@ export class Vim {
   }
   enterNormalMode() {
     return this.vimCommandManager.enterNormalMode();
+  }
+
+  private updateActiveLine() {
+    const { line: lineIndex } = this.vimState.cursor;
+    const activeLine = this.lines[lineIndex];
+    this.setActiveLine(activeLine);
+    this.lines[lineIndex] = this.vimState.text;
+  }
+  private setActiveLine(activeLine: string) {
+    this.activeLine = activeLine;
+  }
+  private getActiveLine() {
+    return this.activeLine;
+  }
+
+  private verifyValidCursorPosition() {
+    const cursorCol = this.cursor.col;
+    const cursorLine = this.cursor.line;
+    if (cursorCol < 0) {
+      throw new Error(
+        `[ILLEGAL]: Cursor out of bound: Must not be negative, but column is ${cursorCol}`
+      );
+    } else if (cursorLine < 0) {
+      throw new Error(
+        `[ILLEGAL]: Cursor out of bound: Must not be negative, but line is ${cursorLine}`
+      );
+    } else if (this.lines[cursorLine] == undefined) {
+      // == for null and undefined
+      throw new Error(
+        `[ILLEGAL]: Cursor out of bound: Your input has ${this.lines.length} lines, but cursor line is: ${cursorLine}`
+      );
+    } else if (cursorCol > this.lines[cursorLine].length) {
+      throw new Error(
+        `[ILLEGAL]: Cursor out of bound: Your input has ${this.lines[cursorLine].length} columns, but cursor column is: ${cursorCol}`
+      );
+    }
+  }
+
+  private logAndVerifyQueueInputReturn(
+    queueInputReturn: QueueInputReturn,
+    input: string
+  ) {
+    const { vimState } = queueInputReturn;
+    const actviveLine = this.lines[vimState.cursor.line];
+
+    if (actviveLine !== vimState.text) {
+      const errorMessage = `Active line and vim state wrong.`;
+      const expected = `Expected: ${vimState.text}`;
+      const received = `Received: ${actviveLine}`;
+      throw new Error(`${errorMessage}\n${expected}\n${received}`);
+    }
+
+    logger.debug(['Result of input: %s is: %o', input, queueInputReturn], {
+      onlyVerbose: true,
+    });
   }
 }

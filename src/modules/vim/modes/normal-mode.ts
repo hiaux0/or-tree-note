@@ -15,4 +15,12 @@ export class NormalMode extends AbstractMode {
   ): VimState {
     return super.executeCommand(commandName, commandValue, this.currentMode);
   }
+
+  deleteInnerWord(): VimState {
+    const token = super.getTokenUnderCursor();
+    const newText = this.vimState.text.replace(token.string, '');
+    this.vimState.text = newText;
+
+    return this.vimState;
+  }
 }

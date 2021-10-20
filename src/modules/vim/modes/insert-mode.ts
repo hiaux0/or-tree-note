@@ -42,8 +42,4 @@ export class InsertMode extends AbstractMode {
     this.vimState.text = updatedInput;
     return this.vimState;
   }
-
-  nothing() {
-    return this.vimState;
-  }
 }
