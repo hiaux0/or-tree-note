@@ -1,5 +1,6 @@
 import { StateHistory, nextStateHistory } from 'aurelia-store';
 import produce from 'immer';
+import { cloneDeep } from 'lodash';
 import { Cursor, VimState } from 'modules/vim/vim.types';
 import { VimEditorState } from 'store/initial-state';
 
@@ -8,7 +9,7 @@ export function changeVimState(
   newVimState: VimState
 ) {
   return nextStateHistory(
-    state,
+    cloneDeep(state),
     produce(state.present, (draftState) => {
       draftState.vimState = newVimState;
     })
@@ -22,7 +23,7 @@ export const changeText = (
 ) => {
   changeText;
   return nextStateHistory(
-    state,
+    cloneDeep(state),
     produce(state.present, (draftState) => {
       const targetDraftLine = draftState.lines[targetLineNumber];
 
@@ -37,7 +38,7 @@ export function createNewLine(
   newText: string
 ) {
   return nextStateHistory(
-    state,
+    cloneDeep(state),
     produce(state.present, (draftState) => {
       draftState.lines.splice(newLineIndex, 0, {
         text: newText,
