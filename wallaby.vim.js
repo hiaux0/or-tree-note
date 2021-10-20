@@ -6,7 +6,9 @@ module.exports = function (wallaby) {
       //   load: false,
       // },
       'src/**/*.+(ts|html|json)',
+
       'test/**/*.feature',
+      'test/common-test/**/*.ts',
       'test/unit-cucumber/init-cucumber-testing.spec.ts',
       'test/unit-cucumber/step-definitions/**/*.ts',
     ],

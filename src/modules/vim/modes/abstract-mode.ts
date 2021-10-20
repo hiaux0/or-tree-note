@@ -45,7 +45,7 @@ export interface TokenizedString {
 }
 
 export function tokenizeInput(input: string): TokenizedString[] {
-  logger.bug('tokenizeInput');
+  // logger.bug('tokenizeInput');
   /* prettier-ignore */ console.trace('TCL: input', input)
   const regExp = /(\S+)/g;
   const matchResult: RegExpExecArray[] = [];
@@ -54,7 +54,7 @@ export function tokenizeInput(input: string): TokenizedString[] {
   while ((match = regExp.exec(input))) {
     matchResult.push(match);
   }
-  /* prettier-ignore */ console.log('TCL: matchResult', matchResult)
+  // /* prettier-ignore */ console.log('TCL: matchResult', matchResult)
 
   const tokens = matchResult.map((result, resultIndex) => {
     const matchedString = result[0];
@@ -250,7 +250,6 @@ export abstract class AbstractMode {
     return this.vimState;
   }
   cursorDown(): VimState {
-    1; /* ? */
     const newCurLine = this.vimState.cursor.line + 1;
     const isValidVertical = isValidVerticalPosition(newCurLine + 1, this.lines);
 

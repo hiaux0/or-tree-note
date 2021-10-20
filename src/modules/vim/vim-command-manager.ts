@@ -197,7 +197,7 @@ export class VimCommandManager {
       ({ targetCommand, potentialCommands } = this.findPotentialCommand(input));
     } catch (error) {
       logger.debug(['Error: %s', error], { onlyVerbose: true });
-      throw error;
+      // throw error;
     }
 
     //
