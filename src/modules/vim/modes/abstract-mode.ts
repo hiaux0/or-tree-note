@@ -9,65 +9,11 @@ import { VimState, VimMode, VimOptions, VimPlugin } from '../vim.types';
 
 const logger = new Logger({ scope: 'AbstractMode' });
 
-export function isValidHorizontalPosition(
-  cursorCol: number,
-  activeInput: string
-) {
-  if (cursorCol === activeInput.length + 1) return true;
-
-  const isBigger = cursorCol > activeInput.length;
-  /**
-   * Should be > technically, but conceptionally, cursor and text index are off by one.
-   */
-  const isZero = cursorCol === 0;
-  const result = !isBigger && !isZero;
-
-  return result;
-}
-
-export function isValidVerticalPosition(line: number, lines: string[]) {
-  const isBigger = line > lines.length;
-  /**
-   * Should be > technically, but conceptionally, line and text index are off by one.
-   */
-  const isZero = line === 0;
-
-  //
-  const result = !isBigger && !isZero;
-  return result;
-}
-
 export interface TokenizedString {
   string: string;
   start: number;
   end: number;
   index: number;
-}
-
-export function tokenizeInput(input: string): TokenizedString[] {
-  const regExp = /(\S+)/g;
-  const matchResult: RegExpExecArray[] = [];
-  let match: RegExpExecArray;
-
-  while ((match = regExp.exec(input))) {
-    matchResult.push(match);
-  }
-
-  const tokens = matchResult.map((result, resultIndex) => {
-    const matchedString = result[0];
-    const { index: matchIndex } = result;
-    const token: TokenizedString = {
-      string: matchedString,
-      start: matchIndex,
-      end: matchIndex + matchedString.length - 1,
-      index: resultIndex,
-    };
-    return token;
-  });
-
-  logger.debug(['Tokens: %o', tokens], { onlyVerbose: true });
-
-  return tokens;
 }
 
 export abstract class AbstractMode {
@@ -443,4 +389,58 @@ export abstract class AbstractMode {
   nothing(): VimState {
     return this.vimState;
   }
+}
+
+export function isValidHorizontalPosition(
+  cursorCol: number,
+  activeInput: string
+) {
+  if (cursorCol === activeInput.length + 1) return true;
+
+  const isBigger = cursorCol > activeInput.length;
+  /**
+   * Should be > technically, but conceptionally, cursor and text index are off by one.
+   */
+  const isZero = cursorCol === 0;
+  const result = !isBigger && !isZero;
+
+  return result;
+}
+
+export function isValidVerticalPosition(line: number, lines: string[]) {
+  const isBigger = line > lines.length;
+  /**
+   * Should be > technically, but conceptionally, line and text index are off by one.
+   */
+  const isZero = line === 0;
+
+  //
+  const result = !isBigger && !isZero;
+  return result;
+}
+
+export function tokenizeInput(input: string): TokenizedString[] {
+  const regExp = /(\S+)/g;
+  const matchResult: RegExpExecArray[] = [];
+  let match: RegExpExecArray;
+
+  while ((match = regExp.exec(input))) {
+    matchResult.push(match);
+  }
+
+  const tokens = matchResult.map((result, resultIndex) => {
+    const matchedString = result[0];
+    const { index: matchIndex } = result;
+    const token: TokenizedString = {
+      string: matchedString,
+      start: matchIndex,
+      end: matchIndex + matchedString.length - 1,
+      index: resultIndex,
+    };
+    return token;
+  });
+
+  logger.debug(['Tokens: %o', tokens], { onlyVerbose: true });
+
+  return tokens;
 }

@@ -156,19 +156,28 @@ export class VimEditorTextMode {
     if (currentMode[result?.targetCommand]) {
       currentMode[result.targetCommand](result.vimState);
       ev.preventDefault();
+    } else {
+      logger.debug([
+        `The mode ${this.vim.getCurrentMode().currentMode} has no command ${
+          result.targetCommand
+        }.`,
+      ]);
     }
 
     this.store.dispatch(changeVimState, result.vimState);
   }
 
   executeCommandSequenceInEditor(inputSequence: string | string[]) {
+    logger.bug('executeCommandSequenceInEditor');
     const resultList = this.vim.queueInputSequence(
       inputSequence,
       this.vimEditorOptions.vimExecutingMode
     );
+    /* prettier-ignore */ console.log('TCL: VimEditorTextMode -> executeCommandSequenceInEditor -> resultList', resultList)
 
     resultList.forEach((result) => {
       const currentMode = this.getCurrentTextMode();
+      /* prettier-ignore */ console.log('TCL: VimEditorTextMode -> executeCommandSequenceInEditor -> currentMode', currentMode)
 
       if (currentMode[result.targetCommand]) {
         currentMode[result.targetCommand](result.vimState);

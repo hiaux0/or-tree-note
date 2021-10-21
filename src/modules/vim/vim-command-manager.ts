@@ -25,17 +25,17 @@ const logger = new Logger({ scope: 'VimCommandManager' });
  */
 export class VimCommandManager {
   activeMode: VimMode = VimMode.NORMAL;
-  normalMode: NormalMode;
-  insertMode: InsertMode;
-  visualMode: VisualMode;
+  private normalMode: NormalMode;
+  private insertMode: InsertMode;
+  private visualMode: VisualMode;
 
   /** Alias for vimOptions.keyBindings */
-  keyBindings: KeyBindingModes;
+  private keyBindings: KeyBindingModes;
 
-  potentialCommands: VimCommand[];
+  private potentialCommands: VimCommand[];
   /** If a command did not trigger, save key */
-  queuedKeys: string[] = [];
-  cursor: Cursor;
+  private queuedKeys: string[] = [];
+  private cursor: Cursor;
 
   constructor(
     public lines: string[],

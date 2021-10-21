@@ -16,3 +16,4 @@ Feature: Delete selection
     Examples:
       | INPUT | COMMANDS                                     | TEXTS         | COLUMNS | LINES |
       | viwd  | enterVisualMode,visualInnerWord,visualDelete | 012 456,, 456 | 0,2,0   | 0,,   |
+      | viwx  | enterVisualMode,visualInnerWord,visualDelete | 012 456,, 456 | 0,2,0   | 0,,   |

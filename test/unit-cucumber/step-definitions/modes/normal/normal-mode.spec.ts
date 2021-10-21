@@ -24,7 +24,7 @@ export const normalModeSteps: StepDefinitions = ({ when, then, and }) => {
     const input = GherkinTestUtil.replaceQuotes(rawInput);
 
     manyQueuedInput = vim.queueInputSequence(input);
-    manyQueuedInput; /*?*/
+    // manyQueuedInput; /*?*/
   });
 
   then(

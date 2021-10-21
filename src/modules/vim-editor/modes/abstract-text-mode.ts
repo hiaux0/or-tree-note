@@ -6,7 +6,7 @@ import {
 } from 'modules/css/css-variables';
 import { Logger } from 'modules/debug/logger';
 import { rootContainer } from 'modules/root-container';
-import { Cursor, VimState } from 'modules/vim/vim.types';
+import { Cursor, VimMode, VimState } from 'modules/vim/vim.types';
 import { VimEditorState } from 'store/initial-state';
 
 import { createNewLine, changeText } from '../actions/actions-vim-editor';
@@ -16,15 +16,14 @@ const logger = new Logger({ scope: 'AbstractTextMode' });
 
 @inject(Store)
 export abstract class AbstractTextMode {
-  children: NodeListOf<HTMLElement>;
+  public mode: VimMode;
 
-  caretWidth: number;
-  caretHeight: number;
-
-  currentLineNumber: number = 0;
-  currentCaretCol: number = 0;
-
-  childrenMutationObserver: ChildrenMutationObserver;
+  private caretWidth: number;
+  private caretHeight: number;
+  private currentLineNumber: number = 0;
+  private currentCaretCol: number = 0;
+  private children: NodeListOf<HTMLElement>;
+  private childrenMutationObserver: ChildrenMutationObserver;
 
   constructor(
     public parentElement: HTMLElement,

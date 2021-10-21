@@ -112,11 +112,10 @@ export class Vim {
     }
 
     //
-    this.updateActiveLine();
     const result: QueueInputReturn = {
       vimState: cloneDeep(vimState),
       targetCommand: targetCommandName,
-      lines: [...this.lines],
+      lines: [...this.getUpdateActiveLine()],
     };
 
     this.logAndVerifyQueueInputReturn(result, input);
@@ -163,11 +162,13 @@ export class Vim {
     return this.vimCommandManager.enterNormalMode();
   }
 
-  private updateActiveLine() {
+  private getUpdateActiveLine() {
     const { line: lineIndex } = this.vimState.cursor;
     const activeLine = this.lines[lineIndex];
     this.setActiveLine(activeLine);
     this.lines[lineIndex] = this.vimState.text;
+
+    return this.lines;
   }
   private setActiveLine(activeLine: string) {
     this.activeLine = activeLine;
