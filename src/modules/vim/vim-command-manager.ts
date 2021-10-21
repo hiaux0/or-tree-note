@@ -132,7 +132,6 @@ export class VimCommandManager {
 
     //
     let targetKeyBinding: VimCommand[];
-
     if (this.potentialCommands?.length) {
       targetKeyBinding = this.potentialCommands;
       //
@@ -162,6 +161,7 @@ export class VimCommandManager {
     //
     let targetCommand;
 
+    keySequence; /*?*/
     const potentialCommands = targetKeyBinding.filter((keyBinding) => {
       const result = inputContainsSequence(keyBinding.key, keySequence);
       return result;

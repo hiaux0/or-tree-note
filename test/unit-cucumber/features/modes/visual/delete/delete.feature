@@ -6,7 +6,6 @@ Feature: Delete selection
       """
     And I'm in normal mode.
 
-  @focus
   Scenario Outline: Delete selection
     When I queueInputSequence <INPUT>
     Then the expected commands should be <COMMANDS>

@@ -1,7 +1,13 @@
-import { VimCommandNames, VimCommand, SynonymKey } from './vim-commands-repository';
+import {
+  VimCommandNames,
+  VimCommand,
+  SynonymKey,
+} from './vim-commands-repository';
 
 export interface KeyBindingModes {
+  insert: VimCommand[];
   normal: VimCommand[];
+  visual: VimCommand[];
   synonyms: SynonymKey;
 }
 
@@ -44,6 +50,8 @@ export enum VimMode {
   'INSERT' = 'INSERT',
   'VISUAL' = 'VISUAL',
 }
+export type VimModeKeys = keyof typeof VimMode;
+
 export interface VimOptions {
   keyBindings?: KeyBindingModes;
   leader?: string;

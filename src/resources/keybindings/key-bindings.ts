@@ -1,5 +1,7 @@
 // Naming based on https://vim.rtorr.com/
 
+import { KeyBindingModes } from 'modules/vim/vim.types';
+
 const commandsAllModes = [{ key: '<Escape>', command: 'enterNormalMode' }];
 
 const cursorAllModes = [
@@ -44,6 +46,7 @@ const keyBindings = {
   insert: [
     { key: '<Backspace>', command: 'backspace' },
     { key: '<Delete>', command: 'delete' },
+    { key: '<Enter>', command: 'newLine' },
     { key: '<Shift>', command: 'shift' },
     { key: '<Control>', command: 'nothing' },
     ...commandsAllModes,

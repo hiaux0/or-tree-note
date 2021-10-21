@@ -94,8 +94,9 @@ export const normalModeSteps: StepDefinitions = ({ when, then, and }) => {
 
   and(/^the texts should be (.*)$/, (rawTexts: string) => {
     const rawTextsSplit = rawTexts.split(',');
-    let lastExpectedText: string | null = null;
+    rawTextsSplit; /*?*/
 
+    let lastExpectedText = '';
     rawTextsSplit.forEach((rawText, index) => {
       const text = GherkinTestUtil.replaceQuotes(rawText);
       lastExpectedText = memoizeExpected(text, lastExpectedText);
