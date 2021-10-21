@@ -20,6 +20,10 @@ export class NormalTextMode extends AbstractTextMode {
     super(parentElement, childSelector, caretElement, store);
   }
 
+  deleteInnerWord(vimState?: VimState) {
+    this.store.dispatch(changeText, vimState.cursor.line, vimState.text);
+  }
+
   visualDelete(vimState?: VimState) {
     this.store.dispatch(changeText, vimState.cursor.line, vimState.text);
   }
