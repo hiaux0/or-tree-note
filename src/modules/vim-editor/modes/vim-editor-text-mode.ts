@@ -139,7 +139,7 @@ export class VimEditorTextMode {
     return ALL_MODIFIERS.includes(modifierInput);
   }
 
-  executeCommandInEditor(input: string, ev: KeyboardEvent) {
+  async executeCommandInEditor(input: string, ev: KeyboardEvent) {
     //
     const result = this.vim.queueInput(input);
     logger.debug(['Received result from vim: %o', result], {
@@ -154,7 +154,7 @@ export class VimEditorTextMode {
     }
 
     if (currentMode[result?.targetCommand]) {
-      currentMode[result.targetCommand](result.vimState);
+      await currentMode[result.targetCommand](result.vimState);
       ev.preventDefault();
     } else {
       logger.debug([

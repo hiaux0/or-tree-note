@@ -1,9 +1,6 @@
 import { cloneDeep, map } from 'lodash';
 import { VimCommandManager } from 'modules/vim/vim-command-manager';
-import {
-  KeyBindingModes,
-  VimMode,
-} from 'modules/vim/vim.types';
+import { KeyBindingModes, VimMode } from 'modules/vim/vim.types';
 import { createVimState } from 'test/vim-state-utils';
 
 const input = ['foo'];

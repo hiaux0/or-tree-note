@@ -20,7 +20,13 @@ export abstract class AbstractTextMode {
 
   private caretWidth: number;
   private caretHeight: number;
-  private currentLineNumber: number = 0;
+  private _currentLineNumber: number = 0;
+  private get currentLineNumber(): number {
+    return this._currentLineNumber;
+  }
+  private set currentLineNumber(value: number) {
+    this._currentLineNumber = value;
+  }
   private currentCaretCol: number = 0;
   private children: NodeListOf<HTMLElement>;
   private childrenMutationObserver: ChildrenMutationObserver;
@@ -77,10 +83,12 @@ export abstract class AbstractTextMode {
   }
 
   getLineRectOffsetLeft() {
+    logger.bug('getLineRectOffsetLeft');
     const children = this.parentElement.querySelectorAll<HTMLElement>(
       `.${this.childSelector}`
     );
     const currentChild = children[this.currentLineNumber];
+    /* prettier-ignore */ console.log('TCL: AbstractTextMode -> getLineRectOffsetLeft -> currentChild', currentChild)
     let childOffsetLeft = 0;
     if (currentChild) {
       childOffsetLeft = currentChild.offsetLeft;
@@ -127,10 +135,10 @@ export abstract class AbstractTextMode {
   /** **** */
   /* Text */
   /** **** */
-  newLine(vimState: VimState) {
+  async newLine(vimState: VimState) {
     const newLineIndex = vimState.cursor.line;
+    await this.store.dispatch(createNewLine, newLineIndex, vimState.text);
     this.setCursorMovement(vimState.cursor);
-    this.store.dispatch(createNewLine, newLineIndex, vimState.text);
   }
   indentRight(vimState: VimState) {
     this.store.dispatch(changeText, vimState.cursor.line, vimState.text);
