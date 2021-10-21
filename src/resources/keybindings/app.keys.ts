@@ -47,19 +47,13 @@ export const SHIFT = 'Shift';
 export const SHIFT_KEY_CODE = 16;
 export const SPACE = 'Space';
 
-export const MODIFIERS = [
-  '⌘',
+export const MODIFIERS_WORDS = [
   'Command',
-  '⌃',
   'Control',
-  '⌥',
   'Option',
   'Alt',
-  '⇧',
   'Shift',
-  '⇪',
   'Caps Lock(Capital)',
-  '↩︎',
   'Escape',
   'Enter',
   'Backspace',
@@ -67,8 +61,13 @@ export const MODIFIERS = [
   'Delete',
   SPACE,
 ] as const;
+export const MODIFIERS_SYMBOLS = ['⌘', '⌃', '⌥', '⇧', '⇪', '↩︎'] as const;
+export const ALL_MODIFIERS = [
+  ...MODIFIERS_WORDS,
+  ...MODIFIERS_SYMBOLS,
+] as const;
 
-export type ModifiersType = typeof MODIFIERS[number];
+export type ModifiersType = typeof ALL_MODIFIERS[number];
 
 export const NAVIGATION_KEYS = [
   // Navigation
@@ -82,7 +81,7 @@ export const NAVIGATION_KEYS = [
   'ArrowDown',
 ];
 
-export const SPECIAL_KEYS = [...MODIFIERS, ...NAVIGATION_KEYS];
+export const SPECIAL_KEYS = [...ALL_MODIFIERS, ...NAVIGATION_KEYS];
 
 // Cursor
 export const CURSOR_LEFT = 'h';

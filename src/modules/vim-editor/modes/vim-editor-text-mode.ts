@@ -6,7 +6,7 @@ import { Logger } from 'modules/debug/logger';
 import { Vim } from 'modules/vim/vim';
 import { Cursor, VimMode } from 'modules/vim/vim.types';
 import {
-  MODIFIERS,
+  ALL_MODIFIERS,
   ModifiersType,
   SPACE,
 } from 'resources/keybindings/app.keys';
@@ -136,7 +136,7 @@ export class VimEditorTextMode {
 
   isModifierKey(input: string): input is ModifiersType {
     const modifierInput = input as ModifiersType;
-    return MODIFIERS.includes(modifierInput);
+    return ALL_MODIFIERS.includes(modifierInput);
   }
 
   executeCommandInEditor(input: string, ev: KeyboardEvent) {

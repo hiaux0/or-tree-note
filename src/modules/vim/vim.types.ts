@@ -5,9 +5,9 @@ import {
 } from './vim-commands-repository';
 
 export interface KeyBindingModes {
-  insert: VimCommand[];
+  insert?: VimCommand[];
   normal: VimCommand[];
-  visual: VimCommand[];
+  visual?: VimCommand[];
   synonyms: SynonymKey;
 }
 

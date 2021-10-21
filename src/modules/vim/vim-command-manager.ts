@@ -1,7 +1,7 @@
 import { groupBy } from 'lodash';
 import { Logger } from 'modules/debug/logger';
 import { inputContainsSequence } from 'modules/string/string';
-import { SPECIAL_KEYS } from 'resources/keybindings/app.keys';
+import { MODIFIERS_WORDS, SPECIAL_KEYS } from 'resources/keybindings/app.keys';
 
 import { InsertMode } from './modes/insert-mode';
 import { NormalMode } from './modes/normal-mode';
@@ -161,8 +161,11 @@ export class VimCommandManager {
     //
     let targetCommand;
 
-    keySequence; /*?*/
     const potentialCommands = targetKeyBinding.filter((keyBinding) => {
+      // if (ignoreCaseForModifiers(keyBinding.key, keySequence)) {
+      //   return true;
+      // }
+
       const result = inputContainsSequence(keyBinding.key, keySequence);
       return result;
     });
@@ -277,6 +280,7 @@ export class VimCommandManager {
       }
     });
 
+    result; /*?*/
     return result;
   }
   /** */
@@ -314,4 +318,13 @@ export class VimCommandManager {
 
     return this.vimState;
   }
+}
+
+/**
+ * @example
+ * <Enter> <enter>
+ */
+function ignoreCaseForModifiers(key: string, keySequence: string) {
+  const isIgnoreCase = keySequence.toLowerCase().includes(key.toLowerCase());
+  return isIgnoreCase;
 }
