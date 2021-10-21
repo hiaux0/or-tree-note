@@ -4,7 +4,10 @@ import { SPACE } from 'resources/keybindings/app.keys';
 import keyBindingsJson from 'resources/keybindings/key-bindings';
 
 import { VimCommandManager } from './vim-command-manager';
-import { VimCommandNames } from './vim-commands-repository';
+import {
+  VimCommandNames,
+  VIM_COMMANDS_THAT_CHANGE_TO_NORMAL_MODE,
+} from './vim-commands-repository';
 import {
   VimOptions,
   Cursor,
@@ -80,14 +83,12 @@ export class Vim {
 
     //
     let targetCommandName: VimCommandNames;
-
     try {
       targetCommandName = this.vimCommandManager.getCommandName(input);
     } catch {}
     if (!targetCommandName) return;
 
     let vimState: VimState;
-
     if (targetCommandName === 'enterInsertMode') {
       vimState = this.vimCommandManager.enterInsertMode();
     } else if (targetCommandName === 'enterNormalMode') {
@@ -107,6 +108,7 @@ export class Vim {
     if (vimState) {
       this.vimCommandManager.setVimState(vimState);
       this.vimState = vimState;
+      this.handleCommandThatChangesMode(targetCommandName);
     } else {
       vimState = this.vimState;
     }
@@ -119,6 +121,7 @@ export class Vim {
     };
 
     this.logAndVerifyQueueInputReturn(result, input);
+    /* prettier-ignore */ console.log('TCL: result', result)
 
     return result;
   }
@@ -217,5 +220,15 @@ export class Vim {
     logger.debug(['Result of input: %s is: %o', input, queueInputReturn], {
       onlyVerbose: true,
     });
+  }
+
+  private handleCommandThatChangesMode(targetCommandName: string) {
+    // Change to normal mode
+    if (VIM_COMMANDS_THAT_CHANGE_TO_NORMAL_MODE.includes(targetCommandName)) {
+      this.enterNormalMode();
+      return true;
+    }
+
+    return false;
   }
 }

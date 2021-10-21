@@ -26,6 +26,8 @@ export const VIM_COMMANDS = [
 ] as const;
 export type VimCommandNames = typeof VIM_COMMANDS[number];
 
+export const VIM_COMMANDS_THAT_CHANGE_TO_NORMAL_MODE = ['visualDelete'];
+
 export interface VimCommand {
   key: string;
   command: VimCommandNames;
