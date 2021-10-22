@@ -5,10 +5,10 @@ Feature: Character $.
       \|012 456
       """
     And I'm in normal mode.
-    When I type <INPUT>
-    Then the expected commands should be <COMMANDS>
-    And the cursors should be at line <LINES> and column <COLUMNS>
+    When I type <Input>
+    Then the expected commands should be <Commands>
+    And the cursors should be at line <Lines> and column <Columns>
 
     Examples:
-      | INPUT | COMMANDS      | LINES | COLUMNS |
+      | Input | COMMANDS      | Lines | Columns |
       | $     | cursorLineEnd | 0     | 6       |

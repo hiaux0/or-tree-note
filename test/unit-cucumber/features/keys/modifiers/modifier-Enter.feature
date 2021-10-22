@@ -5,13 +5,13 @@ Feature: Modifier Enter.
       \|012 456
       """
     And I'm in insert mode.
-    When I type <INPUT>
-    Then the expected commands should be <COMMANDS>
-    And the cursors should be at line <LINES> and column <COLUMNS>
-    And the texts should be <TEXTS>
+    When I type <Input>
+    Then the expected commands should be <Commands>
+    And the cursors should be at line <Lines> and column <Columns>
+    And the texts should be <Texts>
 
     Examples:
-      | INPUT   | COMMANDS | TEXTS   | COLUMNS | LINES |
+      | Input   | Commands | Texts   | Columns | Lines |
       | <Enter> | newLine  | 012 456 | 0       | 1     |
 
   Scenario Outline: New Line - Middle of line
@@ -20,14 +20,14 @@ Feature: Modifier Enter.
       01\|2 456
       """
     And I'm in insert mode.
-    When I type <INPUT>
-    Then the expected commands should be <COMMANDS>
-    And the cursors should be at line <LINES> and column <COLUMNS>
-    And the texts should be <TEXTS>
+    When I type <Input>
+    Then the expected commands should be <Commands>
+    And the cursors should be at line <Lines> and column <Columns>
+    And the texts should be <Texts>
     And the previous line text should be <PreviousText>
 
     Examples:
-      | INPUT   | COMMANDS | TEXTS | PreviousText | COLUMNS | LINES |
+      | Input   | Commands | Texts | PreviousText | Columns | Lines |
       | <Enter> | newLine  | 2 456 | 01           | 0       | 1     |
 
   @focus
@@ -38,15 +38,15 @@ Feature: Modifier Enter.
       789
       """
     And I'm in insert mode.
-    When I type <INPUT>
-    Then the expected commands should be <COMMANDS>
-    And there should be <NUM_LINES> lines
-    And the cursors should be at line <LINES> and column <COLUMNS>
-    And the texts should be <TEXTS>
+    When I type <Input>
+    Then the expected commands should be <Commands>
+    And there should be <Num_Lines> lines
+    And the cursors should be at line <Lines> and column <Columns>
+    And the texts should be <Texts>
     And the previous line text should be <PreviousText>
 
     Examples:
-      | INPUT   | COMMANDS | TEXTS | PreviousText | COLUMNS | LINES | NUM_LINES |
+      | Input   | Commands | Texts | PreviousText | Columns | Lines | Num_Lines |
       | <Enter> | newLine  | 2 456 | 01           | 0       | 1     | 3         |
 
   Scenario Outline: New Line - End of line
@@ -55,11 +55,11 @@ Feature: Modifier Enter.
       012 456\|
       """
     And I'm in insert mode.
-    When I type <INPUT>
-    Then the expected commands should be <COMMANDS>
-    And the cursors should be at line <LINES> and column <COLUMNS>
-    And the texts should be <TEXTS>
+    When I type <Input>
+    Then the expected commands should be <Commands>
+    And the cursors should be at line <Lines> and column <Columns>
+    And the texts should be <Texts>
 
     Examples:
-      | INPUT   | COMMANDS | TEXTS | COLUMNS | LINES |
+      | Input   | Commands | Texts | Columns | Lines |
       | <Enter> | newLine  |       | 0       | 1     |

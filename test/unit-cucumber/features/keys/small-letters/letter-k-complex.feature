@@ -8,24 +8,24 @@ Feature: Letter k - complex.
     And I'm in normal mode.
 
   Scenario Outline: Cursor up - Multi line - Lower line longer upper line.
-    When I type <INPUT>
-    Then the expected commands should be <COMMANDS>
-    And the texts should be <TEXTS>
-    And the cursors should be at line <LINES> and column <COLUMNS>
+    When I type <Input>
+    Then the expected commands should be <Commands>
+    And the texts should be <Texts>
+    And the cursors should be at line <Lines> and column <Columns>
 
     Examples:
-      | INPUT | COMMANDS | TEXTS | COLUMNS | LINES |
+      | Input | Commands | Texts | Columns | Lines |
       | k   | cursorUp | hi    | 1       | 0     |
 
 # @todo
 # eeku should leave cursor at last position of below line
 # Scenario Outline: Cursor up - Multi line - Lower line longer upper line.
-#   When I type <INPUT>
-#   Then the expected commands should be <COMMANDS>
-#   And the texts should be <TEXTS>
-#   And the cursors should be at line <LINES> and column <COLUMNS>
+#   When I type <Input>
+#   Then the expected commands should be <Commands>
+#   And the texts should be <Texts>
+#   And the cursors should be at line <Lines> and column <Columns>
 
 #   Examples:
-#     | INPUT | COMMANDS                       | TEXTS       | COLUMNS | LINES |
+#     | Input | COMMANDS                       | Texts       | Columns | Lines |
 #     | eek   | cursorWordForwardEnd,,cursorUp,cursorDown | 012 456,,hi,012 456 | 2,6,1,6   | 1,1,0,1
 #                                                                                       ^ todo: is 1

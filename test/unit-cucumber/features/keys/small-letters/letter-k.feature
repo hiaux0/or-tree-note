@@ -6,13 +6,13 @@ Feature: Letter k.
       bar
       """
     And I'm in normal mode.
-    When I type <INPUT>
-    Then the expected commands should be <COMMANDS>
-    And the cursors should be at line <LINES> and column <COLUMNS>
-    And the texts should be <TEXTS>
+    When I type <Input>
+    Then the expected commands should be <Commands>
+    And the cursors should be at line <Lines> and column <Columns>
+    And the texts should be <Texts>
 
     Examples:
-      | INPUT | COMMANDS | TEXTS | COLUMNS | LINES |
+      | Input | Commands | Texts | Columns | Lines |
       | k     | cursorUp | foo   | 0       | 0     |
 
   Scenario Outline: Cursor up - Multi line - Last line.
@@ -23,12 +23,12 @@ Feature: Letter k.
       """
     And I'm in normal mode.
 
-    When I type <INPUT>
-    Then the expected commands should be <COMMANDS>
-    And the cursors should be at line <LINES> and column <COLUMNS>
-    And the texts should be <TEXTS>
+    When I type <Input>
+    Then the expected commands should be <Commands>
+    And the cursors should be at line <Lines> and column <Columns>
+    And the texts should be <Texts>
 
     Examples:
-      | INPUT | COMMANDS | TEXTS | COLUMNS | LINES |
+      | Input | Commands | Texts | Columns | Lines |
       | k     | cursorUp | foo   | 0       | 0     |
 
