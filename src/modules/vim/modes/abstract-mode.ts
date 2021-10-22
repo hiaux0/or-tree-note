@@ -224,8 +224,6 @@ export abstract class AbstractMode {
 
     const newActiveText = this.lines[newCurLine];
 
-    // this.vimState.updateActiveLine(newActiveText);
-
     this.vimState.cursor.line = newCurLine;
     this.reTokenizeInput(newActiveText);
 
@@ -362,8 +360,7 @@ export abstract class AbstractMode {
     const spaces = ' '.repeat(indentSize);
     const updatedInput = `${spaces}${this.vimState.getActiveLine()}`;
 
-    // this.vimState.getActiveLine() = updatedInput;
-    throw 'TODO: vimstate.text refactor'; /*?*/
+    this.vimState.updateActiveLine(updatedInput);
 
     this.vimState.cursor.col += indentSize;
     this.lines[this.vimState.cursor.line] = updatedInput;
@@ -383,8 +380,7 @@ export abstract class AbstractMode {
 
     const updatedInput = text.substring(numOfWhiteSpaceAtStart); /* ? */
 
-    // this.vimState.getActiveLine() = updatedInput;
-    throw 'TODO: vimstate.text refactor'; /*?*/
+    this.vimState.updateActiveLine(updatedInput);
 
     this.vimState.cursor.col -= numOfWhiteSpaceAtStart;
     this.lines[this.vimState.cursor.line] = updatedInput;
@@ -399,8 +395,7 @@ export abstract class AbstractMode {
       ''
     );
 
-    // this.vimState.getActiveLine() = updatedInput;
-    throw 'TODO: vimstate.text refactor'; /*?*/
+    this.vimState.updateActiveLine(updatedInput);
 
     return this.vimState;
   }

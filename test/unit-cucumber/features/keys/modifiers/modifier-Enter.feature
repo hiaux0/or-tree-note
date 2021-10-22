@@ -5,7 +5,7 @@ Feature: Modifier Enter.
       \|012 456
       """
     And I'm in insert mode.
-    When I queueInputSequence <INPUT>
+    When I type <INPUT>
     Then the expected commands should be <COMMANDS>
     And the cursors should be at line <LINES> and column <COLUMNS>
     And the texts should be <TEXTS>
@@ -20,7 +20,7 @@ Feature: Modifier Enter.
       01\|2 456
       """
     And I'm in insert mode.
-    When I queueInputSequence <INPUT>
+    When I type <INPUT>
     Then the expected commands should be <COMMANDS>
     And the cursors should be at line <LINES> and column <COLUMNS>
     And the texts should be <TEXTS>
@@ -30,6 +30,7 @@ Feature: Modifier Enter.
       | INPUT   | COMMANDS | TEXTS | PreviousText | COLUMNS | LINES |
       | <Enter> | newLine  | 2 456 | 01           | 0       | 1     |
 
+  @focus
   Scenario Outline: New Line - Middle of line - Multiple
     Given I activate Vim with the following input:
       """
@@ -37,7 +38,7 @@ Feature: Modifier Enter.
       789
       """
     And I'm in insert mode.
-    When I queueInputSequence <INPUT>
+    When I type <INPUT>
     Then the expected commands should be <COMMANDS>
     And there should be <NUM_LINES> lines
     And the cursors should be at line <LINES> and column <COLUMNS>
@@ -54,7 +55,7 @@ Feature: Modifier Enter.
       012 456\|
       """
     And I'm in insert mode.
-    When I queueInputSequence <INPUT>
+    When I type <INPUT>
     Then the expected commands should be <COMMANDS>
     And the cursors should be at line <LINES> and column <COLUMNS>
     And the texts should be <TEXTS>

@@ -8,7 +8,7 @@ Feature: Letter k - complex.
     And I'm in normal mode.
 
   Scenario Outline: Cursor up - Multi line - Lower line longer upper line.
-    When I queueInputSequence <INPUT>
+    When I type <INPUT>
     Then the expected commands should be <COMMANDS>
     And the texts should be <TEXTS>
     And the cursors should be at line <LINES> and column <COLUMNS>
@@ -20,7 +20,7 @@ Feature: Letter k - complex.
 # @todo
 # eeku should leave cursor at last position of below line
 # Scenario Outline: Cursor up - Multi line - Lower line longer upper line.
-#   When I queueInputSequence <INPUT>
+#   When I type <INPUT>
 #   Then the expected commands should be <COMMANDS>
 #   And the texts should be <TEXTS>
 #   And the cursors should be at line <LINES> and column <COLUMNS>

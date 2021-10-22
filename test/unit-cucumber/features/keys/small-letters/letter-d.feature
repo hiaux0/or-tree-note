@@ -7,7 +7,7 @@ Feature: Letter d.
     And I'm in normal mode.
 
   Scenario: diw deleteInnerWord
-    When I queueInputSequence "diw"
+    When I type "diw"
     Then the expected commands should be "deleteInnerWord"
     And the cursors should be at line 0 and column 0
     And the texts should be " 456"

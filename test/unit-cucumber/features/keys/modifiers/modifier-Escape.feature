@@ -2,7 +2,7 @@ Feature: Modifier Escape.
   Scenario: Start Insert - Escape
     Given I start Vim
     And I'm in Insert mode.
-    When I queueInputSequence "<Escape>"
+    When I type "<Escape>"
     Then the I should go into Normal mode
 
   Scenario: Start Visual - Escape
