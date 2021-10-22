@@ -6,20 +6,9 @@ import {
 import { QueueInputReturn } from 'modules/vim/vim.types';
 import { testError, TestError } from '../../../common-test/errors/test-errors';
 import { GherkinTestUtil } from '../../../common-test/gherkin/gherkin-test-util';
-import {
-  initialCursor,
-  manyQueuedInput,
-  queuedInput,
-} from './modes/common-vim.spec';
+import { initialCursor, manyQueuedInput } from './modes/common-vim.spec';
 
 export const commonVimAssertionsSteps: StepDefinitions = ({ then, and }) => {
-  then(
-    /^the expected command should be (.*)$/,
-    (rawCommand: VimCommandNames) => {
-      theExpectedCommandShouldBe(queuedInput, rawCommand);
-    }
-  );
-
   /** command1,command2 */
   then(
     /^the expected commands should be (.*)$/,
@@ -44,13 +33,6 @@ export const commonVimAssertionsSteps: StepDefinitions = ({ then, and }) => {
     expect(manyQueuedInput[manyQueuedInput.length - 1].lines.length).toBe(
       Number(numOfLines)
     );
-  });
-
-  and(/^the cursor should be at line (.*) and column (.*)$/, (line, column) => {
-    expect(queuedInput.vimState.cursor).toEqual({
-      col: Number(column),
-      line: Number(line),
-    });
   });
 
   and(

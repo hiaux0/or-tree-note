@@ -7,7 +7,6 @@ import { GherkinTestUtil } from '../../../../common-test/gherkin/gherkin-test-ut
 
 export let vim: Vim;
 export let initialCursor;
-export let queuedInput: QueueInputReturn;
 export let manyQueuedInput: QueueInputReturn[];
 
 export const commonVimSteps: StepDefinitions = ({ given, when }) => {
@@ -23,12 +22,7 @@ export const commonVimSteps: StepDefinitions = ({ given, when }) => {
     vim = new Vim(cloneDeep(input), cloneDeep(initialCursor));
   });
 
-  when(/^I (?:queueInput|type) (.*)$/, (rawInput: string) => {
-    const input = GherkinTestUtil.replaceQuotes(rawInput);
-    queuedInput = vim.queueInput(input);
-  });
-
-  when(/^I queueInputSequence (.*)$/, (rawInput: string) => {
+  when(/^I (?:queueInputSequence|type) (.*)$/, (rawInput: string) => {
     const input = GherkinTestUtil.replaceQuotes(rawInput);
 
     manyQueuedInput = vim.queueInputSequence(input);
