@@ -2,8 +2,8 @@ Feature: Cursor Down - Complex.
   Background:
     Given I activate Vim with the following input:
       """
-      \|012 456
-      hi
+      \|hi
+      012 456
       """
     And I'm in normal mode.
 

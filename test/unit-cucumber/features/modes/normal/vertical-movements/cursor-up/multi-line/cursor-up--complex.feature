@@ -1,4 +1,4 @@
-Feature: Multi line - Cursor up - Upper line longer lower line.
+Feature: Cursor up - Multi line - Lower line longer upper line.
   Background:
     Given I activate Vim with the following input:
       """
@@ -7,7 +7,7 @@ Feature: Multi line - Cursor up - Upper line longer lower line.
       """
     And I'm in normal mode.
 
-  Scenario Outline: Multi line - Cursor up - Upper line longer lower line.
+  Scenario Outline: Cursor up - Multi line - Lower line longer upper line.
     When I queueInputSequence <INPUT>
     Then the expected commands should be <COMMANDS>
     And the texts should be <TEXTS>
@@ -19,7 +19,7 @@ Feature: Multi line - Cursor up - Upper line longer lower line.
 
 # @todo
 # eeku should leave cursor at last position of below line
-# Scenario Outline: Multi line - Cursor up - Upper line longer lower line.
+# Scenario Outline: Cursor up - Multi line - Lower line longer upper line.
 #   When I queueInputSequence <INPUT>
 #   Then the expected commands should be <COMMANDS>
 #   And the texts should be <TEXTS>

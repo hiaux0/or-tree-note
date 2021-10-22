@@ -30,7 +30,6 @@ Feature: New Line.
       | INPUT   | COMMANDS | TEXTS | PreviousText | COLUMNS | LINES |
       | <Enter> | newLine  | 2 456 | 01           | 0       | 1     |
 
-  # @focus
   Scenario Outline: New Line - Middle of line - Multiple
     Given I activate Vim with the following input:
       """

@@ -1,4 +1,4 @@
-Feature: Delete
+Feature: Delete.
   Background:
     Given I activate Vim with the following input:
       """

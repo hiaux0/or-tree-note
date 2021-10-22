@@ -1,19 +1,38 @@
 import { StepDefinitions } from 'jest-cucumber';
 import { cloneDeep } from 'lodash';
 import { Vim } from 'modules/vim/vim';
-import { Cursor } from 'modules/vim/vim.types';
+import { Cursor, QueueInputReturn } from 'modules/vim/vim.types';
 import { testError } from '../../../../common-test/errors/test-errors';
+import { GherkinTestUtil } from '../../../../common-test/gherkin/gherkin-test-util';
 
 export let vim: Vim;
 export let initialCursor;
+export let queuedInput: QueueInputReturn;
+export let manyQueuedInput: QueueInputReturn[];
 
-export const commonVimSteps: StepDefinitions = ({ given }) => {
+export const commonVimSteps: StepDefinitions = ({ given, when }) => {
+  given('I start Vim', () => {
+    vim = new Vim(cloneDeep(['']));
+  });
+
   given('I activate Vim with the following input:', (rawContent: string) => {
     const rawInput = rawContent.split('\n');
     initialCursor = findCursor(rawInput);
 
     const input = replaceCursorFromRaw(rawInput);
     vim = new Vim(cloneDeep(input), cloneDeep(initialCursor));
+  });
+
+  when(/^I (?:queueInput|type) (.*)$/, (rawInput: string) => {
+    const input = GherkinTestUtil.replaceQuotes(rawInput);
+    queuedInput = vim.queueInput(input);
+  });
+
+  when(/^I queueInputSequence (.*)$/, (rawInput: string) => {
+    const input = GherkinTestUtil.replaceQuotes(rawInput);
+
+    manyQueuedInput = vim.queueInputSequence(input);
+    // manyQueuedInput; /*?*/
   });
 };
 

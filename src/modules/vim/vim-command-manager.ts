@@ -8,6 +8,7 @@ import { NormalMode } from './modes/normal-mode';
 import { VisualMode } from './modes/visual-mode';
 import { defaultVimOptions } from './vim';
 import { VimCommandNames, VimCommand } from './vim-commands-repository';
+import { VimStateClass } from './vim-state';
 import {
   VimState,
   FindPotentialCommandReturn,
@@ -39,7 +40,7 @@ export class VimCommandManager {
 
   constructor(
     public lines: string[],
-    public vimState: VimState,
+    public vimState: VimStateClass,
     public vimOptions: VimOptions = defaultVimOptions
   ) {
     this.cursor = vimState.cursor;
@@ -51,7 +52,7 @@ export class VimCommandManager {
     this.keyBindings = this.vimOptions.keyBindings;
   }
 
-  setVimState(vimState: VimState) {
+  setVimState(vimState: VimStateClass) {
     this.vimState = vimState;
   }
 
@@ -62,14 +63,14 @@ export class VimCommandManager {
   enterInsertMode() {
     logger.debug(['Enter Insert mode']);
     this.activeMode = VimMode.INSERT;
-    this.insertMode.reTokenizeInput(this.vimState?.text);
+    this.insertMode.reTokenizeInput(this.vimState?.getActiveLine());
     this.vimState.mode = VimMode.INSERT;
     return this.vimState;
   }
   enterNormalMode() {
     logger.debug(['Enter Normal mode']);
     this.activeMode = VimMode.NORMAL;
-    this.normalMode.reTokenizeInput(this.vimState?.text);
+    this.normalMode.reTokenizeInput(this.vimState?.getActiveLine());
     this.vimState.mode = VimMode.NORMAL;
     //
     this.potentialCommands = [];
@@ -108,7 +109,7 @@ export class VimCommandManager {
   executeVimCommand(
     commandName: VimCommandNames,
     commandInput?: string
-  ): VimState {
+  ): VimStateClass {
     const currentMode = this.getCurrentMode();
     try {
       const vimState = currentMode.executeCommand(commandName, commandInput);
@@ -302,8 +303,9 @@ export class VimCommandManager {
     return groupByCommand(accumulatedResult);
   }
 
-  newLine(): VimState {
-    const { cursor, text } = this.vimState;
+  newLine(): VimStateClass {
+    const { cursor } = this.vimState;
+    const text = this.vimState.getActiveLine();
     const currentLineIndex = cursor.line;
     const newLineIndex = currentLineIndex + 1;
     const currentMode = this.getCurrentMode();
@@ -316,7 +318,8 @@ export class VimCommandManager {
     updatedLines.splice(newLineIndex, 0, newLineText);
     updatedLines; /*?*/
     currentMode.reTokenizeInput(newLineText);
-    this.vimState.text = newLineText;
+    this.vimState.updateActiveLine(newLineText);
+
     this.vimState.lines = updatedLines;
     this.vimState.cursor = {
       line: newLineIndex,

@@ -3,6 +3,7 @@ import {
   VimCommand,
   SynonymKey,
 } from './vim-commands-repository';
+import { VimStateClass } from './vim-state';
 
 export interface KeyBindingModes {
   insert?: VimCommand[];
@@ -37,7 +38,7 @@ export type VimState = {
 };
 
 export interface QueueInputReturn {
-  vimState: VimState | null;
+  vimState: VimStateClass | null;
   targetCommand: VimCommandNames;
   lines: string[];
 }
@@ -62,5 +63,8 @@ export interface VimOptions {
 
 export interface VimPlugin {
   commandName: string;
-  execute: (vimState?: VimState, commandValue?: string) => VimState | void;
+  execute: (
+    vimState?: VimStateClass,
+    commandValue?: string
+  ) => VimStateClass | void;
 }

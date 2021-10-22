@@ -1,11 +1,11 @@
-Feature: Multi line - Cursor down - Last line.
-  Scenario Outline: Multi line - Cursor down - Last line.
+Feature: Cursor down - Multi line.
+  Scenario Outline: Cursor down - Multi line.
     Given I activate Vim with the following input:
       """
-      foo
-      \|bar
+      \|foo
+      bar
       """
-    Given I'm in normal mode.
+    And I'm in normal mode.
     When I queueInputSequence <INPUT>
     Then the expected commands should be <COMMANDS>
     And the cursors should be at line <LINES> and column <COLUMNS>
@@ -14,4 +14,3 @@ Feature: Multi line - Cursor down - Last line.
     Examples:
       | INPUT | COMMANDS   | TEXTS | COLUMNS | LINES |
       | u     | cursorDown | bar   | 0       | 1     |
-

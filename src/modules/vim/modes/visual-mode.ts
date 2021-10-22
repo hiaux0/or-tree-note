@@ -1,5 +1,6 @@
 import { Logger } from 'modules/debug/logger';
 import { replaceRange } from 'modules/string/string';
+import { VimStateClass } from '../vim-state';
 
 import { VimState, VimMode } from '../vim.types';
 import { AbstractMode } from './abstract-mode';
@@ -9,7 +10,7 @@ const logger = new Logger({ scope: 'VisualMode' });
 export class VisualMode extends AbstractMode {
   currentMode = VimMode.VISUAL;
 
-  executeCommand(commandName: string, commandValue: string): VimState {
+  executeCommand(commandName: string, commandValue: string): VimStateClass {
     const newVimState = super.executeCommand(
       commandName,
       commandValue,
@@ -24,7 +25,7 @@ export class VisualMode extends AbstractMode {
     return newVimState;
   }
 
-  visualMoveToOtherEndOfMarkedArea(): VimState {
+  visualMoveToOtherEndOfMarkedArea(): VimStateClass {
     const curCursorCol = this.vimState.cursor.col;
 
     this.vimState.cursor.col = this.vimState.visualStartCursor.col;
@@ -33,7 +34,7 @@ export class VisualMode extends AbstractMode {
     return this.vimState;
   }
 
-  visualInnerWord(): VimState {
+  visualInnerWord(): VimStateClass {
     const token = super.getTokenUnderCursor();
     const isAtStartOfWord = token.start === this.vimState.cursor.col;
 
@@ -50,15 +51,15 @@ export class VisualMode extends AbstractMode {
     return this.vimState;
   }
 
-  visualStartLineWise(): VimState {
+  visualStartLineWise(): VimStateClass {
     this.vimState.visualStartCursor.col = 0;
-    this.vimState.cursor.col = this.vimState.text.length;
+    this.vimState.cursor.col = this.vimState.getActiveLine().length;
 
     return this.vimState;
   }
 
-  visualDelete(): VimState {
-    const { text, visualStartCursor, visualEndCursor } = this.vimState;
+  visualDelete(): VimStateClass {
+    const { visualStartCursor, visualEndCursor } = this.vimState;
     if (!visualStartCursor) {
       logVisualDeleteError('Need start cursor');
       return this.vimState;
@@ -68,16 +69,16 @@ export class VisualMode extends AbstractMode {
       return this.vimState;
     }
 
+    const text = this.vimState.getActiveLine();
     const replaced = replaceRange(
       text,
       visualStartCursor.col,
       visualEndCursor.col
     );
-    this.vimState.text = replaced;
+    this.vimState.updateActiveLine(replaced);
 
     // Put cursor to start of visual
-    this.vimState.cursor.col = visualStartCursor.col; /*?*/
-    this.vimState; /*?*/
+    this.vimState.cursor.col = visualStartCursor.col;
 
     return this.vimState;
   }

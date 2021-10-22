@@ -1,4 +1,4 @@
-Feature: Initialize Vim
+Feature: Initialize Vim.
   Scenario: Initialize Vim
     Given I activate Vim with the following input:
       """

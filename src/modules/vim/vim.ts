@@ -8,6 +8,7 @@ import {
   VimCommandNames,
   VIM_COMMANDS_THAT_CHANGE_TO_NORMAL_MODE,
 } from './vim-commands-repository';
+import { VimStateClass } from './vim-state';
 import {
   VimOptions,
   Cursor,
@@ -42,7 +43,7 @@ const defaultCursor = {
  * - the cursor location
  */
 export class Vim {
-  public vimState: VimState;
+  public vimState: VimStateClass;
 
   private readonly vimCommandManager: VimCommandManager;
   private activeLine: string;
@@ -56,12 +57,7 @@ export class Vim {
       ...defaultVimOptions,
       ...this.vimOptions,
     };
-    const initialVimState: VimState = {
-      text: lines[this.cursor.line],
-      lines: lines,
-      cursor: this.cursor,
-      mode: VimMode.NORMAL,
-    };
+    const initialVimState = new VimStateClass(cursor, lines);
     this.vimCommandManager = new VimCommandManager(
       lines,
       initialVimState,
@@ -89,7 +85,7 @@ export class Vim {
     } catch {}
     if (!targetCommandName) return;
 
-    let vimState: VimState;
+    let vimState: VimStateClass;
     if (targetCommandName === 'enterInsertMode') {
       vimState = this.vimCommandManager.enterInsertMode();
     } else if (targetCommandName === 'enterNormalMode') {
@@ -164,6 +160,9 @@ export class Vim {
   enterNormalMode() {
     return this.vimCommandManager.enterNormalMode();
   }
+  enterVisualMode() {
+    return this.vimCommandManager.enterVisualMode();
+  }
 
   private verifyValidCursorPosition() {
     const cursorCol = this.cursor.col;
@@ -192,7 +191,8 @@ export class Vim {
     queueInputReturn: QueueInputReturn,
     input: string
   ) {
-    const { cursor, text, lines } = queueInputReturn.vimState;
+    const { cursor, lines } = queueInputReturn.vimState;
+    const text = queueInputReturn.vimState.getActiveLine();
     const actviveLine = lines[cursor.line];
 
     if (actviveLine !== text) {

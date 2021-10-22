@@ -1,6 +1,7 @@
 import { Logger } from 'modules/debug/logger';
 
 import { VimCommandNames } from '../vim-commands-repository';
+import { VimStateClass } from '../vim-state';
 import { VimState, VimMode } from '../vim.types';
 import { AbstractMode } from './abstract-mode';
 
@@ -12,14 +13,14 @@ export class NormalMode extends AbstractMode {
   executeCommand(
     commandName: VimCommandNames,
     commandValue?: string
-  ): VimState {
+  ): VimStateClass {
     return super.executeCommand(commandName, commandValue, this.currentMode);
   }
 
-  deleteInnerWord(): VimState {
+  deleteInnerWord(): VimStateClass {
     const token = super.getTokenUnderCursor();
-    const newText = this.vimState.text.replace(token.string, '');
-    this.vimState.text = newText;
+    const newText = this.vimState.getActiveLine().replace(token.string, '');
+    this.vimState.updateActiveLine(newText);
 
     return this.vimState;
   }
