@@ -57,12 +57,13 @@ export class Vim {
       ...this.vimOptions,
     };
     const initialVimState: VimState = {
-      text: this.lines[this.cursor.line],
+      text: lines[this.cursor.line],
+      lines: lines,
       cursor: this.cursor,
       mode: VimMode.NORMAL,
     };
     this.vimCommandManager = new VimCommandManager(
-      this.lines,
+      lines,
       initialVimState,
       finalVimOptions
     );
@@ -117,11 +118,10 @@ export class Vim {
     const result: QueueInputReturn = {
       vimState: cloneDeep(vimState),
       targetCommand: targetCommandName,
-      lines: [...this.getUpdateActiveLine()],
+      lines: [...this.vimState.lines],
     };
 
     this.logAndVerifyQueueInputReturn(result, input);
-    /* prettier-ignore */ console.log('TCL: result', result)
 
     return result;
   }
@@ -165,21 +165,6 @@ export class Vim {
     return this.vimCommandManager.enterNormalMode();
   }
 
-  private getUpdateActiveLine() {
-    const { line: lineIndex } = this.vimState.cursor;
-    const activeLine = this.lines[lineIndex];
-    this.setActiveLine(activeLine);
-    this.lines[lineIndex] = this.vimState.text;
-
-    return this.lines;
-  }
-  private setActiveLine(activeLine: string) {
-    this.activeLine = activeLine;
-  }
-  private getActiveLine() {
-    return this.activeLine;
-  }
-
   private verifyValidCursorPosition() {
     const cursorCol = this.cursor.col;
     const cursorLine = this.cursor.line;
@@ -207,12 +192,12 @@ export class Vim {
     queueInputReturn: QueueInputReturn,
     input: string
   ) {
-    const { vimState } = queueInputReturn;
-    const actviveLine = this.lines[vimState.cursor.line];
+    const { cursor, text, lines } = queueInputReturn.vimState;
+    const actviveLine = lines[cursor.line];
 
-    if (actviveLine !== vimState.text) {
+    if (actviveLine !== text) {
       const errorMessage = `Active line and vim state wrong.`;
-      const expected = `Expected: ${vimState.text}`;
+      const expected = `Expected: ${text}`;
       const received = `Received: ${actviveLine}`;
       throw new Error(`${errorMessage}\n${expected}\n${received}`);
     }

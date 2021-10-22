@@ -4,6 +4,7 @@ import { commonNormalModeSteps } from './step-definitions/common-steps/modes/com
 import { commonVimSteps } from './step-definitions/common-steps/modes/common-vim.spec';
 import { chaningModesSteps } from './step-definitions/modes/changing-modes.spec';
 import { normalModeSteps } from './step-definitions/modes/normal/normal-mode.spec';
+import { initializationSteps } from './step-definitions/vim/initialization.spec';
 
 export const testContainer = new Container();
 
@@ -17,6 +18,8 @@ export function initCucumberTests(tagFilter: string = '@focus') {
     // common
     commonNormalModeSteps,
     commonVimSteps,
+    // vim
+    initializationSteps,
     // modes
     normalModeSteps,
   ]);

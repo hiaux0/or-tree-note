@@ -9,7 +9,7 @@ import {
   testError,
 } from '../../../../common-test/errors/test-errors';
 import { GherkinTestUtil } from '../../../../common-test/gherkin/gherkin-test-util';
-import { vim } from '../../common-steps/modes/common-vim.spec';
+import { initialCursor, vim } from '../../common-steps/modes/common-vim.spec';
 
 let queuedInput: QueueInputReturn;
 let manyQueuedInput: QueueInputReturn[];
@@ -54,6 +54,12 @@ export const normalModeSteps: StepDefinitions = ({ when, then, and }) => {
     }
   );
 
+  and(/^there should be (\d+) lines$/, (numOfLines: string) => {
+    expect(manyQueuedInput[manyQueuedInput.length - 1].lines.length).toBe(
+      Number(numOfLines)
+    );
+  });
+
   and(/^the cursor should be at line (.*) and column (.*)$/, (line, column) => {
     expect(queuedInput.vimState.cursor).toEqual({
       col: Number(column),
@@ -94,7 +100,6 @@ export const normalModeSteps: StepDefinitions = ({ when, then, and }) => {
 
   and(/^the texts should be (.*)$/, (rawTexts: string) => {
     const rawTextsSplit = rawTexts.split(',');
-    rawTextsSplit; /*?*/
 
     let lastExpectedText = '';
     rawTextsSplit.forEach((rawText, index) => {
@@ -103,6 +108,12 @@ export const normalModeSteps: StepDefinitions = ({ when, then, and }) => {
 
       expect(manyQueuedInput[index].vimState.text).toBe(lastExpectedText);
     });
+  });
+
+  and(/^the previous line text should be (.*)$/, (previousText: string) => {
+    const previousLine =
+      manyQueuedInput[manyQueuedInput.length - 1].lines[initialCursor.line];
+    expect(previousLine).toBe(previousText);
   });
 };
 

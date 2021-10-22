@@ -33,8 +33,13 @@ declare global {
   selector: {
     lines: (store) =>
       store.state.pipe(pluck('present', 'lines'), distinctUntilChanged()),
-    vimState: (store) => store.state.pipe(pluck('present', 'vimState'), distinctUntilChanged()),
-    vimMode: (store) => store.state.pipe(pluck('present', 'vimState', 'mode'), distinctUntilChanged()),
+    vimState: (store) =>
+      store.state.pipe(pluck('present', 'vimState'), distinctUntilChanged()),
+    vimMode: (store) =>
+      store.state.pipe(
+        pluck('present', 'vimState', 'mode'),
+        distinctUntilChanged()
+      ),
     cursorPosition: (store) =>
       store.state.pipe(
         pluck('present', 'vimState', 'cursor'),
@@ -123,5 +128,4 @@ export class OrTreeNotes {
   undo() {
     this.store.dispatch(jump, -1);
   }
-
 }

@@ -5,14 +5,15 @@ import { Cursor } from 'modules/vim/vim.types';
 import { testError } from '../../../../common-test/errors/test-errors';
 
 export let vim: Vim;
+export let initialCursor;
 
 export const commonVimSteps: StepDefinitions = ({ given }) => {
   given('I activate Vim with the following input:', (rawContent: string) => {
     const rawInput = rawContent.split('\n');
-    const cursor = findCursor(rawInput);
+    initialCursor = findCursor(rawInput);
 
     const input = replaceCursorFromRaw(rawInput);
-    vim = new Vim(cloneDeep(input), cloneDeep(cursor));
+    vim = new Vim(cloneDeep(input), cloneDeep(initialCursor));
   });
 };
 

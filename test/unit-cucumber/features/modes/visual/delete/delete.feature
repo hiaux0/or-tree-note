@@ -6,6 +6,7 @@ Feature: Delete selection
       """
     And I'm in normal mode.
 
+@focus
   Scenario Outline: Delete selection
     When I queueInputSequence <INPUT>
     Then the expected commands should be <COMMANDS>
@@ -15,4 +16,4 @@ Feature: Delete selection
     Examples:
       | INPUT | COMMANDS                                     | TEXTS         | COLUMNS | LINES |
       | viwd  | enterVisualMode,visualInnerWord,visualDelete | 012 456,, 456 | 0,2,0   | 0,,   |
-      | viwx  | enterVisualMode,visualInnerWord,visualDelete | 012 456,, 456 | 0,2,0   | 0,,   |
+      # | viwx  | enterVisualMode,visualInnerWord,visualDelete | 012 456,, 456 | 0,2,0   | 0,,   |

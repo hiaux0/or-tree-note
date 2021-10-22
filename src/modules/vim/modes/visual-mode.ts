@@ -77,6 +77,7 @@ export class VisualMode extends AbstractMode {
 
     // Put cursor to start of visual
     this.vimState.cursor.col = visualStartCursor.col; /*?*/
+    this.vimState; /*?*/
 
     return this.vimState;
   }

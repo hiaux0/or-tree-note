@@ -30,6 +30,7 @@ export interface FindPotentialCommandReturn {
 export type VimState = {
   cursor: Cursor;
   text: string;
+  lines: string[];
   mode?: VimMode;
   visualStartCursor?: Cursor;
   visualEndCursor?: Cursor;

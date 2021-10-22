@@ -10,5 +10,6 @@ export function createVimState(
   return {
     text,
     cursor,
+    lines: [text],
   };
 }

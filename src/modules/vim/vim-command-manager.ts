@@ -280,7 +280,6 @@ export class VimCommandManager {
       }
     });
 
-    result; /*?*/
     return result;
   }
   /** */
@@ -304,15 +303,23 @@ export class VimCommandManager {
   }
 
   newLine(): VimState {
-    const newLineMessage = '';
-    const newLineCursorLine = this.vimState.cursor.line + 1;
+    const { cursor, text } = this.vimState;
+    const currentLineIndex = cursor.line;
+    const newLineIndex = currentLineIndex + 1;
     const currentMode = this.getCurrentMode();
 
-    currentMode.reTokenizeInput(newLineMessage);
-    this.lines.splice(newLineCursorLine, 0, newLineMessage);
-    this.vimState.text = newLineMessage;
+    const updatedCurrentLineText = text.substring(0, cursor.col);
+    this.vimState.lines[currentLineIndex] = updatedCurrentLineText;
+    // new line
+    const newLineText = text.substring(cursor.col);
+    const updatedLines = [...this.vimState.lines];
+    updatedLines.splice(newLineIndex, 0, newLineText);
+    updatedLines; /*?*/
+    currentMode.reTokenizeInput(newLineText);
+    this.vimState.text = newLineText;
+    this.vimState.lines = updatedLines;
     this.vimState.cursor = {
-      line: newLineCursorLine,
+      line: newLineIndex,
       col: 0,
     };
 
