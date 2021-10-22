@@ -17,6 +17,13 @@ Feature: Changing Modes.
     When I type "v"
     Then the I should go into Visual mode
 
+  # @todo
+  # Scenario: Start Normal - V(capital)
+  #   Given I start Vim
+  #   And I'm in Normal mode.
+  #   When I type "V"
+  #   Then the I should go into Visual mode
+
   Scenario: Start Visual - Escape
     Given I start Vim
     And I'm in Visual mode.

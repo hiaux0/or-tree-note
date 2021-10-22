@@ -10,7 +10,7 @@ export const testContainer = new Container();
 
 export function initCucumberTests(tagFilter: string = '@focus') {
   const features = loadFeatures('**/features/**/*.feature', {
-    // tagFilter,
+    tagFilter,
   });
 
   autoBindSteps(features, [
