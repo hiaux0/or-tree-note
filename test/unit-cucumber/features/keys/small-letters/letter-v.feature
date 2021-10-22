@@ -25,7 +25,7 @@ Feature: Letter v.
     And the texts should be <Texts>
 
     Examples:
-      | Input | COMMANDS                                     | Texts         | Columns | Lines |
+      | Input | Commands                                     | Texts         | Columns | Lines |
       | viwd  | enterVisualMode,visualInnerWord,visualDelete | 012 456,, 456 | 0,2,0   | 0,,   |
       | viwx  | enterVisualMode,visualInnerWord,visualDelete | 012 456,, 456 | 0,2,0   | 0,,   |
 

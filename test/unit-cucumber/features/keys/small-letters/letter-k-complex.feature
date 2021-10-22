@@ -26,6 +26,6 @@ Feature: Letter k - complex.
 #   And the cursors should be at line <Lines> and column <Columns>
 
 #   Examples:
-#     | Input | COMMANDS                       | Texts       | Columns | Lines |
+#     | Input | Commands                       | Texts       | Columns | Lines |
 #     | eek   | cursorWordForwardEnd,,cursorUp,cursorDown | 012 456,,hi,012 456 | 2,6,1,6   | 1,1,0,1
 #                                                                                       ^ todo: is 1

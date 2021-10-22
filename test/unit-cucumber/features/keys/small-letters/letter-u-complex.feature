@@ -14,7 +14,7 @@ Feature: Letter u - complex.
     And the texts should be <Texts>
 
     Examples:
-      | Input | COMMANDS                         | Texts     | Columns | Lines |
+      | Input | Commands                         | Texts     | Columns | Lines |
       | uee   | cursorDown,cursorWordForwardEnd, | 012 456,, | 0,2,6   | 1,,   |
 
   Scenario Outline: ueek - Upper line shorter lower line.
@@ -24,7 +24,7 @@ Feature: Letter u - complex.
     And the texts should be <Texts>
 
     Examples:
-      | Input | COMMANDS                                  | Texts        | Columns | Lines |
+      | Input | Commands                                  | Texts        | Columns | Lines |
       | ueek  | cursorDown,cursorWordForwardEnd,,cursorUp | 012 456,,,hi | 0,2,6,1 | 1,,,0 |
 
 

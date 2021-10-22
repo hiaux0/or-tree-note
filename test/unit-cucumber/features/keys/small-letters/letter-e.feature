@@ -1,4 +1,5 @@
 Feature: Letter e.
+  @focus
   Scenario Outline: Cursor right - Word.
     Given I activate Vim with the following input:
       """
@@ -10,6 +11,6 @@ Feature: Letter e.
     And the cursors should be at line <Lines> and column <Columns>
 
     Examples:
-      | Input | COMMANDS               | Lines | Columns |
-      | e     | cursorWordForwardEnd   | 0     | 2       |
-      | eee   | cursorWordForwardEnd,, | 0,,   | 2,6,    |
+      | Input | Commands             | Lines | Columns |
+      | e     | cursorWordForwardEnd | 0     | 2       |
+| eee   | cursorWordForwardEnd,, | 0,,   | 2,6,    |

@@ -10,7 +10,7 @@ Feature: Letter b.
     And the cursors should be at line <Lines> and column <Columns>
 
     Examples:
-      | Input | COMMANDS                 | Lines | Columns |
+      | Input | Commands                 | Lines | Columns |
       | b     | cursorBackwordsStartWord | 0     | 0       |
 
   Scenario Outline: Cursor left - Word - End.
@@ -24,6 +24,6 @@ Feature: Letter b.
     And the cursors should be at line <Lines> and column <Columns>
 
     Examples:
-      | Input | COMMANDS                  | Lines | Columns |
+      | Input | Commands                  | Lines | Columns |
       | b     | cursorBackwordsStartWord  | 0     | 4       |
       | bb    | cursorBackwordsStartWord, | 0,    | 4,0     |

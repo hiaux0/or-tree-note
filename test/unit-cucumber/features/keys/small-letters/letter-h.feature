@@ -10,5 +10,5 @@ Feature: Letter h.
     And the cursors should be at line <Lines> and column <Columns>
 
     Examples:
-      | Input | COMMANDS   | Lines | Columns |
+      | Input | Commands   | Lines | Columns |
       | h     | cursorLeft | 0     | 0       |

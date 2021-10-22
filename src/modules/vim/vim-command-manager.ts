@@ -194,6 +194,7 @@ export class VimCommandManager {
 
   /** */
   getCommandName(input: string): VimCommandNames {
+    input; /*?*/
     let targetCommand;
     let potentialCommands: FindPotentialCommandReturn['potentialCommands'];
 

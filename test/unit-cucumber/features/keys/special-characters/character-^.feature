@@ -10,5 +10,5 @@ Feature: Character ^.
     And the cursors should be at line <Lines> and column <Columns>
 
     Examples:
-      | Input | COMMANDS        | Lines | Columns |
+      | Input | Commands        | Lines | Columns |
       | ^     | cursorLineStart | 0     | 0       |

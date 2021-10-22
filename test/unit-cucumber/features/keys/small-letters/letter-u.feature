@@ -12,7 +12,7 @@ Feature: Letter u.
     And the texts should be <Texts>
 
     Examples:
-      | Input | COMMANDS   | Texts | Columns | Lines |
+      | Input | Commands   | Texts | Columns | Lines |
       | u     | cursorDown | bar   | 0       | 1     |
 
   Scenario Outline: Cursor down - Multi line  - Last line.
@@ -28,5 +28,5 @@ Feature: Letter u.
     And the texts should be <Texts>
 
     Examples:
-      | Input | COMMANDS   | Texts | Columns | Lines |
+      | Input | Commands   | Texts | Columns | Lines |
       | u     | cursorDown | bar   | 0       | 1     |

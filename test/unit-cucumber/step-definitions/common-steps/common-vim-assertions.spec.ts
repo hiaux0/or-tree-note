@@ -40,7 +40,6 @@ export const commonVimAssertionsSteps: StepDefinitions = ({ then, and }) => {
     (rawLines: string, rawColumns: string) => {
       const columns = rawColumns.split(',');
       expect(columns.length).toBe(manyQueuedInput.length);
-      manyQueuedInput; /*?*/
 
       let expectedColumn;
       columns.forEach((column, index) => {
