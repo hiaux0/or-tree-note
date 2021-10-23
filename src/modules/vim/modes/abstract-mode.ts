@@ -253,6 +253,31 @@ export abstract class AbstractMode {
 
     return this.vimState;
   }
+  cursorWordForwardStart(): VimStateClass {
+    const nextToken = this.getNexToken();
+    nextToken; /*?*/
+
+    const isAtEnd = nextToken?.end === this.vimState.cursor.col;
+    const isNotAtEnd = nextToken === undefined;
+
+    let resultCol;
+    if (isAtEnd) {
+      const nextNextToken = this.getTokenAtIndex(nextToken.index + 1);
+      resultCol = nextNextToken.end;
+    } else if (isNotAtEnd) {
+      const nextToken = this.getNexToken();
+      resultCol = nextToken.end;
+    } else {
+      resultCol = nextToken.start;
+    }
+
+    resultCol; /*?*/
+    if (resultCol) {
+      this.vimState.cursor.col = resultCol;
+    }
+
+    return this.vimState;
+  }
   cursorBackwordsStartWord(): VimStateClass {
     const tokenUnderCursor = this.getTokenUnderCursor(); /* ? */
 
@@ -324,32 +349,23 @@ export abstract class AbstractMode {
   }
   getNexToken() {
     const tokenizedInput = this.reTokenizeInput(this.vimState.getActiveLine());
-    const curCol = this.vimState.cursor.col;
-    const currentTokenIndex = tokenizedInput.findIndex((input) => {
-      return input.end <= curCol;
-    });
-    const targetToken = tokenizedInput[currentTokenIndex + 1];
+    const currentToken = this.getTokenUnderCursor();
+    const nextToken = tokenizedInput[currentToken.index + 1];
 
-    if (!targetToken) {
-      logger.debug(['Could not find next target token: %o', targetToken], {
-        isError: true,
-      });
+    if (!nextToken) {
+      return currentToken;
     }
-    return targetToken;
+    return nextToken;
   }
   getPreviousToken() {
     const tokenizedInput = this.reTokenizeInput(this.vimState.getActiveLine());
-    const curCol = this.vimState.cursor.col;
-    const currentToken = tokenizedInput.find((input) => {
-      return input.end <= curCol;
-    });
+    const currentToken = this.getTokenUnderCursor();
+    const previousToken = tokenizedInput[currentToken.index - 1];
 
-    if (!currentToken) {
-      logger.debug(['Could not find next target token: %o', currentToken], {
-        isError: true,
-      });
+    if (!previousToken) {
+      return currentToken;
     }
-    return currentToken;
+    return previousToken;
   }
 
   /** **** */
@@ -382,6 +398,8 @@ export abstract class AbstractMode {
 
     this.vimState.updateActiveLine(updatedInput);
 
+    this.vimState.cursor.col; /*?*/
+    numOfWhiteSpaceAtStart; /*?*/
     this.vimState.cursor.col -= numOfWhiteSpaceAtStart;
     this.lines[this.vimState.cursor.line] = updatedInput;
     this.reTokenizeInput(updatedInput);

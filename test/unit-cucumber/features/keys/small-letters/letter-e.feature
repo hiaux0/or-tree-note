@@ -1,5 +1,4 @@
 Feature: Letter e.
-  @focus
   Scenario Outline: Cursor right - Word.
     Given I activate Vim with the following input:
       """

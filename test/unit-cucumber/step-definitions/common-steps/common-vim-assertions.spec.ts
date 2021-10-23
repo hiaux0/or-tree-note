@@ -13,6 +13,7 @@ export const commonVimAssertionsSteps: StepDefinitions = ({ then, and }) => {
   then(
     /^the expected commands should be (.*)$/,
     // TODO: verify spelling
+
     (rawCommands: VimCommandNames) => {
       const conmmands = rawCommands.split(',');
       expect(conmmands.length).toBe(

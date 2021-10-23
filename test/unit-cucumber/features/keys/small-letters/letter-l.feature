@@ -13,6 +13,6 @@ Feature: Letter l.
     And the texts should be <Texts>
 
     Examples:
-      | Input | Commands                                     | Texts            | LINES   | Columns |
-      | ll    | cursorRight,cursorRight                      | foo              | 0,0     | 1,2     |
-      | lli!  | cursorRight,cursorRight,enterInsertMode,type | foo,foo,foo,fo!o | 0,0,0,0 | 1,2,2,3 |
+      | Input | Commands                          | Texts      | Lines | Columns |
+      | ll    | cursorRight,                      | foo        | 0,    | 1,2     |
+      | lli!  | cursorRight,,enterInsertMode,type | foo,,,fo!o | 0,,,  | 1,2,,3  |

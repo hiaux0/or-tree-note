@@ -1,5 +1,4 @@
 Feature: Modifier Enter.
-  @focus
   Scenario Outline: New Line - Start of line
     Given I activate Vim with the following input:
       """
@@ -15,7 +14,6 @@ Feature: Modifier Enter.
       | Input   | Commands | Texts   | Columns | Lines |
       | <Enter> | newLine  | 012 456 | 0       | 1     |
 
-  @focus
   Scenario Outline: New Line - Middle of line
     Given I activate Vim with the following input:
       """
@@ -32,7 +30,6 @@ Feature: Modifier Enter.
       | Input   | Commands | Texts | PreviousText | Columns | Lines |
       | <Enter> | newLine  | 2 456 | 01           | 0       | 1     |
 
-  @focus
   Scenario Outline: New Line - Middle of line - Multiple
     Given I activate Vim with the following input:
       """
@@ -51,7 +48,6 @@ Feature: Modifier Enter.
       | Input   | Commands | Texts | PreviousText | Columns | Lines | Num_Lines |
       | <Enter> | newLine  | 2 456 | 01           | 0       | 1     | 3         |
 
-  @focus
   Scenario Outline: New Line - End of line
     Given I activate Vim with the following input:
       """

@@ -10,7 +10,7 @@ export const initializationSteps: StepDefinitions = ({ then, and }) => {
     }
   );
 
-  and(/the lines should be (.*)/, () => {
-    expect(vim.vimState.lines).toEqual(['012', '456', '789']);
+  and(/the lines should be (.*)/, (lines) => {
+    expect(JSON.stringify(vim.vimState.lines)).toBe(lines);
   });
 };

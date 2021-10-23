@@ -18,7 +18,7 @@ export const commonVimSteps: StepDefinitions = ({ given, when }) => {
     const rawInput = rawContent.split('\n');
     initialCursor = findCursor(rawInput);
 
-    const input = replaceCursorFromRaw(rawInput);
+    const input = cleanupRaw(rawInput);
     vim = new Vim(cloneDeep(input), cloneDeep(initialCursor));
   });
 
@@ -26,7 +26,7 @@ export const commonVimSteps: StepDefinitions = ({ given, when }) => {
     const input = GherkinTestUtil.replaceQuotes(rawInput);
 
     manyQueuedInput = vim.queueInputSequence(input);
-    // manyQueuedInput; /*?*/
+    manyQueuedInput; /*?*/
   });
 };
 
@@ -45,12 +45,17 @@ function findCursor(input: string[]): Cursor {
   input.forEach((line, index) => {
     const matchedCursor = matchCursor(line);
     if (matchedCursor === null) return;
-
     if (cursorLine !== undefined && cursorColumn !== undefined) {
       /* prettier-ignore */ logAlreadyFoundCursorError(cursorLine, cursorColumn, index, matchedCursor);
     }
 
-    cursorColumn = matchedCursor.index;
+    /* prettier-ignore */
+    if (matchedCursor[0] === '\|') {
+      cursorColumn = matchedCursor.index - 1; // - 1 for \
+    } else {
+      cursorColumn = matchedCursor.index;
+    }
+
     cursorLine = index;
   });
 
@@ -85,8 +90,10 @@ function logAlreadyFoundCursorError(
   );
 }
 
-function replaceCursorFromRaw(rawInput: string[]) {
+function cleanupRaw(rawInput: string[]) {
   const result = rawInput.map((line) => {
+    line = GherkinTestUtil.replaceQuotes(line);
+
     const isCursorMatch = matchCursor(line);
     if (isCursorMatch) {
       const [cursorChar] = isCursorMatch;

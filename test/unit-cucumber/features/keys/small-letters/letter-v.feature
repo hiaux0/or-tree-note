@@ -1,10 +1,9 @@
 Feature: Letter v.
-  Scenario: Start Normal - v
+  Scenario: v - Start Normal
     Given I start Vim
     And I'm in Normal mode.
     When I type "v"
     Then the I should go into Visual mode
-
 
   # @todo
   # Scenario: Start Normal - V(capital)
@@ -13,7 +12,7 @@ Feature: Letter v.
   #   When I type "V"
   #   Then the I should go into Visual mode
 
-  Scenario: Delete selection
+  Scenario Outline: viw(\w)
     Given I activate Vim with the following input:
       """
       \|012 456
@@ -25,7 +24,9 @@ Feature: Letter v.
     And the texts should be <Texts>
 
     Examples:
-      | Input | Commands                                     | Texts         | Columns | Lines |
-      | viwd  | enterVisualMode,visualInnerWord,visualDelete | 012 456,, 456 | 0,2,0   | 0,,   |
-      | viwx  | enterVisualMode,visualInnerWord,visualDelete | 012 456,, 456 | 0,2,0   | 0,,   |
+      | Input | Commands                                                         | Texts         | Columns | Lines |
+      | viw   | enterVisualMode,visualInnerWord                                  | 012 456,      | 0,2     | 0,    |
+      | viwd  | enterVisualMode,visualInnerWord,visualDelete                     | 012 456,, 456 | 0,2,0   | 0,,   |
+      | viwo  | enterVisualMode,visualInnerWord,visualMoveToOtherEndOfMarkedArea | 012 456,,     | 0,2,0   | 0,,   |
+      | viwx  | enterVisualMode,visualInnerWord,visualDelete                     | 012 456,, 456 | 0,2,0   | 0,,   |
 
