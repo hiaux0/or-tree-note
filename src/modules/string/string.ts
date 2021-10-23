@@ -1,3 +1,21 @@
+export class StringUtil {
+  static indexOfBack(input: string, target: string): number {
+    let targetCharacterIndex = -1;
+    for (
+      let characterIndex = input.length - 1;
+      characterIndex < input.length;
+      characterIndex--
+    ) {
+      if (input[characterIndex] === target) {
+        targetCharacterIndex = characterIndex;
+        break;
+      }
+    }
+
+    return targetCharacterIndex;
+  }
+}
+
 export function insert(str: string, index: number, value: string): string {
   const ind = index < 0 ? this.length + index : index;
   return str.substr(0, ind) + value + str.substr(ind);
@@ -100,6 +118,8 @@ export function filterListByCharSequence(inputList: string[], value: string) {
  * --> true
  */
 export function inputContainsSequence(input: string, sequence: string) {
+  // input; /*?*/
+  // sequence; /*?*/
   const regex = new RegExp(`^${escapeRegex(sequence)}`);
   const execedRegex = regex.exec(input);
 

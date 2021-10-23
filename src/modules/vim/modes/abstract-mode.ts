@@ -3,6 +3,7 @@ import { Logger } from 'modules/debug/logger';
 import {
   getFirstNonWhiteSpaceCharIndex,
   replaceAt,
+  StringUtil,
 } from 'modules/string/string';
 import { VimStateClass } from '../vim-state';
 
@@ -315,6 +316,61 @@ export abstract class AbstractMode {
     this.vimState.cursor.col = nonWhiteSpaceIndex;
     return this.vimState;
   }
+  toCharacterAtBack(commandInput: string): VimStateClass {
+    const { cursor } = this.vimState;
+    const text = this.vimState.getActiveLine();
+    const currentTextFromStartToColumn = text.substring(0, cursor.col);
+    let targetCharacterIndex = StringUtil.indexOfBack(
+      currentTextFromStartToColumn,
+      commandInput
+    );
+
+    if (targetCharacterIndex > -1) {
+      this.vimState.cursor.col = targetCharacterIndex;
+    }
+
+    return this.vimState;
+  }
+  toCharacterAt(commandInput: string): VimStateClass {
+    const { cursor } = this.vimState;
+    const text = this.vimState.getActiveLine();
+    const currentTextToEnd = text.substring(cursor.col);
+    const targetCharacterIndex = currentTextToEnd.indexOf(commandInput);
+
+    if (targetCharacterIndex > -1) {
+      const finalNewIndex = cursor.col + targetCharacterIndex; // before substring + target index
+      this.vimState.cursor.col = finalNewIndex;
+    }
+
+    return this.vimState;
+  }
+  toCharacterAfterBack(commandInput: string): VimStateClass {
+    // const { cursor } = this.vimState;
+    // const text = this.vimState.getActiveLine();
+    // const currentTextFromStartToColumn = text.substring(0, cursor.col);
+    // let targetCharacterIndex = StringUtil.indexOfBack(
+    //   currentTextFromStartToColumn,
+    //   commandInput
+    // );
+
+    // if (targetCharacterIndex > -1) {
+    //   this.vimState.cursor.col = targetCharacterIndex + 1; // + 1 after char
+    // }
+
+    return this.vimState;
+  }
+  toCharacterBefore(commandInput: string): VimStateClass {
+    const { cursor } = this.vimState;
+    const text = this.vimState.getActiveLine();
+    const currentTextToEnd = text.substring(cursor.col);
+    const targetCharacterIndex = currentTextToEnd.indexOf(commandInput);
+    if (targetCharacterIndex > -1) {
+      const finalNewIndex = cursor.col + targetCharacterIndex - 1; // before substring + target index - before character
+      this.vimState.cursor.col = finalNewIndex;
+    }
+
+    return this.vimState;
+  }
 
   /** ************** */
   /* Cursor Helpers */
@@ -377,29 +433,22 @@ export abstract class AbstractMode {
     const updatedInput = `${spaces}${this.vimState.getActiveLine()}`;
 
     this.vimState.updateActiveLine(updatedInput);
-
     this.vimState.cursor.col += indentSize;
     this.lines[this.vimState.cursor.line] = updatedInput;
     this.reTokenizeInput(updatedInput);
 
     return this.vimState;
   }
-
   indentLeft(): VimStateClass {
     const { indentSize } = this.vimOptions;
     const text = this.vimState.getActiveLine();
-
     const numOfWhiteSpaceAtStart = text
       .substring(0, indentSize)
       .split('')
       .filter((char) => char === ' ').length;
-
-    const updatedInput = text.substring(numOfWhiteSpaceAtStart); /* ? */
+    const updatedInput = text.substring(numOfWhiteSpaceAtStart);
 
     this.vimState.updateActiveLine(updatedInput);
-
-    this.vimState.cursor.col; /*?*/
-    numOfWhiteSpaceAtStart; /*?*/
     this.vimState.cursor.col -= numOfWhiteSpaceAtStart;
     this.lines[this.vimState.cursor.line] = updatedInput;
     this.reTokenizeInput(updatedInput);

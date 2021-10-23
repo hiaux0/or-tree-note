@@ -1,7 +1,8 @@
-import { groupBy } from 'lodash';
-import { Logger } from 'modules/debug/logger';
+import { Logger } from 'common/logging/logging';
+import { flatten, flattenDeep, groupBy } from 'lodash';
 import { inputContainsSequence } from 'modules/string/string';
 import { MODIFIERS_WORDS, SPECIAL_KEYS } from 'resources/keybindings/app.keys';
+import { commandsThatWaitForNextInput } from 'resources/keybindings/key-bindings';
 
 import { InsertMode } from './modes/insert-mode';
 import { NormalMode } from './modes/normal-mode';
@@ -11,7 +12,7 @@ import { VimCommandNames, VimCommand } from './vim-commands-repository';
 import { VimStateClass } from './vim-state';
 import {
   VimState,
-  FindPotentialCommandReturn,
+  FindPotentialCommandReturn as PotentialCommandReturn,
   VimMode,
   QueueInputReturn,
   KeyBindingModes,
@@ -19,7 +20,7 @@ import {
   VimOptions,
 } from './vim.types';
 
-const logger = new Logger({ scope: 'VimCommandManager' });
+const logger = new Logger('VimCommandManager');
 
 /**
  * I know about the "manager" naming, but `VimCommand` interface also makes sense
@@ -36,15 +37,12 @@ export class VimCommandManager {
   private potentialCommands: VimCommand[];
   /** If a command did not trigger, save key */
   private queuedKeys: string[] = [];
-  private cursor: Cursor;
 
   constructor(
     public lines: string[],
     public vimState: VimStateClass,
     public vimOptions: VimOptions = defaultVimOptions
   ) {
-    this.cursor = vimState.cursor;
-
     this.normalMode = new NormalMode(vimState, this.lines, this.vimOptions);
     this.insertMode = new InsertMode(vimState, this.lines, this.vimOptions);
     this.visualMode = new VisualMode(vimState, this.lines, this.vimOptions);
@@ -61,14 +59,14 @@ export class VimCommandManager {
   /** *******/
 
   enterInsertMode() {
-    logger.debug(['Enter Insert mode']);
+    logger.culogger.debug(['Enter Insert mode']);
     this.activeMode = VimMode.INSERT;
     this.insertMode.reTokenizeInput(this.vimState?.getActiveLine());
     this.vimState.mode = VimMode.INSERT;
     return this.vimState;
   }
   enterNormalMode() {
-    logger.debug(['Enter Normal mode']);
+    logger.culogger.debug(['Enter Normal mode']);
     this.activeMode = VimMode.NORMAL;
     this.normalMode.reTokenizeInput(this.vimState?.getActiveLine());
     this.vimState.mode = VimMode.NORMAL;
@@ -81,7 +79,7 @@ export class VimCommandManager {
     return this.vimState;
   }
   enterVisualMode() {
-    logger.debug(['Enter Visual mode']);
+    logger.culogger.debug(['Enter Visual mode']);
     this.activeMode = VimMode.VISUAL;
     this.vimState.visualStartCursor = { ...this.vimState.cursor };
     this.vimState.visualEndCursor = {
@@ -115,6 +113,7 @@ export class VimCommandManager {
       const vimState = currentMode.executeCommand(commandName, commandInput);
       return vimState;
     } catch (error) {
+      /* prettier-ignore */ logger.log(`No Command found in mode >> ${currentMode.currentMode} <<`, { log: true, isError: true });
       const previousState = this.vimState;
       return previousState;
     }
@@ -125,17 +124,20 @@ export class VimCommandManager {
    * @sideeffect queuedKeys
    * @sideeffect potentialCommands
    */
-  findPotentialCommand(input: string): FindPotentialCommandReturn {
-    //
-    input = this.ensureVimModifier(input);
-
-    logger.debug(['Finding potential command for: ', input]);
+  findPotentialCommand(input: string): PotentialCommandReturn {
+    const commandAwaitingNextInput = getCommandAwaitingNextInput(
+      input,
+      this.potentialCommands
+    );
+    if (commandAwaitingNextInput) {
+      this.potentialCommands = commandAwaitingNextInput.potentialCommands;
+      return commandAwaitingNextInput;
+    }
 
     //
     let targetKeyBinding: VimCommand[];
     if (this.potentialCommands?.length) {
       targetKeyBinding = this.potentialCommands;
-      //
     } else {
       targetKeyBinding = this.keyBindings[
         this.activeMode.toLowerCase()
@@ -143,8 +145,9 @@ export class VimCommandManager {
     }
 
     //
+    input = this.ensureVimModifier(input);
+    logger.culogger.debug(['Finding potential command for: ', input]);
     let keySequence: string;
-
     if (this.queuedKeys.length) {
       keySequence = this.queuedKeys.join('').concat(input);
     } else if (this.getSynonymModifier(input)) {
@@ -155,25 +158,19 @@ export class VimCommandManager {
     } else {
       keySequence = input;
     }
-    logger.debug(['keySequence: %s', keySequence], {
-      onlyVerbose: true,
-    });
-
-    //
-    let targetCommand;
+    /* prettier-ignore */ logger.culogger.debug(['keySequence: %s', keySequence], { onlyVerbose: true, });
 
     const potentialCommands = targetKeyBinding.filter((keyBinding) => {
       // if (ignoreCaseForModifiers(keyBinding.key, keySequence)) {
       //   return true;
       // }
-
       const result = inputContainsSequence(keyBinding.key, keySequence);
       return result;
     });
-    logger.debug(['potentialCommands: %o', potentialCommands], {
-      onlyVerbose: true,
-    });
 
+    /* prettier-ignore */ logger.culogger.debug(['potentialCommands: %o', potentialCommands], { onlyVerbose: true, });
+
+    let targetCommand;
     if (potentialCommands.length === 0) {
       this.emptyQueuedKeys();
       throw new Error('Empty Array');
@@ -188,39 +185,38 @@ export class VimCommandManager {
       this.potentialCommands = potentialCommands;
     }
 
-    //
     return { targetCommand, potentialCommands };
   }
 
   /** */
   getCommandName(input: string): VimCommandNames {
     let targetCommand;
-    let potentialCommands: FindPotentialCommandReturn['potentialCommands'];
+    let potentialCommands: PotentialCommandReturn['potentialCommands'];
 
     try {
       ({ targetCommand, potentialCommands } = this.findPotentialCommand(input));
     } catch (error) {
-      logger.debug(['Error: %s', error], { onlyVerbose: true });
+      logger.culogger.debug(['Error: %s', error], { onlyVerbose: true });
       // throw error;
     }
 
     //
     if (!targetCommand) {
       if (this.activeMode === VimMode.INSERT) {
-        /* prettier-ignore */ logger.debug(['Default to the command: type in Insert Mode'], { log: true, });
+        /* prettier-ignore */ logger.culogger.debug(['Default to the command: type in Insert Mode'], { log: true, });
         return 'type';
       }
 
       if (potentialCommands?.length) {
-        /* prettier-ignore */ logger.debug(['Awaiting potential commands: %o', potentialCommands]);
+        /* prettier-ignore */ logger.culogger.debug(['Awaiting potential commands: %o', potentialCommands]);
       } else {
-        /* prettier-ignore */ logger.debug( [ 'No command for key: %s in Mode: %s ((vim.ts-getCommandName))', input, this.activeMode, ], { isError: true });
+        /* prettier-ignore */ logger.culogger.debug( [ 'No command for key: %s in Mode: %s ((vim.ts-getCommandName))', input, this.activeMode, ], { isError: true });
       }
 
       return;
     }
 
-    logger.debug(['Command: %s', targetCommand.command]);
+    logger.culogger.debug(['Command: %s', targetCommand.command]);
 
     //
     return targetCommand.command;
@@ -236,9 +232,12 @@ export class VimCommandManager {
     if (SPECIAL_KEYS.includes(input)) {
       const asVimModifier = `<${input}>`;
 
-      logger.debug(['Converted to vim modifier key: %s', asVimModifier], {
-        onlyVerbose: true,
-      });
+      logger.culogger.debug(
+        ['Converted to vim modifier key: %s', asVimModifier],
+        {
+          onlyVerbose: true,
+        }
+      );
       return asVimModifier;
     }
     return input;
@@ -248,7 +247,7 @@ export class VimCommandManager {
     const synonymInput = this.keyBindings.synonyms[input.toLowerCase()];
 
     if (synonymInput) {
-      logger.debug(['Found synonym: %s for %s', synonymInput, input]);
+      logger.culogger.debug(['Found synonym: %s for %s', synonymInput, input]);
       return synonymInput;
     } else {
       return input;
@@ -327,6 +326,42 @@ export class VimCommandManager {
     };
 
     return this.vimState;
+  }
+}
+
+/**
+ * @example
+ *   input = t
+ *   potentialCommands = []
+ *   getCommandAwaitingNextInput() // {targetCommand: undefined, potentialCommands: { key: 't', command: 'toCharacterBefore' }}
+ *
+ *   input = 4 //
+ *   potentialCommands = [{ key: 't', command: 'toCharacterBefore' }]
+ *   getCommandAwaitingNextInput() // {targetCommand: potentialCommands[0], potentialCommands}
+ */
+function getCommandAwaitingNextInput(
+  input: string,
+  potentialCommands: VimCommand[]
+): PotentialCommandReturn {
+  const awaitingCommand = commandsThatWaitForNextInput.find(
+    (command) => command.key === input
+  );
+  if (awaitingCommand) {
+    return {
+      targetCommand: undefined,
+      potentialCommands: [awaitingCommand],
+    };
+  }
+
+  if (potentialCommands.length === 1) {
+    const isInputForAwaitingCommand = commandsThatWaitForNextInput.find(
+      (command) => command.command === potentialCommands[0].command
+    );
+
+    return {
+      targetCommand: isInputForAwaitingCommand,
+      potentialCommands: [isInputForAwaitingCommand],
+    };
   }
 }
 

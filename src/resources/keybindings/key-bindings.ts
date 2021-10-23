@@ -1,8 +1,15 @@
 // Naming based on https://vim.rtorr.com/
 
+import { VimCommand } from 'modules/vim/vim-commands-repository';
 import { KeyBindingModes } from 'modules/vim/vim.types';
 
 const commandsAllModes = [{ key: '<Escape>', command: 'enterNormalMode' }];
+export const commandsThatWaitForNextInput: VimCommand[] = [
+  { key: 'F', command: 'toCharacterAtBack' },
+  { key: 'f', command: 'toCharacterAt' },
+  { key: 'T', command: 'toCharacterAfterBack' },
+  { key: 't', command: 'toCharacterBefore' },
+];
 
 const cursorAllModes = [
   { key: '<ArrowLeft>', command: 'cursorLeft' },
@@ -17,11 +24,11 @@ const cursorNormalAndVisual = [
   { key: 'h', command: 'cursorLeft' },
   { key: 'k', command: 'cursorUp' },
   { key: 'l', command: 'cursorRight' },
-  { key: 't', command: 'toCharacterBefore' },
   { key: 'u', command: 'cursorDown' },
   { key: 'w', command: 'cursorWordForwardStart' },
   { key: '$', command: 'cursorLineEnd' },
   { key: '^', command: 'cursorLineStart' },
+  ...commandsThatWaitForNextInput,
 ];
 
 const keyBindings = {
