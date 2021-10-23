@@ -9,16 +9,6 @@ import { TestError, testError } from '../../common-test/errors/test-errors';
 import { GherkinTestUtil } from '../../common-test/gherkin/gherkin-test-util';
 
 // !! sucrase and ts-jest not able to handle named typed arrays
-// type TestCaseList = [
-//   testCaseOptions: TestCaseOptions,
-//   rawContent: string,
-//   rawInput: string,
-//   rawCommands: string,
-//   rawLines: string,
-//   rawColumns: string,
-//   rawTexts?: string,
-//   moreAssertions?: MoreTestCaseAssertions
-// ];
 type TestCaseList = [
   /* testCaseOptions */ TestCaseOptions,
   /* rawContent */ string,
@@ -293,29 +283,6 @@ describe('Vim input.', () => {
       });
     }
   );
-
-  // Object.entries(newTestCases).forEach(([letter, testCases]) => {
-  //   const focussedTestCases = testCases.filter((testCase) => testCase.focus);
-
-  //   if (focussedTestCases.length > 0) {
-  //     testCases = focussedTestCases;
-  //   }
-
-  //   // testCases.forEach(
-  //   //   ({
-  //   //     rawContent,
-  //   //     rawInput,
-  //   //     rawCommands,
-  //   //     numOfLines,
-  //   //     rawLines,
-  //   //     rawColumns,
-  //   //     rawTexts,
-  //   //     previousText,
-  //   //     mode,
-  //   //     expectedMode,
-  //   //   }) => {}
-  //   // );
-  // });
 });
 
 /**
