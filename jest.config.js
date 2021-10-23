@@ -17,9 +17,9 @@ module.exports = {
   //   global: { statements: 90, lines: 90, functions: 90 },
   // },
   moduleNameMapper: {
-    "common/(.*)": "<rootDir>/src/common/$1",
-    "modules/(.*)": "<rootDir>/src/modules/$1",
-    "resources/(.*)": "<rootDir>/src/resources/$1"
+    'common/(.*)': '<rootDir>/src/common/$1',
+    'modules/(.*)': '<rootDir>/src/modules/$1',
+    'resources/(.*)': '<rootDir>/src/resources/$1',
   },
   testPathIgnorePatterns: ['/build/', '/node_modules/', '/testFixture/'],
   // globals: {

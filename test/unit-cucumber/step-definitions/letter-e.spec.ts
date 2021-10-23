@@ -8,23 +8,41 @@ import { Cursor, QueueInputReturn, VimMode } from 'modules/vim/vim.types';
 import { TestError, testError } from '../../common-test/errors/test-errors';
 import { GherkinTestUtil } from '../../common-test/gherkin/gherkin-test-util';
 
-interface RawTestCase {
-  rawContent: string;
-  rawInput: string;
-  rawCommands: string;
-  numOfLines?: number;
-  rawLines: string;
-  rawColumns: string;
+// !! sucrase and ts-jest not able to handle named typed arrays
+// type TestCaseList = [
+//   testCaseOptions: TestCaseOptions,
+//   rawContent: string,
+//   rawInput: string,
+//   rawCommands: string,
+//   rawLines: string,
+//   rawColumns: string,
+//   rawTexts?: string,
+//   moreAssertions?: MoreTestCaseAssertions
+// ];
+type TestCaseList = [
+  /* testCaseOptions */ TestCaseOptions,
+  /* rawContent */ string,
+  /* rawInput */ string,
+  /* rawColumns */ string,
+  /* rawCommands */ string,
+  /* moreAssertions */ MoreTestCaseAssertions?
+];
+
+interface TestCaseOptions {
+  focus?: boolean;
+}
+
+interface MoreTestCaseAssertions {
+  rawLines?: string;
   rawTexts?: string;
+  numOfLines?: number;
   previousText?: string;
   mode?: VimMode;
   expectedMode?: VimMode;
   focus?: boolean;
 }
 
-interface TestCase {
-  [key: string]: RawTestCase[];
-}
+const RAW_SPLIT = ';';
 
 const TWO_LINES_NUMBERS = `012 456
 789`;
@@ -37,127 +55,230 @@ function addCursorAt(line: number, textWithCursor: string, rawInput: string) {
   return input.join('\n');
 }
 
-/* prettier-ignore */
-let newTestCases: TestCase = {
-      b: [
-      {        rawContent: '|012 456',                                     rawInput: 'b',        rawCommands: 'cursorBackwordsStartWord',           rawLines: '0',     rawColumns: '0', },
-      {        rawContent: '012 45|6',                                     rawInput: 'b',        rawCommands: 'cursorBackwordsStartWord',           rawLines: '0',     rawColumns: '4', },
-      {        rawContent: '012 45|6',                                     rawInput: 'bb',       rawCommands: 'cursorBackwordsStartWord,',          rawLines: '0,',    rawColumns: '4,0', },
-      ],
-      d: [
-      {        rawContent: '|012 456',                                     rawInput: 'diw',      rawCommands: 'deleteInnerWord',                    rawLines: '0',     rawColumns: '0',       rawTexts: ' 456' },
-      ],
-      e: [
-      {        rawContent: '|012 456',                                     rawInput: 'e',        rawCommands: 'cursorWordForwardEnd',               rawLines: '0',     rawColumns: '2', },
-      {        rawContent: '|012 456',                                     rawInput: 'eee',      rawCommands: 'cursorWordForwardEnd,,',             rawLines: '0,,',   rawColumns: '2,6,', },
-      ],
-      f: [
-      {        rawContent: '|012 456',                                     rawInput: 'f0',       rawCommands: 'toCharacterAt',                      rawLines: '0',     rawColumns: '0', },
-      {        rawContent: '01|2 456',                                     rawInput: 'f0',       rawCommands: 'toCharacterAt',                      rawLines: '0',     rawColumns: '2', },
-      {        rawContent: '01|2 456',                                     rawInput: 'f5',       rawCommands: 'toCharacterAt',                      rawLines: '0',     rawColumns: '5', },
-      ],
-      h: [
-      {        rawContent: '|012 456',                                     rawInput: 'h',        rawCommands: 'cursorLeft',                         rawLines: '0',     rawColumns: '0', },
-      {        rawContent: '01|2 456',                                     rawInput: 'h',        rawCommands: 'cursorLeft',                         rawLines: '0',     rawColumns: '1', },
-      ],
-      i: [
-      {        rawContent:'',                                              rawInput: 'i',        rawCommands: 'enterInsertMode',                    rawLines: '0',     rawColumns: '0', },
-      ],
-      k: [
-      {        rawContent: addCursorAt(0, '|foo', TWO_LINES_WORDS),        rawInput: 'k',        rawCommands: 'cursorUp',                           rawLines: '0',     rawColumns: '0',       rawTexts: 'foo' },
-      {        rawContent: addCursorAt(1, '|bar', TWO_LINES_WORDS),        rawInput: 'k',        rawCommands: 'cursorUp',                           rawLines: '0',     rawColumns: '0',       rawTexts: 'foo' },
-      ],
-      l: [
-      {        rawContent: '|foo',                                         rawInput: 'll',       rawCommands: 'cursorRight,',                       rawLines: '0,',    rawColumns: '1,2',     rawTexts: 'foo,'},
-      {        rawContent: '|foo',                                         rawInput: 'lli!',     rawCommands: 'cursorRight,,enterInsertMode,type',  rawLines: '0,,,',  rawColumns: '1,2,,3',  rawTexts: 'foo,,,fo!o'},
-      ],
-      t: [
-      {        rawContent: '|012 456',                                     rawInput: 't0',       rawCommands: 'toCharacterBefore',                  rawLines: '0',     rawColumns: '0', },
-      {        rawContent: '01|2 456',                                     rawInput: 't0',       rawCommands: 'toCharacterBefore',                  rawLines: '0',     rawColumns: '2', },
-      {        rawContent: '01|2 456',                                     rawInput: 't5',       rawCommands: 'toCharacterBefore',                  rawLines: '0',     rawColumns: '4', },
-      ],
-      u: [
-      {        rawContent: addCursorAt(0, '|foo', TWO_LINES_WORDS),        rawInput: 'u',        rawCommands: 'cursorDown',                         rawLines: '1',     rawColumns: '0',       rawTexts: 'bar' },
-      {        rawContent: addCursorAt(0, '|bar', TWO_LINES_WORDS),        rawInput: 'u',        rawCommands: 'cursorDown',                         rawLines: '1',     rawColumns: '0',       rawTexts: 'bar' },
-      ],
-      v: [
-      {        rawContent:'',                                              rawInput: 'v',        rawCommands: 'enterVisualMode',                    rawLines: '0',     rawColumns: '0', },
-      ],
-
-  // l
-  // {  focus:true, rawContent: '|012 456',  rawInput: 'h',  rawCommands: 'cursorLeft',  rawLines: '0',  rawColumns: '0', },
-  // {  focus:true, rawContent: addCursorAt(0, '|foo', TWO_LINES_WORDS),  rawInput: 'k',  rawCommands: 'cursorUp',  rawLines: '0',  rawColumns: '0', rawTexts: 'foo' },
-  /** Modifiers */
-      Enter: [
-      {        rawContent: '|012 456',                                     rawInput: '<Enter>',  rawCommands: 'newLine',                            rawLines: '1',     rawColumns: '0',       rawTexts: '012 456' },
-      {        rawContent: '01|2 456',                                     rawInput: '<Enter>',  rawCommands: 'newLine',                            rawLines: '1',     rawColumns: '0',       rawTexts: '2 456', previousText: '01' },
-      {        rawContent: addCursorAt(0, '01|2 456', TWO_LINES_NUMBERS),  rawInput: '<Enter>',  rawCommands: 'newLine',                            rawLines: '1',     rawColumns: '0',       rawTexts: '2 456', previousText: '01', numOfLines: 3 },
-      {        rawContent: '012 456|',                                     rawInput: '<Enter>',  rawCommands: 'newLine',                            rawLines: '1',     rawColumns: '0',       rawTexts: '', previousText: '012 456', numOfLines: 2 },
-      ],
-};
-
 let initialCursor;
 let vim: Vim;
 let manyQueuedInput;
 
-describe('Vim input', () => {
-  afterEach(() => {
-    // vim = null;
-    // initialCursor = null;
-    // manyQueuedInput = null;
-  });
+/* prettier-ignore */
+let testCaseAsList: TestCaseList[] = [
+    //    , 'rawContent'     , 'rawInput'    , 'rawColumns'   , 'rawCommands'                                ,
+    [ {}  , '|012 456'       , 'b'           , '0'            , 'cursorBackwordsStartWord'                   , ]                           ,
+    [ {}  , '012 45|6'       , 'b'           , '4'            , 'cursorBackwordsStartWord'                   , ]                           ,
+    [ {}  , '012 45|6'       , 'bb'          , '4;0'          , 'cursorBackwordsStartWord;'                  , ]                           ,
+    [ {}  , '|012 456'       , 'diw'         , '0'            , 'deleteInnerWord'                            , {rawTexts: '` 456`'}]       ,
+    [ {}  , '|012 456'       , 'e'           , '2'            , 'cursorWordForwardEnd'                       , ]                           ,
+    [ {}  , '|012 456'       , 'eee'         , '2;6;'         , 'cursorWordForwardEnd;;'                     , ]                           ,
+    [ {}  , '012 4|56'       , 'F0'          , '0'            , 'toCharacterAtBack'                          , ]                           ,
+    [ {}  , '012 4|56'       , 'F6'          , '5'            , 'toCharacterAtBack'                          , ]                           ,
+    [ {}  , '|012 456'       , 'f0'          , '0'            , 'toCharacterAt'                              , ]                           ,
+    [ {}  , '01|2 456'       , 'f0'          , '2'            , 'toCharacterAt'                              , ]                           ,
+    [ {}  , '01|2 456'       , 'f5'          , '5'            , 'toCharacterAt'                              , ]                           ,
+    [ {}  , '|012 456'       , 'h'           , '0'            , 'cursorLeft'                                 , ]                           ,
+    [ {}  , '01|2 456'       , 'h'           , '1'            , 'cursorLeft'                                 , ]                           ,
+    [ {}  , ''               , 'i'           , '0'            , 'enterInsertMode'                            , ]                           ,
+    [ {}  , '|foo\nbar'      , 'k'           , '0'            , 'cursorUp'                                   , {rawTexts: 'foo' }]         ,
+    [ {}  , 'foo\n|bar'      , 'k'           , '0'            , 'cursorUp'                                   , {rawTexts: 'foo' }]         ,
+    [ {}  , 'hi\n012 456|'   , 'k'           , '1'            , 'cursorUp'                                   , {rawTexts: 'hi' }]          ,
+    [ {}  , '|foo'           , 'll'          , '1;2'          , 'cursorRight;'                               , {rawTexts: 'foo;'}]         ,
+    [ {}  , '|foo'           , 'lli!'        , '1;2;;3'       , 'cursorRight;;enterInsertMode;type'          , {rawTexts: 'foo;;;fo!o'}]   ,
+    [ {}  , '|012 456'       , 't0'          , '0'            , 'toCharacterBefore'                          , ]                           ,
+    [ {}  , ''               , 'v'           , '0'            , 'enterVisualMode'                            , ]                           ,
+    [ {}  , '012 4|56'       , 'T0'          , '1'            , 'toCharacterAfterBack'                       , ]                           ,
+    [ {}  , '012 4|56'       , 'T6'          , '5'            , 'toCharacterAfterBack'                       , ]                           ,
+    [ {}  , '01|2 456'       , 't0'          , '2'            , 'toCharacterBefore'                          , ]                           ,
+    [ {}  , '01|2 456'       , 't5'          , '4'            , 'toCharacterBefore'                          , ]                           ,
+    [ {}  , '|foo\nbar'      , 'u'           , '0'            , 'cursorDown'                                 , {rawLines: '1'              , rawTexts: 'bar'} ]           ,
+    [ {}  , 'foo\n|bar'      , 'u'           , '0'            , 'cursorDown'                                 , {rawLines: '1'              , rawTexts: 'bar'} ]           ,
+    [ {}  , '|hi\n012 456'   , 'uee'         , '0;2;6'        , 'cursorDown;cursorWordForwardEnd;'           , {rawLines: '1;;'            , rawTexts: '012 456;;'} ]     ,
+    [ {}  , '|hi\n012 456'   , 'ueek'        , '0;2;6;1'      , 'cursorDown;cursorWordForwardEnd;;cursorUp'  , {rawLines: '1;;;0'          , rawTexts: '012 456;;;hi'} ]  ,
+    [ {}  , '012 456|'       , '^'           , '0'            , 'cursorLineStart'                            , ]                           ,
+    [ {}  , '|012 456'       , '$'           , '6'            , 'cursorLineEnd'                              , ]                           ,
+    [ {}  , '|012 456'       , '<Control>]'  , '4'            , 'indentRight'                                , {rawTexts: '`    012 456`'} ]  ,
+    [ {}  , '|012 456'       , '<Control>['  , '0'            , 'indentLeft'                                 , {rawTexts: '012 456'} ]     ,
+    [ {}  , ' |012 456'      , '<Control>['  , '0'            , 'indentLeft'                                 , {rawTexts: '012 456'} ]     ,
+    [ {}  , '|012 456'       , '<Enter>'     , '0'            , 'newLine'                                    , {rawLines: '1'              , rawTexts: '012 456'} ]       ,
+    [ {}  , '01|2 456'       , '<Enter>'     , '0'            , 'newLine'                                    , {rawLines: '1'              , rawTexts: '2 456'            , previousText: '01'} ]    ,
+    [ {}  , '01|2 456\nabc'  , '<Enter>'     , '0'            , 'newLine'                                    , {rawLines: '1'              , rawTexts: '2 456'            , previousText: '01'       , numOfLines: 3} ]  ,
+    [ {}  , '012 456|'       , '<Enter>'     , '0'            , 'newLine'                                    , {rawLines: '1'              , rawTexts: ''                 , previousText: '012 456'  , numOfLines: 2} ]  ,
+    [ {}  , ''               , '<Escape>'    , '0'            , 'enterNormalMode'                            , {mode: VimMode.INSERT} ]    ,
+    [ {}  , ''               , '<Escape>'    , '0'            , 'enterNormalMode'                            , {mode: VimMode.VISUAL} ]    ,
+    //    , 'rawContent'     , 'rawInput'    , 'rawCommands'  , 'rawColumns'                                 ,
+]
+// [ {}  , 'hi\n012 456|'   , 'ku'        , '1'            , 'cursorUp'                                   , {rawTexts: 'hi' }]         , // @todo eeku should leave cursor at last position of below line
+// [ {focus:true}  , '    |012 456'       , '<Control>['   , '0'            , 'indentLeft'                                    , {rawTexts: '012 456'} ]    ,
 
-  Object.entries(newTestCases).forEach(([letter, testCases]) => {
-    const focussedTestCases = testCases.filter((testCase) => testCase.focus);
+describe('Vim input.', () => {
+  const focussedTestCases = testCaseAsList.filter(
+    (testCase) => testCase[0].focus
+  );
 
-    if (focussedTestCases.length > 0) {
-      testCases = focussedTestCases;
-    }
+  if (focussedTestCases.length > 0) {
+    testCaseAsList = focussedTestCases;
+  }
 
-    testCases.forEach(
-      ({
-        rawContent,
-        rawInput,
-        rawCommands,
-        numOfLines,
-        rawLines,
-        rawColumns,
-        rawTexts,
-        previousText,
-        mode,
+  testCaseAsList.forEach(
+    ([
+      testCaseOptions,
+      rawContent,
+      rawInput,
+      rawColumns,
+      rawCommands,
+      moreAssertions = {},
+    ]) => {
+      testCaseOptions;
+      const {
         expectedMode,
-      }) => {
-        const finalMode = mode || VimMode.NORMAL;
-        describe(`Letter - ${letter}`, () => {
-          describe(`${rawInput} - ${rawCommands}`, () => {
-            it(`Given I activate Vim with the following input: ${rawContent}`, () => {
-              rawContent; /*?*/
-              const rawInput = rawContent.split('\n');
+        mode,
+        numOfLines,
+        previousText,
+        rawLines,
+        rawTexts,
+      } = moreAssertions;
+      const finalMode = mode || VimMode.NORMAL;
+      describe(`Letter - ${rawInput[0]}.`, () => {
+        describe(`${rawInput} - ${rawCommands}.`, () => {
+          it(`Given I activate Vim with the following input: "${rawContent}"`, () => {
+            rawContent; /*?*/
+            const rawInput = rawContent.split('\n');
+            const input = replaceCursorFromRaw(rawInput);
 
-              // If we provide rawContent, then also find cursor
-              if (rawContent) {
-                initialCursor = findCursor(rawInput);
-                initialCursor; /*?*/
-              }
-
-              const input = replaceCursorFromRaw(rawInput);
+            // If we provide rawContent, then also a cursor
+            if (rawContent) {
+              initialCursor = findCursor(rawInput);
               vim = new Vim(cloneDeep(input), initialCursor);
+            } else {
+              vim = new Vim(cloneDeep(input));
+            }
+          });
+
+          it(`And I'm in "${finalMode}" mode.`, () => {
+            switch (finalMode.toLowerCase()) {
+              case 'insert': {
+                vim.enterInsertMode();
+                expect(vim.vimState.mode).toBe(VimMode.INSERT);
+                break;
+              }
+              case 'normal': {
+                vim.enterNormalMode();
+                expect(vim.vimState.mode).toBe(VimMode.NORMAL);
+                break;
+              }
+              case 'visual': {
+                vim.enterVisualMode();
+                expect(vim.vimState.mode).toBe(VimMode.VISUAL);
+                break;
+              }
+              default: {
+                throw new TestError('Not valid/supported mode');
+              }
+            }
+          });
+
+          it(`When I type "${rawInput}"`, () => {
+            const input = GherkinTestUtil.replaceQuotes(rawInput);
+
+            manyQueuedInput = vim.queueInputSequence(input);
+            manyQueuedInput; /*?*/
+          });
+
+          it(`Then the expected commands should be "${rawCommands}"`, () => {
+            const conmmands = rawCommands.split(RAW_SPLIT);
+            expect(conmmands.length).toBe(
+              manyQueuedInput.length,
+              'Expected equal commands of lines and result'
+            );
+
+            let expectedCommand = null;
+            conmmands.forEach((command, index) => {
+              expectedCommand = memoizeExpected(command, expectedCommand);
+
+              theExpectedCommandShouldBe(
+                manyQueuedInput[index],
+                expectedCommand
+              );
+            });
+          });
+
+          if (numOfLines !== undefined) {
+            it(`there should be "${numOfLines}" lines`, () => {
+              manyQueuedInput; /*?*/
+              expect(
+                manyQueuedInput[manyQueuedInput.length - 1].lines.length
+              ).toBe(Number(numOfLines), 'hi');
+            });
+          }
+
+          it(`And the cursors should be at line "${
+            rawLines ?? 0
+          }" and column "${rawColumns}"`, () => {
+            const columns = rawColumns.split(RAW_SPLIT);
+            expect(columns.length).toBe(manyQueuedInput.length);
+
+            let expectedColumn;
+            columns.forEach((column, index) => {
+              expectedColumn = memoizeExpected(column, expectedColumn);
+
+              expect(manyQueuedInput[index].vimState.cursor.col).toEqual(
+                Number(expectedColumn),
+                `Expected equal number of columns and result. Test index: ${index}`
+              );
             });
 
-            it(`And I'm in ${finalMode} mode.`, () => {
-              switch (finalMode.toLowerCase()) {
+            if (!rawLines) return;
+
+            const lines = rawLines.split(RAW_SPLIT);
+            expect(lines.length).toBe(
+              manyQueuedInput.length,
+              'Expected equal number of lines and result'
+            );
+            let expectedLine;
+            lines.forEach((line, index) => {
+              expectedLine = memoizeExpected(line, expectedLine);
+              expect(manyQueuedInput[index].vimState.cursor.line).toEqual(
+                Number(expectedLine)
+              );
+            });
+          });
+
+          if (rawTexts !== undefined) {
+            it(`And the texts should be "${rawTexts}"`, () => {
+              const rawTextsSplit = rawTexts.split(RAW_SPLIT);
+
+              let lastExpectedText = '';
+              rawTextsSplit.forEach((rawText, index) => {
+                const text = GherkinTestUtil.replaceQuotes(rawText);
+                lastExpectedText = memoizeExpected(text, lastExpectedText);
+
+                expect(manyQueuedInput[index].vimState.getActiveLine()).toBe(
+                  lastExpectedText
+                );
+              });
+            });
+          }
+
+          if (previousText !== undefined) {
+            it(`And the previous line text should be "${previousText}"`, () => {
+              const previousLine =
+                manyQueuedInput[manyQueuedInput.length - 1].lines[
+                  initialCursor.line
+                ];
+              expect(previousLine).toBe(previousText);
+            });
+          }
+
+          // Modes
+          if (expectedMode !== undefined) {
+            it(`And I should go into "${expectedMode}" mode`, () => {
+              switch (mode.toLocaleLowerCase()) {
                 case 'insert': {
-                  vim.enterInsertMode();
                   expect(vim.vimState.mode).toBe(VimMode.INSERT);
                   break;
                 }
                 case 'normal': {
-                  vim.enterNormalMode();
                   expect(vim.vimState.mode).toBe(VimMode.NORMAL);
                   break;
                 }
                 case 'visual': {
-                  vim.enterVisualMode();
                   expect(vim.vimState.mode).toBe(VimMode.VISUAL);
                   break;
                 }
@@ -166,122 +287,34 @@ describe('Vim input', () => {
                 }
               }
             });
-
-            it(`When I type ${rawInput}`, () => {
-              const input = GherkinTestUtil.replaceQuotes(rawInput);
-
-              manyQueuedInput = vim.queueInputSequence(input);
-              // manyQueuedInput; /*?*/
-            });
-
-            it(`Then the expected commands should be ${rawCommands}`, () => {
-              const conmmands = rawCommands.split(',');
-              expect(conmmands.length).toBe(
-                manyQueuedInput.length,
-                'Expected equal commands of lines and result'
-              );
-
-              let expectedCommand = null;
-              conmmands.forEach((command, index) => {
-                expectedCommand = memoizeExpected(command, expectedCommand);
-
-                theExpectedCommandShouldBe(
-                  manyQueuedInput[index],
-                  expectedCommand
-                );
-              });
-            });
-
-            if (numOfLines !== undefined) {
-              it(`there should be ${numOfLines} lines`, () => {
-                manyQueuedInput; /*?*/
-                expect(
-                  manyQueuedInput[manyQueuedInput.length - 1].lines.length
-                ).toBe(Number(numOfLines), 'hi');
-              });
-            }
-
-            it(`And the cursors should be at line ${rawLines} and column ${rawColumns}`, () => {
-              const columns = rawColumns.split(',');
-              expect(columns.length).toBe(manyQueuedInput.length);
-
-              let expectedColumn;
-              columns.forEach((column, index) => {
-                expectedColumn = memoizeExpected(column, expectedColumn);
-
-                expect(manyQueuedInput[index].vimState.cursor.col).toEqual(
-                  Number(expectedColumn),
-                  `Expected equal number of columns and result. Test index: ${index}`
-                );
-              });
-
-              const lines = rawLines.split(',');
-              expect(lines.length).toBe(
-                manyQueuedInput.length,
-                'Expected equal number of lines and result'
-              );
-              let expectedLine;
-              lines.forEach((line, index) => {
-                expectedLine = memoizeExpected(line, expectedLine);
-                expect(manyQueuedInput[index].vimState.cursor.line).toEqual(
-                  Number(expectedLine)
-                );
-              });
-            });
-
-            if (rawTexts !== undefined) {
-              it(`the texts should be ${rawTexts}`, () => {
-                const rawTextsSplit = rawTexts.split(',');
-
-                let lastExpectedText = '';
-                rawTextsSplit.forEach((rawText, index) => {
-                  const text = GherkinTestUtil.replaceQuotes(rawText);
-                  lastExpectedText = memoizeExpected(text, lastExpectedText);
-
-                  expect(manyQueuedInput[index].vimState.getActiveLine()).toBe(
-                    lastExpectedText
-                  );
-                });
-              });
-            }
-
-            if (previousText !== undefined) {
-              it(`And the previous line text should be ${previousText}`, () => {
-                const previousLine =
-                  manyQueuedInput[manyQueuedInput.length - 1].lines[
-                    initialCursor.line
-                  ];
-                expect(previousLine).toBe(previousText);
-              });
-            }
-
-            // Modes
-            if (expectedMode !== undefined) {
-              it(`the I should go into ${expectedMode} mode`, () => {
-                switch (mode.toLocaleLowerCase()) {
-                  case 'insert': {
-                    expect(vim.vimState.mode).toBe(VimMode.INSERT);
-                    break;
-                  }
-                  case 'normal': {
-                    expect(vim.vimState.mode).toBe(VimMode.NORMAL);
-                    break;
-                  }
-                  case 'visual': {
-                    expect(vim.vimState.mode).toBe(VimMode.VISUAL);
-                    break;
-                  }
-                  default: {
-                    throw new TestError('Not valid/supported mode');
-                  }
-                }
-              });
-            }
-          });
+          }
         });
-      }
-    );
-  });
+      });
+    }
+  );
+
+  // Object.entries(newTestCases).forEach(([letter, testCases]) => {
+  //   const focussedTestCases = testCases.filter((testCase) => testCase.focus);
+
+  //   if (focussedTestCases.length > 0) {
+  //     testCases = focussedTestCases;
+  //   }
+
+  //   // testCases.forEach(
+  //   //   ({
+  //   //     rawContent,
+  //   //     rawInput,
+  //   //     rawCommands,
+  //   //     numOfLines,
+  //   //     rawLines,
+  //   //     rawColumns,
+  //   //     rawTexts,
+  //   //     previousText,
+  //   //     mode,
+  //   //     expectedMode,
+  //   //   }) => {}
+  //   // );
+  // });
 });
 
 /**
@@ -371,7 +404,7 @@ function theExpectedCommandShouldBe(
 }
 
 /**
- * Better DX: allow sth like "foo,,,bar"
+ * Better DX: allow sth like "foo;;,bar"
  */
 function memoizeExpected(input: string, expected: string) {
   if (input === '') {

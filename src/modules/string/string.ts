@@ -3,8 +3,8 @@ export class StringUtil {
     let targetCharacterIndex = -1;
     for (
       let characterIndex = input.length - 1;
-      characterIndex < input.length;
-      characterIndex--
+      characterIndex >= 0;
+      characterIndex -= 1
     ) {
       if (input[characterIndex] === target) {
         targetCharacterIndex = characterIndex;

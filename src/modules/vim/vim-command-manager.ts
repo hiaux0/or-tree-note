@@ -34,7 +34,7 @@ export class VimCommandManager {
   /** Alias for vimOptions.keyBindings */
   private keyBindings: KeyBindingModes;
 
-  private potentialCommands: VimCommand[];
+  private potentialCommands: VimCommand[] = [];
   /** If a command did not trigger, save key */
   private queuedKeys: string[] = [];
 
@@ -343,6 +343,8 @@ function getCommandAwaitingNextInput(
   input: string,
   potentialCommands: VimCommand[]
 ): PotentialCommandReturn | undefined {
+  input; /*?*/
+  potentialCommands; /*?*/
   const awaitingCommand = commandsThatWaitForNextInput.find(
     (command) => command.key === input
   );

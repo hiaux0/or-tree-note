@@ -12,7 +12,7 @@ Feature: Letter T(capital).
 
     Examples:
       | Input | Commands             | Lines | Columns |
-      | T0    | toCharacterAfterBack | 0     | 0       |
+      | T0    | toCharacterAfterBack | 0     | 1       |
       | T6    | toCharacterAfterBack | 0     | 5       |
 
 
