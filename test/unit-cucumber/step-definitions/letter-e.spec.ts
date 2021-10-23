@@ -87,6 +87,7 @@ let testCaseAsList: TestCaseList[] = [
     [ {}  , '012 4|56'       , 'T6'          , '5'            , 'toCharacterAfterBack'                       , ]                           ,
     [ {}  , '01|2 456'       , 't0'          , '2'            , 'toCharacterBefore'                          , ]                           ,
     [ {}  , '01|2 456'       , 't5'          , '4'            , 'toCharacterBefore'                          , ]                           ,
+    [ {}  , '|foo'      , 'rx'           , '0'            , 'replace'                                 , { rawTexts: 'xoo'} ]           ,
     [ {}  , '|foo\nbar'      , 'u'           , '0'            , 'cursorDown'                                 , {rawLines: '1'              , rawTexts: 'bar'} ]           ,
     [ {}  , 'foo\n|bar'      , 'u'           , '0'            , 'cursorDown'                                 , {rawLines: '1'              , rawTexts: 'bar'} ]           ,
     [ {}  , '|hi\n012 456'   , 'uee'         , '0;2;6'        , 'cursorDown;cursorWordForwardEnd;'           , {rawLines: '1;;'            , rawTexts: '012 456;;'} ]     ,

@@ -82,7 +82,6 @@ export abstract class AbstractMode {
 
     return result;
   }
-
   executeVimPluginCommand(targetVimPlugin: VimPlugin, commandValue: string) {
     return targetVimPlugin.execute(this.vimState, commandValue);
   }
@@ -98,7 +97,6 @@ export abstract class AbstractMode {
 
     return tokenizedInput;
   }
-
   validateHorizontalCursor(vimState: VimStateClass) {
     const curCol = vimState.cursor.col + 1;
     const isValid = isValidHorizontalPosition(curCol, vimState.getActiveLine());
@@ -122,7 +120,6 @@ export abstract class AbstractMode {
 
     return isValid;
   }
-
   validateVerticalCursor(vimState: VimState) {
     const line = vimState.cursor.line + 1;
     const isValid = isValidVerticalPosition(line, this.lines);
@@ -469,6 +466,13 @@ export abstract class AbstractMode {
 
     this.vimState.updateActiveLine(updatedInput);
 
+    return this.vimState;
+  }
+  replace(commandInput: string): VimStateClass {
+    const text = this.vimState.getActiveLine();
+    const { col } = this.vimState.cursor;
+    const replaced = replaceAt(text, col, commandInput);
+    this.vimState.updateActiveLine(replaced);
     return this.vimState;
   }
 

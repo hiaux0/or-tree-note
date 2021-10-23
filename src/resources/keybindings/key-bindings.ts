@@ -7,6 +7,7 @@ const commandsAllModes = [{ key: '<Escape>', command: 'enterNormalMode' }];
 export const commandsThatWaitForNextInput: VimCommand[] = [
   { key: 'F', command: 'toCharacterAtBack' },
   { key: 'f', command: 'toCharacterAt' },
+  { key: 'r', command: 'replace' },
   { key: 'T', command: 'toCharacterAfterBack' },
   { key: 't', command: 'toCharacterBefore' },
 ];

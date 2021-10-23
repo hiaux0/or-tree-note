@@ -19,6 +19,7 @@ export const VIM_COMMANDS = [
   'indentRight',
   'indentLeft',
   'newLine',
+  'replace',
   'toCharacterAtBack',
   'toCharacterAt',
   'toCharacterAfterBack',
