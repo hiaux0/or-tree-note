@@ -364,8 +364,10 @@ export abstract class AbstractMode {
     const text = this.vimState.getActiveLine();
     const currentTextToEnd = text.substring(cursor.col);
     const targetCharacterIndex = currentTextToEnd.indexOf(commandInput);
-    if (targetCharacterIndex > -1) {
+    if (targetCharacterIndex > 0) {
+      // ^ -1: stay, 0: stay, cos at beginning
       const finalNewIndex = cursor.col + targetCharacterIndex - 1; // before substring + target index - before character
+      finalNewIndex; /*?*/
       this.vimState.cursor.col = finalNewIndex;
     }
 

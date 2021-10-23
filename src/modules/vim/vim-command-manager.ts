@@ -342,7 +342,7 @@ export class VimCommandManager {
 function getCommandAwaitingNextInput(
   input: string,
   potentialCommands: VimCommand[]
-): PotentialCommandReturn {
+): PotentialCommandReturn | undefined {
   const awaitingCommand = commandsThatWaitForNextInput.find(
     (command) => command.key === input
   );
@@ -353,16 +353,16 @@ function getCommandAwaitingNextInput(
     };
   }
 
-  if (potentialCommands.length === 1) {
-    const isInputForAwaitingCommand = commandsThatWaitForNextInput.find(
-      (command) => command.command === potentialCommands[0].command
-    );
+  if (potentialCommands.length !== 1) return;
+  const isInputForAwaitingCommand = commandsThatWaitForNextInput.find(
+    (command) => command.command === potentialCommands[0].command
+  );
+  if (!isInputForAwaitingCommand) return;
 
-    return {
-      targetCommand: isInputForAwaitingCommand,
-      potentialCommands: [isInputForAwaitingCommand],
-    };
-  }
+  return {
+    targetCommand: isInputForAwaitingCommand,
+    potentialCommands: [isInputForAwaitingCommand],
+  };
 }
 
 /**

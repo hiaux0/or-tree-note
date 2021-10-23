@@ -10,12 +10,12 @@ module.exports = function (wallaby) {
       'test/**/*.feature',
       'test/common-test/**/*.ts',
       'test/unit-cucumber/init-cucumber-testing.spec.ts',
-      'test/unit-cucumber/step-definitions/**/*.ts',
+      // 'test/unit-cucumber/step-definitions/**/*.ts',
     ],
 
     tests: [
-      'test/test-launchers/init-tests.spec.ts',
-      // 'test/unit-cucumber/step-definitions/letter-e.spec.ts',
+      // 'test/test-launchers/init-tests.spec.ts',
+      'test/unit-cucumber/step-definitions/letter-e.spec.ts',
     ],
 
     testFramework: 'jest',
