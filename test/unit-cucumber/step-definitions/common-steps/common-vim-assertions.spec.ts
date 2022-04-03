@@ -3,7 +3,8 @@ import {
   VimCommandNames,
   VIM_COMMANDS,
 } from 'modules/vim/vim-commands-repository';
-import { QueueInputReturn } from 'modules/vim/vim.types';
+import { QueueInputReturn } from 'modules/vim/vim-types';
+
 import { testError, TestError } from '../../../common-test/errors/test-errors';
 import { GherkinTestUtil } from '../../../common-test/gherkin/gherkin-test-util';
 import { initialCursor, manyQueuedInput } from './modes/common-vim.spec';

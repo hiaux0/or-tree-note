@@ -18,7 +18,7 @@ import {
   KeyBindingModes,
   Cursor,
   VimOptions,
-} from './vim.types';
+} from './vim-types';
 
 const logger = new Logger('VimCommandManager');
 
@@ -27,12 +27,12 @@ const logger = new Logger('VimCommandManager');
  */
 export class VimCommandManager {
   activeMode: VimMode = VimMode.NORMAL;
-  private normalMode: NormalMode;
-  private insertMode: InsertMode;
-  private visualMode: VisualMode;
+  private readonly normalMode: NormalMode;
+  private readonly insertMode: InsertMode;
+  private readonly visualMode: VisualMode;
 
   /** Alias for vimOptions.keyBindings */
-  private keyBindings: KeyBindingModes;
+  private readonly keyBindings: KeyBindingModes;
 
   private potentialCommands: VimCommand[] = [];
   /** If a command did not trigger, save key */
@@ -210,7 +210,7 @@ export class VimCommandManager {
       if (potentialCommands?.length) {
         /* prettier-ignore */ logger.culogger.debug(['Awaiting potential commands: %o', potentialCommands]);
       } else {
-        /* prettier-ignore */ logger.culogger.debug( [ 'No command for key: %s in Mode: %s ((vim.ts-getCommandName))', input, this.activeMode, ], { isError: true });
+        /* prettier-ignore */ logger.culogger.debug([ 'No command for key: %s in Mode: %s ((vim.ts-getCommandName))', input, this.activeMode, ], { isError: true });
       }
 
       return;
@@ -315,7 +315,7 @@ export class VimCommandManager {
     const newLineText = text.substring(cursor.col);
     const updatedLines = [...this.vimState.lines];
     updatedLines.splice(newLineIndex, 0, newLineText);
-    updatedLines; /*?*/
+    updatedLines; /* ? */
     currentMode.reTokenizeInput(newLineText);
     this.vimState.updateActiveLine(newLineText);
 
@@ -343,8 +343,8 @@ function getCommandAwaitingNextInput(
   input: string,
   potentialCommands: VimCommand[]
 ): PotentialCommandReturn | undefined {
-  input; /*?*/
-  potentialCommands; /*?*/
+  input; /* ? */
+  potentialCommands; /* ? */
   const awaitingCommand = commandsThatWaitForNextInput.find(
     (command) => command.key === input
   );

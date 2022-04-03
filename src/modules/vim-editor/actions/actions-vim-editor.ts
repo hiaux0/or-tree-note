@@ -1,7 +1,7 @@
 import { StateHistory, nextStateHistory } from 'aurelia-store';
 import produce from 'immer';
 import { cloneDeep } from 'lodash';
-import { Cursor, VimState } from 'modules/vim/vim.types';
+import { Cursor, VimState } from 'modules/vim/vim-types';
 import { VimEditorState } from 'store/initial-state';
 
 export function changeVimState(

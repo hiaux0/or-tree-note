@@ -5,9 +5,9 @@ import {
   replaceAt,
   StringUtil,
 } from 'modules/string/string';
-import { VimStateClass } from '../vim-state';
 
-import { VimState, VimMode, VimOptions, VimPlugin } from '../vim.types';
+import { VimStateClass } from '../vim-state';
+import { VimState, VimMode, VimOptions, VimPlugin } from '../vim-types';
 
 const logger = new Logger({ scope: 'AbstractMode' });
 
@@ -57,7 +57,7 @@ export abstract class AbstractMode {
     if (!this[commandName]) {
       logger.debug(
         [
-          "No command '%s' found in %s Mode. ((modes.ts-executeCommand))",
+          'No command \'%s\' found in %s Mode. ((modes.ts-executeCommand))',
           commandName,
           currentMode,
         ],
@@ -244,7 +244,7 @@ export abstract class AbstractMode {
       resultCol = tokenUnderCursor.end;
     }
 
-    resultCol; /*?*/
+    resultCol; /* ? */
     if (resultCol) {
       this.vimState.cursor.col = resultCol;
     }
@@ -253,7 +253,7 @@ export abstract class AbstractMode {
   }
   cursorWordForwardStart(): VimStateClass {
     const nextToken = this.getNexToken();
-    nextToken; /*?*/
+    nextToken; /* ? */
 
     const isAtEnd = nextToken?.end === this.vimState.cursor.col;
     const isNotAtEnd = nextToken === undefined;
@@ -269,7 +269,7 @@ export abstract class AbstractMode {
       resultCol = nextToken.start;
     }
 
-    resultCol; /*?*/
+    resultCol; /* ? */
     if (resultCol) {
       this.vimState.cursor.col = resultCol;
     }
@@ -317,7 +317,7 @@ export abstract class AbstractMode {
     const { cursor } = this.vimState;
     const text = this.vimState.getActiveLine();
     const currentTextFromStartToColumn = text.substring(0, cursor.col);
-    let targetCharacterIndex = StringUtil.indexOfBack(
+    const targetCharacterIndex = StringUtil.indexOfBack(
       currentTextFromStartToColumn,
       commandInput
     );
@@ -345,7 +345,7 @@ export abstract class AbstractMode {
     const { cursor } = this.vimState;
     const text = this.vimState.getActiveLine();
     const currentTextFromStartToColumn = text.substring(0, cursor.col);
-    let targetCharacterIndex = StringUtil.indexOfBack(
+    const targetCharacterIndex = StringUtil.indexOfBack(
       currentTextFromStartToColumn,
       commandInput
     );
@@ -364,7 +364,7 @@ export abstract class AbstractMode {
     if (targetCharacterIndex > 0) {
       // ^ -1: stay, 0: stay, cos at beginning
       const finalNewIndex = cursor.col + targetCharacterIndex - 1; // before substring + target index - before character
-      finalNewIndex; /*?*/
+      finalNewIndex; /* ? */
       this.vimState.cursor.col = finalNewIndex;
     }
 

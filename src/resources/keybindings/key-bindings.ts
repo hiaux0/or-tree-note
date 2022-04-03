@@ -1,7 +1,7 @@
 // Naming based on https://vim.rtorr.com/
 
 import { VimCommand } from 'modules/vim/vim-commands-repository';
-import { KeyBindingModes } from 'modules/vim/vim.types';
+import { KeyBindingModes } from 'modules/vim/vim-types';
 
 const commandsAllModes = [{ key: '<Escape>', command: 'enterNormalMode' }];
 export const commandsThatWaitForNextInput: VimCommand[] = [

@@ -1,7 +1,7 @@
 import { cloneDeep } from 'lodash';
 import { Vim } from 'modules/vim/vim';
 import { VimCommandManager } from 'modules/vim/vim-command-manager';
-import { Cursor, VimMode } from 'modules/vim/vim.types';
+import { Cursor, VimMode } from 'modules/vim/vim-types';
 import { createVimState, VIM_TEST_WHOLEINPUT } from 'test/vim-state-utils';
 
 describe('C: Mode - Visual - Simplest setup', () => {

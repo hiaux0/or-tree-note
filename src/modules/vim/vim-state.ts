@@ -1,4 +1,4 @@
-import { Cursor, VimMode } from './vim.types';
+import { Cursor, VimMode } from './vim-types';
 
 export class VimStateClass {
   constructor(

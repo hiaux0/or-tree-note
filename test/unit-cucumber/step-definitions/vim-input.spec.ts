@@ -4,7 +4,8 @@ import {
   VIM_COMMANDS,
   VimCommandNames,
 } from 'modules/vim/vim-commands-repository';
-import { Cursor, QueueInputReturn, VimMode } from 'modules/vim/vim.types';
+import { Cursor, QueueInputReturn, VimMode } from 'modules/vim/vim-types';
+
 import { TestError, testError } from '../../common-test/errors/test-errors';
 import { GherkinTestUtil } from '../../common-test/gherkin/gherkin-test-util';
 
@@ -94,7 +95,7 @@ let testCaseAsList: TestCaseList[] = [
     [ {}  , ''               , '<Escape>'    , '0'            , 'enterNormalMode'                            , {mode: VimMode.INSERT} ]    ,
     [ {}  , ''               , '<Escape>'    , '0'            , 'enterNormalMode'                            , {mode: VimMode.VISUAL} ]    ,
     //    , 'rawContent'     , 'rawInput'    , 'rawCommands'  , 'rawColumns'                                 ,
-]
+];
 // [ {}  , 'hi\n012 456|'   , 'ku'        , '1'            , 'cursorUp'                                   , {rawTexts: 'hi' }]         , // @todo eeku should leave cursor at last position of below line
 // [ {focus:true}  , '    |012 456'       , '<Control>['   , '0'            , 'indentLeft'                                    , {rawTexts: '012 456'} ]    ,
 
@@ -129,7 +130,7 @@ describe('Vim input.', () => {
       describe(`Letter - ${rawInput[0]}.`, () => {
         describe(`${rawInput} - ${rawCommands}.`, () => {
           it(`Given I activate Vim with the following input: "${rawContent}"`, () => {
-            rawContent; /*?*/
+            rawContent; /* ? */
             const rawInput = rawContent.split('\n');
             const input = replaceCursorFromRaw(rawInput);
 
@@ -169,7 +170,7 @@ describe('Vim input.', () => {
             const input = GherkinTestUtil.replaceQuotes(rawInput);
 
             manyQueuedInput = vim.queueInputSequence(input);
-            manyQueuedInput; /*?*/
+            manyQueuedInput; /* ? */
           });
 
           it(`Then the expected commands should be "${rawCommands}"`, () => {
@@ -192,7 +193,7 @@ describe('Vim input.', () => {
 
           if (numOfLines !== undefined) {
             it(`there should be "${numOfLines}" lines`, () => {
-              manyQueuedInput; /*?*/
+              manyQueuedInput; /* ? */
               expect(
                 manyQueuedInput[manyQueuedInput.length - 1].lines.length
               ).toBe(Number(numOfLines), 'hi');
@@ -295,12 +296,12 @@ describe('Vim input.', () => {
  *
  */
 function findCursor(input: string[]): Cursor {
-  input; /*?*/
+  input; /* ? */
   let cursorLine: number | undefined;
   let cursorColumn: number | undefined;
   input.forEach((line, index) => {
     const matchedCursor = matchCursor(line);
-    matchedCursor; /*?*/
+    matchedCursor; /* ? */
     if (matchedCursor === null) return;
     if (cursorLine !== undefined && cursorColumn !== undefined) {
       /* prettier-ignore */ logAlreadyFoundCursorError(cursorLine, cursorColumn, index, matchedCursor);

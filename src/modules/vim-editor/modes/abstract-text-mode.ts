@@ -6,7 +6,7 @@ import {
 } from 'modules/css/css-variables';
 import { Logger } from 'modules/debug/logger';
 import { rootContainer } from 'modules/root-container';
-import { Cursor, VimMode, VimState } from 'modules/vim/vim.types';
+import { Cursor, VimMode, VimState } from 'modules/vim/vim-types';
 import { VimEditorState } from 'store/initial-state';
 
 import { createNewLine, changeText } from '../actions/actions-vim-editor';
@@ -18,8 +18,8 @@ const logger = new Logger({ scope: 'AbstractTextMode' });
 export abstract class AbstractTextMode {
   public mode: VimMode;
 
-  private caretWidth: number;
-  private caretHeight: number;
+  private readonly caretWidth: number;
+  private readonly caretHeight: number;
   private _currentLineNumber: number = 0;
   private get currentLineNumber(): number {
     return this._currentLineNumber;
@@ -29,7 +29,7 @@ export abstract class AbstractTextMode {
   }
   private currentCaretCol: number = 0;
   private children: NodeListOf<HTMLElement>;
-  private childrenMutationObserver: ChildrenMutationObserver;
+  private readonly childrenMutationObserver: ChildrenMutationObserver;
 
   constructor(
     public parentElement: HTMLElement,
@@ -88,7 +88,7 @@ export abstract class AbstractTextMode {
       `.${this.childSelector}`
     );
     const currentChild = children[this.currentLineNumber];
-    /* prettier-ignore */ console.log('TCL: AbstractTextMode -> getLineRectOffsetLeft -> currentChild', currentChild)
+    /* prettier-ignore */ console.log('TCL: AbstractTextMode -> getLineRectOffsetLeft -> currentChild', currentChild);
     let childOffsetLeft = 0;
     if (currentChild) {
       childOffsetLeft = currentChild.offsetLeft;

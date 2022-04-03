@@ -4,7 +4,7 @@ import { isMac } from 'common/platform/platform-check';
 import hotkeys from 'hotkeys-js';
 import { Logger } from 'modules/debug/logger';
 import { Vim } from 'modules/vim/vim';
-import { Cursor, VimMode } from 'modules/vim/vim.types';
+import { Cursor, VimMode } from 'modules/vim/vim-types';
 import {
   ALL_MODIFIERS,
   ModifiersType,
@@ -173,11 +173,11 @@ export class VimEditorTextMode {
       inputSequence,
       this.vimEditorOptions.vimExecutingMode
     );
-    /* prettier-ignore */ console.log('TCL: VimEditorTextMode -> executeCommandSequenceInEditor -> resultList', resultList)
+    /* prettier-ignore */ console.log('TCL: VimEditorTextMode -> executeCommandSequenceInEditor -> resultList', resultList);
 
     resultList.forEach((result) => {
       const currentMode = this.getCurrentTextMode();
-      /* prettier-ignore */ console.log('TCL: VimEditorTextMode -> executeCommandSequenceInEditor -> currentMode', currentMode)
+      /* prettier-ignore */ console.log('TCL: VimEditorTextMode -> executeCommandSequenceInEditor -> currentMode', currentMode);
 
       if (currentMode[result.targetCommand]) {
         currentMode[result.targetCommand](result.vimState);

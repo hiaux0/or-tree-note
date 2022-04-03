@@ -13,7 +13,7 @@ import {
   VimExecutingMode,
   Cursor,
   VimState,
-} from 'modules/vim/vim.types';
+} from 'modules/vim/vim-types';
 import { distinctUntilChanged, pluck } from 'rxjs/operators';
 import { EditorLine, VimEditorState } from 'store/initial-state';
 import { toggleCheckbox } from 'store/or-tree-notes/actions-or-tree-notes';

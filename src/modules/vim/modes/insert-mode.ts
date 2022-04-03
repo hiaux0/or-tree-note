@@ -2,7 +2,7 @@ import { insert, replaceAt } from 'modules/string/string';
 
 import { SPACE } from '../../../resources/keybindings/app.keys';
 import { VimStateClass } from '../vim-state';
-import { VimState, VimMode } from '../vim.types';
+import { VimState, VimMode } from '../vim-types';
 import { AbstractMode } from './abstract-mode';
 
 export class InsertMode extends AbstractMode {
@@ -42,7 +42,7 @@ export class InsertMode extends AbstractMode {
 
     super.cursorLeft();
     // this.vimState.getActiveLine() = updatedInput;
-    throw 'TODO: vimstate.text refactor'; /*?*/
+    throw 'TODO: vimstate.text refactor'; /* ? */
 
     return this.vimState;
   }

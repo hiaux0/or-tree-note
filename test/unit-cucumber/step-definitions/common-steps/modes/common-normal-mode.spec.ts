@@ -1,5 +1,6 @@
 import { StepDefinitions } from 'jest-cucumber';
-import { VimMode, VimModeKeys } from 'modules/vim/vim.types';
+import { VimMode, VimModeKeys } from 'modules/vim/vim-types';
+
 import { TestError } from '../../../../common-test/errors/test-errors';
 import { vim } from './common-vim.spec';
 

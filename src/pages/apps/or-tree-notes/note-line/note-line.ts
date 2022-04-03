@@ -1,9 +1,9 @@
 import { inject } from 'aurelia-dependency-injection';
-import { computedFrom , bindable } from 'aurelia-framework';
+import { computedFrom, bindable } from 'aurelia-framework';
 import { CSS_SELECTORS } from 'common/css-selectors';
 import { getCssVar } from 'modules/css/css-variables';
 import { Logger } from 'modules/debug/logger';
-import { Cursor } from 'modules/vim/vim.types';
+import { Cursor } from 'modules/vim/vim-types';
 import { EditorLine } from 'store/initial-state';
 
 import './note-line.scss';

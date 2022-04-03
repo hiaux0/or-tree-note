@@ -17,7 +17,7 @@ import {
   VimExecutingMode,
   VimState,
   VimMode,
-} from './vim.types';
+} from './vim-types';
 
 const logger = new Logger({ scope: 'Vim' });
 
@@ -46,7 +46,7 @@ export class Vim {
   public vimState: VimStateClass;
 
   private readonly vimCommandManager: VimCommandManager;
-  private activeLine: string;
+  private readonly activeLine: string;
 
   constructor(
     private readonly lines: string[],
@@ -196,7 +196,7 @@ export class Vim {
     const actviveLine = lines[cursor.line];
 
     if (actviveLine !== text) {
-      const errorMessage = `Active line and vim state wrong.`;
+      const errorMessage = 'Active line and vim state wrong.';
       const expected = `Expected: ${text}`;
       const received = `Received: ${actviveLine}`;
       throw new Error(`${errorMessage}\n${expected}\n${received}`);
