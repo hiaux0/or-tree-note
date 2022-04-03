@@ -1,13 +1,3 @@
 <template>
-  <require from="../apps/apps"></require>
-  <require from="./or-tree-notes/or-tree-notes"></require>
-
-  <button click.delegate="realUsage()" class="normal-button">Real Usage</button>
-  <button click.delegate="resetStore()" class="normal-button"
-    >Reset Store (dev)</button
-  >
-  <div style="font-size: 8px;">Current mode: ${currentMode}</div>
-
-  <!-- Todo: Apps page should somehow showcase apps -->
-  <or-tree-notes></or-tree-notes>
+  <router-view></router-view>
 </template>

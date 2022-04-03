@@ -25,6 +25,10 @@ export class App {
         title: 'Apps',
       },
       {
+        route: 'apps/*viewModelName',
+        moduleId: PLATFORM.moduleName('./pages/apps/apps-welcome/apps-welcome'),
+      },
+      {
         route: 'uilib',
         moduleId: PLATFORM.moduleName('./pages/uilib/uilib'),
         nav: true,

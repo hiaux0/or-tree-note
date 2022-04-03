@@ -1,0 +1,18 @@
+<template>
+  <a href="#">Back to home</a>
+
+ <require from='../or-tree-notes/or-tree-notes'></require>
+
+  <button>
+    <a href="#apps/or-tree-notes">or-tree-notes</a>
+  </button>
+
+  <div class="uilibWelcome__compose">
+    <compose
+      if.bind="viewModel"
+      view-model.bind="viewModel"
+      class="${viewModelName}"
+    ></compose>
+  </div>
+</template>
+
