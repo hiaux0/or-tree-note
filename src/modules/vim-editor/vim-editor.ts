@@ -20,9 +20,7 @@ export interface VimEditorOptions {
   vimExecutingMode?: VimExecutingMode;
   plugins?: VimPlugin[];
 }
-const defaultVimEditorOptions: VimEditorOptions = {
-  isTextMode: true,
-};
+// const defaultVimEditorOptions: VimEditorOptions = { isTextMode: true, };
 
 @inject(VimEditorTextMode)
 export class VimEditor {
@@ -32,7 +30,7 @@ export class VimEditor {
     public vimEditorOptions: VimEditorOptions,
     public vimEditorTextMode: VimEditorTextMode
   ) {
-    if (this.vimEditorOptions.isTextMode) {
+    if (this.vimEditorOptions.isTextMode === true) {
       vimEditorTextMode.setupElementMode();
       vimEditorTextMode.initVim();
       vimEditorTextMode.initKeys();
@@ -40,7 +38,7 @@ export class VimEditor {
     }
 
     setTimeout(() => {
-      // vimEditorTextMode.executeCommandSequenceInEditor("u<Space>tc");
+      // vimEditorTextMode.executeCommandSequenceInEditor('diw');
       // vimEditorTextMode.executeCommandSequenceInEditor('i');
       // vimEditorTextMode.executeCommandSequenceInEditor("u<Space>t");
       // vimEditorTextMode.executeCommandSequenceInEditor("u");
@@ -48,7 +46,7 @@ export class VimEditor {
   }
 
   getMode() {
-    const { currentMode: activeMode } = this.vim.getCurrentMode();
-    return activeMode;
+    const currentMode = this.vim.getCurrentMode().currentMode;
+    return currentMode;
   }
 }

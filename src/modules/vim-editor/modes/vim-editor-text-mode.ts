@@ -173,13 +173,12 @@ export class VimEditorTextMode {
       inputSequence,
       this.vimEditorOptions.vimExecutingMode
     );
-    /* prettier-ignore */ console.log('TCL: VimEditorTextMode -> executeCommandSequenceInEditor -> resultList', resultList);
-
     resultList.forEach((result) => {
+      /* prettier-ignore */ console.log('TCL ~ file: vim-editor-text-mode.ts ~ line 178 ~ VimEditorTextMode ~ resultList.forEach ~ result', result);
       const currentMode = this.getCurrentTextMode();
-      /* prettier-ignore */ console.log('TCL: VimEditorTextMode -> executeCommandSequenceInEditor -> currentMode', currentMode);
 
-      if (currentMode[result.targetCommand]) {
+      /* prettier-ignore */ console.log('TCL ~ file: vim-editor-text-mode.ts ~ line 180 ~ VimEditorTextMode ~ resultList.forEach ~ result.targetCommand', result.targetCommand);
+      if (currentMode[result.targetCommand] != null) {
         currentMode[result.targetCommand](result.vimState);
       }
     });

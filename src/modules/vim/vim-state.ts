@@ -5,7 +5,7 @@ export class VimStateClass {
     public cursor: Cursor,
     public lines: string[],
     public text?: string,
-    public mode?: VimMode,
+    public mode: VimMode = VimMode.NORMAL,
     public visualStartCursor?: Cursor,
     public visualEndCursor?: Cursor
   ) {}

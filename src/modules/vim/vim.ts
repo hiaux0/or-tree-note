@@ -99,6 +99,7 @@ export class Vim {
         targetCommandName,
         input
       );
+      /* prettier-ignore */ console.log('>> 1 TCL ~ file: vim.ts ~ line 104 ~ Vim ~ queueInput ~ vimState', vimState);
     }
 
     //
@@ -118,6 +119,8 @@ export class Vim {
     };
 
     this.logAndVerifyQueueInputReturn(result, input);
+
+    /* prettier-ignore */ console.log('TCL ~ file: vim.ts ~ line 123 ~ Vim ~ queueInput ~ result.vimState', result.vimState);
 
     return result;
   }

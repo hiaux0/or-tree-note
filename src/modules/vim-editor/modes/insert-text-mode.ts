@@ -1,4 +1,5 @@
 import { Logger } from 'modules/debug/logger';
+import { VimStateClass } from 'modules/vim/vim-state';
 import { VimMode, VimState } from 'modules/vim/vim-types';
 
 import { changeText } from '../actions/actions-vim-editor';
@@ -9,13 +10,21 @@ const logger = new Logger({ scope: 'InsertTextMode' });
 export class InsertTextMode extends AbstractTextMode {
   mode: VimMode.INSERT;
 
-  backspace(vimState?: VimState) {
-    this.store.dispatch(changeText, vimState.cursor.line, vimState.text);
+  backspace(vimState?: VimStateClass) {
+    void this.store.dispatch(
+      changeText,
+      vimState.cursor.line,
+      vimState.getActiveLine()
+    );
     super.cursorLeft(vimState);
   }
 
-  type(vimState?: VimState) {
-    this.store.dispatch(changeText, vimState.cursor.line, vimState.text);
+  type(vimState?: VimStateClass) {
+    void this.store.dispatch(
+      changeText,
+      vimState.cursor.line,
+      vimState.getActiveLine()
+    );
     super.cursorRight(vimState);
   }
 

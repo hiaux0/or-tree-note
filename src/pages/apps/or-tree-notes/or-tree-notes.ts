@@ -3,7 +3,7 @@ import { bindable } from 'aurelia-framework';
 import { Store, jump, connectTo, StateHistory } from 'aurelia-store';
 import { CSS_SELECTORS } from 'common/css-selectors';
 import { CURRENT_OTN_MODE } from 'local-storage';
-import { Logger } from 'modules/debug/logger';
+// import { Logger } from 'modules/debug/logger';
 import { rootContainer } from 'modules/root-container';
 import { changeVimState } from 'modules/vim-editor/actions/actions-vim-editor';
 import { VimEditorTextMode } from 'modules/vim-editor/modes/vim-editor-text-mode';
@@ -20,13 +20,13 @@ import { toggleCheckbox } from 'store/or-tree-notes/actions-or-tree-notes';
 
 import './or-tree-notes.scss';
 
-const logger = new Logger({ scope: 'OrTreeNotes' });
+// const logger = new Logger({ scope: 'OrTreeNotes' });
 
-declare global {
-  interface Window {
-    vimState: any;
-  }
-}
+// declare global {
+//   interface Window {
+//     vimState: any;
+//   }
+// }
 
 @autoinject()
 @connectTo<StateHistory<VimEditorState>>({
@@ -104,7 +104,7 @@ export class OrTreeNotes {
     this.vimEditor = rootContainer.get(VimEditor);
     this.currentModeName = this.vimEditor.getMode();
 
-    this.store.dispatch('changeVimState', this.vimEditor.vim.vimState);
+    void this.store.dispatch('changeVimState', this.vimEditor.vim.vimState);
   }
 
   saveToLocalStorage() {
@@ -122,10 +122,10 @@ export class OrTreeNotes {
     const { vimState } = this.vimEditor.vim;
     const { line: targetLineNumber } = vimState.cursor;
 
-    this.store.dispatch(toggleCheckbox, targetLineNumber);
+    void this.store.dispatch(toggleCheckbox, targetLineNumber);
   }
 
   undo() {
-    this.store.dispatch(jump, -1);
+    void this.store.dispatch(jump, -1);
   }
 }

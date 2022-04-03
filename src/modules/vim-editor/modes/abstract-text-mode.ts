@@ -6,7 +6,8 @@ import {
 } from 'modules/css/css-variables';
 import { Logger } from 'modules/debug/logger';
 import { rootContainer } from 'modules/root-container';
-import { Cursor, VimMode, VimState } from 'modules/vim/vim-types';
+import { VimStateClass } from 'modules/vim/vim-state';
+import { Cursor, VimMode } from 'modules/vim/vim-types';
 import { VimEditorState } from 'store/initial-state';
 
 import { createNewLine, changeText } from '../actions/actions-vim-editor';
@@ -83,14 +84,12 @@ export abstract class AbstractTextMode {
   }
 
   getLineRectOffsetLeft() {
-    logger.bug('getLineRectOffsetLeft');
     const children = this.parentElement.querySelectorAll<HTMLElement>(
       `.${this.childSelector}`
     );
     const currentChild = children[this.currentLineNumber];
-    /* prettier-ignore */ console.log('TCL: AbstractTextMode -> getLineRectOffsetLeft -> currentChild', currentChild);
     let childOffsetLeft = 0;
-    if (currentChild) {
+    if (currentChild != null) {
       childOffsetLeft = currentChild.offsetLeft;
     }
 
@@ -102,29 +101,29 @@ export abstract class AbstractTextMode {
   /** ****** */
   /* Cursor */
   /** ****** */
-  cursorUp(vimState?: VimState) {
+  cursorUp(vimState?: VimStateClass) {
     this.setCursorMovement(vimState?.cursor);
   }
-  cursorDown(vimState?: VimState) {
+  cursorDown(vimState?: VimStateClass) {
     this.setCursorMovement(vimState?.cursor);
   }
-  cursorRight(vimState: VimState) {
+  cursorRight(vimState: VimStateClass) {
     this.setCursorMovement(vimState?.cursor);
     return;
   }
-  cursorLeft(vimState: VimState) {
+  cursorLeft(vimState: VimStateClass) {
     this.setCursorMovement(vimState?.cursor);
   }
-  cursorWordForwardEnd(vimState: VimState) {
+  cursorWordForwardEnd(vimState: VimStateClass) {
     this.setCursorMovement(vimState?.cursor);
   }
-  cursorBackwordsStartWord(vimState: VimState) {
+  cursorBackwordsStartWord(vimState: VimStateClass) {
     this.setCursorMovement(vimState?.cursor);
   }
-  cursorLineEnd(vimState: VimState) {
+  cursorLineEnd(vimState: VimStateClass) {
     this.setCursorMovement(vimState?.cursor);
   }
-  cursorLineStart(vimState: VimState) {
+  cursorLineStart(vimState: VimStateClass) {
     this.setCursorMovement(vimState?.cursor);
   }
 
@@ -135,21 +134,37 @@ export abstract class AbstractTextMode {
   /** **** */
   /* Text */
   /** **** */
-  async newLine(vimState: VimState) {
+  async newLine(vimState: VimStateClass) {
     const newLineIndex = vimState.cursor.line;
-    await this.store.dispatch(createNewLine, newLineIndex, vimState.text);
+    await this.store.dispatch(
+      createNewLine,
+      newLineIndex,
+      vimState.getActiveLine()
+    );
     this.setCursorMovement(vimState.cursor);
   }
-  indentRight(vimState: VimState) {
-    this.store.dispatch(changeText, vimState.cursor.line, vimState.text);
+  async indentRight(vimState: VimStateClass) {
+    await this.store.dispatch(
+      changeText,
+      vimState.cursor.line,
+      vimState.getActiveLine()
+    );
     this.setCursorMovement(vimState.cursor);
   }
-  indentLeft(vimState: VimState) {
-    this.store.dispatch(changeText, vimState.cursor.line, vimState.text);
+  async indentLeft(vimState: VimStateClass) {
+    await this.store.dispatch(
+      changeText,
+      vimState.cursor.line,
+      vimState.getActiveLine()
+    );
     this.setCursorMovement(vimState.cursor);
   }
-  delete(vimState: VimState) {
-    this.store.dispatch(changeText, vimState.cursor.line, vimState.text);
+  async delete(vimState: VimStateClass) {
+    await this.store.dispatch(
+      changeText,
+      vimState.cursor.line,
+      vimState.getActiveLine()
+    );
   }
 
   resetCaretBlinking() {

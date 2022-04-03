@@ -1,5 +1,6 @@
 import { StateHistory, Store } from 'aurelia-store';
 import { Logger } from 'modules/debug/logger';
+import { VimStateClass } from 'modules/vim/vim-state';
 import { VimMode, VimState } from 'modules/vim/vim-types';
 import { VimEditorState } from 'store/initial-state';
 
@@ -20,11 +21,21 @@ export class NormalTextMode extends AbstractTextMode {
     super(parentElement, childSelector, caretElement, store);
   }
 
-  deleteInnerWord(vimState?: VimState) {
-    this.store.dispatch(changeText, vimState.cursor.line, vimState.text);
+  deleteInnerWord(vimState?: VimStateClass) {
+    /* prettier-ignore */ console.log('TCL ~ file: normal-text-mode.ts ~ line 24 ~ NormalTextMode ~ deleteInnerWord ~ deleteInnerWord');
+    /* prettier-ignore */ console.log('TCL ~ file: normal-text-mode.ts ~ line 26 ~ NormalTextMode ~ deleteInnerWord ~ vimState.text', vimState.text);
+    void this.store.dispatch(
+      changeText,
+      vimState.cursor.line,
+      vimState.getActiveLine()
+    );
   }
 
-  visualDelete(vimState?: VimState) {
-    this.store.dispatch(changeText, vimState.cursor.line, vimState.text);
+  visualDelete(vimState?: VimStateClass) {
+    void this.store.dispatch(
+      changeText,
+      vimState.cursor.line,
+      vimState.getActiveLine()
+    );
   }
 }
