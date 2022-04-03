@@ -67,7 +67,7 @@ describe('Vim - General', () => {
 
 describe('C: Mode - Normal', () => {
   describe('C: Sequenced commands', () => {
-    let vimCommandManager;
+    let vimCommandManager: VimCommandManager;
 
     beforeEach(() => {
       vimCommandManager = new VimCommandManager(
@@ -131,7 +131,8 @@ describe('C: Mode - Normal', () => {
       it('F: Throw error on no match', () => {
         try {
           vimCommandManager.findPotentialCommand('x');
-        } catch (error) {
+        } catch (_error) {
+          const error = _error as Error;
           expect(error.message).toBe('Empty Array');
         }
       });

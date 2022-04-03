@@ -1,7 +1,7 @@
 import { Logger } from 'common/logging/logging';
-import { flatten, flattenDeep, groupBy } from 'lodash';
+import { groupBy } from 'lodash';
 import { inputContainsSequence } from 'modules/string/string';
-import { MODIFIERS_WORDS, SPECIAL_KEYS } from 'resources/keybindings/app-keys';
+import { SPECIAL_KEYS } from 'resources/keybindings/app-keys';
 import { commandsThatWaitForNextInput } from 'resources/keybindings/key-bindings';
 
 import { InsertMode } from './modes/insert-mode';
@@ -11,12 +11,10 @@ import { defaultVimOptions } from './vim';
 import { VimCommandNames, VimCommand } from './vim-commands-repository';
 import { VimStateClass } from './vim-state';
 import {
-  VimState,
   FindPotentialCommandReturn as PotentialCommandReturn,
   VimMode,
   QueueInputReturn,
   KeyBindingModes,
-  Cursor,
   VimOptions,
 } from './vim-types';
 
@@ -121,8 +119,8 @@ export class VimCommandManager {
 
   /**
    * @throws EmpytArrayException
-   * @sideeffect queuedKeys
-   * @sideeffect potentialCommands
+   * sideeffect queuedKeys
+   * sideeffect potentialCommands
    */
   findPotentialCommand(input: string): PotentialCommandReturn {
     const commandAwaitingNextInput = getCommandAwaitingNextInput(
@@ -269,7 +267,7 @@ export class VimCommandManager {
       })
       .split(',');
 
-    const result = [];
+    const result: string[] = [];
     splitByModifier.forEach((splitCommands) => {
       if (splitCommands.includes('<')) {
         result.push(splitCommands);
@@ -287,7 +285,7 @@ export class VimCommandManager {
     const accumulatedResult = resultList.filter((result) => result.vimState);
 
     //
-    function groupByCommand(input: any[]) {
+    function groupByCommand(input: QueueInputReturn[]) {
       const grouped = groupBy(input, (commandResult) => {
         return commandResult.targetCommand;
       });
@@ -315,7 +313,6 @@ export class VimCommandManager {
     const newLineText = text.substring(cursor.col);
     const updatedLines = [...this.vimState.lines];
     updatedLines.splice(newLineIndex, 0, newLineText);
-    updatedLines; /* ? */
     currentMode.reTokenizeInput(newLineText);
     this.vimState.updateActiveLine(newLineText);
 
@@ -343,8 +340,6 @@ function getCommandAwaitingNextInput(
   input: string,
   potentialCommands: VimCommand[]
 ): PotentialCommandReturn | undefined {
-  input; /* ? */
-  potentialCommands; /* ? */
   const awaitingCommand = commandsThatWaitForNextInput.find(
     (command) => command.key === input
   );
@@ -371,7 +366,7 @@ function getCommandAwaitingNextInput(
  * @example
  * <Enter> <enter>
  */
-function ignoreCaseForModifiers(key: string, keySequence: string) {
+export function ignoreCaseForModifiers(key: string, keySequence: string) {
   const isIgnoreCase = keySequence.toLowerCase().includes(key.toLowerCase());
   return isIgnoreCase;
 }

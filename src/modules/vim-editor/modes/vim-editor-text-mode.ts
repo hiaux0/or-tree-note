@@ -96,7 +96,9 @@ export class VimEditorTextMode {
 
   checkAllowedBrowserShortcuts(ev: KeyboardEvent) {
     const mainModifier = isMac ? ev.metaKey : ev.ctrlKey;
-    if (ev.key === 'r' && mainModifier) {
+    const reload = ev.key === 'r' && mainModifier;
+    const hardReload = ev.key === 'R' && mainModifier && ev.shiftKey;
+    if (reload || hardReload) {
       return true;
     } else if (ev.key === 'C' && mainModifier && ev.shiftKey) {
       return true;
@@ -107,6 +109,7 @@ export class VimEditorTextMode {
     }
 
     ev.preventDefault();
+    return false;
   }
 
   initKeys() {
@@ -130,7 +133,7 @@ export class VimEditorTextMode {
         isOnlyGroup: true,
       });
 
-      this.executeCommandInEditor(pressedKey, ev);
+      void this.executeCommandInEditor(pressedKey, ev);
     });
   }
 
@@ -164,7 +167,7 @@ export class VimEditorTextMode {
       ]);
     }
 
-    this.store.dispatch(changeVimState, result.vimState);
+    await this.store.dispatch(changeVimState, result.vimState);
   }
 
   executeCommandSequenceInEditor(inputSequence: string | string[]) {

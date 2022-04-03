@@ -15,8 +15,6 @@ import {
   QueueInputReturn,
   KeyBindingModes,
   VimExecutingMode,
-  VimState,
-  VimMode,
 } from './vim-types';
 
 const logger = new Logger({ scope: 'Vim' });
@@ -82,10 +80,12 @@ export class Vim {
     let targetCommandName: VimCommandNames;
     try {
       targetCommandName = this.vimCommandManager.getCommandName(input);
-    } catch {}
+    } catch (_error) {
+      void 0;
+    }
     if (!targetCommandName) return;
 
-    let vimState: VimStateClass;
+    let vimState: VimStateClass | undefined;
     if (targetCommandName === 'enterInsertMode') {
       vimState = this.vimCommandManager.enterInsertMode();
     } else if (targetCommandName === 'enterNormalMode') {
@@ -102,7 +102,7 @@ export class Vim {
     }
 
     //
-    if (vimState) {
+    if (vimState !== undefined) {
       this.vimCommandManager.setVimState(vimState);
       this.vimState = vimState;
       this.handleCommandThatChangesMode(targetCommandName);
@@ -175,7 +175,7 @@ export class Vim {
       throw new Error(
         `[ILLEGAL]: Cursor out of bound: Must not be negative, but line is ${cursorLine}`
       );
-    } else if (this.lines[cursorLine] == undefined) {
+    } else if (this.lines[cursorLine] == null) {
       // == for null and undefined
       throw new Error(
         `[ILLEGAL]: Cursor out of bound: Your input has ${this.lines.length} lines, but cursor line is: ${cursorLine}`
@@ -191,6 +191,8 @@ export class Vim {
     queueInputReturn: QueueInputReturn,
     input: string
   ) {
+    if (queueInputReturn.vimState == null) return;
+
     const { cursor, lines } = queueInputReturn.vimState;
     const text = queueInputReturn.vimState.getActiveLine();
     const actviveLine = lines[cursor.line];
