@@ -16,7 +16,9 @@ describe('C: Mode - Visual - Simplest setup', () => {
   });
 
   it('Add cursor data to visual - 1 cursorRight', () => {
-    const result = vimCommandManager.executeVimCommand('cursorRight');
+    const result = vimCommandManager
+      .executeVimCommand('cursorRight')
+      .serialize();
     expect(result).toEqual({
       mode: VimMode.VISUAL,
       cursor: { col: 1, line: 0 },
@@ -27,7 +29,9 @@ describe('C: Mode - Visual - Simplest setup', () => {
   });
   it('Add cursor data to visual - 2 cursorRight', () => {
     vimCommandManager.executeVimCommand('cursorRight');
-    const result = vimCommandManager.executeVimCommand('cursorRight');
+    const result = vimCommandManager
+      .executeVimCommand('cursorRight')
+      .serialize();
 
     expect(result).toEqual({
       mode: VimMode.VISUAL,
@@ -38,7 +42,9 @@ describe('C: Mode - Visual - Simplest setup', () => {
     });
   });
   it('Add cursor data to visual - e', () => {
-    const result = vimCommandManager.executeVimCommand('cursorWordForwardEnd');
+    const result = vimCommandManager
+      .executeVimCommand('cursorWordForwardEnd')
+      .serialize();
 
     expect(result).toEqual({
       mode: VimMode.VISUAL,
@@ -53,9 +59,9 @@ describe('C: Mode - Visual - Simplest setup', () => {
       'cursorWordForwardEnd'
     );
     vimCommandManager.setVimState(vimState);
-    const result = vimCommandManager.executeVimCommand(
-      'cursorBackwordsStartWord'
-    );
+    const result = vimCommandManager
+      .executeVimCommand('cursorBackwordsStartWord')
+      .serialize();
 
     expect(result).toEqual({
       mode: VimMode.VISUAL,
@@ -73,9 +79,9 @@ describe('C: Mode - Visual - Simplest setup', () => {
     );
     vimCommandManager.enterVisualMode();
 
-    const result = vimCommandManager.executeVimCommand(
-      'cursorBackwordsStartWord'
-    );
+    const result = vimCommandManager
+      .executeVimCommand('cursorBackwordsStartWord')
+      .serialize();
 
     expect(result).toEqual({
       mode: VimMode.VISUAL,
@@ -88,7 +94,9 @@ describe('C: Mode - Visual - Simplest setup', () => {
 
   describe('#visualInnerWord', () => {
     it('Start of word', () => {
-      const result = vimCommandManager.executeVimCommand('visualInnerWord');
+      const result = vimCommandManager
+        .executeVimCommand('visualInnerWord')
+        .serialize();
       expect(result).toEqual({
         mode: VimMode.VISUAL,
         cursor: { col: 2, line: 0 },
@@ -99,7 +107,9 @@ describe('C: Mode - Visual - Simplest setup', () => {
     });
     it('Middle of word', () => {
       vimCommandManager.executeVimCommand('cursorRight');
-      const result = vimCommandManager.executeVimCommand('visualInnerWord');
+      const result = vimCommandManager
+        .executeVimCommand('visualInnerWord')
+        .serialize();
       expect(result).toEqual({
         mode: VimMode.VISUAL,
         cursor: { col: 2, line: 0 },
@@ -110,7 +120,9 @@ describe('C: Mode - Visual - Simplest setup', () => {
     });
     it('End of word', () => {
       vimCommandManager.executeVimCommand('cursorWordForwardEnd');
-      const result = vimCommandManager.executeVimCommand('visualInnerWord');
+      const result = vimCommandManager
+        .executeVimCommand('visualInnerWord')
+        .serialize();
       expect(result).toEqual({
         mode: VimMode.VISUAL,
         cursor: { col: 2, line: 0 },
@@ -126,9 +138,9 @@ describe('C: Mode - Visual - Simplest setup', () => {
       'cursorWordForwardEnd'
     );
     vimCommandManager.setVimState(vimState);
-    const result = vimCommandManager.executeVimCommand(
-      'visualMoveToOtherEndOfMarkedArea'
-    );
+    const result = vimCommandManager
+      .executeVimCommand('visualMoveToOtherEndOfMarkedArea')
+      .serialize();
 
     expect(result).toEqual({
       mode: VimMode.VISUAL,
@@ -151,7 +163,9 @@ describe('C: Mode - Visual - Complexer setup', () => {
     );
     vimCommandManager.enterVisualMode();
 
-    const result = vimCommandManager.executeVimCommand('visualStartLineWise');
+    const result = vimCommandManager
+      .executeVimCommand('visualStartLineWise')
+      .serialize();
     expect(result).toEqual({
       mode: VimMode.VISUAL,
       cursor: { col: 5, line: 0 },
@@ -166,7 +180,7 @@ describe('C: Mode - Visual - Complexer setup', () => {
     const vim = new Vim(cloneDeep(input), createVimState(input[0]).cursor);
     const result = vim.queueInputSequence('uviw').pop();
 
-    expect(result.vimState).toEqual({
+    expect(result.vimState.serialize()).toEqual({
       mode: VimMode.VISUAL,
       cursor: { col: 5, line: 1 },
       text: input[1],

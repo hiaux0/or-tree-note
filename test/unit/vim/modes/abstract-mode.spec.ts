@@ -3,7 +3,7 @@
 // import { Vim } from 'modules/vim/vim';
 // import { createVimState } from 'test/vim-state-utils';
 
-// import { VimMode } from '../../../../src/modules/vim/vim.types';
+// import { VimMode } from '../../../../src/modules/vim/vim-types';
 
 // const input = ['foo'];
 // const cursor = { line: 0, col: 0 };

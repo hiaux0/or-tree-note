@@ -1,6 +1,6 @@
 // import { cloneDeep } from 'lodash';
 // import { Vim } from 'modules/vim/vim';
-// import { Cursor, VimPlugin } from 'modules/vim/vim.types';
+// import { Cursor, VimPlugin } from 'modules/vim/vim-types';
 
 // const input = ['foo'];
 // const cursor: Cursor = { line: 0, col: 0 };

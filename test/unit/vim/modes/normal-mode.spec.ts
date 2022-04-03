@@ -1,7 +1,7 @@
 // import { cloneDeep } from 'lodash';
 // import { NormalMode } from 'modules/vim/modes/normal-mode';
 // import { Vim } from 'modules/vim/vim';
-// import { Cursor, VimState } from 'modules/vim/vim.types';
+// import { Cursor, VimState } from 'modules/vim/vim-types';
 
 // const input = ['foo'];
 // const cursor: Cursor = { line: 0, col: 0 };

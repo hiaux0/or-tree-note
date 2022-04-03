@@ -1,7 +1,7 @@
 // import { cloneDeep } from 'lodash';
 // import { Vim } from 'modules/vim/vim';
 // import { VimCommandManager } from 'modules/vim/vim-command-manager';
-// import { Cursor } from 'modules/vim/vim.types';
+// import { Cursor } from 'modules/vim/vim-types';
 // import { createVimState } from 'test/vim-state-utils';
 
 // const input = ['foo'];
