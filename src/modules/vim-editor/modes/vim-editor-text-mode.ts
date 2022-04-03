@@ -128,10 +128,7 @@ export class VimEditorTextMode {
       const modifiers = `${ev.ctrlKey ? 'Ctrl+' : ''}${
         ev.shiftKey ? 'Shift+' : ''
       }${ev.altKey ? 'Alt+' : ''}${ev.metaKey ? 'Meta+' : ''}`;
-      logger.debug(['-------------- Key pressed: (%s) %s', modifiers, ev.key], {
-        log: true,
-        isOnlyGroup: true,
-      });
+      /* prettier-ignore */ logger.debug(['-------------- Key pressed: (%s) %s', modifiers, ev.key], { log: true, isOnlyGroup: true, });
 
       void this.executeCommandInEditor(pressedKey, ev);
     });
