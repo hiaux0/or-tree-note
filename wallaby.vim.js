@@ -15,7 +15,8 @@ module.exports = function (wallaby) {
 
     tests: [
       // 'test/test-launchers/init-tests.spec.ts',
-      'test/unit-cucumber/step-definitions/letter-e.spec.ts',
+      // 'test/unit-cucumber/step-definitions/letter-e.spec.ts',
+      'test/unit-cucumber/step-definitions/vim-input.spec.ts',
     ],
 
     testFramework: 'jest',
