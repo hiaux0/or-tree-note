@@ -1,6 +1,11 @@
 <template>
-
   <h1>${value}</h1>
 
   <div>Command: ${targetCommand}</div>
+
+  <div class="container">
+    <div class="${6 === $index ? 'active' : ''}" repeat.for="index of numOfElements"
+      >${index}</div
+    >
+  </div>
 </template>
