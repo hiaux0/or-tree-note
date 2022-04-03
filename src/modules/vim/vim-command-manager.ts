@@ -1,7 +1,7 @@
 import { Logger } from 'common/logging/logging';
 import { flatten, flattenDeep, groupBy } from 'lodash';
 import { inputContainsSequence } from 'modules/string/string';
-import { MODIFIERS_WORDS, SPECIAL_KEYS } from 'resources/keybindings/app.keys';
+import { MODIFIERS_WORDS, SPECIAL_KEYS } from 'resources/keybindings/app-keys';
 import { commandsThatWaitForNextInput } from 'resources/keybindings/key-bindings';
 
 import { InsertMode } from './modes/insert-mode';

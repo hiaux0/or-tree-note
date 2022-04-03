@@ -9,7 +9,7 @@ import {
   ALL_MODIFIERS,
   ModifiersType,
   SPACE,
-} from 'resources/keybindings/app.keys';
+} from 'resources/keybindings/app-keys';
 import { pluck, take } from 'rxjs/operators';
 import { VimEditorState } from 'store/initial-state';
 

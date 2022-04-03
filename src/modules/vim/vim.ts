@@ -1,6 +1,6 @@
 import { cloneDeep } from 'lodash';
 import { Logger } from 'modules/debug/logger';
-import { SPACE } from 'resources/keybindings/app.keys';
+import { SPACE } from 'resources/keybindings/app-keys';
 import keyBindingsJson from 'resources/keybindings/key-bindings';
 
 import { VimCommandManager } from './vim-command-manager';

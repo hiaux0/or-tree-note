@@ -1,6 +1,6 @@
 import { insert, replaceAt } from 'modules/string/string';
 
-import { SPACE } from '../../../resources/keybindings/app.keys';
+import { SPACE } from '../../../resources/keybindings/app-keys';
 import { VimStateClass } from '../vim-state';
 import { VimState, VimMode } from '../vim-types';
 import { AbstractMode } from './abstract-mode';
