@@ -1008,6 +1008,13 @@
   dependencies:
     regenerator-runtime "^0.13.4"
 
+"@babel/runtime@^7.17.0":
+  version "7.17.8"
+  resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.17.8.tgz#3e56e4aff81befa55ac3ac6a0967349fd1c5bca2"
+  integrity sha512-dQpEpK0O9o6lj6oPu0gRDbbnk+4LeHlNcBpspf6Olzt3GIX4P1lWF1gS+pHLDFlaJvbR6q7jCfQ08zA4QJBnmA==
+  dependencies:
+    regenerator-runtime "^0.13.4"
+
 "@babel/runtime@^7.8.4":
   version "7.12.5"
   resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.12.5.tgz#410e7e487441e1b360c29be715d870d9b985882e"
@@ -1650,6 +1657,13 @@
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/@protobufjs/utf8/-/utf8-1.1.0.tgz#a777360b5b39a1a2e5106f8e858f2fd2d060c570"
   integrity sha1-p3c2C1s5oaLlEG+OhY8v0tBgxXA=
+
+"@redux-devtools/extension@^3.2.1":
+  version "3.2.2"
+  resolved "https://registry.yarnpkg.com/@redux-devtools/extension/-/extension-3.2.2.tgz#2d6da4df2c4d32a0aac54d824e46f52b1fd9fc4d"
+  integrity sha512-fKA2TWNzJF7wXSDwBemwcagBFudaejXCzH5hRszN3Z6B7XEJtEmGD77AjV0wliZpIZjA/fs3U7CejFMQ+ipS7A==
+  dependencies:
+    "@babel/runtime" "^7.17.0"
 
 "@sinonjs/commons@^1.7.0":
   version "1.8.3"
@@ -3038,7 +3052,7 @@ aurelia-pal-browser@^1.0.0:
   dependencies:
     aurelia-pal "^1.4.0"
 
-aurelia-pal@^1.0.0, aurelia-pal@^1.1.1, aurelia-pal@^1.3.0, aurelia-pal@^1.4.0, aurelia-pal@^1.8.0:
+aurelia-pal@^1.0.0, aurelia-pal@^1.1.1, aurelia-pal@^1.3.0, aurelia-pal@^1.4.0, aurelia-pal@^1.8.2:
   version "1.8.2"
   resolved "https://registry.yarnpkg.com/aurelia-pal/-/aurelia-pal-1.8.2.tgz#9c39509ea2650291fa4bda06a4ed37d8be31f0ac"
   integrity sha512-6erozUK5aaD88PvThs/L87kLsqxqPaBU59PGECr36v9yezhve0BHqpKgbtJ8haHJSiH80K9lsJtXfefedS/3sw==
@@ -3074,14 +3088,15 @@ aurelia-router@^1.5.0:
     aurelia-path "^1.0.0"
     aurelia-route-recognizer "^1.3.2"
 
-aurelia-store@^1.6.0:
-  version "1.6.0"
-  resolved "https://registry.yarnpkg.com/aurelia-store/-/aurelia-store-1.6.0.tgz#f39e97ec92ada432f68ffd5ea6c1f7bba760a3bf"
-  integrity sha512-ErCCtf6liIayI4Kw+Jqjm3gm3hysrHBsYvEeXS/om1ppLVhxHXG1i8Oufmf91ZX8AXDiAuV7u9pjWW447cYp5A==
+aurelia-store@^1.7.2:
+  version "1.7.2"
+  resolved "https://registry.yarnpkg.com/aurelia-store/-/aurelia-store-1.7.2.tgz#53ad3ca19a3073470bb4281348271e3ebfa07e17"
+  integrity sha512-zh4WR3TFlWdNKO45soZ/cVJR1xyYOfeG7hREYxdBxIiZG6mo58U2VzJYwbdn3lH6Zvf+pyYLP1rpCx0cbZEX+g==
   dependencies:
+    "@redux-devtools/extension" "^3.2.1"
     aurelia-dependency-injection "^1.4.1"
     aurelia-logging "^1.5.0"
-    aurelia-pal "^1.8.0"
+    aurelia-pal "^1.8.2"
     aurelia-templating "^1.10.1"
     rxjs "^6.2.2"
 
