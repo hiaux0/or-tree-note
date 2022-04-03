@@ -59,6 +59,7 @@ let testCaseAsList: TestCaseList[] = [
     [ {}  , '012 |456'       , 'diw'         , '4'            , 'deleteInnerWord'                            , {rawTexts: '`012 `'}]       ,
     [ {}  , '|012 456'       , 'diw'         , '0'            , 'deleteInnerWord'                            , {rawTexts: '` 456`'}]       ,
     [ {}  , '|012 456'       , 'e'           , '2'            , 'cursorWordForwardEnd'                       , ]                           ,
+    [ {}  , '| 12'           , 'e'           , '2'            , 'cursorWordForwardEnd'                       , ]                           ,
     [ {}  , '|012 456'       , 'eee'         , '2;6;'         , 'cursorWordForwardEnd;;'                     , ]                           ,
     [ {}  , '012 4|56'       , 'F0'          , '0'            , 'toCharacterAtBack'                          , ]                           ,
     [ {}  , '012 4|56'       , 'F6'          , '5'            , 'toCharacterAtBack'                          , ]                           ,

@@ -110,8 +110,10 @@ export class VimCommandManager {
     try {
       const vimState = currentMode.executeCommand(commandName, commandInput);
       return vimState;
-    } catch (error) {
-      /* prettier-ignore */ logger.log(`No Command found in mode >> ${currentMode.currentMode} <<`, { log: true, isError: true });
+    } catch (_error) {
+      const error = _error as Error;
+      console.error(error);
+
       const previousState = this.vimState;
       return previousState;
     }

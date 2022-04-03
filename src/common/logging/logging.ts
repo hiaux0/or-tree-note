@@ -16,7 +16,7 @@ interface ILogOptions extends LogOptions {
 }
 
 const DEFAULT_LOG_OPTIONS: ILogOptions = {
-  log: false,
+  log: true,
   focusedLogging: true,
   measurePerf: false,
   focusedPerf: true,
@@ -57,8 +57,8 @@ export class Logger {
       logLevel: 'INFO',
       log,
     });
-    if (loggedMessage) {
-      console.log(loggedMessage[0]);
+    if (loggedMessage.length > 0) {
+      // console.log(loggedMessage[0]);
       if (loggedMessage.length > 1) {
         console.log('There are more log messages');
       }

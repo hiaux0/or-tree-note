@@ -383,9 +383,7 @@ export abstract class AbstractMode {
       return isUnderCursor;
     });
 
-    logger.debug(['Token under curor: %o', targetToken], {
-      onlyVerbose: true,
-    });
+    /* prettier-ignore */ logger.debug(['Token under curor: %o', targetToken], { onlyVerbose: true, });
 
     return targetToken;
   }
@@ -405,12 +403,30 @@ export abstract class AbstractMode {
   getNexToken() {
     const tokenizedInput = this.reTokenizeInput(this.vimState.getActiveLine());
     const currentToken = this.getTokenUnderCursor();
-    const nextToken = tokenizedInput[currentToken.index + 1];
 
-    if (!nextToken) {
+    let nextIndex = NaN;
+    if (currentToken == null) {
+      nextIndex = this.getNextTokenFromCusor(tokenizedInput).index;
+    } else {
+      nextIndex = currentToken.index + 1;
+    }
+
+    const nextToken = tokenizedInput[nextIndex];
+
+    if (nextToken == null) {
       return currentToken;
     }
     return nextToken;
+  }
+  private getNextTokenFromCusor(tokenizedInput: TokenizedString[]) {
+    const currentCol = this.vimState.cursor.col;
+    const maybeNext = tokenizedInput.find((input) => input.end >= currentCol);
+
+    if (maybeNext == null) {
+      return tokenizedInput[0];
+    }
+
+    return maybeNext;
   }
   getPreviousToken() {
     const tokenizedInput = this.reTokenizeInput(this.vimState.getActiveLine());

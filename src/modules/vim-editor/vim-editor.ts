@@ -38,7 +38,7 @@ export class VimEditor {
     }
 
     setTimeout(() => {
-      // vimEditorTextMode.executeCommandSequenceInEditor('diw');
+      // vimEditorTextMode.executeCommandSequenceInEditor('diwe');
       // vimEditorTextMode.executeCommandSequenceInEditor('i');
       // vimEditorTextMode.executeCommandSequenceInEditor("u<Space>t");
       // vimEditorTextMode.executeCommandSequenceInEditor("u");
