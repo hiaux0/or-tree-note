@@ -1,6 +1,7 @@
 import { autoinject, bindable } from 'aurelia-framework';
 import * as d3 from 'd3';
 import { initVimHtml } from 'modules/vim-html';
+import { VIM_COMMAND } from 'modules/vim/vim-commands-repository';
 import './vim-html-connection.scss';
 
 const ACTIVE_CLASS = 'active';
@@ -26,9 +27,12 @@ export class VimHtmlConnection {
   private line: number;
   private col: number;
   private readonly activeIndex: number = 0;
-  private readonly numOfElements = 7;
+  private numOfElements = 7;
+  private currentActive: HTMLElement;
 
   attached() {
+    this.initActive();
+
     d3.selectAll('p').style('color', function () {
       return `hsl(${Math.random() * 360},100%,50%)`;
     });
@@ -47,41 +51,53 @@ export class VimHtmlConnection {
         console.clear();
 
         switch (result.targetCommand) {
-          case 'cursorRight': {
-            this.getNextSibling();
+          case VIM_COMMAND['cursorRight']: {
+            this.currentActive = this.getNextSibling();
             break;
           }
-          case 'cursorLeft': {
-            this.getPreviousSibling();
+          case VIM_COMMAND['cursorLeft']: {
+            this.currentActive = this.getPreviousSibling();
             break;
           }
-          case 'cursorUp': {
-            this.getUpSibling();
+          case VIM_COMMAND['cursorUp']: {
+            this.currentActive = this.getUpSibling();
             break;
           }
-          case 'cursorDown': {
-            this.getDownSibling();
+          case VIM_COMMAND['cursorDown']: {
+            this.currentActive = this.getDownSibling();
             break;
           }
-          case 'cursorLineStart': {
-            this.getFirstSibling();
+          case VIM_COMMAND['cursorLineStart']: {
+            this.currentActive = this.getFirstSibling();
             break;
           }
-          case 'cursorLineEnd': {
-            this.getLastSibling();
+          case VIM_COMMAND['cursorLineEnd']: {
+            this.currentActive = this.getLastSibling();
             break;
           }
-          case 'indentLeft': {
-            this.goToParent();
+          case VIM_COMMAND['indentLeft']: {
+            this.currentActive = this.goToParent();
             break;
           }
-          case 'indentRight': {
-            this.getFirstChild();
+          case VIM_COMMAND['indentRight']: {
+            this.currentActive = this.getFirstChild();
+            break;
+          }
+          case VIM_COMMAND['newLine']: {
+            this.numOfElements += 1;
+            break;
+          }
+          case VIM_COMMAND.backspace: {
+            this.numOfElements -= 1;
             break;
           }
         }
       },
     });
+  }
+
+  private initActive() {
+    this.currentActive = document.querySelector('.active');
   }
 
   private getPreviousSibling() {
@@ -94,6 +110,8 @@ export class VimHtmlConnection {
 
     $currentActive.classList.remove(ACTIVE_CLASS);
     $previousActive.classList.add(ACTIVE_CLASS);
+
+    return $previousActive as HTMLElement;
   }
 
   private getNextSibling() {
@@ -106,6 +124,8 @@ export class VimHtmlConnection {
 
     $currentActive.classList.remove(ACTIVE_CLASS);
     $nextActive.classList.add(ACTIVE_CLASS);
+
+    return $nextActive as HTMLElement;
   }
 
   /**
@@ -148,6 +168,8 @@ export class VimHtmlConnection {
       $currentActive.classList.remove(ACTIVE_CLASS);
       $upActive.classList.add(ACTIVE_CLASS);
     }
+
+    return $upActive as HTMLElement;
   }
 
   /**
@@ -188,6 +210,8 @@ export class VimHtmlConnection {
       $currentActive.classList.remove(ACTIVE_CLASS);
       $downActive.classList.add(ACTIVE_CLASS);
     }
+
+    return $downActive as HTMLElement;
   }
 
   private getFirstSibling() {
@@ -199,6 +223,8 @@ export class VimHtmlConnection {
 
     $currentActive.classList.remove(ACTIVE_CLASS);
     $firstActive.classList.add(ACTIVE_CLASS);
+
+    return $firstActive as HTMLElement;
   }
 
   private getLastSibling() {
@@ -210,6 +236,8 @@ export class VimHtmlConnection {
 
     $currentActive.classList.remove(ACTIVE_CLASS);
     $lastActive.classList.add(ACTIVE_CLASS);
+
+    return $lastActive as HTMLElement;
   }
 
   private goToParent(
@@ -223,6 +251,8 @@ export class VimHtmlConnection {
 
     $currentActive.classList.remove(ACTIVE_CLASS);
     $parent.classList.add(ACTIVE_CLASS);
+
+    return $parent;
   }
 
   private getFirstChild() {
@@ -232,5 +262,7 @@ export class VimHtmlConnection {
 
     $currentActive.classList.remove(ACTIVE_CLASS);
     $child.classList.add(ACTIVE_CLASS);
+
+    return $child as HTMLElement;
   }
 }

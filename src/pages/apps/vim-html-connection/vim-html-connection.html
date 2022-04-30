@@ -2,9 +2,10 @@
   <h1>${value}</h1>
 
   <div>Command: ${targetCommand}</div>
+  <div>Current Node: ${currentActive.textContent} </div>
 
   <div class="container">
-    <p class="${6 === $index ? 'active' : ''}" repeat.for="index of numOfElements"
+    <p class="${activeIndex === $index ? 'active' : ''}" repeat.for="index of numOfElements"
       >${index}</p
     >
   </div>
