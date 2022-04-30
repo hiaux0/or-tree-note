@@ -21,7 +21,7 @@
 
 3. Add commandName as method to `abstract-mode.ts` (Actual Vim implementation)
 
-4. Add command to `vim-commands.ts`
+4. Add command to `vim-commands-repository.ts`
 
 
 ---
