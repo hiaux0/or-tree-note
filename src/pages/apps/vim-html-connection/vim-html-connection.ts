@@ -75,39 +75,39 @@ export class VimHtmlConnection {
         console.clear();
 
         switch (result.targetCommand) {
-          case VIM_COMMAND['cursorRight']: {
+          case VIM_COMMAND.cursorRight: {
             /* this.currentActive = */ this.getNextSibling();
             break;
           }
-          case VIM_COMMAND['cursorLeft']: {
+          case VIM_COMMAND.cursorLeft: {
             /* this.currentActive = */ this.getPreviousSibling();
             break;
           }
-          case VIM_COMMAND['cursorUp']: {
+          case VIM_COMMAND.cursorUp: {
             /* this.currentActive = */ this.getUpSibling();
             break;
           }
-          case VIM_COMMAND['cursorDown']: {
+          case VIM_COMMAND.cursorDown: {
             /* this.currentActive = */ this.getDownSibling();
             break;
           }
-          case VIM_COMMAND['cursorLineStart']: {
+          case VIM_COMMAND.cursorLineStart: {
             /* this.currentActive = */ this.getFirstSibling();
             break;
           }
-          case VIM_COMMAND['cursorLineEnd']: {
+          case VIM_COMMAND.cursorLineEnd: {
             /* this.currentActive = */ this.getLastSibling();
             break;
           }
-          case VIM_COMMAND['indentLeft']: {
+          case VIM_COMMAND.indentLeft: {
             /* this.currentActive = */ this.goToParent();
             break;
           }
-          case VIM_COMMAND['indentRight']: {
+          case VIM_COMMAND.indentRight: {
             /* this.currentActive = */ this.getFirstChild();
             break;
           }
-          case VIM_COMMAND['newLine']: {
+          case VIM_COMMAND.newLine: {
             this.addNodeAtIndex(this.currentActiveIndex);
             break;
           }
