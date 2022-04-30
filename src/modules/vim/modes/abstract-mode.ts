@@ -486,6 +486,9 @@ export abstract class AbstractMode {
     this.vimState.updateActiveLine(replaced);
     return this.vimState;
   }
+  backspace(): VimStateClass {
+    return this.vimState;
+  }
 
   nothing(): VimStateClass {
     return this.vimState;
