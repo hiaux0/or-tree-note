@@ -1,15 +1,14 @@
 // Naming based on https://vim.rtorr.com/
 
-import { VimCommand } from 'modules/vim/vim-commands-repository';
-import { KeyBindingModes } from 'modules/vim/vim-types';
+import { VimCommand, VIM_COMMAND } from 'modules/vim/vim-commands-repository';
 
 const commandsAllModes = [{ key: '<Escape>', command: 'enterNormalMode' }];
 export const commandsThatWaitForNextInput: VimCommand[] = [
-  { key: 'F', command: 'toCharacterAtBack' },
-  { key: 'f', command: 'toCharacterAt' },
-  { key: 'r', command: 'replace' },
-  { key: 'T', command: 'toCharacterAfterBack' },
-  { key: 't', command: 'toCharacterBefore' },
+  { key: 'F', command: VIM_COMMAND['toCharacterAtBack'] },
+  { key: 'f', command: VIM_COMMAND['toCharacterAt'] },
+  { key: 'r', command: VIM_COMMAND['replace'] },
+  { key: 'T', command: VIM_COMMAND['toCharacterAfterBack'] },
+  { key: 't', command: VIM_COMMAND['toCharacterBefore'] },
 ];
 
 const cursorAllModes = [
@@ -47,6 +46,7 @@ const keyBindings = {
     { key: '<Control>]', command: 'indentRight' },
     { key: '<Control>[', command: 'indentLeft' },
     { key: '<Enter>', command: 'newLine' },
+    { key: '<Backspace>', command: 'backspace' },
     { key: '<Meta>', command: 'nothing' },
     ...commandsAllModes,
     ...cursorAllModes,

@@ -6,6 +6,7 @@ import keyBindingsJson from 'resources/keybindings/key-bindings';
 import { VimCommandManager } from './vim-command-manager';
 import {
   VimCommandNames,
+  VIM_COMMAND,
   VIM_COMMANDS_THAT_CHANGE_TO_NORMAL_MODE,
 } from './vim-commands-repository';
 import { VimStateClass } from './vim-state';
@@ -80,19 +81,20 @@ export class Vim {
     let targetCommandName: VimCommandNames;
     try {
       targetCommandName = this.vimCommandManager.getCommandName(input);
+      /* prettier-ignore */ console.log('TCL ~ file: vim.ts ~ line 83 ~ Vim ~ queueInput ~ targetCommandName', targetCommandName);
     } catch (_error) {
       void 0;
     }
     if (!targetCommandName) return;
 
     let vimState: VimStateClass | undefined;
-    if (targetCommandName === 'enterInsertMode') {
+    if (targetCommandName === VIM_COMMAND['enterInsertMode']) {
       vimState = this.vimCommandManager.enterInsertMode();
-    } else if (targetCommandName === 'enterNormalMode') {
+    } else if (targetCommandName === VIM_COMMAND['enterNormalMode']) {
       vimState = this.vimCommandManager.enterNormalMode();
-    } else if (targetCommandName === 'enterVisualMode') {
+    } else if (targetCommandName === VIM_COMMAND['enterVisualMode']) {
       vimState = this.vimCommandManager.enterVisualMode();
-    } else if (targetCommandName === 'newLine') {
+    } else if (targetCommandName === VIM_COMMAND['newLine']) {
       vimState = this.vimCommandManager.newLine();
     } else {
       vimState = this.vimCommandManager.executeVimCommand(

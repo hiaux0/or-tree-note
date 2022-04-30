@@ -1,9 +1,6 @@
 import { cloneDeep } from 'lodash';
 import { Vim } from 'modules/vim/vim';
-import {
-  VIM_COMMANDS,
-  VimCommandNames,
-} from 'modules/vim/vim-commands-repository';
+import { VIM_COMMANDS, VIM_COMMAND } from 'modules/vim/vim-commands-repository';
 import { Cursor, QueueInputReturn, VimMode } from 'modules/vim/vim-types';
 
 import { TestError, testError } from '../../common-test/errors/test-errors';
@@ -361,7 +358,7 @@ function theExpectedCommandShouldBe(
   expectedInput: QueueInputReturn,
   rawCommand: string
 ) {
-  const command = GherkinTestUtil.replaceQuotes(rawCommand);
+  const command = GherkinTestUtil.replaceQuotes(rawCommand) as VIM_COMMAND;
 
   verifyCommandsName(command);
 
@@ -383,8 +380,8 @@ function memoizeExpected(input: string, expected: string) {
   return expected;
 }
 
-function verifyCommandsName(command: string) {
-  const isValid = VIM_COMMANDS.includes(command as VimCommandNames);
+function verifyCommandsName(command: VIM_COMMAND) {
+  const isValid = VIM_COMMANDS.includes(command);
 
   if (!isValid) {
     // testError.log(`Command not in list, was: >> ${command} <<.`);

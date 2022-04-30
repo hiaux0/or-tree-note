@@ -2,6 +2,7 @@ import { StepDefinitions } from 'jest-cucumber';
 import {
   VimCommandNames,
   VIM_COMMANDS,
+  VIM_COMMAND,
 } from 'modules/vim/vim-commands-repository';
 import { QueueInputReturn } from 'modules/vim/vim-types';
 
@@ -93,7 +94,7 @@ function theExpectedCommandShouldBe(
   expectedInput: QueueInputReturn,
   rawCommand: string
 ) {
-  const command = GherkinTestUtil.replaceQuotes(rawCommand);
+  const command = GherkinTestUtil.replaceQuotes(rawCommand) as VIM_COMMAND;
 
   verifyCommandsName(command);
 
@@ -115,8 +116,8 @@ function memoizeExpected(input: string, expected: string) {
   return expected;
 }
 
-function verifyCommandsName(command: string) {
-  const isValid = VIM_COMMANDS.includes(<VimCommandNames>command);
+function verifyCommandsName(command: VIM_COMMAND) {
+  const isValid = VIM_COMMANDS.includes(command);
 
   if (!isValid) {
     // testError.log(`Command not in list, was: >> ${command} <<.`);
