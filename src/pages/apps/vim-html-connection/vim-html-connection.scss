@@ -1,4 +1,4 @@
-* {
+.vim-html-connection * {
   border: 1px solid black;
   padding: 1px;
 }
@@ -12,7 +12,7 @@
   grid: repeat(3, 1fr) / repeat(3, 1fr);
   gap: 15px;
 
-  div {
+  p {
     width: 80px;
     height: 80px;
   }

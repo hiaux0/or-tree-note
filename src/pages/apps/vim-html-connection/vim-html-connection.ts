@@ -1,4 +1,5 @@
 import { autoinject, bindable } from 'aurelia-framework';
+import * as d3 from 'd3';
 import { initVimHtml } from 'modules/vim-html';
 import './vim-html-connection.scss';
 
@@ -28,6 +29,16 @@ export class VimHtmlConnection {
   private readonly numOfElements = 7;
 
   attached() {
+    d3.selectAll('p').style('color', function () {
+      return `hsl(${Math.random() * 360},100%,50%)`;
+    });
+
+    // d3.selectAll('p')
+    //   .data([4, 8, 15, 16, 23, 42])
+    //   .style('font-size', function (d) {
+    //     return `${d}px`;
+    //   });
+
     initVimHtml({
       commandListener: (result) => {
         this.targetCommand = result.targetCommand;
