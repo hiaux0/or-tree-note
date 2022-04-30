@@ -1,8 +1,17 @@
 <template>
-  <div>Command: ${targetCommand}</div>
+  <div>
+    Command: ${targetCommand}
+    <span if.bind="isMoveMode"> -- Move mode</span>
+  </div>
   <div>Current Node: ${currentActive.textContent} </div>
 
-  <div class="container" ref="nodesContainerRef">
+  <div
+    class="
+      container
+      ${isMoveMode ? 'move-mode' : ''}
+    "
+    ref="nodesContainerRef"
+  >
     <p
       class="${manualActiveIndex === $index ? 'active' : ''}"
       repeat.for="node of nodes"

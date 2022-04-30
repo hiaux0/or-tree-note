@@ -32,6 +32,8 @@ export class VimHtmlConnection {
   private readonly numOfElements = 7;
   private nodes: MyNode[] = [];
   private readonly nodesContainerRef: HTMLElement;
+  private isMoveMode: boolean = true;
+  private elementToMove: HTMLElement;
 
   @computedFrom('manualActiveIndex', 'nodes.length')
   private get currentActive(): HTMLElement {
@@ -56,6 +58,7 @@ export class VimHtmlConnection {
 
   attached() {
     this.initActive();
+    this.setElementToMove(); // dev
 
     d3.selectAll('p').style('color', function () {
       return `hsl(${Math.random() * 360},100%,50%)`;
@@ -115,16 +118,29 @@ export class VimHtmlConnection {
             this.removeNodeAtIndex(this.currentActiveIndex);
             break;
           }
+          case VIM_COMMAND.enterNormalMode: {
+            this.isMoveMode = false;
+            break;
+          }
+          case VIM_COMMAND.enterVisualMode: {
+            this.isMoveMode = true;
+            this.setElementToMove();
+            break;
+          }
         }
       },
     });
+  }
+
+  private setElementToMove(): void {
+    this.elementToMove = this.currentActive;
   }
 
   private initActive() {
     /**
      * Have to set earliest in attached for the `currentActive` getter to trigger.
      */
-    this.manualActiveIndex = 6;
+    this.manualActiveIndex = 2;
   }
 
   private initNodes() {
@@ -137,8 +153,11 @@ export class VimHtmlConnection {
    * Current: Move highlight of active to new element
    * Other option: Add new element after active, and keep active one highlighted
    */
-  private addNodeAtIndex(index: number): void {
-    const newNode = this.createNewNode({ id: this.nodes.length.toString() });
+  private addNodeAtIndex(index: number, newNode?: MyNode): void {
+    if (newNode === undefined) {
+      newNode = this.createNewNode({ id: this.nodes.length.toString() });
+    }
+
     const afterCurrentIndex = index + 1;
     this.nodes.splice(afterCurrentIndex, 0, newNode);
 
@@ -198,6 +217,20 @@ export class VimHtmlConnection {
       $previousActive = $currentActive.parentElement.lastElementChild;
     }
 
+    if (this.isMoveMode) {
+      this.removeNodeAtIndex(this.getIndex($currentActive));
+      const prevIndex = this.getIndex($previousActive);
+      this.addNodeAtIndex(
+        prevIndex - 1,
+        this.createNewNode({
+          id: this.elementToMove.textContent,
+        })
+      );
+      this.manualActiveIndex = prevIndex;
+
+      return;
+    }
+
     this.setActiveIndex(this.getIndex($previousActive));
 
     return $previousActive as HTMLElement;
@@ -209,6 +242,20 @@ export class VimHtmlConnection {
     if ($nextActive === null) {
       console.log('No element found, circle back?');
       $nextActive = $currentActive.parentElement.firstElementChild;
+    }
+
+    if (this.isMoveMode) {
+      this.removeNodeAtIndex(this.getIndex($currentActive));
+      const nextIndex = this.getIndex($nextActive);
+      this.addNodeAtIndex(
+        nextIndex - 1,
+        this.createNewNode({
+          id: this.elementToMove.textContent,
+        })
+      );
+      this.manualActiveIndex = nextIndex;
+
+      return;
     }
 
     this.setActiveIndex(this.getIndex($nextActive));
@@ -253,6 +300,20 @@ export class VimHtmlConnection {
       });
 
     if ($upActive) {
+      if (this.isMoveMode) {
+        this.removeNodeAtIndex(this.getIndex($currentActive));
+        const upIndex = this.getIndex($upActive);
+        this.addNodeAtIndex(
+          upIndex - 1,
+          this.createNewNode({
+            id: this.elementToMove.textContent,
+          })
+        );
+        this.manualActiveIndex = upIndex;
+
+        return;
+      }
+
       this.setActiveIndex(this.getIndex($upActive));
     }
 
@@ -294,6 +355,20 @@ export class VimHtmlConnection {
     });
 
     if ($downActive) {
+      if (this.isMoveMode) {
+        this.removeNodeAtIndex(this.getIndex($currentActive));
+        const downIndex = this.getIndex($downActive);
+        this.addNodeAtIndex(
+          downIndex - 1,
+          this.createNewNode({
+            id: this.elementToMove.textContent,
+          })
+        );
+        this.manualActiveIndex = downIndex;
+
+        return;
+      }
+
       this.setActiveIndex(this.getIndex($downActive));
     }
 
@@ -307,6 +382,20 @@ export class VimHtmlConnection {
 
     if ($firstActive === $currentActive) return;
 
+    if (this.isMoveMode) {
+      this.removeNodeAtIndex(this.getIndex($currentActive));
+      const moveToIndex = this.getIndex($firstActive);
+      this.addNodeAtIndex(
+        moveToIndex - 1,
+        this.createNewNode({
+          id: this.elementToMove.textContent,
+        })
+      );
+      this.manualActiveIndex = moveToIndex;
+
+      return;
+    }
+
     this.setActiveIndex(this.getIndex($firstActive));
 
     return $firstActive as HTMLElement;
@@ -318,6 +407,20 @@ export class VimHtmlConnection {
     const $lastActive = $parent.lastElementChild;
 
     if ($lastActive === $currentActive) return;
+
+    if (this.isMoveMode) {
+      this.removeNodeAtIndex(this.getIndex($currentActive));
+      const moveToIndex = this.getIndex($lastActive);
+      this.addNodeAtIndex(
+        moveToIndex - 1,
+        this.createNewNode({
+          id: this.elementToMove.textContent,
+        })
+      );
+      this.manualActiveIndex = moveToIndex;
+
+      return;
+    }
 
     this.setActiveIndex(this.getIndex($lastActive));
 

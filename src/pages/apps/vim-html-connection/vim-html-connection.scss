@@ -12,6 +12,10 @@
   grid: repeat(3, 1fr) / repeat(3, 1fr);
   gap: 15px;
 
+  &.move-mode {
+    border: 3px solid yellow;
+  }
+
   p {
     width: 80px;
     height: 80px;
