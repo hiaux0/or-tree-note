@@ -2,7 +2,7 @@ import { Logger } from 'modules/debug/logger';
 import { replaceRange } from 'modules/string/string';
 
 import { VimStateClass } from '../vim-state';
-import { VimState, VimMode } from '../vim-types';
+import { VimMode } from '../vim-types';
 import { AbstractMode } from './abstract-mode';
 
 const logger = new Logger({ scope: 'VisualMode' });

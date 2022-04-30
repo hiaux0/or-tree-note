@@ -54,10 +54,10 @@ export abstract class AbstractMode {
       return;
     }
 
-    if (!this[commandName]) {
+    if (this[commandName] !== undefined) {
       logger.debug(
         [
-          'No command \'%s\' found in %s Mode. ((modes.ts-executeCommand))',
+          'No command "%s" found in %s Mode. ((modes.ts-executeCommand))',
           commandName,
           currentMode,
         ],
@@ -114,7 +114,7 @@ export abstract class AbstractMode {
           }
         );
       } catch {
-        throw '';
+        throw new Error();
       }
     }
 
@@ -135,7 +135,7 @@ export abstract class AbstractMode {
           isError: true,
         }
       );
-      throw '';
+      throw new Error();
     }
 
     return isValid;
@@ -244,7 +244,6 @@ export abstract class AbstractMode {
       resultCol = tokenUnderCursor.end;
     }
 
-    resultCol; /* ? */
     if (resultCol) {
       this.vimState.cursor.col = resultCol;
     }
@@ -253,7 +252,6 @@ export abstract class AbstractMode {
   }
   cursorWordForwardStart(): VimStateClass {
     const nextToken = this.getNexToken();
-    nextToken; /* ? */
 
     const isAtEnd = nextToken?.end === this.vimState.cursor.col;
     const isNotAtEnd = nextToken === undefined;
@@ -269,7 +267,6 @@ export abstract class AbstractMode {
       resultCol = nextToken.start;
     }
 
-    resultCol; /* ? */
     if (resultCol) {
       this.vimState.cursor.col = resultCol;
     }
@@ -279,7 +276,6 @@ export abstract class AbstractMode {
   cursorBackwordsStartWord(): VimStateClass {
     const tokenUnderCursor = this.getTokenUnderCursor(); /* ? */
 
-    this.vimState.cursor; /* ? */
     const isAtStart =
       tokenUnderCursor?.start === this.vimState.cursor.col; /* ? */
     const tokenNotUnderCursor = tokenUnderCursor === undefined;
@@ -364,7 +360,6 @@ export abstract class AbstractMode {
     if (targetCharacterIndex > 0) {
       // ^ -1: stay, 0: stay, cos at beginning
       const finalNewIndex = cursor.col + targetCharacterIndex - 1; // before substring + target index - before character
-      finalNewIndex; /* ? */
       this.vimState.cursor.col = finalNewIndex;
     }
 
@@ -433,7 +428,7 @@ export abstract class AbstractMode {
     const currentToken = this.getTokenUnderCursor();
     const previousToken = tokenizedInput[currentToken.index - 1];
 
-    if (!previousToken) {
+    if (previousToken === undefined) {
       return currentToken;
     }
     return previousToken;
