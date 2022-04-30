@@ -1,12 +1,12 @@
 <template>
-  <h1>${value}</h1>
-
   <div>Command: ${targetCommand}</div>
   <div>Current Node: ${currentActive.textContent} </div>
 
-  <div class="container">
-    <p class="${activeIndex === $index ? 'active' : ''}" repeat.for="index of numOfElements"
-      >${index}</p
+  <div class="container" ref="nodesContainerRef">
+    <p
+      class="${manualActiveIndex === $index ? 'active' : ''}"
+      repeat.for="node of nodes"
+      >${node.id}</p
     >
   </div>
 </template>
