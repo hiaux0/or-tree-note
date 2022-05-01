@@ -51,11 +51,20 @@ export class VimHtmlConnection {
     });
 
     initVimHtml({
+      /**
+       * 1. Set mode
+       * 2. Movement mode
+       */
       modeChanged: (mode) => {
         this.vimHtmlMode = this.getMode(mode);
 
-        if (mode === VimMode.VISUAL) {
-          this.isMoveMode = true;
+        switch (mode) {
+          case VimMode.NORMAL:
+            this.isMoveMode = false;
+            break;
+          case VimMode.VISUAL:
+            this.isMoveMode = true;
+            break;
         }
       },
       commandListener: (result) => {
