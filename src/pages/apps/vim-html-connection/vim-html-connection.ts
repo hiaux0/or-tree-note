@@ -67,6 +67,7 @@ export class VimHtmlConnection {
           const { activeIndex } = this.vimHtmlMode.handleCommand(
             result.targetCommand
           );
+          /* prettier-ignore */ console.log('TCL ~ file: vim-html-connection.ts ~ line 70 ~ VimHtmlConnection ~ attached ~ activeIndex', activeIndex);
           this.setActiveIndex(activeIndex);
           return;
         } else if (this.vimHtmlMode instanceof NormalHtmlMovement) {
@@ -114,7 +115,9 @@ export class VimHtmlConnection {
     }));
   }
 
-  private setActiveIndex(newIndex: number): void {
+  private setActiveIndex(newIndex: number | undefined): void {
+    if (newIndex === undefined) return;
+
     /**
      * Was last element? Then highlight the new last one
      */
