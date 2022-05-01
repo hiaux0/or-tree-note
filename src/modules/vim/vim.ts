@@ -78,10 +78,9 @@ export class Vim {
     logger.debug(['Received input: %s', input]);
 
     //
-    let targetCommandName: VimCommandNames;
+    let targetCommandName: VIM_COMMAND;
     try {
       targetCommandName = this.vimCommandManager.getCommandName(input);
-      /* prettier-ignore */ console.log('TCL ~ file: vim.ts ~ line 83 ~ Vim ~ queueInput ~ targetCommandName', targetCommandName);
     } catch (_error) {
       void 0;
     }

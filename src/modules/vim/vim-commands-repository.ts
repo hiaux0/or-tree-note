@@ -32,6 +32,12 @@ export enum VIM_COMMAND {
   'visualMoveToOtherEndOfMarkedArea' = 'visualMoveToOtherEndOfMarkedArea',
 }
 
+export const VIM_MODE_COMMANDS = [
+  VIM_COMMAND['enterInsertMode'],
+  VIM_COMMAND['enterNormalMode'],
+  VIM_COMMAND['enterVisualMode'],
+];
+
 export const VIM_COMMANDS = [
   VIM_COMMAND.newLine,
   VIM_COMMAND['backspace'],
@@ -46,9 +52,7 @@ export const VIM_COMMANDS = [
   VIM_COMMAND['cursorLineStart'],
   VIM_COMMAND['delete'],
   VIM_COMMAND['deleteInnerWord'],
-  VIM_COMMAND['enterInsertMode'],
-  VIM_COMMAND['enterNormalMode'],
-  VIM_COMMAND['enterVisualMode'],
+
   VIM_COMMAND['indentRight'],
   VIM_COMMAND['indentLeft'],
   VIM_COMMAND['newLine'],
@@ -64,7 +68,11 @@ export const VIM_COMMANDS = [
   VIM_COMMAND['visualInnerWord'],
   VIM_COMMAND['visualStartLineWise'],
   VIM_COMMAND['visualMoveToOtherEndOfMarkedArea'],
-] as const;
+  // ...VIM_MODE_COMMANDS,
+  VIM_COMMAND['enterInsertMode'],
+  VIM_COMMAND['enterNormalMode'],
+  VIM_COMMAND['enterVisualMode'],
+];
 export type VimCommandNames = keyof typeof VIM_COMMAND;
 
 export const VIM_COMMANDS_THAT_CHANGE_TO_NORMAL_MODE = ['visualDelete'];

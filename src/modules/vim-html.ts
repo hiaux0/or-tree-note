@@ -3,7 +3,8 @@ import hotkeys from 'hotkeys-js';
 import { SPACE } from 'resources/keybindings/app-keys';
 
 import { Vim } from './vim/vim';
-import { QueueInputReturn, Cursor } from './vim/vim-types';
+import { QueueInputReturn, Cursor, VimMode } from './vim/vim-types';
+import { isModeChangeCommand } from './vim/vim-utils';
 
 export interface InputData {
   pressedKey: string;
@@ -15,9 +16,11 @@ export type CommandListener = (
   vimResults: QueueInputReturn,
   inputData: InputData
 ) => void;
+export type ModeChanged = (newMode: VimMode) => void;
 
 export interface VimHtmlOptions {
   commandListener: CommandListener;
+  modeChanged?: ModeChanged;
 }
 
 /**
@@ -29,9 +32,11 @@ export function initVimHtml(vimHtmlOptions: VimHtmlOptions) {
     vimPlugins: [],
   });
 
-  initKeys(vimHtmlOptions.commandListener);
+  initKeys(vimHtmlOptions);
 
-  function initKeys(commandListener: CommandListener) {
+  function initKeys(vimHtmlOptions: VimHtmlOptions) {
+    const { commandListener, modeChanged } = vimHtmlOptions;
+
     hotkeys('*', (ev) => {
       if (checkAllowedBrowserShortcuts(ev)) {
         return;
@@ -51,7 +56,11 @@ export function initVimHtml(vimHtmlOptions: VimHtmlOptions) {
       const result = executeCommandInEditor(pressedKey, ev);
       if (result == null) return;
 
-      commandListener(result, { pressedKey, ev, modifiersText: modifiers });
+      if (isModeChangeCommand(result.targetCommand)) {
+        modeChanged(result.vimState.mode);
+      } else {
+        commandListener(result, { pressedKey, ev, modifiersText: modifiers });
+      }
     });
   }
 

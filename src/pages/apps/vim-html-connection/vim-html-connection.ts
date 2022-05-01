@@ -1,39 +1,26 @@
 import { autoinject, bindable, computedFrom } from 'aurelia-framework';
-import { getRandomId } from 'common/random';
 import * as d3 from 'd3';
 import { MyNode } from 'entities/entities';
 import { initVimHtml } from 'modules/vim-html';
-import { VIM_COMMAND } from 'modules/vim/vim-commands-repository';
+import { VimMode } from 'modules/vim/vim-types';
+
 import './vim-html-connection.scss';
+import { NormalHtmlMovement } from './vim-html-movement/nomal-html-movement';
+import { VisualHtmlMovement } from './vim-html-movement/visual-html-movement';
 
-const ACTIVE_CLASS = 'active';
-
-type Selector = string;
-
-interface HorizontalOptions {
-  widthDelta?: number;
-  highestParent?: HTMLElement | Selector;
-  lowestChild?: HTMLElement | Selector;
-}
-
-const defaulthorizontalOptions: HorizontalOptions = {
-  widthDelta: 0,
-  highestParent: document.body,
-};
+export const ACTIVE_CLASS = 'active';
 
 @autoinject
 export class VimHtmlConnection {
   @bindable value = 'VimHtmlConnection';
 
   private targetCommand: string;
-  private line: number;
-  private col: number;
   private manualActiveIndex: number;
   private readonly numOfElements = 7;
   private nodes: MyNode[] = [];
   private readonly nodesContainerRef: HTMLElement;
-  private isMoveMode: boolean = true;
-  private elementToMove: HTMLElement;
+  private isMoveMode: boolean = false;
+  private vimHtmlMode: NormalHtmlMovement | VisualHtmlMovement;
 
   @computedFrom('manualActiveIndex', 'nodes.length')
   private get currentActive(): HTMLElement {
@@ -48,7 +35,7 @@ export class VimHtmlConnection {
 
   @computedFrom('currentActive')
   private get currentActiveIndex() {
-    const index = this.getIndex(this.currentActive);
+    const index = this.getIndexOfElement(this.currentActive);
     return index;
   }
 
@@ -58,82 +45,60 @@ export class VimHtmlConnection {
 
   attached() {
     this.initActive();
-    this.setElementToMove(); // dev
 
     d3.selectAll('p').style('color', function () {
       return `hsl(${Math.random() * 360},100%,50%)`;
     });
 
-    // d3.selectAll('p')
-    //   .data([4, 8, 15, 16, 23, 42])
-    //   .style('font-size', function (d) {
-    //     return `${d}px`;
-    //   });
-
     initVimHtml({
-      commandListener: (result) => {
-        this.targetCommand = result.targetCommand;
-        this.line = result.vimState.cursor.line;
-        this.col = result.vimState.cursor.col;
-        console.clear();
+      modeChanged: (mode) => {
+        this.vimHtmlMode = this.getMode(mode);
 
-        switch (result.targetCommand) {
-          case VIM_COMMAND.cursorRight: {
-            /* this.currentActive = */ this.getNextSibling();
-            break;
-          }
-          case VIM_COMMAND.cursorLeft: {
-            /* this.currentActive = */ this.getPreviousSibling();
-            break;
-          }
-          case VIM_COMMAND.cursorUp: {
-            /* this.currentActive = */ this.getUpSibling();
-            break;
-          }
-          case VIM_COMMAND.cursorDown: {
-            /* this.currentActive = */ this.getDownSibling();
-            break;
-          }
-          case VIM_COMMAND.cursorLineStart: {
-            /* this.currentActive = */ this.getFirstSibling();
-            break;
-          }
-          case VIM_COMMAND.cursorLineEnd: {
-            /* this.currentActive = */ this.getLastSibling();
-            break;
-          }
-          case VIM_COMMAND.indentLeft: {
-            /* this.currentActive = */ this.goToParent();
-            break;
-          }
-          case VIM_COMMAND.indentRight: {
-            /* this.currentActive = */ this.getFirstChild();
-            break;
-          }
-          case VIM_COMMAND.newLine: {
-            this.addNodeAtIndex(this.currentActiveIndex);
-            break;
-          }
-          case VIM_COMMAND.backspace: {
-            this.removeNodeAtIndex(this.currentActiveIndex);
-            break;
-          }
-          case VIM_COMMAND.enterNormalMode: {
-            this.isMoveMode = false;
-            break;
-          }
-          case VIM_COMMAND.enterVisualMode: {
-            this.isMoveMode = true;
-            this.setElementToMove();
-            break;
-          }
+        if (mode === VimMode.VISUAL) {
+          this.isMoveMode = true;
+        }
+      },
+      commandListener: (result) => {
+        console.clear();
+        this.targetCommand = result.targetCommand;
+
+        if (this.vimHtmlMode instanceof VisualHtmlMovement) {
+          this.vimHtmlMode.setElementToMove(this.currentActive);
+          const { activeIndex } = this.vimHtmlMode.handleCommand(
+            result.targetCommand
+          );
+          this.setActiveIndex(activeIndex);
+          return;
+        } else if (this.vimHtmlMode instanceof NormalHtmlMovement) {
+          const { nextElement } = this.vimHtmlMode.handleCommand(
+            result.targetCommand
+          );
+          this.setActiveIndex(this.getIndexOfElement(nextElement));
         }
       },
     });
   }
 
-  private setElementToMove(): void {
-    this.elementToMove = this.currentActive;
+  private getMode<Mode extends VimMode>(
+    mode: Mode
+  ): Mode extends VimMode.NORMAL
+    ? NormalHtmlMovement
+    : Mode extends VimMode.VISUAL
+    ? VisualHtmlMovement
+    : never {
+    let finalMode;
+    switch (mode) {
+      case VimMode.NORMAL: {
+        finalMode = new NormalHtmlMovement();
+        break;
+      }
+      case VimMode.VISUAL: {
+        finalMode = new VisualHtmlMovement(this.nodes, this.nodesContainerRef);
+        break;
+      }
+    }
+
+    return finalMode;
   }
 
   private initActive() {
@@ -147,34 +112,6 @@ export class VimHtmlConnection {
     this.nodes = Array.from({ length: this.numOfElements }, (_, index) => ({
       id: String(index),
     }));
-  }
-
-  /**
-   * Current: Move highlight of active to new element
-   * Other option: Add new element after active, and keep active one highlighted
-   */
-  private addNodeAtIndex(index: number, newNode?: MyNode): void {
-    if (newNode === undefined) {
-      newNode = this.createNewNode({ id: this.nodes.length.toString() });
-    }
-
-    const afterCurrentIndex = index + 1;
-    this.nodes.splice(afterCurrentIndex, 0, newNode);
-
-    this.setActiveIndex(afterCurrentIndex);
-  }
-
-  private removeNodeAtIndex(index: number): void {
-    this.nodes.splice(index, 1);
-
-    this.setActiveIndex(index);
-  }
-
-  private createNewNode(newNode: Partial<MyNode>): MyNode {
-    return {
-      id: getRandomId(),
-      ...newNode,
-    };
   }
 
   private setActiveIndex(newIndex: number): void {
@@ -202,254 +139,10 @@ export class VimHtmlConnection {
     this.manualActiveIndex = newIndex;
   }
 
-  private getIndex(element: Element | HTMLElement): number {
+  private getIndexOfElement(element: Element | HTMLElement): number {
     const index = Array.from(this.nodesContainerRef?.children).findIndex(
       (child) => child === element
     );
     return index;
-  }
-
-  private getPreviousSibling() {
-    const $currentActive = document.querySelector('.active');
-    let $previousActive = $currentActive.previousElementSibling;
-    if ($previousActive === null) {
-      console.log('No element found, circle back?');
-      $previousActive = $currentActive.parentElement.lastElementChild;
-    }
-
-    if (this.isMoveMode) {
-      this.removeNodeAtIndex(this.getIndex($currentActive));
-      const prevIndex = this.getIndex($previousActive);
-      this.addNodeAtIndex(
-        prevIndex - 1,
-        this.createNewNode({
-          id: this.elementToMove.textContent,
-        })
-      );
-      this.manualActiveIndex = prevIndex;
-
-      return;
-    }
-
-    this.setActiveIndex(this.getIndex($previousActive));
-
-    return $previousActive as HTMLElement;
-  }
-
-  private getNextSibling() {
-    const $currentActive = document.querySelector('.active');
-    let $nextActive = $currentActive.nextElementSibling;
-    if ($nextActive === null) {
-      console.log('No element found, circle back?');
-      $nextActive = $currentActive.parentElement.firstElementChild;
-    }
-
-    if (this.isMoveMode) {
-      this.removeNodeAtIndex(this.getIndex($currentActive));
-      const nextIndex = this.getIndex($nextActive);
-      this.addNodeAtIndex(
-        nextIndex - 1,
-        this.createNewNode({
-          id: this.elementToMove.textContent,
-        })
-      );
-      this.manualActiveIndex = nextIndex;
-
-      return;
-    }
-
-    this.setActiveIndex(this.getIndex($nextActive));
-
-    return $nextActive as HTMLElement;
-  }
-
-  /**
-   * Future:
-   *  0
-   *  1| 2  3  <-- Should go to 0
-   *  4  5  6
-   */
-  private getUpSibling(
-    horizontalOptions: HorizontalOptions = defaulthorizontalOptions
-  ) {
-    const { widthDelta } = horizontalOptions;
-    const $currentActive = document.querySelector('.active');
-    const $child = $currentActive.parentElement;
-    const curRect = $currentActive.getBoundingClientRect();
-
-    const $upActive = Array.from($child.children)
-      .reverse()
-      .find((sibling) => {
-        if (sibling === $currentActive) return false;
-
-        const siblingRect = sibling.getBoundingClientRect();
-        const isAbove = curRect.top >= siblingRect.bottom;
-        const isInWidthInterval_Left =
-          curRect.left - widthDelta <= siblingRect.left;
-        const isInWidthInterval_Right =
-          // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
-          curRect.right + widthDelta >= siblingRect.right;
-        const isInWidthInterval =
-          isInWidthInterval_Left && isInWidthInterval_Right;
-
-        if (isAbove && isInWidthInterval) {
-          return true;
-        }
-
-        return false;
-      });
-
-    if ($upActive) {
-      if (this.isMoveMode) {
-        this.removeNodeAtIndex(this.getIndex($currentActive));
-        const upIndex = this.getIndex($upActive);
-        this.addNodeAtIndex(
-          upIndex - 1,
-          this.createNewNode({
-            id: this.elementToMove.textContent,
-          })
-        );
-        this.manualActiveIndex = upIndex;
-
-        return;
-      }
-
-      this.setActiveIndex(this.getIndex($upActive));
-    }
-
-    return $upActive as HTMLElement;
-  }
-
-  /**
-   * Future:
-   *  0  1  2
-   *  3  4 |5   <-- should go to 6
-   *  6
-   */
-  private getDownSibling(
-    horizontalOptions: HorizontalOptions = defaulthorizontalOptions
-  ) {
-    const { widthDelta } = horizontalOptions;
-    const $currentActive = document.querySelector('.active');
-    const $parent = $currentActive.parentElement;
-    const curRect = $currentActive.getBoundingClientRect();
-
-    const $downActive = Array.from($parent.children).find((sibling) => {
-      if (sibling === $currentActive) return false;
-
-      const siblingRect = sibling.getBoundingClientRect();
-      const isBelow = curRect.top <= siblingRect.top; // curRect.top: Allow slightly below. Future: option for fullBelow?
-      const isInWidthInterval_Left =
-        curRect.left - widthDelta <= siblingRect.left;
-      const isInWidthInterval_Right =
-        // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
-        curRect.right + widthDelta >= siblingRect.right;
-      const isInWidthInterval =
-        isInWidthInterval_Left && isInWidthInterval_Right;
-
-      if (isBelow && isInWidthInterval) {
-        return true;
-      }
-
-      return false;
-    });
-
-    if ($downActive) {
-      if (this.isMoveMode) {
-        this.removeNodeAtIndex(this.getIndex($currentActive));
-        const downIndex = this.getIndex($downActive);
-        this.addNodeAtIndex(
-          downIndex - 1,
-          this.createNewNode({
-            id: this.elementToMove.textContent,
-          })
-        );
-        this.manualActiveIndex = downIndex;
-
-        return;
-      }
-
-      this.setActiveIndex(this.getIndex($downActive));
-    }
-
-    return $downActive as HTMLElement;
-  }
-
-  private getFirstSibling() {
-    const $currentActive = document.querySelector('.active');
-    const $parent = $currentActive.parentElement;
-    const $firstActive = $parent.firstElementChild;
-
-    if ($firstActive === $currentActive) return;
-
-    if (this.isMoveMode) {
-      this.removeNodeAtIndex(this.getIndex($currentActive));
-      const moveToIndex = this.getIndex($firstActive);
-      this.addNodeAtIndex(
-        moveToIndex - 1,
-        this.createNewNode({
-          id: this.elementToMove.textContent,
-        })
-      );
-      this.manualActiveIndex = moveToIndex;
-
-      return;
-    }
-
-    this.setActiveIndex(this.getIndex($firstActive));
-
-    return $firstActive as HTMLElement;
-  }
-
-  private getLastSibling() {
-    const $currentActive = document.querySelector('.active');
-    const $parent = $currentActive.parentElement;
-    const $lastActive = $parent.lastElementChild;
-
-    if ($lastActive === $currentActive) return;
-
-    if (this.isMoveMode) {
-      this.removeNodeAtIndex(this.getIndex($currentActive));
-      const moveToIndex = this.getIndex($lastActive);
-      this.addNodeAtIndex(
-        moveToIndex - 1,
-        this.createNewNode({
-          id: this.elementToMove.textContent,
-        })
-      );
-      this.manualActiveIndex = moveToIndex;
-
-      return;
-    }
-
-    this.setActiveIndex(this.getIndex($lastActive));
-
-    return $lastActive as HTMLElement;
-  }
-
-  private goToParent(
-    horizontalOptions: HorizontalOptions = defaulthorizontalOptions
-  ) {
-    const { highestParent } = horizontalOptions;
-    const $currentActive = document.querySelector('.active');
-    if ($currentActive === highestParent) return;
-    const $parent = $currentActive.parentElement;
-    if ($parent == null) return;
-
-    $currentActive.classList.remove(ACTIVE_CLASS);
-    $parent.classList.add(ACTIVE_CLASS);
-
-    return $parent;
-  }
-
-  private getFirstChild() {
-    const $currentActive = document.querySelector('.active');
-    const $child = $currentActive.firstElementChild;
-    if ($child == null) return;
-
-    $currentActive.classList.remove(ACTIVE_CLASS);
-    $child.classList.add(ACTIVE_CLASS);
-
-    return $child as HTMLElement;
   }
 }

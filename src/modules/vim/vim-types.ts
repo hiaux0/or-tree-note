@@ -2,6 +2,7 @@ import {
   VimCommandNames,
   VimCommand,
   SynonymKey,
+  VIM_COMMAND,
 } from './vim-commands-repository';
 import { VimStateClass } from './vim-state';
 
@@ -39,7 +40,7 @@ export type VimState = {
 
 export interface QueueInputReturn {
   vimState: VimStateClass | null;
-  targetCommand: VimCommandNames;
+  targetCommand: VIM_COMMAND;
   lines: string[];
 }
 

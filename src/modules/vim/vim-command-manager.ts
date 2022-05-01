@@ -8,7 +8,11 @@ import { InsertMode } from './modes/insert-mode';
 import { NormalMode } from './modes/normal-mode';
 import { VisualMode } from './modes/visual-mode';
 import { defaultVimOptions } from './vim';
-import { VimCommandNames, VimCommand } from './vim-commands-repository';
+import {
+  VimCommandNames,
+  VimCommand,
+  VIM_COMMAND,
+} from './vim-commands-repository';
 import { VimStateClass } from './vim-state';
 import {
   FindPotentialCommandReturn as PotentialCommandReturn,
@@ -189,7 +193,7 @@ export class VimCommandManager {
   }
 
   /** */
-  getCommandName(input: string): VimCommandNames {
+  getCommandName(input: string): VIM_COMMAND {
     let targetCommand;
     let potentialCommands: PotentialCommandReturn['potentialCommands'];
 
@@ -204,7 +208,7 @@ export class VimCommandManager {
     if (!targetCommand) {
       if (this.activeMode === VimMode.INSERT) {
         /* prettier-ignore */ logger.culogger.debug(['Default to the command: type in Insert Mode'], { log: true, });
-        return 'type';
+        return VIM_COMMAND.type;
       }
 
       if (potentialCommands?.length) {
