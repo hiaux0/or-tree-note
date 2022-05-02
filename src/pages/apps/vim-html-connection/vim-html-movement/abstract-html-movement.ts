@@ -42,7 +42,7 @@ export abstract class AbstractHtmlMovement {
    */
   public getUpSibling(
     horizontalOptions: HorizontalOptions = defaulthorizontalOptions
-  ) {
+  ): HTMLElement | undefined {
     const { widthDelta } = horizontalOptions;
     const $currentActive = document.querySelector('.active');
     const $child = $currentActive.parentElement;
@@ -69,6 +69,8 @@ export abstract class AbstractHtmlMovement {
 
         return false;
       });
+
+    if ($upActive === undefined) return;
 
     return $upActive as HTMLElement;
   }

@@ -1,21 +1,47 @@
 <template>
+  <require from="./vim-html/vim-html"></require>
+
   <div>
     Command: ${targetCommand}
     <span if.bind="isMoveMode"> -- Move mode</span>
   </div>
-  <div>Current Node: ${currentActive.textContent} </div>
 
-  <div
-    class="
-      container
-      ${isMoveMode ? 'move-mode' : ''}
-    "
-    ref="nodesContainerRef"
-  >
-    <p
-      class="${manualActiveIndex === $index ? 'active' : ''}"
-      repeat.for="node of nodes"
-      >${node.id}</p
+  <section class="container-sections">
+    <vim-html
+      nodes.two-way="nodes"
+      active-index.two-way="manualActiveIndex"
+      id="first"
+      child-selector=".allowInteraction"
     >
-  </div>
+      <p
+        class="${manualActiveIndex === $index ? 'active' : ''} allowInteraction"
+        repeat.for="node of nodes"
+        contenteditable="true"
+        >${node.id}</p
+      >
+    </vim-html>
+
+    <vim-html
+      nodes.two-way="nodes1"
+      active-index.two-way="manualActiveIndex1"
+      id="second"
+    >
+      <p
+        class="${manualActiveIndex1 === $index ? 'active' : ''}"
+        repeat.for="node of nodes1"
+        >${node.id}</p
+      >
+    </vim-html>
+    <vim-html
+      nodes.two-way="nodes1"
+      active-index.two-way="manualActiveIndex1"
+      id="third"
+    >
+      <p
+        class="${manualActiveIndex1 === $index ? 'active' : ''}"
+        repeat.for="node of nodes1"
+        >${node.id}</p
+      >
+    </vim-html>
+  </section>
 </template>

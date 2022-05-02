@@ -1,4 +1,5 @@
 export interface CommandHandledReturn {
+  currentElement?: HTMLElement;
   nextElement?: HTMLElement;
   activeIndex?: number;
 }

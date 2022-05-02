@@ -3,6 +3,7 @@ import {
   VIM_COMMAND,
 } from 'modules/vim/vim-commands-repository';
 
+import { ACTIVE_CLASS } from '../vim-html-connection';
 import {
   CommandHandledReturn,
   HorizontalOptions,
@@ -39,16 +40,14 @@ export class NormalHtmlMovement extends AbstractHtmlMovement {
         nextActive = this.getLastSibling();
         break;
       }
-      // case VIM_COMMAND.indentLeft:
-      //   {
-      //     nextActive = this.goToParent();
-      //     break;
-      //   }
-      // case VIM_COMMAND.indentRight:
-      //   {
-      //     nextActive = this.getFirstChild();
-      //     break;
-      //   }
+      case VIM_COMMAND.indentLeft: {
+        nextActive = this.goToParent();
+        break;
+      }
+      case VIM_COMMAND.indentRight: {
+        nextActive = this.getFirstChild();
+        break;
+      }
       // case VIM_COMMAND.newLine: {
       //   this.addNodeAtIndex(this.currentActiveIndex);
       //   break;
@@ -68,6 +67,7 @@ export class NormalHtmlMovement extends AbstractHtmlMovement {
       }
     }
     return {
+      currentElement: document.querySelector(`.${ACTIVE_CLASS}`),
       nextElement: nextActive,
     };
   }
@@ -90,7 +90,7 @@ export class NormalHtmlMovement extends AbstractHtmlMovement {
    */
   public getUpSibling(
     horizontalOptions: HorizontalOptions = defaulthorizontalOptions
-  ) {
+  ): HTMLElement | undefined {
     const sibling = super.getUpSibling(horizontalOptions);
     return sibling;
   }
@@ -121,8 +121,9 @@ export class NormalHtmlMovement extends AbstractHtmlMovement {
   public goToParent(
     horizontalOptions: HorizontalOptions = defaulthorizontalOptions
   ) {
-    const sibling = super.goToParent(horizontalOptions);
-    return sibling;
+    const next = super.goToParent(horizontalOptions);
+    /* prettier-ignore */ console.log('TCL ~ file: nomal-html-movement.ts ~ line 124 ~ NormalHtmlMovement ~ next', next);
+    return next;
   }
 
   public getFirstChild() {

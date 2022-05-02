@@ -4,21 +4,25 @@
 }
 
 .active {
-  border-color: tomato;
+  border-color: tomato !important;
 }
 
-.container {
-  display: grid;
-  grid: repeat(3, 1fr) / repeat(3, 1fr);
-  gap: 15px;
+.container-sections {
+  display: flex;
 
-  &.move-mode {
-    border: 3px solid yellow;
+  .container {
+    display: grid;
+    grid: repeat(3, 1fr) / repeat(3, 1fr);
+    gap: 15px;
+    // width: 50%;
+
+    &.move-mode {
+      border: 3px solid yellow;
+    }
+
+    p {
+      width: 80px;
+      height: 80px;
+    }
   }
-
-  p {
-    width: 80px;
-    height: 80px;
-  }
-
 }

@@ -1,0 +1,11 @@
+  .mode-container {
+    &.mode {
+      &--NORMAL {
+        border-color: slateblue;
+      }
+
+      &--VISUAL {
+        border-color: honeydew;
+      }
+    }
+  }

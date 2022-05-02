@@ -14,29 +14,44 @@ export interface InputData {
 
 export type CommandListener = (
   vimResults: QueueInputReturn,
-  inputData: InputData
+  inputData?: InputData
 ) => void;
 export type ModeChanged = (newMode: VimMode) => void;
 
 export interface VimHtmlOptions {
   commandListener: CommandListener;
   modeChanged?: ModeChanged;
+  afterInit?: (
+    vim: Vim
+  ) => QueueInputReturn[] | Promise<QueueInputReturn[]> | void;
 }
 
 /**
  * Make Vim engine available for HTML usage
  */
-export function initVimHtml(vimHtmlOptions: VimHtmlOptions) {
+export async function initVimHtml(vimHtmlOptions: VimHtmlOptions) {
   const startCursor: Cursor = { col: 0, line: 0 };
   const vim = new Vim(['123', 'abc'], startCursor, {
     vimPlugins: [],
   });
+  const { commandListener, modeChanged, afterInit } = vimHtmlOptions;
 
-  initKeys(vimHtmlOptions);
+  initKeys();
+  if (afterInit) {
+    const afterResults = await afterInit(vim);
 
-  function initKeys(vimHtmlOptions: VimHtmlOptions) {
-    const { commandListener, modeChanged } = vimHtmlOptions;
+    if (afterResults) {
+      afterResults.forEach((result) => {
+        if (isModeChangeCommand(result.targetCommand)) {
+          modeChanged(result.vimState.mode);
+        } else {
+          commandListener(result);
+        }
+      });
+    }
+  }
 
+  function initKeys() {
     hotkeys('*', (ev) => {
       if (checkAllowedBrowserShortcuts(ev)) {
         return;
