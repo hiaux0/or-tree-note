@@ -42,6 +42,9 @@ export const LETTERS = [
 ];
 
 // Modifiers
+export const ALT = 'Alt';
+export const BACKSPACE = 'Backspace';
+export const CONTROL = 'Control';
 export const ESCAPE = 'Escape';
 export const SHIFT = 'Shift';
 export const SHIFT_KEY_CODE = 16;

@@ -2,7 +2,15 @@ import { Logger } from 'common/logging/logging';
 import { groupBy } from 'lodash';
 import { inputContainsSequence } from 'modules/string/string';
 import { SPECIAL_KEYS } from 'resources/keybindings/app-keys';
-import { commandsThatWaitForNextInput } from 'resources/keybindings/key-bindings';
+import {
+  commandsThatWaitForNextInput,
+  isAlt,
+  isBackspace,
+  isControl,
+  isEscape,
+  isShift,
+  isSpace,
+} from 'resources/keybindings/key-bindings';
 
 import { InsertMode } from './modes/insert-mode';
 import { NormalMode } from './modes/normal-mode';
@@ -198,7 +206,11 @@ export class VimCommandManager {
     let potentialCommands: PotentialCommandReturn['potentialCommands'];
 
     try {
-      ({ targetCommand, potentialCommands } = this.findPotentialCommand(input));
+      /** Else, it "awaiting commands" like `t` will not function properly in insert mode. Can this be improved? */
+      if (!this.isInsertMode()) {
+        ({ targetCommand, potentialCommands } =
+          this.findPotentialCommand(input));
+      }
     } catch (error) {
       logger.culogger.debug(['Error: %s', error], { onlyVerbose: true });
       // throw error;
@@ -206,7 +218,21 @@ export class VimCommandManager {
 
     //
     if (!targetCommand) {
-      if (this.activeMode === VimMode.INSERT) {
+      if (this.isInsertMode()) {
+        if (isAlt(input)) {
+          return; // todo
+        } else if (isBackspace(input)) {
+          return VIM_COMMAND.backspace;
+        } else if (isControl(input)) {
+          return; // todo
+        } else if (isEscape(input)) {
+          return VIM_COMMAND.enterNormalMode;
+        } else if (isShift(input)) {
+          return; // todo
+        } else if (isSpace(input)) {
+          return VIM_COMMAND.space;
+        }
+
         /* prettier-ignore */ logger.culogger.debug(['Default to the command: type in Insert Mode'], { log: true, });
         return VIM_COMMAND.type;
       }
@@ -224,6 +250,10 @@ export class VimCommandManager {
 
     //
     return targetCommand.command;
+  }
+
+  private isInsertMode() {
+    return this.activeMode === VimMode.INSERT;
   }
 
   emptyQueuedKeys() {

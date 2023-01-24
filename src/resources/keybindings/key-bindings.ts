@@ -2,6 +2,17 @@
 
 import { VimCommand, VIM_COMMAND } from 'modules/vim/vim-commands-repository';
 
+import { ALT, BACKSPACE, CONTROL, ESCAPE, SHIFT, SPACE } from './app-keys';
+
+export const Modifier = {
+  '<Alt>': '<Alt>',
+  '<Backspace>': '<Backspace>',
+  '<Control>': '<Control>',
+  '<Escape>': '<Escape>',
+  '<Shift>': '<Shift>',
+  '<Space>': '<Space>',
+};
+
 const commandsAllModes = [{ key: '<Escape>', command: 'enterNormalMode' }];
 export const commandsThatWaitForNextInput: VimCommand[] = [
   { key: 'F', command: VIM_COMMAND['toCharacterAtBack'] },
@@ -57,7 +68,7 @@ const keyBindings = {
     { key: '<Delete>', command: 'delete' },
     { key: '<Enter>', command: 'newLine' },
     { key: '<Shift>', command: 'shift' },
-    { key: '<Space>', command: 'space' },
+    { key: Modifier['<Space>'], command: 'space' },
     { key: '<Control>', command: 'nothing' },
     ...commandsAllModes,
     ...cursorAllModes,
@@ -77,3 +88,22 @@ const keyBindings = {
 } as const;
 
 export default keyBindings;
+
+export function isAlt(newInput: string) {
+  return newInput === ALT || newInput === Modifier['<Alt>'];
+}
+export function isBackspace(newInput: string) {
+  return newInput === BACKSPACE || newInput === Modifier['<Backspace>'];
+}
+export function isControl(newInput: string) {
+  return newInput === CONTROL || newInput === Modifier['<Control>'];
+}
+export function isEscape(newInput: string) {
+  return newInput === ESCAPE || newInput === Modifier['<Escape>'];
+}
+export function isShift(newInput: string) {
+  return newInput === SHIFT || newInput === Modifier['<Shift>'];
+}
+export function isSpace(newInput: string) {
+  return newInput === SPACE || newInput === Modifier['<Space>'];
+}

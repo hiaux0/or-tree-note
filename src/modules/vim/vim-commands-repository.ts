@@ -1,4 +1,4 @@
-import { ModifiersType } from '../../resources/keybindings/app-keys';
+import { ModifiersType, SPACE } from '../../resources/keybindings/app-keys';
 
 export enum VIM_COMMAND {
   'backspace' = 'backspace',

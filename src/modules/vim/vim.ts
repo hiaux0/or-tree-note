@@ -85,6 +85,7 @@ export class Vim {
       void 0;
     }
     if (!targetCommandName) return;
+    logger.debug(['targetCommandName: %s', targetCommandName], { log: true });
 
     let vimState: VimStateClass | undefined;
     if (targetCommandName === VIM_COMMAND['enterInsertMode']) {

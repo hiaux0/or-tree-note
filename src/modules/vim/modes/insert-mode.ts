@@ -1,4 +1,5 @@
 import { insert, replaceAt } from 'modules/string/string';
+import { isSpace, Modifier } from 'resources/keybindings/key-bindings';
 
 import { SPACE } from '../../../resources/keybindings/app-keys';
 import { VimStateClass } from '../vim-state';
@@ -9,8 +10,8 @@ export class InsertMode extends AbstractMode {
   currentMode = VimMode.INSERT;
 
   type(newInput: string): VimStateClass {
-    /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: insert-mode.ts ~ line 12 ~ newInput', newInput);
-    if (newInput === SPACE) {
+    /* prettier-ignore */ console.trace('>>>> _ >>>> ~ file: insert-mode.ts ~ line 12 ~ newInput', newInput);
+    if (isSpace(newInput)) {
       newInput = ' ';
     }
 
@@ -42,14 +43,19 @@ export class InsertMode extends AbstractMode {
       ''
     );
 
+    this.vimState.updateActiveLine(updatedInput);
+
+    this.lines[this.vimState.cursor.line] = updatedInput;
     super.cursorLeft();
     // this.vimState.getActiveLine() = updatedInput;
+    return this.vimState;
     throw 'TODO: vimstate.text refactor'; /* ? */
 
     return this.vimState;
   }
 
   space(): VimStateClass {
+    /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: insert-mode.ts ~ line 53 ~ space');
     return this.type(SPACE);
     // return this.vimState;
     // /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: insert-mode.ts ~ line 51 ~ space');
