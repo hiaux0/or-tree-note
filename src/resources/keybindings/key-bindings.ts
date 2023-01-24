@@ -57,6 +57,7 @@ const keyBindings = {
     { key: '<Delete>', command: 'delete' },
     { key: '<Enter>', command: 'newLine' },
     { key: '<Shift>', command: 'shift' },
+    { key: '<Space>', command: 'space' },
     { key: '<Control>', command: 'nothing' },
     ...commandsAllModes,
     ...cursorAllModes,

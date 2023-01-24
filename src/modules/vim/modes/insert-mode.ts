@@ -9,6 +9,7 @@ export class InsertMode extends AbstractMode {
   currentMode = VimMode.INSERT;
 
   type(newInput: string): VimStateClass {
+    /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: insert-mode.ts ~ line 12 ~ newInput', newInput);
     if (newInput === SPACE) {
       newInput = ' ';
     }
@@ -26,6 +27,7 @@ export class InsertMode extends AbstractMode {
   }
 
   executeCommand(commandName: string, commandValue: string): VimStateClass {
+    /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: insert-mode.ts ~ line 30 ~ commandName', commandName);
     return super.executeCommand(commandName, commandValue, this.currentMode);
   }
 
@@ -45,5 +47,11 @@ export class InsertMode extends AbstractMode {
     throw 'TODO: vimstate.text refactor'; /* ? */
 
     return this.vimState;
+  }
+
+  space(): VimStateClass {
+    return this.type(SPACE);
+    // return this.vimState;
+    // /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: insert-mode.ts ~ line 51 ~ space');
   }
 }

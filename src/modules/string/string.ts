@@ -21,6 +21,11 @@ export function insert(str: string, index: number, value: string): string {
   return str.substr(0, ind) + value + str.substr(ind);
 }
 
+// const input = '012345';
+// input.length; /* ? */
+// const result = insert(input, 0, ' '); /* ? */
+// result.length; /* ? */
+
 /**
  * @example
  *   ​​​​​​​​replaceAt(input, 4) // 012356

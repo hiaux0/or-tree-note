@@ -75,7 +75,7 @@ export class Vim {
    * For modifier keys, pass in, eg. <Escape>
    */
   queueInput(input: string): QueueInputReturn | undefined {
-    logger.debug(['Received input: %s', input]);
+    logger.debug(['Received input: %s', input], { log: true });
 
     //
     let targetCommandName: VIM_COMMAND;

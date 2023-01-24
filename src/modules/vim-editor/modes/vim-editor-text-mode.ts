@@ -121,6 +121,7 @@ export class VimEditorTextMode {
       let pressedKey: string;
       if (ev.code === SPACE) {
         pressedKey = ev.code;
+        /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: vim-editor-text-mode.ts ~ line 124 ~ pressedKey', pressedKey);
       } else {
         pressedKey = ev.key;
       }
@@ -128,7 +129,9 @@ export class VimEditorTextMode {
       const modifiers = `${ev.ctrlKey ? 'Ctrl+' : ''}${
         ev.shiftKey ? 'Shift+' : ''
       }${ev.altKey ? 'Alt+' : ''}${ev.metaKey ? 'Meta+' : ''}`;
-      /* prettier-ignore */ logger.debug(['-------------- Key pressed: (%s) %s', modifiers, ev.key], { log: true, isOnlyGroup: true, });
+      /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: vim-editor-text-mode.ts ~ line 133 ~ ev.key', ev.key);
+      /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: vim-editor-text-mode.ts ~ line 136 ~ pressedKey', pressedKey);
+      /* prettier-ignore */ logger.debug(['-------------- Key pressed: (%s) %s', modifiers, ev.key ?? pressedKey], { log: true, isOnlyGroup: true, });
 
       void this.executeCommandInEditor(pressedKey, ev);
     });
