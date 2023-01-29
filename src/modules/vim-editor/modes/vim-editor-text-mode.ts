@@ -114,6 +114,10 @@ export class VimEditorTextMode {
 
   initKeys() {
     hotkeys('*', (ev) => {
+      /* prettier-ignore */ console.log('------------------------------------------------------------------------------------------');
+      /* prettier-ignore */ console.log('------------------------------------------------------------------------------------------');
+      /* prettier-ignore */ console.log('------------------------------------------------------------------------------------------');
+      /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: vim-editor-text-mode.ts ~ line 117 ~ ev', ev);
       if (this.checkAllowedBrowserShortcuts(ev)) {
         return;
       }

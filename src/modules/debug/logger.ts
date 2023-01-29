@@ -50,7 +50,7 @@ export interface LogOptions {
 let defautLogOptions: LogOptions = {
   logMethod: 'log',
   logLevel: 'VERBOSE',
-  clearPreviousGroupsWhen_isOnlyGroup_True: true,
+  clearPreviousGroupsWhen_isOnlyGroup_True: false,
   // dontLogUnlessSpecified: true,
   focusedLogging: false,
   useTable: true,

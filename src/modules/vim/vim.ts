@@ -74,13 +74,19 @@ export class Vim {
   /**
    * For modifier keys, pass in, eg. <Escape>
    */
-  queueInput(input: string): QueueInputReturn | undefined {
+  queueInput(
+    input: string,
+    modifiers?: string[]
+  ): QueueInputReturn | undefined {
     logger.debug(['Received input: %s', input], { log: true });
 
     //
-    let targetCommandName: VIM_COMMAND;
+    let targetCommandName: VIM_COMMAND | undefined;
     try {
-      targetCommandName = this.vimCommandManager.getCommandName(input);
+      targetCommandName = this.vimCommandManager.getCommandName(
+        input,
+        modifiers
+      );
     } catch (_error) {
       void 0;
     }

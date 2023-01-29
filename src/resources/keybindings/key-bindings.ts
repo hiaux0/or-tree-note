@@ -16,7 +16,9 @@ export const Modifier = {
   '<Alt>': '<Alt>',
   '<Backspace>': '<Backspace>',
   '<Control>': '<Control>',
+  '<Delete>': '<Delete>',
   '<Escape>': '<Escape>',
+  '<Meta>': '<Meta>',
   '<Shift>': '<Shift>',
   '<Space>': '<Space>',
 };

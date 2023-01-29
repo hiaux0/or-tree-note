@@ -1,6 +1,7 @@
 import { isMac } from 'common/platform/platform-check';
 import hotkeys from 'hotkeys-js';
 import { SPACE } from 'resources/keybindings/app-keys';
+import { Modifier } from 'resources/keybindings/key-bindings';
 
 import { Vim } from './vim/vim';
 import { QueueInputReturn, Cursor, VimMode } from './vim/vim-types';
@@ -53,6 +54,7 @@ export async function initVimHtml(vimHtmlOptions: VimHtmlOptions) {
 
   function initKeys() {
     hotkeys('*', (ev) => {
+      /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: vim-html.ts ~ line 56 ~ ev', ev);
       if (checkAllowedBrowserShortcuts(ev)) {
         return;
       }
@@ -64,11 +66,28 @@ export async function initVimHtml(vimHtmlOptions: VimHtmlOptions) {
         pressedKey = ev.key;
       }
 
-      const modifiers = `${ev.ctrlKey ? 'Ctrl+' : ''}${
-        ev.shiftKey ? 'Shift+' : ''
-      }${ev.altKey ? 'Alt+' : ''}${ev.metaKey ? 'Meta+' : ''}`;
+      let modifiers = '';
 
-      const result = executeCommandInEditor(pressedKey, ev);
+      const collectedModifiers = [];
+      if (ev.ctrlKey) {
+        modifiers += 'Ctrl+';
+        collectedModifiers.push(Modifier['<Control>']);
+      }
+      if (ev.shiftKey) {
+        modifiers += 'Shift+';
+        collectedModifiers.push(Modifier['<Shift>']);
+      }
+      if (ev.altKey) {
+        modifiers += 'Alt+';
+        collectedModifiers.push(Modifier['<Alt>']);
+      }
+      if (ev.metaKey) {
+        modifiers += 'Meta+';
+        collectedModifiers.push(Modifier['<Meta>']);
+      }
+
+      /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: vim-html.ts ~ line 73 ~ pressedKey', pressedKey);
+      const result = executeCommandInEditor(pressedKey, ev, collectedModifiers);
       if (result == null) return;
 
       if (isModeChangeCommand(result.targetCommand)) {
@@ -97,8 +116,12 @@ export async function initVimHtml(vimHtmlOptions: VimHtmlOptions) {
     return false;
   }
 
-  function executeCommandInEditor(input: string, ev: KeyboardEvent) {
-    const result = vim.queueInput(input);
+  function executeCommandInEditor(
+    input: string,
+    ev: KeyboardEvent,
+    modifiers: string[]
+  ) {
+    const result = vim.queueInput(input, modifiers);
     ev.preventDefault();
 
     return result;

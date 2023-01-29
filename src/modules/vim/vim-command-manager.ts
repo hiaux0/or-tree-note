@@ -140,7 +140,10 @@ export class VimCommandManager {
    * sideeffect queuedKeys
    * sideeffect potentialCommands
    */
-  findPotentialCommand(input: string): PotentialCommandReturn {
+  findPotentialCommand(
+    input: string,
+    modifiers: string[] = []
+  ): PotentialCommandReturn {
     const commandAwaitingNextInput = getCommandAwaitingNextInput(
       input,
       this.potentialCommands
@@ -157,23 +160,31 @@ export class VimCommandManager {
       targetKeyBinding = this.potentialCommands;
     } else {
       targetKeyBinding = this.keyBindings[
-        this.activeMode.toLowerCase()
+        this.activeMode.toLowerCase() as keyof KeyBindingModes
       ] as VimCommand[];
     }
 
     //
     input = this.ensureVimModifier(input);
     /* prettier-ignore */ logger.culogger.debug(['Finding potential command for: ', input], {log: true});
-    let keySequence: string;
+    let keySequence: string = '';
     if (this.queuedKeys.length) {
       keySequence = this.queuedKeys.join('').concat(input);
-    } else if (this.getSynonymModifier(input)) {
+      /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: vim-command-manager.ts ~ line 170 ~ keySequence', keySequence);
+    } else if (this.getSynonymModifier(input) || modifiers.length) {
       const synonymInput = this.getSynonymModifier(input);
+
+      if (modifiers.length) {
+        keySequence += modifiers.join('');
+        // Already included, then use the array
+      }
       if (synonymInput) {
-        keySequence = synonymInput;
+        keySequence += synonymInput;
+        /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: vim-command-manager.ts ~ line 175 ~ keySequence', keySequence);
       }
     } else {
       keySequence = input;
+      /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: vim-command-manager.ts ~ line 179 ~ keySequence', keySequence);
     }
     /* prettier-ignore */ logger.culogger.debug(['keySequence: %s', keySequence], { log: true});
 
@@ -219,15 +230,20 @@ export class VimCommandManager {
   }
 
   /** */
-  getCommandName(input: string): VIM_COMMAND {
+  getCommandName(
+    input: string,
+    modifiers: string[] = []
+  ): VIM_COMMAND | undefined {
     let targetCommand;
     let potentialCommands: PotentialCommandReturn['potentialCommands'];
 
     try {
       /** Else, it "awaiting commands" like `t` will not function properly in insert mode. Can this be improved? */
       if (!this.isInsertMode()) {
-        ({ targetCommand, potentialCommands } =
-          this.findPotentialCommand(input));
+        ({ targetCommand, potentialCommands } = this.findPotentialCommand(
+          input,
+          modifiers
+        ));
       }
     } catch (error) {
       logger.culogger.debug(['Error: %s', error], { onlyVerbose: true });
@@ -258,7 +274,7 @@ export class VimCommandManager {
       }
 
       if (potentialCommands?.length) {
-        /* prettier-ignore */ logger.culogger.debug(['Awaiting potential commands: %o', potentialCommands], {log: true});
+        /* prettier-ignore */ logger.culogger.debug(['Awaiting potential commands: %o', potentialCommands], {log: false});
       } else {
         /* prettier-ignore */ logger.culogger.debug([ 'No command for key: %s in Mode: %s ((vim.ts-getCommandName))', input, this.activeMode, ], { isError: true, log: true });
       }

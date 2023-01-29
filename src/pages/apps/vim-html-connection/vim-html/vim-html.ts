@@ -72,9 +72,9 @@ export class VimHtml {
 
           if (this.getVimHtmlId(nextElement)) {
             this.currentVimHtmlId = this.getVimHtmlId(nextElement);
-            /* prettier-ignore */ console.log('TCL ~ file: vim-html.ts ~ line 74 ~ VimHtml ~ attached ~ this.currentVimHtmlId', this.currentVimHtmlId);
+            // /* prettier-ignore */ console.log('TCL ~ file: vim-html.ts ~ line 74 ~ VimHtml ~ attached ~ this.currentVimHtmlId', this.currentVimHtmlId);
           }
-          /* prettier-ignore */ console.log('TCL ~ file: vim-html.ts ~ line 63 ~ VimHtml ~ attached ~ nextElement', nextElement);
+          // /* prettier-ignore */ console.log('TCL ~ file: vim-html.ts ~ line 63 ~ VimHtml ~ attached ~ nextElement', nextElement);
 
           /**
            * If just any HTML element, then do general highlighl
