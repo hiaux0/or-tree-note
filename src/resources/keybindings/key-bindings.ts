@@ -2,7 +2,15 @@
 
 import { VimCommand, VIM_COMMAND } from 'modules/vim/vim-commands-repository';
 
-import { ALT, BACKSPACE, CONTROL, ESCAPE, SHIFT, SPACE } from './app-keys';
+import {
+  ALT,
+  BACKSPACE,
+  CONTROL,
+  DELETE,
+  ESCAPE,
+  SHIFT,
+  SPACE,
+} from './app-keys';
 
 export const Modifier = {
   '<Alt>': '<Alt>',
@@ -14,12 +22,17 @@ export const Modifier = {
 };
 
 const commandsAllModes = [{ key: '<Escape>', command: 'enterNormalMode' }];
+/**
+ * The very next input
+ * TODO: rename? `...VeryNextInput`
+ */
 export const commandsThatWaitForNextInput: VimCommand[] = [
   { key: 'F', command: VIM_COMMAND['toCharacterAtBack'] },
   { key: 'f', command: VIM_COMMAND['toCharacterAt'] },
   { key: 'r', command: VIM_COMMAND['replace'] },
   { key: 'T', command: VIM_COMMAND['toCharacterAfterBack'] },
   { key: 't', command: VIM_COMMAND['toCharacterBefore'] },
+  // { key: `${Modifier['<Space>']}tc`, command: VIM_COMMAND.space },
 ];
 
 const cursorAllModes = [
@@ -97,6 +110,9 @@ export function isBackspace(newInput: string) {
 }
 export function isControl(newInput: string) {
   return newInput === CONTROL || newInput === Modifier['<Control>'];
+}
+export function isDelete(newInput: string) {
+  return newInput === DELETE || newInput === Modifier['<Delete>'];
 }
 export function isEscape(newInput: string) {
   return newInput === ESCAPE || newInput === Modifier['<Escape>'];

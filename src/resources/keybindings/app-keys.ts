@@ -45,6 +45,7 @@ export const LETTERS = [
 export const ALT = 'Alt';
 export const BACKSPACE = 'Backspace';
 export const CONTROL = 'Control';
+export const DELETE = 'Delete';
 export const ESCAPE = 'Escape';
 export const SHIFT = 'Shift';
 export const SHIFT_KEY_CODE = 16;

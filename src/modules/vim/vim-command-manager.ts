@@ -1,5 +1,5 @@
 import { Logger } from 'common/logging/logging';
-import { groupBy } from 'lodash';
+import { groupBy, includes } from 'lodash';
 import { inputContainsSequence } from 'modules/string/string';
 import { SPECIAL_KEYS } from 'resources/keybindings/app-keys';
 import {
@@ -7,6 +7,7 @@ import {
   isAlt,
   isBackspace,
   isControl,
+  isDelete,
   isEscape,
   isShift,
   isSpace,
@@ -30,7 +31,10 @@ import {
   VimOptions,
 } from './vim-types';
 
-const logger = new Logger('VimCommandManager');
+const logger = new Logger('VimCommandManager', {
+  log: true,
+  disableLogger: false,
+});
 
 /**
  * I know about the "manager" naming, but `VimCommand` interface also makes sense
@@ -141,10 +145,11 @@ export class VimCommandManager {
       input,
       this.potentialCommands
     );
-    if (commandAwaitingNextInput) {
-      this.potentialCommands = commandAwaitingNextInput.potentialCommands;
-      return commandAwaitingNextInput;
-    }
+    const includes = this.includesPotentialCommands(commandAwaitingNextInput);
+    // if (includes) {
+    // this.potentialCommands = commandAwaitingNextInput.potentialCommands;
+    // return commandAwaitingNextInput;
+    // }
 
     //
     let targetKeyBinding: VimCommand[];
@@ -158,7 +163,7 @@ export class VimCommandManager {
 
     //
     input = this.ensureVimModifier(input);
-    logger.culogger.debug(['Finding potential command for: ', input]);
+    /* prettier-ignore */ logger.culogger.debug(['Finding potential command for: ', input], {log: true});
     let keySequence: string;
     if (this.queuedKeys.length) {
       keySequence = this.queuedKeys.join('').concat(input);
@@ -170,7 +175,7 @@ export class VimCommandManager {
     } else {
       keySequence = input;
     }
-    /* prettier-ignore */ logger.culogger.debug(['keySequence: %s', keySequence], { onlyVerbose: true, });
+    /* prettier-ignore */ logger.culogger.debug(['keySequence: %s', keySequence], { log: true});
 
     const potentialCommands = targetKeyBinding.filter((keyBinding) => {
       // if (ignoreCaseForModifiers(keyBinding.key, keySequence)) {
@@ -180,7 +185,7 @@ export class VimCommandManager {
       return result;
     });
 
-    /* prettier-ignore */ logger.culogger.debug(['potentialCommands: %o', potentialCommands], { onlyVerbose: true, });
+    /* prettier-ignore */ logger.culogger.debug(['potentialCommands: %o', potentialCommands], { log: true});
 
     let targetCommand;
     if (potentialCommands.length === 0) {
@@ -198,6 +203,19 @@ export class VimCommandManager {
     }
 
     return { targetCommand, potentialCommands };
+  }
+
+  private includesPotentialCommands(
+    commandAwaitingNextInput: PotentialCommandReturn
+  ) {
+    const has = this.potentialCommands.find((command) => {
+      const found = includes(
+        commandAwaitingNextInput?.potentialCommands,
+        command
+      );
+      return found;
+    });
+    return has;
   }
 
   /** */
@@ -225,6 +243,8 @@ export class VimCommandManager {
           return VIM_COMMAND.backspace;
         } else if (isControl(input)) {
           return; // todo
+        } else if (isDelete(input)) {
+          return;
         } else if (isEscape(input)) {
           return VIM_COMMAND.enterNormalMode;
         } else if (isShift(input)) {
@@ -238,9 +258,9 @@ export class VimCommandManager {
       }
 
       if (potentialCommands?.length) {
-        /* prettier-ignore */ logger.culogger.debug(['Awaiting potential commands: %o', potentialCommands]);
+        /* prettier-ignore */ logger.culogger.debug(['Awaiting potential commands: %o', potentialCommands], {log: true});
       } else {
-        /* prettier-ignore */ logger.culogger.debug([ 'No command for key: %s in Mode: %s ((vim.ts-getCommandName))', input, this.activeMode, ], { isError: true });
+        /* prettier-ignore */ logger.culogger.debug([ 'No command for key: %s in Mode: %s ((vim.ts-getCommandName))', input, this.activeMode, ], { isError: true, log: true });
       }
 
       return;
@@ -377,6 +397,13 @@ function getCommandAwaitingNextInput(
   potentialCommands: VimCommand[]
 ): PotentialCommandReturn | undefined {
   const awaitingCommand = commandsThatWaitForNextInput.find(
+    // BUG?
+    /**
+     * 1. press <space>
+     * 2. t
+     * 3. Expect: <space>t
+     * 4. But: t
+     */
     (command) => command.key === input
   );
   if (awaitingCommand) {
