@@ -1,0 +1,21 @@
+<template>
+  <input
+    type="text"
+    autofocus
+    value.bind="productCode"
+    change.delegate="priceChange()"
+  />
+
+  <div class="productContainer">
+    <label for="">Price:</label>
+
+    <div class="productNameContainer">
+      <span class="productName">${productName}</span>
+    </div>
+
+    <div class="productPriceContainer">
+      <span class="productPrice__value">${product}</span>
+      <span class="productPrice__currency">VND</span>
+    </div>
+  </div>
+</template>
