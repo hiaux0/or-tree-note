@@ -1,21 +1,44 @@
 <template>
   <input
+    ref="productCodeInputRef"
     type="text"
     autofocus
     value.bind="productCode"
-    change.delegate="priceChange()"
   />
 
   <div class="productContainer">
-    <label for="">Price:</label>
-
-    <div class="productNameContainer">
-      <span class="productName">${productName}</span>
-    </div>
-
     <div class="productPriceContainer">
-      <span class="productPrice__value">${product}</span>
+      <label>Price:</label>
+      <span class="productPrice__value">${product.price}</span>
       <span class="productPrice__currency">VND</span>
     </div>
+
+    <div class="productNameContainer">
+      <label>Name:</label>
+      <span class="productName">${product.name}</span>
+    </div>
+  </div>
+
+  <hr />
+  <hr />
+
+  <h3>Them mat hang</h3>
+  <div class="manageProductsContainer">
+    <div class="addNewProductContainer">
+      <input
+        ref="newProductPriceInputRef"
+        type="text"
+        value.bind="newProductPrice"
+      />
+      <button click.delegate="addNewProduct()">Add new product</button>
+    </div>
+  </div>
+
+  <hr />
+  <hr />
+  <h3>Sua gia</h3>
+  <div class="existingProductContainer">
+    <input type="text" value.bind="updatedProductPrice" />
+    <button click.delegate="updateProduct()">Sua gia mat hang</button>
   </div>
 </template>
