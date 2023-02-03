@@ -77,6 +77,10 @@ $mainPadding: 30px;
         justify-content: space-between;
         align-items: center;
 
+        .sessionProduct__price {
+          width: 65px;
+        }
+
         .sessionProduct__code,
         .sessionProduct__codeHeader {
           font-size: medium;

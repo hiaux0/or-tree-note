@@ -5,6 +5,7 @@ export interface Product {
 
 export interface SessionProduct extends Product {
   code: string;
+  time: string;
 }
 
 export const EMPTY_PRODUCT: Product = {

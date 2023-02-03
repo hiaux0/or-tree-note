@@ -101,6 +101,7 @@ export class DuyAnhMart {
       this.sessionCollection.push({
         ...product,
         code: this.productCode,
+        time: new Date().toLocaleTimeString(),
       });
 
       // Clear code input, in order to scan new products
