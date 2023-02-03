@@ -176,7 +176,9 @@ module.exports = ({ production } = {}, {extractCss, analyze, tests, hmr, port, h
     historyApiFallback: true,
     hot: hmr || project.platform.hmr,
     port: port || project.platform.port,
-    host: host
+    // host: host
+    host: '0.0.0.0',
+    useLocalIp: true,
   },
   devtool: production ? 'nosources-source-map' : 'cheap-module-eval-source-map',
   module: {
