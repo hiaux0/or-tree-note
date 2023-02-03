@@ -7,3 +7,8 @@ export const EMPTY_PRODUCT: Product = {
   name: '',
   price: NaN,
 };
+
+export const TEST_PRODUCT: Product = {
+  name: '',
+  price: 123456,
+};

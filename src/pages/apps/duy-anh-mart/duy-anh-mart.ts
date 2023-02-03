@@ -1,14 +1,14 @@
 import { autoinject, computedFrom, observable } from 'aurelia-framework';
 
 import { ProductDatabase } from './ProductDatabase';
-import { Product, EMPTY_PRODUCT } from './ProductEntity';
+import { Product, EMPTY_PRODUCT, TEST_PRODUCT } from './ProductEntity';
 
 import './duy-anh-mart.scss';
 
 /**
  * Quickly add new products
  */
-const QUICK_MODE = false;
+const QUICK_MODE = true;
 
 @autoinject()
 export class DuyAnhMart {
@@ -20,7 +20,7 @@ export class DuyAnhMart {
 
   @observable()
   productCode: string = '';
-  product: Product;
+  product: Product = TEST_PRODUCT;
 
   @computedFrom('product.price', 'productCode')
   get priceNotFound() {

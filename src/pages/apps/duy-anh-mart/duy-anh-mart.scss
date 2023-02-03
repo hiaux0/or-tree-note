@@ -1,8 +1,34 @@
-.manageProductsContainer,
-.existingProductContainer {
-  &.disabled * {
-    color: gray;
-    cursor: not-allowed;
-    pointer-events: none;
+.duyAnhMart {
+  padding: 30px;
+  background-color: white;
+  color: #333;
+
+  .scannerInput {
+    margin-bottom: 20px;
   }
+
+  .productContainer {
+    margin-bottom: 20px;
+    font-size: 36px;
+
+    .productPriceContainer {
+      min-height: 50px;
+    }
+  }
+
+  .manageProductsContainer,
+  .existingProductContainer {
+    &.disabled * {
+      color: gray;
+      cursor: not-allowed;
+      pointer-events: none;
+    }
+
+    input[type='text'],
+    input[type='number'] {
+      width: 100px;
+    }
+  }
+
+  .existingProductContainer {}
 }
