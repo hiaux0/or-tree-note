@@ -1,4 +1,6 @@
 <template>
+  <require from="./value-converter/addCommaToView"></require>
+
   <input
     ref="productCodeInputRef"
     type="text"
@@ -56,7 +58,7 @@
   <!-- Sua gia -->
   <div class="existingProductContainer ${priceNotFound ? 'disabled' : ''}">
     <h3>Sua gia</h3>
-    <input type="number" value.bind="updatedProductPrice" />
+    <input type="text" value.bind="updatedProductPrice | addCommaToView" />
     <button click.delegate="updateProduct()">Sua gia mat hang</button>
   </div>
 

@@ -25,7 +25,6 @@ export class DuyAnhMart {
   @computedFrom('product.price', 'productCode')
   get priceNotFound() {
     const notFound = this.productCode !== '' && !this.product?.price;
-    /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: duy-anh-mart.ts ~ line 28 ~ notFound', notFound);
     return notFound;
   }
 
