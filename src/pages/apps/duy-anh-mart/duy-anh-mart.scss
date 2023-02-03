@@ -1,39 +1,99 @@
+$textColor: #333;
+$borderColor: $textColor;
+
+$mainPadding: 30px;
+
 .duyAnhMart {
+  display: flex;
   padding: 30px;
   background-color: white;
-  color: #333;
+  color: $textColor;
 
-  .scannerInput {
-    margin-bottom: 20px;
-  }
+  .leftContainer {
+    width: 50%;
+    margin-right: 15px;
 
-  .productContainer {
-    margin-bottom: 20px;
-    font-size: 36px;
+    .scannerInput {
+      margin-bottom: 20px;
+    }
 
-    .productPriceContainer {
-      min-height: 50px;
+    .productContainer {
+      margin-bottom: 20px;
+      font-size: 36px;
+
+      .productPriceContainer {
+        min-height: 50px;
+      }
+    }
+
+    .manageProductsContainer,
+    .existingProductContainer {
+      &.disabled * {
+        color: gray;
+        cursor: not-allowed;
+        pointer-events: none;
+      }
+
+      input[type='text'],
+      input[type='number'] {
+        width: 100px;
+      }
+    }
+
+    .manageProductsContainer {
+      .newlyAddedContainer {
+        font-size: 12px;
+      }
     }
   }
 
-  .manageProductsContainer,
-  .existingProductContainer {
-    &.disabled * {
-      color: gray;
-      cursor: not-allowed;
-      pointer-events: none;
-    }
+  .rightContainer {
+    width: 50%;
 
-    input[type='text'],
-    input[type='number'] {
-      width: 100px;
-    }
-  }
+    .sessionContainer {
+      padding: 15px;
+      border: 1px solid $borderColor;
+      width: calc(100% - 30px); // $mainPadding
 
-  .manageProductsContainer {
-    .newlyAddedContainer {
-      font-size: 12px;
+      .sessionProduct_header {
+        display: flex;
+        border-bottom: 1px solid $borderColor;
+        padding-bottom: 5px;
+        margin-bottom: 5px;
+      }
 
+      .sessionProduct,
+      .sessionProduct_header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        .sessionProduct__code,
+        .sessionProduct__codeHeader {
+          font-size: medium;
+        }
+      }
+
+      .sessionFooter {
+        display: flex;
+        margin-top: 20px;
+        justify-content: space-between;
+
+        .sessionSum {
+          font-size: 28px;
+          padding: 5px 15px;
+          border-top: 1px solid $borderColor;
+        }
+
+        .deleteButtonContainer {
+          display: flex;
+          align-items: center;
+
+          button {
+            height: 30px;
+          }
+        }
+      }
     }
   }
 }

@@ -1,7 +1,12 @@
 import { autoinject, computedFrom, observable } from 'aurelia-framework';
 
 import { ProductDatabase } from './ProductDatabase';
-import { Product, EMPTY_PRODUCT, TEST_PRODUCT } from './ProductEntity';
+import {
+  Product,
+  EMPTY_PRODUCT,
+  TEST_PRODUCT,
+  SessionProduct,
+} from './ProductEntity';
 
 import './duy-anh-mart.scss';
 
@@ -12,11 +17,14 @@ const QUICK_MODE = true;
 
 @autoinject()
 export class DuyAnhMart {
-  private updatedProductPrice: number;
+  private readonly sessionProduct: SessionProduct;
   private readonly shouldAutoAddThousand = true;
   private readonly newProductPrice: number;
   private readonly productCodeInputRef: HTMLElement;
   private readonly newProductPriceInputRef: HTMLElement;
+
+  private updatedProductPrice: number;
+  private sessionCollection: SessionProduct[] = [];
 
   product: Product = TEST_PRODUCT;
 
@@ -29,6 +37,16 @@ export class DuyAnhMart {
   get priceNotFound() {
     const notFound = this.productCode !== '' && !this.product?.price;
     return notFound;
+  }
+
+  @computedFrom('sessionCollection.length')
+  get sessionSum() {
+    const sum = this.sessionCollection.reduce((acc, product) => {
+      acc += product.price;
+      return acc;
+    }, 0);
+
+    return sum;
   }
 
   constructor(private readonly productDatabase: ProductDatabase) {
@@ -49,6 +67,8 @@ export class DuyAnhMart {
     this.productCodeInputRef.addEventListener('keydown', (ev) => {
       if (ev.key === 'Enter') {
         this.handleProductCodeChanged();
+      } else if (ev.key === 'Escape') {
+        this.clearSession();
       }
     });
   }
@@ -62,8 +82,16 @@ export class DuyAnhMart {
     const product = this.productDatabase.getProduct(this.productCode);
 
     if (product?.price != null) {
+      // Set product
       this.product = product;
       this.updatedProductPrice = this.product.price;
+      this.sessionCollection.push({
+        ...product,
+        code: this.productCode,
+      });
+
+      // Clear code input, in order to scan new products
+      this.productCode = '';
     } else {
       this.product = undefined;
       this.updatedProductPrice = undefined;
@@ -106,6 +134,10 @@ export class DuyAnhMart {
       price: Number(this.updatedProductPrice),
     };
     this.productDatabase.updateProduct(this.productCode, finalUpdated);
+  }
+
+  private clearSession() {
+    this.sessionCollection = [];
   }
 }
 

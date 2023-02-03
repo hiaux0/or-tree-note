@@ -2,75 +2,108 @@
   <require from="./value-converter/addCommaToView"></require>
 
   <div class="duyAnhMart">
-    <h3>🔎 Tim Gia</h3>
+    <!-- Enter price and manage -->
+    <div class="leftContainer">
+      <h3>🔎 Tim Gia</h3>
+      <input
+        ref="productCodeInputRef"
+        class="scannerInput"
+        type="text"
+        autofocus
+        value.bind="productCode"
+        placeholder="Chup code gia"
+      />
+      <div class="productContainer">
+        <div class="productPriceContainer">
+          <!-- <label>Gia:</label> -->
+          <span class="productPrice__currency">VND</span>
+          <template if.bind="product.price">
+            <strong class="productPrice__value"
+              >${product.price.toLocaleString()}</strong
+            >
+          </template>
+          <!-- No price -->
+          <span if.bind="priceNotFound">⚠️ Ko tim thay gia</span>
+        </div>
+        <!-- <div class="productNameContainer">
+          <label>Name:</label>
+          <span class="productName">${product.name}</span>
+        </div> -->
+      </div>
+      <hr />
+      <hr />
+      <!-- Them mat hang -->
+      <div class="manageProductsContainer ${!priceNotFound ? 'disabled' : ''}">
+        <h5>➕ Them mat hang</h5>
+        <div class="addNewProductContainer">
+          <input
+            ref="newProductPriceInputRef"
+            type="number"
+            value.bind="newProductPrice"
+          />
+          <button click.delegate="addNewProduct()">Them</button>
+          <input
+            type="checkbox"
+            checked.bind="shouldAutoAddThousand"
+            id="addThousandInput"
+          />
+          <label for="addThousandInput">1000 VND</label>
+        </div>
+        <div if.bind="newlyAddedProduct" class="newlyAddedContainer">
+          ✅ da them ${newlyAddedProduct.price} thanh cong
+        </div>
+      </div>
+      <hr />
+      <hr />
+      <!-- Sua gia -->
+      <div class="existingProductContainer ${priceNotFound ? 'disabled' : ''}">
+        <h5>✏️ Sua gia</h5>
+        <input type="text" value.bind="updatedProductPrice | addCommaToView" />
+        <button click.delegate="updateProduct()">Sua gia mat hang</button>
+      </div>
+      <!-- <hr />
+      <hr />
+      <h3>Danh Ba</h3> -->
+    </div>
 
-    <input
-      ref="productCodeInputRef"
-      class="scannerInput"
-      type="text"
-      autofocus
-      value.bind="productCode"
-      placeholder="Chup code gia"
-    />
+    <!-- Calculate Session -->
+    <div class="rightContainer">
+      <div class="sessionContainer">
+        <div class="currentSessionContainer">
+          <!-- table header -->
+          <div class="sessionProduct_header">
+            <div>Gia</div>
+            <div class="sessionProduct__codeHeader">Code</div>
+          </div>
 
-    <div class="productContainer">
-      <div class="productPriceContainer">
-        <!-- <label>Gia:</label> -->
-        <span class="productPrice__currency">VND</span>
-        <template if.bind="product.price">
-          <strong class="productPrice__value"
-            >${product.price.toLocaleString()}</strong
+          <!-- table body -->
+          <div
+            repeat.for="sessionProduct of sessionCollection"
+            class="sessionProduct"
           >
-        </template>
+            <!-- price -->
+            <div class="sessionProduct__price">
+              ${sessionProduct.price.toLocaleString()}
+            </div>
 
-        <!-- No price -->
-        <span if.bind="priceNotFound">⚠️ Ko tim thay gia</span>
-      </div>
+            <!-- code -->
+            <div class="sessionProduct__code"> ${sessionProduct.code} </div>
 
-      <!-- <div class="productNameContainer">
-        <label>Name:</label>
-        <span class="productName">${product.name}</span>
-      </div> -->
-    </div>
+            <!-- timestamp -->
+          </div>
+        </div>
 
-    <hr />
-    <hr />
+        <div class="sessionFooter">
+          <div class="sessionSum"
+            >VND
+            <strong>${sessionSum.toLocaleString()}</strong>
+          </div>
 
-    <!-- Them mat hang -->
-    <div class="manageProductsContainer ${!priceNotFound ? 'disabled' : ''}">
-      <h5>➕ Them mat hang</h5>
-      <div class="addNewProductContainer">
-        <input
-          ref="newProductPriceInputRef"
-          type="number"
-          value.bind="newProductPrice"
-        />
-        <button click.delegate="addNewProduct()">Them</button>
-
-        <input
-          type="checkbox"
-          checked.bind="shouldAutoAddThousand"
-          id="addThousandInput"
-        />
-        <label for="addThousandInput">1000 VND</label>
-      </div>
-      <div if.bind="newlyAddedProduct" class="newlyAddedContainer">
-        ✅ da them ${newlyAddedProduct.price} thanh cong
+          <div class="deleteButtonContainer">
+            <button click.delegate="clearSession()">Xoa</button>
+          </div>
+        </div>
       </div>
     </div>
-
-    <hr />
-    <hr />
-
-    <!-- Sua gia -->
-    <div class="existingProductContainer ${priceNotFound ? 'disabled' : ''}">
-      <h5>✏️ Sua gia</h5>
-      <input type="text" value.bind="updatedProductPrice | addCommaToView" />
-      <button click.delegate="updateProduct()">Sua gia mat hang</button>
-    </div>
-
-    <!-- <hr />
-    <hr />
-    <h3>Danh Ba</h3> -->
   </div>
 </template>
