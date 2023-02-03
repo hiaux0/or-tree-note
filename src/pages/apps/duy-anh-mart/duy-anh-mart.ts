@@ -18,9 +18,12 @@ export class DuyAnhMart {
   private readonly productCodeInputRef: HTMLElement;
   private readonly newProductPriceInputRef: HTMLElement;
 
+  product: Product = TEST_PRODUCT;
+
   @observable()
   productCode: string = '';
-  product: Product = TEST_PRODUCT;
+  @observable()
+  newlyAddedProduct: Product;
 
   @computedFrom('product.price', 'productCode')
   get priceNotFound() {
@@ -38,7 +41,19 @@ export class DuyAnhMart {
     });
   }
 
-  productCodeChanged() {
+  attached() {
+    this.addKeyListeners();
+  }
+
+  private addKeyListeners(): void {
+    this.productCodeInputRef.addEventListener('keydown', (ev) => {
+      if (ev.key === 'Enter') {
+        this.handleProductCodeChanged();
+      }
+    });
+  }
+
+  handleProductCodeChanged() {
     if (this.productCode === '') {
       this.product = EMPTY_PRODUCT;
       return;
@@ -56,6 +71,12 @@ export class DuyAnhMart {
     }
   }
 
+  newlyAddedProductChanged() {
+    window.setTimeout(() => {
+      this.newlyAddedProduct = undefined;
+    }, 5000);
+  }
+
   private prepareToAddNewProduct() {
     /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: duy-anh-mart.ts ~ line 33 ~ prepareToAddNewProduct');
     if (QUICK_MODE) {
@@ -70,10 +91,13 @@ export class DuyAnhMart {
       finalNewPrice = finalNewPrice * 1000;
     }
 
-    this.productDatabase.addProduct(this.productCode, {
+    const newProduct = {
       name: 'testing',
       price: finalNewPrice,
-    });
+    };
+    this.newlyAddedProduct = newProduct;
+
+    this.productDatabase.addProduct(this.productCode, newProduct);
   }
 
   private updateProduct(): void {
