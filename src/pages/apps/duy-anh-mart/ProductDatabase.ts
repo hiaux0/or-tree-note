@@ -13,6 +13,7 @@ export class ProductDatabase {
     this.database = JSON.parse(
       window.localStorage.getItem(DUY_ANH_MART_DB_KEY) ?? '{}'
     ) as DatabaseSchema;
+    /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: ProductDatabase.ts ~ line 17 ~ this.database', this.database);
   }
 
   addProduct(productCode: string, newProduct: Product): void {
@@ -23,6 +24,8 @@ export class ProductDatabase {
       ...existingProduct,
       ...newProduct,
     };
+    console.log('New product: ', finalNewProduct);
+
     this.database[productCode] = finalNewProduct;
 
     window.localStorage.setItem(
@@ -41,13 +44,12 @@ export class ProductDatabase {
     console.log(productCode);
     return {
       name: 'Water',
-      price: '10000',
+      price: 10000,
     };
   }
 
   public updateProduct(productCode: string, updatedProduct: Product) {
     const existingProduct = this.getProduct(productCode);
-    /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: ProductDatabase.ts ~ line 20 ~ existingProduct', existingProduct);
 
     const finalNewProduct = {
       ...existingProduct,

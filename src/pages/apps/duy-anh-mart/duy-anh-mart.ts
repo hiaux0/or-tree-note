@@ -1,7 +1,9 @@
-import { autoinject, observable } from 'aurelia-framework';
+import { autoinject, computedFrom, observable } from 'aurelia-framework';
 
 import { ProductDatabase } from './ProductDatabase';
 import { Product, EMPTY_PRODUCT } from './ProductEntity';
+
+import './duy-anh-mart.scss';
 
 /**
  * Quickly add new products
@@ -10,19 +12,31 @@ const QUICK_MODE = false;
 
 @autoinject()
 export class DuyAnhMart {
-  updatedProductPrice: string;
-
-  newProductPrice: string;
-
+  private updatedProductPrice: number;
+  private readonly shouldAutoAddThousand = true;
+  private readonly newProductPrice: number;
   private readonly productCodeInputRef: HTMLElement;
   private readonly newProductPriceInputRef: HTMLElement;
 
   @observable()
-  productCode: string;
+  productCode: string = '';
   product: Product;
+
+  @computedFrom('product.price', 'productCode')
+  get priceNotFound() {
+    const notFound = this.productCode !== '' && !this.product?.price;
+    /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: duy-anh-mart.ts ~ line 28 ~ notFound', notFound);
+    return notFound;
+  }
 
   constructor(private readonly productDatabase: ProductDatabase) {
     this.productDatabase.init();
+
+    document.addEventListener('keydown', (ev: KeyboardEvent) => {
+      if (ev.key === 'c') {
+        console.clear();
+      }
+    });
   }
 
   productCodeChanged() {
@@ -35,9 +49,10 @@ export class DuyAnhMart {
 
     if (product?.price != null) {
       this.product = product;
-      /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: duy-anh-mart.ts ~ line 39 ~ this.product', this.product);
       this.updatedProductPrice = this.product.price;
     } else {
+      this.product = undefined;
+      this.updatedProductPrice = undefined;
       this.prepareToAddNewProduct();
     }
   }
@@ -51,16 +66,21 @@ export class DuyAnhMart {
   }
 
   addNewProduct() {
+    let finalNewPrice = this.newProductPrice;
+    if (this.shouldAutoAddThousand) {
+      finalNewPrice = finalNewPrice * 1000;
+    }
+
     this.productDatabase.addProduct(this.productCode, {
       name: 'testing',
-      price: this.newProductPrice,
+      price: finalNewPrice,
     });
   }
 
   private updateProduct(): void {
     const finalUpdated: Product = {
       ...this.product,
-      price: this.updatedProductPrice,
+      price: Number(this.updatedProductPrice),
     };
     this.productDatabase.updateProduct(this.productCode, finalUpdated);
   }
@@ -71,4 +91,5 @@ export class DuyAnhMart {
  * - search by product name
  * - filters?
  * - history
+ * - some kind of versioning
  */

@@ -4,41 +4,63 @@
     type="text"
     autofocus
     value.bind="productCode"
+    placeholder="Chup code gia"
   />
 
   <div class="productContainer">
     <div class="productPriceContainer">
-      <label>Price:</label>
-      <span class="productPrice__value">${product.price}</span>
-      <span class="productPrice__currency">VND</span>
+      <label>Gia:</label>
+      <template if.bind="product.price">
+        <strong class="productPrice__value"
+          >${product.price.toLocaleString()}</strong
+        >
+        <span class="productPrice__currency">VND</span>
+      </template>
+
+      <!-- No price -->
+      <span if.bind="priceNotFound">⚠️ Ko tim thay gia</span>
     </div>
 
-    <div class="productNameContainer">
+    <!-- <div class="productNameContainer">
       <label>Name:</label>
       <span class="productName">${product.name}</span>
-    </div>
+    </div> -->
   </div>
 
   <hr />
   <hr />
 
-  <h3>Them mat hang</h3>
-  <div class="manageProductsContainer">
+  <!-- Them mat hang -->
+  <div class="manageProductsContainer ${!priceNotFound ? 'disabled' : ''}">
+    <h3>Them mat hang</h3>
     <div class="addNewProductContainer">
       <input
         ref="newProductPriceInputRef"
-        type="text"
+        type="number"
         value.bind="newProductPrice"
       />
-      <button click.delegate="addNewProduct()">Add new product</button>
+      <button click.delegate="addNewProduct()">Them</button>
+
+      <label for="addThousandInput">1000 VND</label>
+      <input
+        type="checkbox"
+        checked.bind="shouldAutoAddThousand"
+        id="addThousandInput"
+      />
     </div>
   </div>
 
   <hr />
   <hr />
-  <h3>Sua gia</h3>
-  <div class="existingProductContainer">
-    <input type="text" value.bind="updatedProductPrice" />
+
+  <!-- Sua gia -->
+  <div class="existingProductContainer ${priceNotFound ? 'disabled' : ''}">
+    <h3>Sua gia</h3>
+    <input type="number" value.bind="updatedProductPrice" />
     <button click.delegate="updateProduct()">Sua gia mat hang</button>
   </div>
+
+  <hr />
+  <hr />
+  <h3>Danh Ba</h3>
 </template>

@@ -1,9 +1,9 @@
 export interface Product {
   name: string;
-  price: string;
+  price: number;
 }
 
 export const EMPTY_PRODUCT: Product = {
   name: '',
-  price: '',
+  price: NaN,
 };
