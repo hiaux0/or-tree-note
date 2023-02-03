@@ -9,6 +9,10 @@ $mainPadding: 30px;
   background-color: white;
   color: $textColor;
 
+  h3 {
+    margin-top: 0;
+  }
+
   .leftContainer {
     width: 50%;
     margin-right: 15px;
@@ -18,17 +22,22 @@ $mainPadding: 30px;
     }
 
     .productContainer {
-      margin-bottom: 20px;
+      margin-bottom: 40px;
       font-size: 36px;
 
       .productPriceContainer {
         min-height: 50px;
+
+        .productPrice__notFound {
+          font-size: 22px;
+        }
       }
     }
 
     .manageProductsContainer,
     .existingProductContainer {
       &.disabled * {
+        opacity: 0.6;
         color: gray;
         cursor: not-allowed;
         pointer-events: none;

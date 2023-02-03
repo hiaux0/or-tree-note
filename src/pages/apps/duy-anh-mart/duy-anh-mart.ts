@@ -20,22 +20,35 @@ export class DuyAnhMart {
   private readonly sessionProduct: SessionProduct;
   private readonly shouldAutoAddThousand = true;
   private readonly newProductPrice: number;
-  private readonly productCodeInputRef: HTMLElement;
+  private readonly productCodeInputRef: HTMLInputElement;
   private readonly newProductPriceInputRef: HTMLElement;
 
   private updatedProductPrice: number;
   private sessionCollection: SessionProduct[] = [];
 
-  product: Product = TEST_PRODUCT;
+  // currentProduct: Product = TEST_PRODUCT;
+  currentProduct: Product;
 
   @observable()
   productCode: string = '';
   @observable()
   newlyAddedProduct: Product;
 
-  @computedFrom('product.price', 'productCode')
+  // private priceNotFound = false;
+  @computedFrom('currentProduct.price')
   get priceNotFound() {
-    const notFound = this.productCode !== '' && !this.product?.price;
+    /* prettier-ignore */ console.log('------------------------------------------------------------------------------------------');
+    /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: duy-anh-mart.ts ~ line 40 ~ priceNotFound');
+    const productCodeExists = this.productCode !== '';
+    /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: duy-anh-mart.ts ~ line 43 ~ this.productCode', this.productCode);
+    /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: duy-anh-mart.ts ~ line 39 ~ productCodeExists', productCodeExists);
+
+    /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: duy-anh-mart.ts ~ line 42 ~ this.currentProduct;', this.currentProduct);
+    // if (this.currentProduct === undefined) return false;
+
+    const noPriceFound = !this.currentProduct?.price;
+    /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: duy-anh-mart.ts ~ line 41 ~ noPriceFound', noPriceFound);
+    const notFound = productCodeExists && noPriceFound;
     return notFound;
   }
 
@@ -64,27 +77,31 @@ export class DuyAnhMart {
   }
 
   private addKeyListeners(): void {
+    document.addEventListener('keydown', (ev) => {
+      if (ev.key === 'Escape') {
+        this.clearSession();
+      }
+    });
+
     this.productCodeInputRef.addEventListener('keydown', (ev) => {
       if (ev.key === 'Enter') {
         this.handleProductCodeChanged();
-      } else if (ev.key === 'Escape') {
-        this.clearSession();
       }
     });
   }
 
   handleProductCodeChanged() {
-    if (this.productCode === '') {
-      this.product = EMPTY_PRODUCT;
-      return;
-    }
+    // if (this.productCode === '') {
+    //   this.currentProduct = EMPTY_PRODUCT;
+    //   return;
+    // }
 
     const product = this.productDatabase.getProduct(this.productCode);
 
     if (product?.price != null) {
       // Set product
-      this.product = product;
-      this.updatedProductPrice = this.product.price;
+      this.currentProduct = product;
+      this.updatedProductPrice = this.currentProduct.price;
       this.sessionCollection.push({
         ...product,
         code: this.productCode,
@@ -93,8 +110,8 @@ export class DuyAnhMart {
       // Clear code input, in order to scan new products
       this.productCode = '';
     } else {
-      this.product = undefined;
-      this.updatedProductPrice = undefined;
+      // this.priceNotFound = true;
+      this.clearCurrentProduct();
       this.prepareToAddNewProduct();
     }
   }
@@ -130,14 +147,26 @@ export class DuyAnhMart {
 
   private updateProduct(): void {
     const finalUpdated: Product = {
-      ...this.product,
+      ...this.currentProduct,
       price: Number(this.updatedProductPrice),
     };
     this.productDatabase.updateProduct(this.productCode, finalUpdated);
   }
 
-  private clearSession() {
+  private clearCurrentProduct() {
+    // @ts-ignore
+    this.currentProduct = {};
+    // this.currentProduct = undefined;
+    this.updatedProductPrice = undefined;
+  }
+
+  private clearSession(): void {
+    /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: duy-anh-mart.ts ~ line 140 ~ clearSession');
     this.sessionCollection = [];
+    this.clearCurrentProduct();
+    this.productCode = '';
+    this.productCodeInputRef.value = '';
+    this.productCodeInputRef.focus();
   }
 }
 

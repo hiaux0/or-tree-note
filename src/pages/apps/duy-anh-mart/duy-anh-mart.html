@@ -17,13 +17,13 @@
         <div class="productPriceContainer">
           <!-- <label>Gia:</label> -->
           <span class="productPrice__currency">VND</span>
-          <template if.bind="product.price">
+          <template if.bind="currentProduct.price">
             <strong class="productPrice__value"
-              >${product.price.toLocaleString()}</strong
+              >${currentProduct.price.toLocaleString()}</strong
             >
           </template>
           <!-- No price -->
-          <span if.bind="priceNotFound">⚠️ Ko tim thay gia</span>
+          <span class="productPrice__notFound" if.bind="priceNotFound">⚠️ Ko tim thay gia</span>
         </div>
         <!-- <div class="productNameContainer">
           <label>Name:</label>
@@ -94,7 +94,7 @@
         </div>
 
         <div class="sessionFooter">
-          <div class="sessionSum"
+          <div class="sessionsum"
             >VND
             <strong>${sessionSum.toLocaleString()}</strong>
           </div>
