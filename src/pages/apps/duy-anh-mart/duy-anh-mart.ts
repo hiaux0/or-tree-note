@@ -34,20 +34,16 @@ export class DuyAnhMart {
   @observable()
   newlyAddedProduct: Product;
 
-  // private priceNotFound = false;
+  @computedFrom('currentProduct.price')
+  get canEditPrice() {
+    const priceFound = this.currentProduct?.price;
+    return priceFound;
+  }
+
   @computedFrom('currentProduct.price')
   get priceNotFound() {
-    /* prettier-ignore */ console.log('------------------------------------------------------------------------------------------');
-    /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: duy-anh-mart.ts ~ line 40 ~ priceNotFound');
     const productCodeExists = this.productCode !== '';
-    /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: duy-anh-mart.ts ~ line 43 ~ this.productCode', this.productCode);
-    /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: duy-anh-mart.ts ~ line 39 ~ productCodeExists', productCodeExists);
-
-    /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: duy-anh-mart.ts ~ line 42 ~ this.currentProduct;', this.currentProduct);
-    // if (this.currentProduct === undefined) return false;
-
     const noPriceFound = !this.currentProduct?.price;
-    /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: duy-anh-mart.ts ~ line 41 ~ noPriceFound', noPriceFound);
     const notFound = productCodeExists && noPriceFound;
     return notFound;
   }

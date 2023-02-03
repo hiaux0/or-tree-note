@@ -55,8 +55,9 @@
       </div>
       <hr />
       <hr />
+
       <!-- Sua gia -->
-      <div class="existingProductContainer ${priceNotFound ? 'disabled' : ''}">
+      <div class="existingProductContainer ${canEditPrice ? '' : 'disabled'}">
         <h5>✏️ Sua gia</h5>
         <input type="text" value.bind="updatedProductPrice | addCommaToView" />
         <button click.delegate="updateProduct()">Sua gia mat hang</button>
