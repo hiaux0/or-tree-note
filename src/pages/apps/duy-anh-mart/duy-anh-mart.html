@@ -33,7 +33,7 @@
       <hr />
 
       <!-- Them mat hang -->
-      <div class="manageProductsContainer ${!priceNotFound ? 'disabled' : ''}">
+      <div class="manageProductsContainer ${priceNotFound ? '' : 'disabled'}">
         <h5>➕ Them mat hang</h5>
         <div class="addNewProductContainer">
           <div>
@@ -41,12 +41,14 @@
             <input
               ref="newProductPriceInputRef"
               type="number"
+              disabled.bind="!priceNotFound"
               value.bind="newProductPrice"
             />
             <input
               type="checkbox"
-              checked.bind="shouldAutoAddThousand"
               id="addThousandInput"
+              checked.bind="shouldAutoAddThousand"
+              disabled.bind="!priceNotFound"
             />
             <label for="addThousandInput">1000 VND</label>
           </div>
@@ -55,14 +57,20 @@
             <label for="">Ten</label>
             <input
               ref="newProductNameInputRef"
+              class="newProductName"
               type="text"
+              disabled.bind="!priceNotFound"
               value.bind="newProductName"
             />
           </div>
-          <button click.delegate="addNewProduct()">Them</button>
+          <button
+            disabled.bind="!priceNotFound"
+            click.delegate="addNewProduct()"
+            >Them</button
+          >
         </div>
         <div if.bind="newlyAddedProduct" class="newlyAddedContainer">
-          ✅ da them ${newlyAddedProduct.price} thanh cong
+          ✅ da them "${newlyAddedProduct.name}" thanh cong voi gia "${newlyAddedProduct.price}" VND
         </div>
       </div>
       <hr />
@@ -74,16 +82,25 @@
         <div>
           <label for="">VND</label>
           <input
+            disabled.bind="!canEditPrice"
             type="text"
             value.bind="updatedProductPrice | addCommaToView"
           />
         </div>
         <div>
           <label for="">Ten</label>
-          <input type="text" value.bind="updatedProductName" />
+          <input
+            disabled.bind="!canEditPrice"
+            type="text"
+            value.bind="updatedProductName"
+          />
         </div>
-        <button click.delegate="updateProduct()">Sua gia mat hang</button>
-        <button click.delegate="deleteProduct()">🗑️ Bo hang nay di</button>
+        <button disabled.bind="!canEditPrice" click.delegate="updateProduct()"
+          >Sua gia mat hang</button
+        >
+        <button class="deleteProductButton" disabled.bind="!canEditPrice" click.delegate="deleteProduct()"
+          >🗑️ Bo hang nay di</button
+        >
       </div>
 
       <!-- <hr />
@@ -97,6 +114,7 @@
         <div class="currentSessionContainer">
           <!-- table header -->
           <div class="sessionProduct_header">
+            <div class="sessionProduct__codeHeader">#</div>
             <div class="sessionProduct__price">Gia</div>
             <div class="sessionProduct__codeHeader">Ten</div>
             <!-- <div class="sessionProduct__codeHeader">Gio</div> -->
@@ -108,6 +126,7 @@
             repeat.for="sessionProduct of sessionCollection"
             class="sessionProduct"
           >
+            <div>${$index + 1}</div>
             <!-- price -->
             <div class="sessionProduct__price">
               ${sessionProduct.price.toLocaleString()}
@@ -125,7 +144,7 @@
         </div>
 
         <div class="sessionFooter">
-          <div class="sessionsum"
+          <div class="sessionSum"
             >VND
             <strong>${sessionSum.toLocaleString()}</strong>
           </div>

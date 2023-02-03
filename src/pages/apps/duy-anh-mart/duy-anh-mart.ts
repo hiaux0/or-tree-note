@@ -19,11 +19,11 @@ const QUICK_MODE = true;
 export class DuyAnhMart {
   private readonly sessionProduct: SessionProduct;
   private readonly shouldAutoAddThousand = true;
-  private readonly newProductPrice: number;
-  private readonly newProductName: string;
-  private readonly productCodeInputRef: HTMLInputElement;
   private readonly newProductPriceInputRef: HTMLElement;
+  private readonly productCodeInputRef: HTMLInputElement;
 
+  private newProductName: string;
+  private newProductPrice: number;
   private updatedProductName: string;
   private updatedProductPrice: number;
   private sessionCollection: SessionProduct[] = [];
@@ -69,6 +69,9 @@ export class DuyAnhMart {
       if (ev.key === 'c') {
         console.clear();
       }
+      if (ev.key === 't') {
+        console.log(this);
+      }
     });
   }
 
@@ -105,11 +108,7 @@ export class DuyAnhMart {
       this.updatedProductPrice = this.currentProduct.price;
       this.updatedProductName = this.currentProduct.name;
 
-      this.sessionCollection.push({
-        ...product,
-        code: this.productCode,
-        time: new Date().toLocaleTimeString(),
-      });
+      this.addToSessionCollection(product);
 
       // Clear code input, in order to scan new products
       this.productCode = '';
@@ -117,6 +116,27 @@ export class DuyAnhMart {
       // this.priceNotFound = true;
       this.clearCurrentProduct();
       this.prepareToAddNewProduct();
+    }
+  }
+  addToSessionCollection(product: Product) {
+    const alreadyInSession = this.sessionCollection.find(
+      (item) => item.code === this.productCode
+    );
+
+    if (alreadyInSession !== undefined) {
+      this.sessionCollection.push({
+        ...product,
+        code: this.productCode,
+        time: new Date().toLocaleTimeString(),
+        count: alreadyInSession.count + 1,
+      });
+    } else {
+      this.sessionCollection.push({
+        ...product,
+        code: this.productCode,
+        time: new Date().toLocaleTimeString(),
+        count: 1,
+      });
     }
   }
 
@@ -129,8 +149,10 @@ export class DuyAnhMart {
   private prepareToAddNewProduct() {
     /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: duy-anh-mart.ts ~ line 33 ~ prepareToAddNewProduct');
     if (QUICK_MODE) {
-      this.productCodeInputRef.blur();
-      this.newProductPriceInputRef.focus();
+      window.setTimeout(() => {
+        this.productCodeInputRef.blur();
+        this.newProductPriceInputRef.focus();
+      }, 0);
     }
   }
 
@@ -147,6 +169,9 @@ export class DuyAnhMart {
     this.newlyAddedProduct = newProduct;
 
     this.productDatabase.addProduct(this.productCode, newProduct);
+
+    this.newProductName = undefined;
+    this.newProductPrice = undefined;
   }
 
   private updateProduct(): void {
@@ -187,4 +212,7 @@ export class DuyAnhMart {
  * - filters?
  * - history
  * - some kind of versioning
+ *
+ * Improvements:
+ *  - [ ] disable tabbing when input disabled
  */

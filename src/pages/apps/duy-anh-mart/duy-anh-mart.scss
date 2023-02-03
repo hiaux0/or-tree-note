@@ -23,7 +23,7 @@ $mainPadding: 30px;
 
     .productContainer {
       margin-bottom: 40px;
-      font-size: 36px;
+      font-size: 22px;
 
       .productName {
         font-size: 20px;
@@ -53,7 +53,20 @@ $mainPadding: 30px;
       }
     }
 
+    .existingProductContainer {
+      .deleteProductButton {
+        margin-left: 80px;
+      }
+    }
+
     .manageProductsContainer {
+      .addNewProductContainer {
+        .newProductName {
+          width: 150px;
+        }
+
+      }
+
       .newlyAddedContainer {
         font-size: 12px;
       }
@@ -91,13 +104,19 @@ $mainPadding: 30px;
         }
       }
 
+      .sessionProduct {
+        &:hover {
+          background-color: goldenrod;
+        }
+      }
+
       .sessionFooter {
         display: flex;
         margin-top: 20px;
         justify-content: space-between;
 
         .sessionSum {
-          font-size: 28px;
+          font-size: 30px;
           padding: 5px 15px;
           border-top: 1px solid $borderColor;
         }
