@@ -70,7 +70,8 @@
           >
         </div>
         <div if.bind="newlyAddedProduct" class="newlyAddedContainer">
-          ✅ da them "${newlyAddedProduct.name}" thanh cong voi gia "${newlyAddedProduct.price}" VND
+          ✅ da them "${newlyAddedProduct.name}" thanh cong voi gia
+          "${newlyAddedProduct.price}" VND
         </div>
       </div>
       <hr />
@@ -98,7 +99,10 @@
         <button disabled.bind="!canEditPrice" click.delegate="updateProduct()"
           >Sua gia mat hang</button
         >
-        <button class="deleteProductButton" disabled.bind="!canEditPrice" click.delegate="deleteProduct()"
+        <button
+          class="deleteProductButton"
+          disabled.bind="!canEditPrice"
+          click.delegate="deleteProduct()"
           >🗑️ Bo hang nay di</button
         >
       </div>
@@ -116,6 +120,7 @@
           <div class="sessionProduct_header">
             <div class="sessionProduct__codeHeader">#</div>
             <div class="sessionProduct__price">Gia</div>
+            <div class="sessionProduct__codeHeader">So Luong</div>
             <div class="sessionProduct__codeHeader">Ten</div>
             <!-- <div class="sessionProduct__codeHeader">Gio</div> -->
             <div class="sessionProduct__codeHeader">Code</div>
@@ -126,11 +131,13 @@
             repeat.for="sessionProduct of sessionCollection"
             class="sessionProduct"
           >
-            <div>${$index + 1}</div>
+            <div class="sessionProduct__code">${$index + 1}</div>
             <!-- price -->
             <div class="sessionProduct__price">
-              ${sessionProduct.price.toLocaleString()}
+              ${(sessionProduct.price * sessionProduct.count).toLocaleString()}
             </div>
+
+            <div class="sessionProduct__code">${sessionProduct.count}</div>
 
             <!-- name -->
             <div class="sessionProduct__code"> ${sessionProduct.name} </div>

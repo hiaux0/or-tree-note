@@ -1,4 +1,9 @@
-import { autoinject, computedFrom, observable } from 'aurelia-framework';
+import {
+  autoinject,
+  BindingEngine,
+  computedFrom,
+  observable,
+} from 'aurelia-framework';
 
 import { ProductDatabase } from './ProductDatabase';
 import {
@@ -32,6 +37,7 @@ export class DuyAnhMart {
   currentProduct: Product;
   /** The one just scanned before auto-reset */
   previousProductCode: string = '';
+  sessionSum: number;
 
   @observable()
   productCode: string = '';
@@ -52,17 +58,10 @@ export class DuyAnhMart {
     return notFound;
   }
 
-  @computedFrom('sessionCollection.length')
-  get sessionSum() {
-    const sum = this.sessionCollection.reduce((acc, product) => {
-      acc += product.price;
-      return acc;
-    }, 0);
-
-    return sum;
-  }
-
-  constructor(private readonly productDatabase: ProductDatabase) {
+  constructor(
+    private readonly bindingEngine: BindingEngine,
+    private readonly productDatabase: ProductDatabase
+  ) {
     this.productDatabase.init();
 
     document.addEventListener('keydown', (ev: KeyboardEvent) => {
@@ -76,7 +75,16 @@ export class DuyAnhMart {
   }
 
   attached() {
+    this.addListeners();
     this.addKeyListeners();
+  }
+
+  private addListeners() {
+    this.bindingEngine
+      .collectionObserver(this.sessionCollection)
+      .subscribe((changes) => {
+        /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: duy-anh-mart.ts ~ line 93 ~ changes', changes);
+      });
   }
 
   private addKeyListeners(): void {
@@ -93,7 +101,7 @@ export class DuyAnhMart {
     });
   }
 
-  handleProductCodeChanged() {
+  private handleProductCodeChanged() {
     // if (this.productCode === '') {
     //   this.currentProduct = EMPTY_PRODUCT;
     //   return;
@@ -109,6 +117,7 @@ export class DuyAnhMart {
       this.updatedProductName = this.currentProduct.name;
 
       this.addToSessionCollection(product);
+      this.calculateSessionSum();
 
       // Clear code input, in order to scan new products
       this.productCode = '';
@@ -118,18 +127,14 @@ export class DuyAnhMart {
       this.prepareToAddNewProduct();
     }
   }
+
   addToSessionCollection(product: Product) {
     const alreadyInSession = this.sessionCollection.find(
       (item) => item.code === this.productCode
     );
 
     if (alreadyInSession !== undefined) {
-      this.sessionCollection.push({
-        ...product,
-        code: this.productCode,
-        time: new Date().toLocaleTimeString(),
-        count: alreadyInSession.count + 1,
-      });
+      alreadyInSession.count = alreadyInSession.count + 1;
     } else {
       this.sessionCollection.push({
         ...product,
@@ -170,8 +175,7 @@ export class DuyAnhMart {
 
     this.productDatabase.addProduct(this.productCode, newProduct);
 
-    this.newProductName = undefined;
-    this.newProductPrice = undefined;
+    this.clearNewProductValues();
   }
 
   private updateProduct(): void {
@@ -200,9 +204,26 @@ export class DuyAnhMart {
     /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: duy-anh-mart.ts ~ line 140 ~ clearSession');
     this.sessionCollection = [];
     this.clearCurrentProduct();
-    this.productCode = '';
+
+    this.newProductName = this.productCode = '';
     this.productCodeInputRef.value = '';
     this.productCodeInputRef.focus();
+    this.sessionSum = undefined;
+
+    this.clearNewProductValues();
+  }
+
+  private clearNewProductValues() {
+    this.newProductPrice = NaN;
+    this.newProductName = undefined;
+  }
+
+  private calculateSessionSum() {
+    const sum = this.sessionCollection.reduce((acc, product) => {
+      acc += product.price * product.count;
+      return acc;
+    }, 0);
+    this.sessionSum = sum;
   }
 }
 
