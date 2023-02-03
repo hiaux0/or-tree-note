@@ -20,14 +20,18 @@ export class DuyAnhMart {
   private readonly sessionProduct: SessionProduct;
   private readonly shouldAutoAddThousand = true;
   private readonly newProductPrice: number;
+  private readonly newProductName: string;
   private readonly productCodeInputRef: HTMLInputElement;
   private readonly newProductPriceInputRef: HTMLElement;
 
+  private updatedProductName: string;
   private updatedProductPrice: number;
   private sessionCollection: SessionProduct[] = [];
 
   // currentProduct: Product = TEST_PRODUCT;
   currentProduct: Product;
+  /** The one just scanned before auto-reset */
+  previousProductCode: string = '';
 
   @observable()
   productCode: string = '';
@@ -96,8 +100,11 @@ export class DuyAnhMart {
 
     if (product?.price != null) {
       // Set product
+      this.previousProductCode = this.productCode;
       this.currentProduct = product;
       this.updatedProductPrice = this.currentProduct.price;
+      this.updatedProductName = this.currentProduct.name;
+
       this.sessionCollection.push({
         ...product,
         code: this.productCode,
@@ -134,7 +141,7 @@ export class DuyAnhMart {
     }
 
     const newProduct = {
-      name: 'testing',
+      name: this.newProductName,
       price: finalNewPrice,
     };
     this.newlyAddedProduct = newProduct;
@@ -146,8 +153,15 @@ export class DuyAnhMart {
     const finalUpdated: Product = {
       ...this.currentProduct,
       price: Number(this.updatedProductPrice),
+      name: this.updatedProductName,
     };
-    this.productDatabase.updateProduct(this.productCode, finalUpdated);
+
+    /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: duy-anh-mart.ts ~ line 158 ~ finalUpdated', finalUpdated);
+    this.productDatabase.updateProduct(this.previousProductCode, finalUpdated);
+  }
+
+  private deleteProduct(): void {
+    this.productDatabase.deleteProduct(this.previousProductCode);
   }
 
   private clearCurrentProduct() {

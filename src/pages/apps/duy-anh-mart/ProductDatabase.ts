@@ -49,6 +49,7 @@ export class ProductDatabase {
   }
 
   public updateProduct(productCode: string, updatedProduct: Product) {
+    /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: ProductDatabase.ts ~ line 52 ~ productCode', productCode);
     const existingProduct = this.getProduct(productCode);
 
     const finalNewProduct = {
@@ -56,7 +57,18 @@ export class ProductDatabase {
       ...updatedProduct,
     };
     this.database[productCode] = finalNewProduct;
+    /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: ProductDatabase.ts ~ line 59 ~ finalNewProduct', finalNewProduct);
 
+    /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: ProductDatabase.ts ~ line 62 ~ database', this.database);
+
+    window.localStorage.setItem(
+      DUY_ANH_MART_DB_KEY,
+      JSON.stringify(this.database)
+    );
+  }
+
+  public deleteProduct(productCode: string) {
+    this.database[productCode] = undefined;
     window.localStorage.setItem(
       DUY_ANH_MART_DB_KEY,
       JSON.stringify(this.database)

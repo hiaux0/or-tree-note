@@ -23,31 +23,43 @@
             >
           </template>
           <!-- No price -->
-          <span class="productPrice__notFound" if.bind="priceNotFound">⚠️ Ko tim thay gia</span>
+          <span class="productPrice__notFound" if.bind="priceNotFound"
+            >⚠️ Ko tim thay gia</span
+          >
         </div>
-        <!-- <div class="productNameContainer">
-          <label>Name:</label>
-          <span class="productName">${product.name}</span>
-        </div> -->
+        <span class="productName">${currentProduct.name}</span>
       </div>
       <hr />
       <hr />
+
       <!-- Them mat hang -->
       <div class="manageProductsContainer ${!priceNotFound ? 'disabled' : ''}">
         <h5>➕ Them mat hang</h5>
         <div class="addNewProductContainer">
-          <input
-            ref="newProductPriceInputRef"
-            type="number"
-            value.bind="newProductPrice"
-          />
+          <div>
+            <label for="">Gia moi</label>
+            <input
+              ref="newProductPriceInputRef"
+              type="number"
+              value.bind="newProductPrice"
+            />
+            <input
+              type="checkbox"
+              checked.bind="shouldAutoAddThousand"
+              id="addThousandInput"
+            />
+            <label for="addThousandInput">1000 VND</label>
+          </div>
+
+          <div>
+            <label for="">Ten</label>
+            <input
+              ref="newProductNameInputRef"
+              type="text"
+              value.bind="newProductName"
+            />
+          </div>
           <button click.delegate="addNewProduct()">Them</button>
-          <input
-            type="checkbox"
-            checked.bind="shouldAutoAddThousand"
-            id="addThousandInput"
-          />
-          <label for="addThousandInput">1000 VND</label>
         </div>
         <div if.bind="newlyAddedProduct" class="newlyAddedContainer">
           ✅ da them ${newlyAddedProduct.price} thanh cong
@@ -59,9 +71,21 @@
       <!-- Sua gia -->
       <div class="existingProductContainer ${canEditPrice ? '' : 'disabled'}">
         <h5>✏️ Sua gia</h5>
-        <input type="text" value.bind="updatedProductPrice | addCommaToView" />
+        <div>
+          <label for="">VND</label>
+          <input
+            type="text"
+            value.bind="updatedProductPrice | addCommaToView"
+          />
+        </div>
+        <div>
+          <label for="">Ten</label>
+          <input type="text" value.bind="updatedProductName" />
+        </div>
         <button click.delegate="updateProduct()">Sua gia mat hang</button>
+        <button click.delegate="deleteProduct()">🗑️ Bo hang nay di</button>
       </div>
+
       <!-- <hr />
       <hr />
       <h3>Danh Ba</h3> -->
@@ -73,8 +97,9 @@
         <div class="currentSessionContainer">
           <!-- table header -->
           <div class="sessionProduct_header">
-            <div>Gia</div>
-            <div class="sessionProduct__codeHeader">Gio</div>
+            <div class="sessionProduct__price">Gia</div>
+            <div class="sessionProduct__codeHeader">Ten</div>
+            <!-- <div class="sessionProduct__codeHeader">Gio</div> -->
             <div class="sessionProduct__codeHeader">Code</div>
           </div>
 
@@ -88,8 +113,10 @@
               ${sessionProduct.price.toLocaleString()}
             </div>
 
+            <!-- name -->
+            <div class="sessionProduct__code"> ${sessionProduct.name} </div>
             <!-- time -->
-            <div class="sessionProduct__code"> ${sessionProduct.time} </div>
+            <!-- <div class="sessionProduct__code"> ${sessionProduct.time} </div> -->
             <!-- code -->
             <div class="sessionProduct__code"> ${sessionProduct.code} </div>
 
