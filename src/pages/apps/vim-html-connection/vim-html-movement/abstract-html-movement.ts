@@ -93,7 +93,7 @@ export abstract class AbstractHtmlMovement {
       if (sibling === $currentActive) return false;
 
       const siblingRect = sibling.getBoundingClientRect();
-      const isBelow = curRect.top <= siblingRect.top; // curRect.top: Allow slightly below. Future: option for fullBelow?
+      const isBelow = curRect.top <= siblingRect.top; // <=: Allow slightly below. Future: option for fullBelow?
       const isInWidthInterval_Left =
         curRect.left - widthDelta <= siblingRect.left;
       const isInWidthInterval_Right =
