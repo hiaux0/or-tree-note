@@ -7,6 +7,7 @@ import {
   BACKSPACE,
   CONTROL,
   DELETE,
+  ENTER,
   ESCAPE,
   SHIFT,
   SPACE,
@@ -17,6 +18,7 @@ export const Modifier = {
   '<Backspace>': '<Backspace>',
   '<Control>': '<Control>',
   '<Delete>': '<Delete>',
+  '<Enter>': '<Enter>',
   '<Escape>': '<Escape>',
   '<Meta>': '<Meta>',
   '<Shift>': '<Shift>',
@@ -115,6 +117,9 @@ export function isControl(newInput: string) {
 }
 export function isDelete(newInput: string) {
   return newInput === DELETE || newInput === Modifier['<Delete>'];
+}
+export function isEnter(newInput: string) {
+  return newInput === ENTER || newInput === Modifier['<Enter>'];
 }
 export function isEscape(newInput: string) {
   return newInput === ESCAPE || newInput === Modifier['<Escape>'];

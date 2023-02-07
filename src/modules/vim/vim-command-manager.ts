@@ -8,6 +8,7 @@ import {
   isBackspace,
   isControl,
   isDelete,
+  isEnter,
   isEscape,
   isShift,
   isSpace,
@@ -260,6 +261,8 @@ export class VimCommandManager {
         } else if (isControl(input)) {
           return; // todo
         } else if (isDelete(input)) {
+          return;
+        } else if (isEnter(input)) {
           return;
         } else if (isEscape(input)) {
           return VIM_COMMAND.enterNormalMode;
