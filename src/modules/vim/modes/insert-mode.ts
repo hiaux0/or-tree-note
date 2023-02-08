@@ -21,7 +21,7 @@ export class InsertMode extends AbstractMode {
     );
     this.vimState.updateActiveLine(updatedInput);
 
-    this.lines[this.vimState.cursor.line] = updatedInput;
+    this.vimState.lines[this.vimState.cursor.line] = updatedInput;
     super.cursorRight();
     return this.vimState;
   }
@@ -43,7 +43,7 @@ export class InsertMode extends AbstractMode {
 
     this.vimState.updateActiveLine(updatedInput);
 
-    this.lines[this.vimState.cursor.line] = updatedInput;
+    this.vimState.lines[this.vimState.cursor.line] = updatedInput;
     super.cursorLeft();
     // this.vimState.getActiveLine() = updatedInput;
     return this.vimState;

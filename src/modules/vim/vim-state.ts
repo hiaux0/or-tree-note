@@ -41,6 +41,11 @@ export class VimStateClass {
   }
 
   public updateActiveLine(updated: string) {
+    this.lines; /* ? */
+    this.cursor.line; /* ? */
+    updated; /* ? */
     this.lines[this.cursor.line] = updated;
+    // this.lines[this.cursor.line] = 'si';
+    this.lines; /* ? */
   }
 }

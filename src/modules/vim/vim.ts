@@ -58,7 +58,6 @@ export class Vim {
     };
     const initialVimState = new VimStateClass(cursor, lines);
     this.vimCommandManager = new VimCommandManager(
-      lines,
       initialVimState,
       finalVimOptions
     );
@@ -124,6 +123,7 @@ export class Vim {
       targetCommand: targetCommandName,
       lines: [...this.vimState.lines],
     };
+    logger.debug(['vimState: %o', vimState], { log: true });
 
     this.logAndVerifyQueueInputReturn(result, input);
 
@@ -146,13 +146,20 @@ export class Vim {
     }
 
     givenInputSequence.forEach((input) => {
+      if (input === 'u') {
+        // input; /* ? */
+      }
       const subResult = this.queueInput(input);
       if (subResult?.targetCommand !== undefined) {
+        if (input === 'u') {
+          // subResult; /* ? */
+        }
         resultList.push(subResult);
       }
     });
 
     if (vimExecutingMode === VimExecutingMode.INDIVIDUAL) {
+      // resultList; /* ? */
       return resultList;
     }
 

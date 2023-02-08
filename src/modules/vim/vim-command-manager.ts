@@ -54,13 +54,12 @@ export class VimCommandManager {
   private queuedKeys: string[] = [];
 
   constructor(
-    public lines: string[],
     public vimState: VimStateClass,
     public vimOptions: VimOptions = defaultVimOptions
   ) {
-    this.normalMode = new NormalMode(vimState, this.lines, this.vimOptions);
-    this.insertMode = new InsertMode(vimState, this.lines, this.vimOptions);
-    this.visualMode = new VisualMode(vimState, this.lines, this.vimOptions);
+    this.normalMode = new NormalMode(vimState, this.vimOptions);
+    this.insertMode = new InsertMode(vimState, this.vimOptions);
+    this.visualMode = new VisualMode(vimState, this.vimOptions);
 
     this.keyBindings = this.vimOptions.keyBindings;
   }
@@ -126,6 +125,7 @@ export class VimCommandManager {
     const currentMode = this.getCurrentMode();
     try {
       const vimState = currentMode.executeCommand(commandName, commandInput);
+      // vimState.lines; /* ? */
       return vimState;
     } catch (_error) {
       const error = _error as Error;
@@ -375,7 +375,9 @@ export class VimCommandManager {
     return groupByCommand(accumulatedResult);
   }
 
+  /** TODO: newline bug */
   newLine(): VimStateClass {
+    this.vimState; /* ? */
     const { cursor } = this.vimState;
     const text = this.vimState.getActiveLine();
     const currentLineIndex = cursor.line;
@@ -383,19 +385,28 @@ export class VimCommandManager {
     const currentMode = this.getCurrentMode();
 
     const updatedCurrentLineText = text.substring(0, cursor.col);
+    this.vimState.lines; /* ? */
     this.vimState.lines[currentLineIndex] = updatedCurrentLineText;
+    // this.vimState.lines; /* ? */
     // new line
     const newLineText = text.substring(cursor.col);
     const updatedLines = [...this.vimState.lines];
+    // updatedLines; /* ? */
     updatedLines.splice(newLineIndex, 0, newLineText);
+    updatedLines; /* ? */
+    // updatedLines; /* ? */
     currentMode.reTokenizeInput(newLineText);
-    this.vimState.updateActiveLine(newLineText);
+    // this.vimState.lines; /* ? */
+    // this.vimState.updateActiveLine(newLineText);
+    // this.vimState.lines; /* ? */
 
     this.vimState.lines = updatedLines;
+    this.vimState.lines; /* ? */
     this.vimState.cursor = {
       line: newLineIndex,
       col: 0,
     };
+    this.vimState.lines; /* ? */
 
     return this.vimState;
   }
