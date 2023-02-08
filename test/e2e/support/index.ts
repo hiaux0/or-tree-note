@@ -14,19 +14,54 @@
 // ***********************************************************
 
 // Import commands.js using ES2015 syntax:
-import "./commands";
+import './commands';
 
-import "./commands/e2e-app";
+import './commands/e2e-app';
 //
-import "./commands/css/e2e-css-variables";
+import './commands/css/e2e-css-variables';
 //
-import "./commands/vim/e2e-vim";
+import './commands/vim/e2e-vim';
 
 // Alternatively you can use CommonJS syntax:
 // require('./commands');
 
-Cypress.on("uncaught:exception", (err, runnable) => {
+Cypress.on('uncaught:exception', (err, runnable) => {
   // returning false here prevents Cypress from
   // failing the test
   // return false;
 });
+
+const app = window.top;
+if (!app.document.head.querySelector('[data-hide-command-log-request]')) {
+  const hideStyles = app.document.createElement('style');
+  hideStyles.innerHTML = `
+    /** Hide URLs */
+    .command-name-request,
+    .command-name-new-url,
+    .command-name-xhr {
+      display: none;
+    };
+
+    /** Highlight steps */
+    .command-name-step {
+      color: red !important;
+    }
+  `;
+  hideStyles.setAttribute('data-hide-command-log-request', '');
+
+  app.document.head.appendChild(hideStyles);
+
+  const style = app.document.createElement('style');
+  style.innerHTML = `
+    /** Highlight steps */
+    .command-name-step .command-method span {
+      color: #f280ff !important;
+      font-size: 16px;
+    }
+    .command-name-step .command-message .command-message-text {
+      font-size: 14px;
+      font-weight: 900;
+    }
+  `;
+  app.document.head.appendChild(style);
+}
