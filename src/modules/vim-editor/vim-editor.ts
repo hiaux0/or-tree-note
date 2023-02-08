@@ -39,13 +39,11 @@ export class VimEditor {
 
     setTimeout(() => {
       // vimEditorTextMode.executeCommandSequenceInEditor('diwe');
-
       // vimEditorTextMode.executeCommandSequenceInEditor('it<Space>'); // awaiting command
       // vimEditorTextMode.executeCommandSequenceInEditor('iu<Space>');
       // vimEditorTextMode.executeCommandSequenceInEditor('it<Backspace>'); // awaiting command
-
       // vimEditorTextMode.executeCommandSequenceInEditor('u<Space>tc'); // stuck at `t` as `toCharacterBefore`
-      vimEditorTextMode.executeCommandSequenceInEditor('u');
+      // vimEditorTextMode.executeCommandSequenceInEditor('u');
     }, 1000);
   }
 

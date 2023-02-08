@@ -171,7 +171,7 @@ export class VimCommandManager {
     let keySequence: string = '';
     if (this.queuedKeys.length) {
       keySequence = this.queuedKeys.join('').concat(input);
-      /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: vim-command-manager.ts ~ line 170 ~ keySequence', keySequence);
+      // /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: vim-command-manager.ts ~ line 170 ~ keySequence', keySequence);
     } else if (this.getSynonymModifier(input) || modifiers.length) {
       const synonymInput = this.getSynonymModifier(input);
 
@@ -181,11 +181,11 @@ export class VimCommandManager {
       }
       if (synonymInput) {
         keySequence += synonymInput;
-        /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: vim-command-manager.ts ~ line 175 ~ keySequence', keySequence);
+        // /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: vim-command-manager.ts ~ line 175 ~ keySequence', keySequence);
       }
     } else {
       keySequence = input;
-      /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: vim-command-manager.ts ~ line 179 ~ keySequence', keySequence);
+      // /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: vim-command-manager.ts ~ line 179 ~ keySequence', keySequence);
     }
     /* prettier-ignore */ logger.culogger.debug(['keySequence: %s', keySequence], { log: true});
 
@@ -263,7 +263,7 @@ export class VimCommandManager {
         } else if (isDelete(input)) {
           return;
         } else if (isEnter(input)) {
-          return;
+          return VIM_COMMAND.newLine;
         } else if (isEscape(input)) {
           return VIM_COMMAND.enterNormalMode;
         } else if (isShift(input)) {

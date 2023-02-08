@@ -15,7 +15,7 @@ describe('Aurelia skeleton app', () => {
       });
       window.localStorage.setItem(OTN_STATE_KEY, initialTestState);
     });
-    cy.visit('#/apps');
+    cy.visit('#/apps/or-tree-notes');
   });
 
   it('Should move cursor', () => {
@@ -126,12 +126,33 @@ describe('Aurelia skeleton app', () => {
   });
 
   const input3 = 'diw';
-  it.only(`DEV: ${input3}`, () => {
+  it(`DEV: ${input3}`, () => {
     cy.vim(input3);
     cy.get('.editor-line')
       .invoke('text')
       .then((updatedContent) => {
         expect(updatedContent).equal(` 456`);
+      });
+  });
+
+  const input4 = 'ei{enter}';
+  it.only(`DEV: ${input4}`, () => {
+    cy.vim(input4);
+
+    // 1st line
+    cy.get('.editor-line')
+      .first()
+      .invoke('text')
+      .then((updatedContent) => {
+        expect(updatedContent).equal(`01`);
+      });
+
+    // 2nd line
+    cy.get('.editor-line')
+      .last()
+      .invoke('text')
+      .then((updatedContent) => {
+        expect(updatedContent).equal(`2 456`);
       });
   });
 });

@@ -1,7 +1,14 @@
 import { cloneDeep } from 'lodash';
-import { Vim } from 'modules/vim/vim';
-import { VIM_COMMANDS, VIM_COMMAND } from 'modules/vim/vim-commands-repository';
-import { Cursor, QueueInputReturn, VimMode } from 'modules/vim/vim-types';
+import { Vim } from '../../../src/modules/vim/vim';
+import {
+  VIM_COMMANDS,
+  VIM_COMMAND,
+} from '../../../src/modules/vim/vim-commands-repository';
+import {
+  Cursor,
+  QueueInputReturn,
+  VimMode,
+} from '../../../src/modules/vim/vim-types';
 
 import { TestError, testError } from '../../common-test/errors/test-errors';
 import { GherkinTestUtil } from '../../common-test/gherkin/gherkin-test-util';

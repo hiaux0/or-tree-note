@@ -34,11 +34,13 @@ export const changeText = (
 export function createNewLine(
   state: StateHistory<VimEditorState>,
   newLineIndex: number,
+  previousText: string,
   newText: string
 ) {
   return nextStateHistory(
     cloneDeep(state),
     produce(state.present, (draftState) => {
+      draftState.lines[newLineIndex - 1].text = previousText;
       draftState.lines.splice(newLineIndex, 0, {
         text: newText,
       });

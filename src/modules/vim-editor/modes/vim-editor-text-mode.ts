@@ -114,10 +114,7 @@ export class VimEditorTextMode {
 
   initKeys() {
     hotkeys('*', (ev) => {
-      /* prettier-ignore */ console.log('------------------------------------------------------------------------------------------');
-      /* prettier-ignore */ console.log('------------------------------------------------------------------------------------------');
-      /* prettier-ignore */ console.log('------------------------------------------------------------------------------------------');
-      /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: vim-editor-text-mode.ts ~ line 117 ~ ev', ev);
+      console.clear();
       if (this.checkAllowedBrowserShortcuts(ev)) {
         return;
       }
@@ -133,8 +130,8 @@ export class VimEditorTextMode {
       const modifiers = `${ev.ctrlKey ? 'Ctrl+' : ''}${
         ev.shiftKey ? 'Shift+' : ''
       }${ev.altKey ? 'Alt+' : ''}${ev.metaKey ? 'Meta+' : ''}`;
-      /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: vim-editor-text-mode.ts ~ line 133 ~ ev.key', ev.key);
-      /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: vim-editor-text-mode.ts ~ line 136 ~ pressedKey', pressedKey);
+      // /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: vim-editor-text-mode.ts ~ line 133 ~ ev.key', ev.key);
+      // /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: vim-editor-text-mode.ts ~ line 136 ~ pressedKey', pressedKey);
       /* prettier-ignore */ logger.debug(['-------------- Key pressed: (%s) %s', modifiers, ev.key ?? pressedKey], { log: true, isOnlyGroup: true, });
 
       void this.executeCommandInEditor(pressedKey, ev);

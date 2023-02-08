@@ -135,10 +135,14 @@ export abstract class AbstractTextMode {
   /* Text */
   /** **** */
   async newLine(vimState: VimStateClass) {
+    /* prettier-ignore */ console.log('------------------------------------------------------------------------------------------');
+    /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: abstract-text-mode.ts ~ line 138 ~ vimState', vimState);
     const newLineIndex = vimState.cursor.line;
+    /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: abstract-text-mode.ts ~ line 141 ~ newLineIndex', newLineIndex);
     await this.store.dispatch(
       createNewLine,
       newLineIndex,
+      vimState.getPreviousLine(),
       vimState.getActiveLine()
     );
     this.setCursorMovement(vimState.cursor);

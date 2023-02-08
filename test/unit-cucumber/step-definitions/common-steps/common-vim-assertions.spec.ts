@@ -3,8 +3,8 @@ import {
   VimCommandNames,
   VIM_COMMANDS,
   VIM_COMMAND,
-} from 'modules/vim/vim-commands-repository';
-import { QueueInputReturn } from 'modules/vim/vim-types';
+} from '../../../../src/modules/vim/vim-commands-repository';
+import { QueueInputReturn } from '../../../../src/modules/vim/vim-types';
 
 import { testError, TestError } from '../../../common-test/errors/test-errors';
 import { GherkinTestUtil } from '../../../common-test/gherkin/gherkin-test-util';
@@ -18,6 +18,7 @@ export const commonVimAssertionsSteps: StepDefinitions = ({ then, and }) => {
 
     (rawCommands: VimCommandNames) => {
       const conmmands = rawCommands.split(',');
+      conmmands; /*?*/
       expect(conmmands.length).toBe(
         manyQueuedInput.length,
         'Expected equal commands of lines and result'

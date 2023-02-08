@@ -1,7 +1,10 @@
 import { StepDefinitions } from 'jest-cucumber';
 import { cloneDeep } from 'lodash';
-import { Vim } from 'modules/vim/vim';
-import { Cursor, QueueInputReturn } from 'modules/vim/vim-types';
+import { Vim } from '../../../../../src/modules/vim/vim';
+import {
+  Cursor,
+  QueueInputReturn,
+} from '../../../../../src/modules/vim/vim-types';
 
 import { testError } from '../../../../common-test/errors/test-errors';
 import { GherkinTestUtil } from '../../../../common-test/gherkin/gherkin-test-util';

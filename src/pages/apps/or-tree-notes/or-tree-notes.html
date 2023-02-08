@@ -20,7 +20,7 @@
           caret-element.bind="caretRef"
           line-highlight-end.bind="vimState.visualEndCursor"
           line-highlight-start.bind="vimState.visualStartCursor"
-          ></note-line>
+        ></note-line>
       </template>
 
       <!-- Caret -->
@@ -41,6 +41,14 @@
       <div>
         <strong>Cursor</strong> C: ${cursorPosition.col} - L:
         ${cursorPosition.line}
+      </div>
+      <div>
+        <strong>Text:</strong>
+        ${lines[cursorPosition.line].text}</div
+      >
+      <div>
+        <strong># of lines: </strong>
+        ${lines.length}
       </div>
     </div>
   </div>

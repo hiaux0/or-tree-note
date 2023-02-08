@@ -9,10 +9,10 @@ import { initializationSteps } from './step-definitions/vim/initialization.spec'
 
 export const testContainer = new Container();
 
-// export function initCucumberTests(tagFilter: string = '@focus') {
-export function initCucumberTests() {
+export function initCucumberTests(tagFilter: string = '@focus') {
+  // export function initCucumberTests() {
   const features = loadFeatures('**/features/**/*.feature', {
-    // tagFilter,
+    tagFilter,
   });
 
   autoBindSteps(features, [

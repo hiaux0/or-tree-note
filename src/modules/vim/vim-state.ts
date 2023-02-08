@@ -25,9 +25,19 @@ export class VimStateClass {
     };
   }
 
+  public getLineAt(lineIndex: number) {
+    const line = this.lines[lineIndex];
+    return line;
+  }
+
   public getActiveLine() {
-    const active = this.lines[this.cursor.line];
+    const active = this.getLineAt(this.cursor.line);
     return active;
+  }
+
+  public getPreviousLine() {
+    const previous = this.getLineAt(this.cursor.line - 1);
+    return previous;
   }
 
   public updateActiveLine(updated: string) {
