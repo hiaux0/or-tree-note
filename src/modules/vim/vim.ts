@@ -120,6 +120,11 @@ export class Vim {
     }
 
     //
+    if (targetCommandName !== VIM_COMMAND['deleteLine']) {
+      vimState.deletedLinesIndeces = []; /* ? */
+    }
+
+    //
     const result: QueueInputReturn = {
       vimState: cloneDeep(vimState),
       targetCommand: targetCommandName,

@@ -127,6 +127,10 @@ export abstract class AbstractTextMode {
     this.setCursorMovement(vimState?.cursor);
   }
 
+  deleteLine(vimState: VimStateClass) {
+    this.setCursorMovement(vimState?.cursor);
+  }
+
   commenKeyFunctionality() {
     this.resetCaretBlinking();
   }

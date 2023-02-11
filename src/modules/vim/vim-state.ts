@@ -7,7 +7,8 @@ export class VimStateClass {
     public text?: string,
     public mode: VimMode = VimMode.NORMAL,
     public visualStartCursor?: Cursor,
-    public visualEndCursor?: Cursor
+    public visualEndCursor?: Cursor,
+    public deletedLinesIndeces?: number[]
   ) {}
 
   public static create(cursor: Cursor, lines?: string[], text?: string) {
@@ -22,6 +23,7 @@ export class VimStateClass {
       mode: this.mode,
       visualStartCursor: this.visualStartCursor,
       visualEndCursor: this.visualEndCursor,
+      deletedLinesIndeces: this.deletedLinesIndeces,
     };
   }
 
@@ -42,11 +44,6 @@ export class VimStateClass {
   }
 
   public updateActiveLine(updated: string) {
-    this.lines; /* ? */
-    this.cursor.line; /* ? */
-    updated; /* ? */
     this.lines[this.cursor.line] = updated;
-    // this.lines[this.cursor.line] = 'si';
-    this.lines; /* ? */
   }
 }

@@ -46,6 +46,9 @@ export class NormalMode extends AbstractMode {
     const activeLine = this.vimState.getActiveLine();
     this.vimState.updateActiveLine(activeLine ?? '');
 
+    //
+    this.vimState.deletedLinesIndeces = [curLine];
+
     return this.vimState;
   }
 }
