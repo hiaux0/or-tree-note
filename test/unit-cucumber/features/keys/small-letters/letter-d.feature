@@ -11,3 +11,9 @@ Feature: Letter d.
     Then the expected commands should be "deleteInnerWord"
     And the cursors should be at line 0 and column 0
     And the texts should be " 456"
+
+  Scenario: dd deleteLine
+    When I type "dd"
+    Then the expected commands should be "deleteLine"
+    And the cursors should be at line 0 and column 0
+    And the texts should be " 456"

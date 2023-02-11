@@ -13,6 +13,7 @@ export enum VIM_COMMAND {
   'cursorLineStart' = 'cursorLineStart',
   'delete' = 'delete',
   'deleteInnerWord' = 'deleteInnerWord',
+  'deleteLine' = 'deleteLine',
   'enterInsertMode' = 'enterInsertMode',
   'enterNormalMode' = 'enterNormalMode',
   'enterVisualMode' = 'enterVisualMode',
@@ -52,6 +53,7 @@ export const VIM_COMMANDS = [
   VIM_COMMAND['cursorLineEnd'],
   VIM_COMMAND['cursorLineStart'],
   VIM_COMMAND['delete'],
+  VIM_COMMAND['deleteLine'],
   VIM_COMMAND['deleteInnerWord'],
 
   VIM_COMMAND['indentRight'],

@@ -111,7 +111,9 @@ export class Vim {
     //
     if (vimState !== undefined) {
       this.vimCommandManager.setVimState(vimState);
+      this.vimState.lines; /* ? */
       this.vimState = vimState;
+      this.vimState.lines; /* ? */
       this.handleCommandThatChangesMode(targetCommandName);
     } else {
       vimState = this.vimState;
@@ -136,7 +138,7 @@ export class Vim {
     vimExecutingMode: VimExecutingMode = VimExecutingMode.INDIVIDUAL
   ): QueueInputReturn[] {
     const resultList: QueueInputReturn[] = [];
-    let givenInputSequence;
+    let givenInputSequence: string[];
 
     if (typeof inputSequence === 'string') {
       givenInputSequence =

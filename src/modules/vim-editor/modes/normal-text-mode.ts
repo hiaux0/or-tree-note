@@ -22,8 +22,6 @@ export class NormalTextMode extends AbstractTextMode {
   }
 
   deleteInnerWord(vimState?: VimStateClass) {
-    /* prettier-ignore */ console.log('TCL ~ file: normal-text-mode.ts ~ line 24 ~ NormalTextMode ~ deleteInnerWord ~ deleteInnerWord');
-    /* prettier-ignore */ console.log('TCL ~ file: normal-text-mode.ts ~ line 26 ~ NormalTextMode ~ deleteInnerWord ~ vimState.text', vimState.text);
     void this.store.dispatch(
       changeText,
       vimState.cursor.line,

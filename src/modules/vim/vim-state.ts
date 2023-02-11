@@ -31,7 +31,8 @@ export class VimStateClass {
   }
 
   public getActiveLine() {
-    const active = this.getLineAt(this.cursor.line);
+    const active = this.getLineAt(this.cursor.line) ?? '';
+    // const active = this.getLineAt(this.cursor.line);
     return active;
   }
 

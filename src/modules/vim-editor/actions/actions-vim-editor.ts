@@ -12,6 +12,8 @@ export function changeVimState(
     cloneDeep(state),
     produce(state.present, (draftState) => {
       draftState.vimState = newVimState.serialize();
+      draftState.lines;
+      /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: actions-vim-editor.ts ~ line 16 ~ draftState.vimState.lines', draftState.vimState.lines);
     })
   );
 }
