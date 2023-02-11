@@ -463,7 +463,7 @@ export abstract class AbstractMode {
 
     const stagedSubText = text.substring(0, indentSize);
     const whiteSpaceAtStartIndex = /\w/g.exec(stagedSubText);
-    let numOfWhiteSpaceAtStart = 0;
+    let numOfWhiteSpaceAtStart = stagedSubText.length;
     if (whiteSpaceAtStartIndex !== null) {
       numOfWhiteSpaceAtStart = whiteSpaceAtStartIndex.index;
     }
