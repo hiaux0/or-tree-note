@@ -41,6 +41,7 @@ export class InsertMode extends AbstractMode {
       ''
     );
 
+    /** PERF: don't change input, when nothing changed */
     this.vimState.updateActiveLine(updatedInput);
 
     this.vimState.lines[this.vimState.cursor.line] = updatedInput;
