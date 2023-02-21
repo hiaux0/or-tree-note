@@ -60,8 +60,8 @@ let testCaseAsList: TestCaseList[] = [
     [ {}  , '|012 456'       , 'b'           , '0'            , 'cursorBackwordsStartWord'                   , ]                           ,
     [ {}  , '012 45|6'       , 'b'           , '4'            , 'cursorBackwordsStartWord'                   , ]                           ,
     [ {}  , '012 45|6'       , 'bb'          , '4;0'          , 'cursorBackwordsStartWord;'                  , ]                           ,
-    [ {focus:true}  , '012 |456'       , 'dd'          , '0'            , 'deleteLine'                                 , {rawTexts: ''}]       ,
-    [ {focus:false}  , '012 |456\nabc'       , 'dd'          , '0'            , 'deleteLine'                                 , {rawTexts: 'abc'}]       ,
+    [ {}  , '012 |456'       , 'dd'          , '0'            , 'deleteLine'                                 , {rawTexts: ''}]       ,
+    [ {}  , '012 |456\nabc'       , 'dd'          , '0'       , 'deleteLine'                                 , {rawTexts: 'abc'}]       ,
     [ {}  , '|012 456'       , 'diw'         , '0'            , 'deleteInnerWord'                            , {rawTexts: '` 456`'}]       ,
     [ {}  , '|012 456'       , 'e'           , '2'            , 'cursorWordForwardEnd'                       , ]                           ,
     [ {}  , '| 12'           , 'e'           , '2'            , 'cursorWordForwardEnd'                       , ]                           ,
@@ -103,6 +103,7 @@ let testCaseAsList: TestCaseList[] = [
     [ {}  , ''               , '<Escape>'    , '0'            , 'enterNormalMode'                            , {mode: VimMode.VISUAL} ]    ,
     // [ {focus: true}  , '012 |456'       , '<Enter><Escape>ku' , '0;0;0;0'      , 'newLine;enterNormalMode;cursorUp;cursorDown', {rawLines: '1;1;0;1'              , rawTexts: '456'                 , previousText: '012 '  , numOfLines: 2} ]  ,
     [ {focus: false}  , '012 |456'       , '<Enter>ku' , '0;0;0'      , 'newLine;cursorUp;cursorDown', {rawLines: '1;0;1'              , rawTexts: '456'                 , previousText: '012 '  , numOfLines: 2} ]  ,
+    // [ {focus: true}  , '|012'       , '<Delete' , '0'      , 'newLine', {rawLines: '1'              , rawTexts: '456'                 , previousText: '012 '  , numOfLines: 2} ]  ,
     //    , 'rawContent'     , 'rawInput'    , 'rawCommands'  , 'rawColumns'                                 ,
 ];
 // [ {}  , 'hi\n012 456|'   , 'ku'        , '1'            , 'cursorUp'                                   , {rawTexts: 'hi' }]         , // @todo eeku should leave cursor at last position of below line
