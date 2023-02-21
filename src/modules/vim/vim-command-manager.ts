@@ -125,6 +125,8 @@ export class VimCommandManager {
     const currentMode = this.getCurrentMode();
     try {
       const vimState = currentMode.executeCommand(commandName, commandInput);
+      vimState.commandName = commandName;
+
       return vimState;
     } catch (_error) {
       const error = _error as Error;

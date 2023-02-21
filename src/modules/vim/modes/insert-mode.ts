@@ -35,20 +35,22 @@ export class InsertMode extends AbstractMode {
   }
 
   backspace(): VimStateClass {
+    const afterCursor = this.vimState.cursor.col - 1;
     const updatedInput = replaceAt(
       this.vimState.getActiveLine(),
-      this.vimState.cursor.col - 1,
+      afterCursor,
       ''
     );
 
-    /** PERF: don't change input, when nothing changed */
-    this.vimState.updateActiveLine(updatedInput);
-
-    this.vimState.lines[this.vimState.cursor.line] = updatedInput;
-    super.cursorLeft();
-    // this.vimState.getActiveLine() = updatedInput;
-    return this.vimState;
-    throw 'TODO: vimstate.text refactor'; /* ? */
+    // If start of line, then join with previous
+    if (afterCursor < 0) {
+      this.joinLine();
+    } else {
+      /** PERF: don't change input, when nothing changed */
+      this.vimState.updateActiveLine(updatedInput);
+      this.vimState.lines[this.vimState.cursor.line] = updatedInput;
+      super.cursorLeft();
+    }
 
     return this.vimState;
   }

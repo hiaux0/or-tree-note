@@ -115,15 +115,8 @@ export class Vim {
       this.vimState = vimState;
       this.vimState.lines; /* ? */
       this.handleCommandThatChangesMode(targetCommandName);
-
-      vimState.commandName = targetCommandName;
     } else {
       vimState = this.vimState;
-    }
-
-    //
-    if (targetCommandName !== VIM_COMMAND['deleteLine']) {
-      vimState.deletedLinesIndeces = []; /* ? */
     }
 
     //
@@ -133,6 +126,12 @@ export class Vim {
       lines: [...this.vimState.lines],
     };
     logger.debug(['vimState: %o', vimState], { log: true });
+
+    /**
+     * Hack? Need to reset deleted lines for every new command,
+     * else we will always delete, once a deleteIndex is present
+     */
+    this.vimState.deletedLinesIndeces = [];
 
     this.logAndVerifyQueueInputReturn(result, input);
 

@@ -498,6 +498,43 @@ export abstract class AbstractMode {
     return this.vimState;
   }
 
+  /** Lines */
+  deleteLine(): VimStateClass {
+    const curLine = this.vimState.cursor.line;
+    // /* prettier-ignore */ console.trace('>>>> _ >>>> ~ file: abstract-mode.ts ~ line 504 ~ curLine', curLine);
+    this.vimState.lines.splice(curLine, 1);
+
+    let newCol = 0;
+    if (this.vimState.getPreviousLine()) {
+      newCol = Math.max(0, this.vimState.getPreviousLine().length - 1);
+    } else {
+      newCol = 0;
+    }
+    this.vimState.cursor.col = newCol;
+
+    this.vimState.cursor.line = Math.max(curLine - 1, 0);
+    const activeLine = this.vimState.getActiveLine();
+    this.vimState.updateActiveLine(activeLine ?? '');
+
+    //
+    this.vimState.deletedLinesIndeces = [curLine];
+
+    return this.vimState;
+  }
+
+  joinLine(): VimStateClass {
+    const prev = this.vimState.getPreviousLine();
+    const active = this.vimState.getActiveLine();
+    const joined = prev.concat(active);
+
+    const prevCursor = this.vimState.cursor.line - 1;
+    this.vimState.updateLine(prevCursor, joined);
+    this.deleteLine();
+    this.vimState.cursor.col = prev.length;
+
+    return this.vimState;
+  }
+
   nothing(): VimStateClass {
     return this.vimState;
   }

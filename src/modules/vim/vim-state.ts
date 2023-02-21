@@ -45,7 +45,12 @@ export class VimStateClass {
     return previous;
   }
 
+  public updateLine(lineIndex: number, updated: string) {
+    this.lines[lineIndex] = updated;
+    this.text = updated;
+  }
+
   public updateActiveLine(updated: string) {
-    this.lines[this.cursor.line] = updated;
+    this.updateLine(this.cursor.line, updated);
   }
 }

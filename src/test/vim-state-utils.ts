@@ -8,5 +8,6 @@ export function createVimState(
   text: string = VIM_TEST_WHOLEINPUT[0],
   cursor: Cursor = initialCursor
 ): VimStateClass {
-  return VimStateClass.create(cursor, [text], text);
+  const lines = text.split('\n');
+  return VimStateClass.create(cursor, lines, text);
 }
