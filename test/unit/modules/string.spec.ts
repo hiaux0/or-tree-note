@@ -2,7 +2,14 @@ import {
   filterListByCharSequence,
   getFirstNonWhiteSpaceCharIndex,
   inputContainsSequence,
-} from 'modules/string/string';
+  replaceAt,
+} from '../../../src/modules/string/string';
+
+describe('replaceAt', () => {
+  it('replace at 1', () => {
+    // replaceAt();
+  });
+});
 
 describe('filterListByCharSequence', () => {
   const inputList = ['foo', 'for', 'faz', 'flo', 'z', 'ga'];

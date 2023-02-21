@@ -31,6 +31,9 @@ export function insert(str: string, index: number, value: string): string {
  *   ​​​​​​​​replaceAt(input, 4) // 012356
  */
 export function replaceAt(input: string, index: number, char: string) {
+  if (index < 0) {
+    return input;
+  }
   return replaceRange(input, index, index, char);
 }
 
