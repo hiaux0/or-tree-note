@@ -37,6 +37,7 @@ export type VimState = {
   visualStartCursor?: Cursor;
   visualEndCursor?: Cursor;
   deletedLinesIndeces?: number[];
+  commandName?: string;
 };
 
 export interface QueueInputReturn {

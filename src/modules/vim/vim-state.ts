@@ -8,7 +8,8 @@ export class VimStateClass {
     public mode: VimMode = VimMode.NORMAL,
     public visualStartCursor?: Cursor,
     public visualEndCursor?: Cursor,
-    public deletedLinesIndeces?: number[]
+    public deletedLinesIndeces?: number[],
+    public commandName?: string
   ) {}
 
   public static create(cursor: Cursor, lines?: string[], text?: string) {
@@ -24,6 +25,7 @@ export class VimStateClass {
       visualStartCursor: this.visualStartCursor,
       visualEndCursor: this.visualEndCursor,
       deletedLinesIndeces: this.deletedLinesIndeces,
+      commandName: this.commandName,
     };
   }
 

@@ -115,6 +115,8 @@ export class Vim {
       this.vimState = vimState;
       this.vimState.lines; /* ? */
       this.handleCommandThatChangesMode(targetCommandName);
+
+      vimState.commandName = targetCommandName;
     } else {
       vimState = this.vimState;
     }
