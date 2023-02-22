@@ -125,7 +125,9 @@ export class VimCommandManager {
     const currentMode = this.getCurrentMode();
     try {
       const vimState = currentMode.executeCommand(commandName, commandInput);
-      vimState.commandName = commandName;
+      if (vimState !== undefined) {
+        vimState.commandName = commandName;
+      }
 
       return vimState;
     } catch (_error) {
@@ -150,11 +152,16 @@ export class VimCommandManager {
       input,
       this.potentialCommands
     );
-    const includes = this.includesPotentialCommands(commandAwaitingNextInput);
+    // const includes = this.includesPotentialCommands(commandAwaitingNextInput);
     // if (includes) {
-    // this.potentialCommands = commandAwaitingNextInput.potentialCommands;
-    // return commandAwaitingNextInput;
-    // }
+    if (commandAwaitingNextInput !== undefined) {
+      if (this.potentialCommands.length === 0) {
+        this.potentialCommands = commandAwaitingNextInput.potentialCommands;
+      } else if (this.potentialCommands.length === 1) {
+        this.potentialCommands = [];
+      }
+      return commandAwaitingNextInput;
+    }
 
     //
     let targetKeyBinding: VimCommand[];
@@ -220,7 +227,7 @@ export class VimCommandManager {
 
   private includesPotentialCommands(
     commandAwaitingNextInput: PotentialCommandReturn
-  ) {
+  ): VimCommand | undefined {
     const has = this.potentialCommands.find((command) => {
       const found = includes(
         commandAwaitingNextInput?.potentialCommands,
@@ -450,10 +457,11 @@ function getCommandAwaitingNextInput(
   );
   if (!isInputForAwaitingCommand) return;
 
-  return {
+  const result = {
     targetCommand: isInputForAwaitingCommand,
     potentialCommands: [isInputForAwaitingCommand],
   };
+  return result;
 }
 
 /**

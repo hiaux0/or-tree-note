@@ -117,6 +117,9 @@ export abstract class AbstractTextMode {
   cursorWordForwardEnd(vimState: VimStateClass) {
     this.setCursorMovement(vimState?.cursor);
   }
+  cursorWordForwardStart(vimState: VimStateClass) {
+    this.setCursorMovement(vimState?.cursor);
+  }
   cursorBackwordsStartWord(vimState: VimStateClass) {
     this.setCursorMovement(vimState?.cursor);
   }
@@ -168,6 +171,13 @@ export abstract class AbstractTextMode {
     this.setCursorMovement(vimState.cursor);
   }
   async delete(vimState: VimStateClass) {
+    await this.store.dispatch(
+      changeText,
+      vimState.cursor.line,
+      vimState.getActiveLine()
+    );
+  }
+  async replace(vimState: VimStateClass) {
     await this.store.dispatch(
       changeText,
       vimState.cursor.line,

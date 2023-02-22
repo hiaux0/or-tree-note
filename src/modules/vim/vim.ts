@@ -111,9 +111,7 @@ export class Vim {
     //
     if (vimState !== undefined) {
       this.vimCommandManager.setVimState(vimState);
-      this.vimState.lines; /* ? */
       this.vimState = vimState;
-      this.vimState.lines; /* ? */
       this.handleCommandThatChangesMode(targetCommandName);
     } else {
       vimState = this.vimState;
