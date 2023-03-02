@@ -4,6 +4,10 @@ import { VimCommand, VIM_COMMAND } from 'modules/vim/vim-commands-repository';
 
 import {
   ALT,
+  ARROW_DOWN,
+  ARROW_LEFT,
+  ARROW_RIGHT,
+  ARROW_UP,
   BACKSPACE,
   CONTROL,
   DELETE,
@@ -66,6 +70,7 @@ const keyBindings = {
     { key: 'dd', command: 'deleteLine' },
     { key: 'diw', command: 'deleteInnerWord' },
     { key: 'i', command: 'enterInsertMode' },
+    { key: 'J', command: 'joinLine' },
     { key: 'v', command: 'enterVisualMode' },
     { key: 'V', command: 'visualStartLineWise' },
     { key: 'x', command: 'delete' },
@@ -109,6 +114,18 @@ export default keyBindings;
 
 export function isAlt(newInput: string) {
   return newInput === ALT || newInput === Modifier['<Alt>'];
+}
+export function isArrowUp(newInput: string) {
+  return newInput === ARROW_UP || newInput === Modifier['<ArrowUp>'];
+}
+export function isArrowDown(newInput: string) {
+  return newInput === ARROW_DOWN || newInput === Modifier['<ArrowDown>'];
+}
+export function isArrowLeft(newInput: string) {
+  return newInput === ARROW_LEFT || newInput === Modifier['<ArrowLeft>'];
+}
+export function isArrowRight(newInput: string) {
+  return newInput === ARROW_RIGHT || newInput === Modifier['<ArrowRight>'];
 }
 export function isBackspace(newInput: string) {
   return newInput === BACKSPACE || newInput === Modifier['<Backspace>'];

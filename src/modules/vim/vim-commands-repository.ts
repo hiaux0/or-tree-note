@@ -19,6 +19,7 @@ export enum VIM_COMMAND {
   'enterVisualMode' = 'enterVisualMode',
   'indentRight' = 'indentRight',
   'indentLeft' = 'indentLeft',
+  'joinLine' = 'joinLine',
   'newLine' = 'newLine',
   'replace' = 'replace',
   'space' = 'space',
@@ -58,6 +59,7 @@ export const VIM_COMMANDS = [
 
   VIM_COMMAND['indentRight'],
   VIM_COMMAND['indentLeft'],
+  VIM_COMMAND['joinLine'],
   VIM_COMMAND['newLine'],
   VIM_COMMAND['replace'],
   VIM_COMMAND['space'],

@@ -101,34 +101,19 @@ export abstract class AbstractTextMode {
   /** ****** */
   /* Cursor */
   /** ****** */
-  cursorUp(vimState?: VimStateClass) {
-    this.setCursorMovement(vimState?.cursor);
-  }
-  cursorDown(vimState?: VimStateClass) {
-    this.setCursorMovement(vimState?.cursor);
-  }
-  cursorRight(vimState: VimStateClass) {
-    this.setCursorMovement(vimState?.cursor);
-    return;
-  }
-  cursorLeft(vimState: VimStateClass) {
-    this.setCursorMovement(vimState?.cursor);
-  }
-  cursorWordForwardEnd(vimState: VimStateClass) {
-    this.setCursorMovement(vimState?.cursor);
-  }
-  cursorWordForwardStart(vimState: VimStateClass) {
-    this.setCursorMovement(vimState?.cursor);
-  }
-  cursorBackwordsStartWord(vimState: VimStateClass) {
-    this.setCursorMovement(vimState?.cursor);
-  }
-  cursorLineEnd(vimState: VimStateClass) {
-    this.setCursorMovement(vimState?.cursor);
-  }
-  cursorLineStart(vimState: VimStateClass) {
-    this.setCursorMovement(vimState?.cursor);
-  }
+  /* prettier-ignore */ cursorUp(vimState?: VimStateClass)                { this.setCursorMovement(vimState?.cursor); }
+  /* prettier-ignore */ cursorDown(vimState?: VimStateClass)              { this.setCursorMovement(vimState?.cursor); }
+  /* prettier-ignore */ cursorRight(vimState: VimStateClass)              { this.setCursorMovement(vimState?.cursor); }
+  /* prettier-ignore */ cursorLeft(vimState: VimStateClass)               { this.setCursorMovement(vimState?.cursor); }
+  /* prettier-ignore */ cursorWordForwardEnd(vimState: VimStateClass)     { this.setCursorMovement(vimState?.cursor); }
+  /* prettier-ignore */ cursorWordForwardStart(vimState: VimStateClass)   { this.setCursorMovement(vimState?.cursor); }
+  /* prettier-ignore */ cursorBackwordsStartWord(vimState: VimStateClass) { this.setCursorMovement(vimState?.cursor); }
+  /* prettier-ignore */ cursorLineEnd(vimState: VimStateClass)            { this.setCursorMovement(vimState?.cursor); }
+  /* prettier-ignore */ cursorLineStart(vimState: VimStateClass)          { this.setCursorMovement(vimState?.cursor); }
+  /* prettier-ignore */ toCharacterAtBack(vimState: VimStateClass)        { this.setCursorMovement(vimState?.cursor); }
+  /* prettier-ignore */ toCharacterAt(vimState: VimStateClass)            { this.setCursorMovement(vimState?.cursor); }
+  /* prettier-ignore */ toCharacterAfterBack(vimState: VimStateClass)     { this.setCursorMovement(vimState?.cursor); }
+  /* prettier-ignore */ toCharacterBefore(vimState: VimStateClass)        { this.setCursorMovement(vimState?.cursor); }
 
   deleteLine(vimState: VimStateClass) {
     this.setCursorMovement(vimState?.cursor);

@@ -5,6 +5,10 @@ import { SPECIAL_KEYS } from 'resources/keybindings/app-keys';
 import {
   commandsThatWaitForNextInput,
   isAlt,
+  isArrowDown,
+  isArrowLeft,
+  isArrowRight,
+  isArrowUp,
   isBackspace,
   isControl,
   isDelete,
@@ -148,16 +152,21 @@ export class VimCommandManager {
     input: string,
     modifiers: string[] = []
   ): PotentialCommandReturn {
+    /* prettier-ignore */ console.log('------------------------------------------------------------------------------------------');
     const commandAwaitingNextInput = getCommandAwaitingNextInput(
       input,
       this.potentialCommands
     );
-    // const includes = this.includesPotentialCommands(commandAwaitingNextInput);
+    /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: vim-command-manager.ts ~ line 155 ~ commandAwaitingNextInput', commandAwaitingNextInput);
+    const includes = this.includesPotentialCommands(commandAwaitingNextInput);
+    /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: vim-command-manager.ts ~ line 157 ~ includes', includes);
     // if (includes) {
     if (commandAwaitingNextInput !== undefined) {
       if (this.potentialCommands.length === 0) {
+        /* prettier-ignore */ console.log('>>>> a.1 >>>> ~ file: vim-command-manager.ts ~ line 161 ~ this.potentialCommands', this.potentialCommands);
         this.potentialCommands = commandAwaitingNextInput.potentialCommands;
       } else if (this.potentialCommands.length === 1) {
+        /* prettier-ignore */ console.log('>>>> a.2 >>>> ~ file: vim-command-manager.ts ~ line 161 ~ this.potentialCommands', this.potentialCommands);
         this.potentialCommands = [];
       }
       return commandAwaitingNextInput;
@@ -263,6 +272,14 @@ export class VimCommandManager {
     if (!targetCommand) {
       if (this.isInsertMode()) {
         if (isAlt(input)) {
+          return; // todo
+        } else if (isArrowUp(input)) {
+          return; // todo
+        } else if (isArrowDown(input)) {
+          return; // todo
+        } else if (isArrowLeft(input)) {
+          return; // todo
+        } else if (isArrowRight(input)) {
           return; // todo
         } else if (isBackspace(input)) {
           return VIM_COMMAND.backspace;
