@@ -498,6 +498,24 @@ export abstract class AbstractMode {
     return this.vimState;
   }
 
+  /** `o` */
+  createNewLine(): VimStateClass {
+    // add new line below
+    const currentLine = this.vimState.getActiveLine();
+    const newLineIndex = this.vimState.cursor.line + 1;
+    const tempLines = [...this.vimState.lines];
+    const numOfWs = StringUtil.getLeadingWhitespaceNum(currentLine);
+    tempLines.splice(newLineIndex, 0, ' '.repeat(numOfWs));
+    this.vimState.cursor.col = numOfWs;
+    // put cursor below
+    this.vimState.cursor.line = this.vimState.cursor.line + 1;
+    this.vimState.lines = tempLines;
+    // this.vimState.mode = VimMode.INSERT;
+
+    /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: abstract-mode.ts ~ line 502 ~ createNewLine');
+    return this.vimState;
+  }
+
   /** Lines */
   deleteLine(): VimStateClass {
     const curLine = this.vimState.cursor.line;

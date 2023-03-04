@@ -2,6 +2,7 @@ import { ModifiersType, SPACE } from '../../resources/keybindings/app-keys';
 
 export enum VIM_COMMAND {
   'backspace' = 'backspace',
+  'createNewLine' = 'createNewLine',
   'cursorRight' = 'cursorRight',
   'cursorUp' = 'cursorUp',
   'cursorLeft' = 'cursorLeft',
@@ -44,6 +45,7 @@ export const VIM_MODE_COMMANDS = [
 export const VIM_COMMANDS = [
   VIM_COMMAND.newLine,
   VIM_COMMAND['backspace'],
+  VIM_COMMAND['createNewLine'],
   VIM_COMMAND['cursorRight'],
   VIM_COMMAND['cursorUp'],
   VIM_COMMAND['cursorLeft'],

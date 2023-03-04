@@ -14,6 +14,35 @@ export class StringUtil {
 
     return targetCharacterIndex;
   }
+
+  static getLeadingWhitespaceNum(text: string): number {
+    const whiteSpaceAtStartIndex = /\w/g.exec(text);
+    let numOfWhiteSpaceAtStart = text.length;
+    if (whiteSpaceAtStartIndex !== null) {
+      numOfWhiteSpaceAtStart = whiteSpaceAtStartIndex.index;
+    }
+    return numOfWhiteSpaceAtStart;
+  }
+
+  // static getIndentation(): number {
+  //   const { indentSize } = this.vimOptions;
+  //   const text = this.vimState.getActiveLine();
+
+  //   const stagedSubText = text.substring(0, indentSize);
+  //   const whiteSpaceAtStartIndex = /\w/g.exec(stagedSubText);
+  //   let numOfWhiteSpaceAtStart = stagedSubText.length;
+  //   if (whiteSpaceAtStartIndex !== null) {
+  //     numOfWhiteSpaceAtStart = whiteSpaceAtStartIndex.index;
+  //   }
+
+  //   const updatedInput = text.substring(numOfWhiteSpaceAtStart);
+  //   this.vimState.updateActiveLine(updatedInput);
+  //   this.vimState.cursor.col -= numOfWhiteSpaceAtStart;
+  //   this.vimState.lines[this.vimState.cursor.line] = updatedInput;
+  //   this.reTokenizeInput(updatedInput);
+
+  //   return this.vimState;
+  // }
 }
 
 export function insert(str: string, index: number, value: string): string {

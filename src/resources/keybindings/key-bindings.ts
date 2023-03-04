@@ -71,6 +71,7 @@ const keyBindings = {
     { key: 'diw', command: 'deleteInnerWord' },
     { key: 'i', command: 'enterInsertMode' },
     { key: 'J', command: 'joinLine' },
+    { key: 'o', command: 'createNewLine' },
     { key: 'v', command: 'enterVisualMode' },
     { key: 'V', command: 'visualStartLineWise' },
     { key: 'x', command: 'delete' },

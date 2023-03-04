@@ -152,21 +152,21 @@ export class VimCommandManager {
     input: string,
     modifiers: string[] = []
   ): PotentialCommandReturn {
-    /* prettier-ignore */ console.log('------------------------------------------------------------------------------------------');
+    // /* prettier-ignore */ console.log('------------------------------------------------------------------------------------------');
     const commandAwaitingNextInput = getCommandAwaitingNextInput(
       input,
       this.potentialCommands
     );
-    /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: vim-command-manager.ts ~ line 155 ~ commandAwaitingNextInput', commandAwaitingNextInput);
+    // /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: vim-command-manager.ts ~ line 155 ~ commandAwaitingNextInput', commandAwaitingNextInput);
     const includes = this.includesPotentialCommands(commandAwaitingNextInput);
-    /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: vim-command-manager.ts ~ line 157 ~ includes', includes);
+    // /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: vim-command-manager.ts ~ line 157 ~ includes', includes);
     // if (includes) {
     if (commandAwaitingNextInput !== undefined) {
       if (this.potentialCommands.length === 0) {
-        /* prettier-ignore */ console.log('>>>> a.1 >>>> ~ file: vim-command-manager.ts ~ line 161 ~ this.potentialCommands', this.potentialCommands);
+        // /* prettier-ignore */ console.log('>>>> a.1 >>>> ~ file: vim-command-manager.ts ~ line 161 ~ this.potentialCommands', this.potentialCommands);
         this.potentialCommands = commandAwaitingNextInput.potentialCommands;
       } else if (this.potentialCommands.length === 1) {
-        /* prettier-ignore */ console.log('>>>> a.2 >>>> ~ file: vim-command-manager.ts ~ line 161 ~ this.potentialCommands', this.potentialCommands);
+        // /* prettier-ignore */ console.log('>>>> a.2 >>>> ~ file: vim-command-manager.ts ~ line 161 ~ this.potentialCommands', this.potentialCommands);
         this.potentialCommands = [];
       }
       return commandAwaitingNextInput;

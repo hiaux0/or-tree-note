@@ -115,6 +115,18 @@ export abstract class AbstractTextMode {
   /* prettier-ignore */ toCharacterAfterBack(vimState: VimStateClass)     { this.setCursorMovement(vimState?.cursor); }
   /* prettier-ignore */ toCharacterBefore(vimState: VimStateClass)        { this.setCursorMovement(vimState?.cursor); }
 
+  /** "o" and not "enter" */
+  async createNewLine(vimState: VimStateClass) {
+    const newLineIndex = vimState.cursor.line;
+    await this.store.dispatch(
+      createNewLine,
+      newLineIndex,
+      vimState.getPreviousLine(),
+      vimState.getActiveLine()
+    );
+    this.setCursorMovement(vimState?.cursor);
+  }
+
   deleteLine(vimState: VimStateClass) {
     this.setCursorMovement(vimState?.cursor);
   }

@@ -79,6 +79,9 @@ let testCaseAsList: TestCaseList[] = [
     [ {}  , 'hi\n012 456|'   , 'k'           , '1'            , 'cursorUp'                                   , {rawTexts: 'hi' }]          ,
     [ {}  , '|foo'           , 'll'          , '1;2'          , 'cursorRight;'                               , {rawTexts: 'foo;'}]         ,
     [ {}  , '|foo'           , 'lli!'        , '1;2;;3'       , 'cursorRight;;enterInsertMode;type'          , {rawTexts: 'foo;;;fo!o'}]   ,
+    [ {}  , '|foo'           , 'o'           , '0'            , 'createNewLine'                              , {rawLines: '1', rawTexts: ''}]   ,
+    [ {}  , '012|\nfoo'      , 'o'           , '0'            , 'createNewLine'                              , {rawLines: '1', rawTexts: ''}]   ,
+    [ {}  , '   |\nfoo'      , 'o'           , '3'            , 'createNewLine'                              , {rawLines: '1', rawTexts: '   '}]   ,
     [ {}  , '|012 456'       , 't0'          , '0'            , 'toCharacterBefore'                          , ]                           ,
     [ {}  , ''               , 'v'           , '0'            , 'enterVisualMode'                            , ]                           ,
     [ {}  , '012 4|56'       , 'T0'          , '1'            , 'toCharacterAfterBack'                       , ]                           ,
@@ -184,6 +187,7 @@ describe('Vim input.', () => {
             const input = GherkinTestUtil.replaceQuotes(rawInput);
 
             manyQueuedInput = vim.queueInputSequence(input);
+            manyQueuedInput; /*?*/
             // expect(true).toBeFalsy();
           });
 
@@ -218,6 +222,7 @@ describe('Vim input.', () => {
             });
           }
 
+          // it.skip(`And the cursors should be at line "${
           it(`And the cursors should be at line "${
             rawLines ?? 0
           }" and column "${rawColumns}"`, () => {
@@ -256,6 +261,7 @@ describe('Vim input.', () => {
           });
 
           if (rawTexts !== undefined) {
+            // it.skip(`And the texts should be "${rawTexts}"`, () => {
             it(`And the texts should be "${rawTexts}"`, () => {
               if (['replace'].includes(rawCommands)) {
                 return;

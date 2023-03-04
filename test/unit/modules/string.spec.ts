@@ -3,7 +3,24 @@ import {
   getFirstNonWhiteSpaceCharIndex,
   inputContainsSequence,
   replaceAt,
+  StringUtil,
 } from '../../../src/modules/string/string';
+
+describe('StringUtil', () => {
+  it('getLeadingWhitespace', () => {
+    const testCases: [string, number][] = [
+      ['foo', 0],
+      ['  foo', 2],
+      ['      foo', 6],
+      ['s     foo', 0],
+    ];
+
+    testCases.forEach(([input, expectedIndentation]) => {
+      const result = StringUtil.getLeadingWhitespaceNum(input);
+      expect(result).toEqual(expectedIndentation);
+    });
+  });
+});
 
 describe('replaceAt', () => {
   it('replace at 1', () => {

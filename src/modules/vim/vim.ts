@@ -101,6 +101,11 @@ export class Vim {
       vimState = this.vimCommandManager.enterVisualMode();
     } else if (targetCommandName === VIM_COMMAND['newLine']) {
       vimState = this.vimCommandManager.newLine();
+      // } else if (targetCommandName === VIM_COMMAND['createNewLine']) {
+      //   const executedVimstate = this.vimCommandManager.executeVimCommand(
+      //     targetCommandName,
+      //     input
+      //   );
     } else {
       vimState = this.vimCommandManager.executeVimCommand(
         targetCommandName,
