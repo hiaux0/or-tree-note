@@ -16,6 +16,7 @@ import {
   QueueInputReturn,
   KeyBindingModes,
   VimExecutingMode,
+  Line,
 } from './vim-types';
 
 const logger = new Logger({ scope: 'Vim' });
@@ -48,7 +49,7 @@ export class Vim {
   private readonly activeLine: string;
 
   constructor(
-    private readonly lines: string[],
+    private readonly lines: Line[],
     private readonly cursor: Cursor = defaultCursor,
     private readonly vimOptions?: VimOptions
   ) {

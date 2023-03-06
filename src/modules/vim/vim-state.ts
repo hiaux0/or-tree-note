@@ -1,8 +1,8 @@
-import { Cursor, VimMode, VimState } from './vim-types';
+import { Cursor, Line, VimMode, VimState } from './vim-types';
 
 export class VimStateClass {
   cursor: Cursor;
-  lines: string[];
+  lines: Line[];
   text: string;
   mode: VimMode;
   visualStartCursor: Cursor;
@@ -21,7 +21,7 @@ export class VimStateClass {
     this.commandName = vimState.commandName;
   }
 
-  public static create(cursor: Cursor, lines?: string[], text?: string) {
+  public static create(cursor: Cursor, lines?: Line[], text?: string) {
     return new VimStateClass({ cursor, lines, text });
   }
 

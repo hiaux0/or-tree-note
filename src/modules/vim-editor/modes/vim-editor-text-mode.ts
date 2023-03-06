@@ -4,7 +4,7 @@ import { isMac } from 'common/platform/platform-check';
 import hotkeys from 'hotkeys-js';
 import { Logger } from 'modules/debug/logger';
 import { Vim } from 'modules/vim/vim';
-import { Cursor, VimMode } from 'modules/vim/vim-types';
+import { Cursor, Line, VimMode } from 'modules/vim/vim-types';
 import {
   ALL_MODIFIERS,
   ModifiersType,
@@ -24,7 +24,7 @@ const logger = new Logger({ scope: 'VimEditorTextMode' });
 
 export class VimEditorTextMode {
   childrenElementList: NodeListOf<HTMLElement>;
-  elementText: string[] = [];
+  elementText: Line[] = [];
   vim: Vim;
 
   getCurrentTextMode: () => AbstractTextMode;

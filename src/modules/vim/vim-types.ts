@@ -29,6 +29,8 @@ export interface FindPotentialCommandReturn {
   potentialCommands: VimCommand[];
 }
 
+export type Line = string;
+
 export type VimLine = {
   cursor: Cursor;
   text: string;
@@ -47,7 +49,7 @@ export type VimStateV2 = {
 export type VimState = {
   cursor: Cursor;
   text: string;
-  lines?: string[];
+  lines?: Line[];
   mode?: VimMode;
   visualStartCursor?: Cursor;
   visualEndCursor?: Cursor;
