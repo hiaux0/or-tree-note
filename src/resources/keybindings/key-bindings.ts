@@ -67,6 +67,7 @@ const keyBindings = {
   normal: [
     // { key: "<Space>", command: "vimLeader" },
     { key: '<Space>tc', command: 'toggleCheckbox' },
+    { key: 'cc', command: 'clearLine' },
     { key: 'dd', command: 'deleteLine' },
     { key: 'diw', command: 'deleteInnerWord' },
     { key: 'i', command: 'enterInsertMode' },

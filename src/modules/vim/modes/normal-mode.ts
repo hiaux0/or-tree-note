@@ -29,4 +29,8 @@ export class NormalMode extends AbstractMode {
 
     return this.vimState;
   }
+
+  clearLine(): VimStateClass {
+    return this.vimState;
+  }
 }
