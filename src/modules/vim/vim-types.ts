@@ -29,6 +29,21 @@ export interface FindPotentialCommandReturn {
   potentialCommands: VimCommand[];
 }
 
+export type VimLine = {
+  cursor: Cursor;
+  text: string;
+  indentation: number;
+};
+
+export type VimStateV2 = {
+  lines?: VimLine[];
+  mode?: VimMode;
+  visualStartCursor?: Cursor;
+  visualEndCursor?: Cursor;
+  deletedLinesIndeces?: number[];
+  commandName?: string;
+};
+
 export type VimState = {
   cursor: Cursor;
   text: string;

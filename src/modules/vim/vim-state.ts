@@ -1,19 +1,28 @@
 import { Cursor, VimMode, VimState } from './vim-types';
 
 export class VimStateClass {
-  constructor(
-    public cursor: Cursor,
-    public lines: string[],
-    public text?: string,
-    public mode: VimMode = VimMode.NORMAL,
-    public visualStartCursor?: Cursor,
-    public visualEndCursor?: Cursor,
-    public deletedLinesIndeces?: number[],
-    public commandName?: string
-  ) {}
+  cursor: Cursor;
+  lines: string[];
+  text: string;
+  mode: VimMode;
+  visualStartCursor: Cursor;
+  visualEndCursor: Cursor;
+  deletedLinesIndeces: number[];
+  commandName: string;
+
+  constructor(public vimState: VimState) {
+    this.cursor = vimState.cursor;
+    this.lines = vimState.lines;
+    this.text = vimState.text;
+    this.mode = vimState.mode ?? VimMode.NORMAL;
+    this.visualStartCursor = vimState.visualStartCursor;
+    this.visualEndCursor = vimState.visualEndCursor;
+    this.deletedLinesIndeces = vimState.deletedLinesIndeces;
+    this.commandName = vimState.commandName;
+  }
 
   public static create(cursor: Cursor, lines?: string[], text?: string) {
-    return new VimStateClass(cursor, lines, text);
+    return new VimStateClass({ cursor, lines, text });
   }
 
   public serialize(): VimState {
