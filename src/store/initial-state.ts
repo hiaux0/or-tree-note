@@ -1,4 +1,4 @@
-import { Cursor, VimState } from 'modules/vim/vim-types';
+import { Cursor, VimStateV2 } from 'modules/vim/vim-types';
 
 export interface HighlightCoords {
   start: number;
@@ -54,7 +54,7 @@ export interface EditorLine {
 
 export interface VimEditorState {
   lines: EditorLine[];
-  vimState?: VimState;
+  vimState?: VimStateV2;
 }
 
 /**

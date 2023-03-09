@@ -32,7 +32,7 @@ export interface VimHtmlOptions {
  */
 export async function initVimHtml(vimHtmlOptions: VimHtmlOptions) {
   const startCursor: Cursor = { col: 0, line: 0 };
-  const vim = new Vim(['123', 'abc'], startCursor, {
+  const vim = new Vim([{ text: '123' }, { text: 'abc' }], startCursor, {
     vimPlugins: [],
   });
   const { commandListener, modeChanged, afterInit } = vimHtmlOptions;

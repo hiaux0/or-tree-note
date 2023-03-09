@@ -53,7 +53,7 @@ export class VisualMode extends AbstractMode {
 
   visualStartLineWise(): VimStateClass {
     this.vimState.visualStartCursor.col = 0;
-    this.vimState.cursor.col = this.vimState.getActiveLine().length;
+    this.vimState.cursor.col = this.vimState.getActiveLine().text.length;
 
     return this.vimState;
   }
@@ -69,7 +69,7 @@ export class VisualMode extends AbstractMode {
       return this.vimState;
     }
 
-    const text = this.vimState.getActiveLine();
+    const text = this.vimState.getActiveLine().text;
     const replaced = replaceRange(
       text,
       visualStartCursor.col,

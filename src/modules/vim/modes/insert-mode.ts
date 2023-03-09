@@ -37,7 +37,7 @@ export class InsertMode extends AbstractMode {
   backspace(): VimStateClass {
     const afterCursor = this.vimState.cursor.col - 1;
     const updatedInput = replaceAt(
-      this.vimState.getActiveLine(),
+      this.vimState.getActiveLine().text,
       afterCursor,
       ''
     );
@@ -48,7 +48,7 @@ export class InsertMode extends AbstractMode {
     } else {
       /** PERF: don't change input, when nothing changed */
       this.vimState.updateActiveLine(updatedInput);
-      this.vimState.lines[this.vimState.cursor.line] = updatedInput;
+      this.vimState.lines[this.vimState.cursor.line].text = updatedInput;
       super.cursorLeft();
     }
 

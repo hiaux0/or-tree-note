@@ -121,8 +121,8 @@ export abstract class AbstractTextMode {
     await this.store.dispatch(
       createNewLine,
       newLineIndex,
-      vimState.getPreviousLine(),
-      vimState.getActiveLine()
+      vimState.getPreviousLine().text,
+      vimState.getActiveLine().text
     );
     this.setCursorMovement(vimState?.cursor);
   }
@@ -146,8 +146,8 @@ export abstract class AbstractTextMode {
     await this.store.dispatch(
       createNewLine,
       newLineIndex,
-      vimState.getPreviousLine(),
-      vimState.getActiveLine()
+      vimState.getPreviousLine().text,
+      vimState.getActiveLine().text
     );
     this.setCursorMovement(vimState.cursor);
   }
@@ -155,7 +155,7 @@ export abstract class AbstractTextMode {
     await this.store.dispatch(
       changeText,
       vimState.cursor.line,
-      vimState.getActiveLine()
+      vimState.getActiveLine().text
     );
     this.setCursorMovement(vimState.cursor);
   }
@@ -163,7 +163,7 @@ export abstract class AbstractTextMode {
     await this.store.dispatch(
       changeText,
       vimState.cursor.line,
-      vimState.getActiveLine()
+      vimState.getActiveLine().text
     );
     this.setCursorMovement(vimState.cursor);
   }
@@ -171,14 +171,14 @@ export abstract class AbstractTextMode {
     await this.store.dispatch(
       changeText,
       vimState.cursor.line,
-      vimState.getActiveLine()
+      vimState.getActiveLine().text
     );
   }
   async replace(vimState: VimStateClass) {
     await this.store.dispatch(
       changeText,
       vimState.cursor.line,
-      vimState.getActiveLine()
+      vimState.getActiveLine().text
     );
   }
 

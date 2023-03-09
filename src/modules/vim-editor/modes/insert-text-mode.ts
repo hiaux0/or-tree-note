@@ -14,7 +14,7 @@ export class InsertTextMode extends AbstractTextMode {
     void this.store.dispatch(
       changeText,
       vimState.cursor.line,
-      vimState.getActiveLine()
+      vimState.getActiveLine().text
     );
     super.cursorLeft(vimState);
   }
@@ -24,7 +24,7 @@ export class InsertTextMode extends AbstractTextMode {
     void this.store.dispatch(
       changeText,
       vimState.cursor.line,
-      vimState.getActiveLine()
+      vimState.getActiveLine().text
     );
     super.cursorRight(vimState);
   }
@@ -33,7 +33,7 @@ export class InsertTextMode extends AbstractTextMode {
     void this.store.dispatch(
       changeText,
       vimState.cursor.line,
-      vimState.getActiveLine()
+      vimState.getActiveLine().text
     );
     super.cursorRight(vimState);
   }

@@ -78,7 +78,7 @@ export const commonVimAssertionsSteps: StepDefinitions = ({ then, and }) => {
       const text = GherkinTestUtil.replaceQuotes(rawText);
       lastExpectedText = memoizeExpected(text, lastExpectedText);
 
-      expect(manyQueuedInput[index].vimState.getActiveLine()).toBe(
+      expect(manyQueuedInput[index].vimState.getActiveLine().text).toBe(
         lastExpectedText
       );
     });
@@ -87,7 +87,7 @@ export const commonVimAssertionsSteps: StepDefinitions = ({ then, and }) => {
   and(/^the previous line text should be (.*)$/, (previousText: string) => {
     const previousLine =
       manyQueuedInput[manyQueuedInput.length - 1].lines[initialCursor.line];
-    expect(previousLine).toBe(previousText);
+    expect(previousLine.text).toBe(previousText);
   });
 };
 
