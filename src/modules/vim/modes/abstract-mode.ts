@@ -7,7 +7,13 @@ import {
 } from 'modules/string/string';
 
 import { VimStateClass } from '../vim-state';
-import { VimState, VimMode, VimOptions, VimPlugin } from '../vim-types';
+import {
+  VimState,
+  VimMode,
+  VimOptions,
+  VimPlugin,
+  VimLine,
+} from '../vim-types';
 
 const logger = new Logger({ scope: 'AbstractMode' });
 
@@ -100,7 +106,10 @@ export abstract class AbstractMode {
   }
   validateHorizontalCursor(vimState: VimStateClass) {
     const curCol = vimState.cursor.col + 1;
-    const isValid = isValidHorizontalPosition(curCol, vimState.getActiveLine());
+    const isValid = isValidHorizontalPosition(
+      curCol,
+      vimState.getActiveLine().text
+    );
 
     if (!isValid) {
       try {
@@ -108,7 +117,7 @@ export abstract class AbstractMode {
           [
             '[INVALID] Cursor col will be: %d, but should be between [0,%d].',
             curCol,
-            vimState.getActiveLine().length,
+            vimState.getActiveLine().text.length,
           ],
           {
             isError: true,
@@ -151,7 +160,7 @@ export abstract class AbstractMode {
     if (
       !isValidHorizontalPosition(
         updaterCursorCol + 1,
-        this.vimState.getActiveLine()
+        this.vimState.getActiveLine().text
       )
     ) {
       return this.vimState;
@@ -166,7 +175,7 @@ export abstract class AbstractMode {
     if (
       !isValidHorizontalPosition(
         updaterCursorCol + 1,
-        this.vimState.getActiveLine()
+        this.vimState.getActiveLine().text
       )
     ) {
       return this.vimState;
@@ -181,7 +190,6 @@ export abstract class AbstractMode {
       newCurLine + 1,
       this.vimState.lines
     );
-    this.vimState.lines; /* ? */
 
     if (!isValidVertical) {
       return this.vimState;
@@ -190,19 +198,19 @@ export abstract class AbstractMode {
     const newActiveLine = this.vimState.lines[newCurLine];
     const isValidHorizontalAfterMovedVertically = isValidHorizontalPosition(
       this.vimState.cursor.col + 1,
-      newActiveLine
+      newActiveLine.text
     );
 
     if (!isValidHorizontalAfterMovedVertically) {
       // TODO: Call "$" to put cursor to end of line
-      this.vimState.cursor.col = Math.max(newActiveLine.length - 1, 0);
+      this.vimState.cursor.col = Math.max(newActiveLine.text.length - 1, 0);
     }
 
     const newActiveText = this.vimState.lines[newCurLine];
 
     // this.vimState.updateActiveLine(newActiveText);
     this.vimState.cursor.line = newCurLine;
-    this.reTokenizeInput(newActiveText);
+    this.reTokenizeInput(newActiveText.text);
 
     return this.vimState;
   }
@@ -220,18 +228,18 @@ export abstract class AbstractMode {
     const newActiveLine = this.vimState.lines[newCurLine];
     const isValidHorizontalAfterMovedVertically = isValidHorizontalPosition(
       this.vimState.cursor.col + 1,
-      newActiveLine
+      newActiveLine.text
     );
 
     if (!isValidHorizontalAfterMovedVertically) {
       // TODO: Call "$" to put cursor to end of line
-      this.vimState.cursor.col = Math.max(newActiveLine.length - 1, 0);
+      this.vimState.cursor.col = Math.max(newActiveLine.text.length - 1, 0);
     }
 
     const newActiveText = this.vimState.lines[newCurLine];
 
     this.vimState.cursor.line = newCurLine;
-    this.reTokenizeInput(newActiveText);
+    this.reTokenizeInput(newActiveText.text);
 
     return this.vimState;
   }
@@ -306,12 +314,12 @@ export abstract class AbstractMode {
     return this.vimState;
   }
   cursorLineEnd(): VimStateClass {
-    this.vimState.cursor.col = this.vimState.getActiveLine().length - 1;
+    this.vimState.cursor.col = this.vimState.getActiveLine().text.length - 1;
     return this.vimState;
   }
   cursorLineStart(): VimStateClass {
     const nonWhiteSpaceIndex = getFirstNonWhiteSpaceCharIndex(
-      this.vimState.getActiveLine()
+      this.vimState.getActiveLine().text
     );
 
     this.vimState.cursor.col = nonWhiteSpaceIndex;
@@ -319,7 +327,7 @@ export abstract class AbstractMode {
   }
   toCharacterAtBack(commandInput: string): VimStateClass {
     const { cursor } = this.vimState;
-    const text = this.vimState.getActiveLine();
+    const text = this.vimState.getActiveLine().text;
     const currentTextFromStartToColumn = text.substring(0, cursor.col);
     const targetCharacterIndex = StringUtil.indexOfBack(
       currentTextFromStartToColumn,
@@ -334,7 +342,7 @@ export abstract class AbstractMode {
   }
   toCharacterAt(commandInput: string): VimStateClass {
     const { cursor } = this.vimState;
-    const text = this.vimState.getActiveLine();
+    const text = this.vimState.getActiveLine().text;
     const currentTextToEnd = text.substring(cursor.col);
     const targetCharacterIndex = currentTextToEnd.indexOf(commandInput);
 
@@ -347,7 +355,7 @@ export abstract class AbstractMode {
   }
   toCharacterAfterBack(commandInput: string): VimStateClass {
     const { cursor } = this.vimState;
-    const text = this.vimState.getActiveLine();
+    const text = this.vimState.getActiveLine().text;
     const currentTextFromStartToColumn = text.substring(0, cursor.col);
     const targetCharacterIndex = StringUtil.indexOfBack(
       currentTextFromStartToColumn,
@@ -362,7 +370,7 @@ export abstract class AbstractMode {
   }
   toCharacterBefore(commandInput: string): VimStateClass {
     const { cursor } = this.vimState;
-    const text = this.vimState.getActiveLine();
+    const text = this.vimState.getActiveLine().text;
     const currentTextToEnd = text.substring(cursor.col);
     const targetCharacterIndex = currentTextToEnd.indexOf(commandInput);
     if (targetCharacterIndex > 0) {
@@ -378,7 +386,9 @@ export abstract class AbstractMode {
   /* Cursor Helpers */
   /** ************** */
   getTokenUnderCursor(): TokenizedString | undefined {
-    const tokenizedInput = this.reTokenizeInput(this.vimState.getActiveLine());
+    const tokenizedInput = this.reTokenizeInput(
+      this.vimState.getActiveLine().text
+    );
     const targetToken = tokenizedInput.find((input) => {
       const curCol = this.vimState.cursor.col;
       const isUnderCursor = input.start <= curCol && curCol <= input.end;
@@ -391,7 +401,9 @@ export abstract class AbstractMode {
     return targetToken;
   }
   getTokenAtIndex(index: number) {
-    const tokenizedInput = this.reTokenizeInput(this.vimState.getActiveLine());
+    const tokenizedInput = this.reTokenizeInput(
+      this.vimState.getActiveLine().text
+    );
 
     if (index < 0) {
       index = 0;
@@ -404,7 +416,9 @@ export abstract class AbstractMode {
     return targetToken;
   }
   getNexToken() {
-    const tokenizedInput = this.reTokenizeInput(this.vimState.getActiveLine());
+    const tokenizedInput = this.reTokenizeInput(
+      this.vimState.getActiveLine().text
+    );
     const currentToken = this.getTokenUnderCursor();
 
     let nextIndex = NaN;
@@ -432,7 +446,9 @@ export abstract class AbstractMode {
     return maybeNext;
   }
   getPreviousToken() {
-    const tokenizedInput = this.reTokenizeInput(this.vimState.getActiveLine());
+    const tokenizedInput = this.reTokenizeInput(
+      this.vimState.getActiveLine().text
+    );
     const currentToken = this.getTokenUnderCursor();
     const previousToken = tokenizedInput[currentToken.index - 1];
 
@@ -448,18 +464,18 @@ export abstract class AbstractMode {
   indentRight(): VimStateClass {
     const { indentSize } = this.vimOptions;
     const spaces = ' '.repeat(indentSize);
-    const updatedInput = `${spaces}${this.vimState.getActiveLine()}`;
+    const updatedInput = `${spaces}${this.vimState.getActiveLine().text}`;
 
     this.vimState.updateActiveLine(updatedInput);
     this.vimState.cursor.col += indentSize;
-    this.vimState.lines[this.vimState.cursor.line] = updatedInput;
+    this.vimState.lines[this.vimState.cursor.line].text = updatedInput;
     this.reTokenizeInput(updatedInput);
 
     return this.vimState;
   }
   indentLeft(): VimStateClass {
     const { indentSize } = this.vimOptions;
-    const text = this.vimState.getActiveLine();
+    const text = this.vimState.getActiveLine().text;
 
     const stagedSubText = text.substring(0, indentSize);
     const whiteSpaceAtStartIndex = /\w/g.exec(stagedSubText);
@@ -471,14 +487,14 @@ export abstract class AbstractMode {
     const updatedInput = text.substring(numOfWhiteSpaceAtStart);
     this.vimState.updateActiveLine(updatedInput);
     this.vimState.cursor.col -= numOfWhiteSpaceAtStart;
-    this.vimState.lines[this.vimState.cursor.line] = updatedInput;
+    this.vimState.lines[this.vimState.cursor.line].text = updatedInput;
     this.reTokenizeInput(updatedInput);
 
     return this.vimState;
   }
   delete(): VimStateClass {
     const updatedInput = replaceAt(
-      this.vimState.getActiveLine(),
+      this.vimState.getActiveLine().text,
       this.vimState.cursor.col,
       ''
     );
@@ -488,7 +504,7 @@ export abstract class AbstractMode {
     return this.vimState;
   }
   replace(commandInput: string): VimStateClass {
-    const text = this.vimState.getActiveLine();
+    const text = this.vimState.getActiveLine().text;
     const { col } = this.vimState.cursor;
     const replaced = replaceAt(text, col, commandInput);
     this.vimState.updateActiveLine(replaced);
@@ -501,16 +517,16 @@ export abstract class AbstractMode {
   /** `o` */
   createNewLine(): VimStateClass {
     // add new line below
-    const currentLine = this.vimState.getActiveLine();
+    const currentLine = this.vimState.getActiveLine().text;
     const newLineIndex = this.vimState.cursor.line + 1;
     const tempLines = [...this.vimState.lines];
     const numOfWs = StringUtil.getLeadingWhitespaceNum(currentLine);
-    tempLines.splice(newLineIndex, 0, ' '.repeat(numOfWs));
+    tempLines.splice(newLineIndex, 0, { text: ' '.repeat(numOfWs) });
     this.vimState.cursor.col = numOfWs;
     // put cursor below
     this.vimState.cursor.line = this.vimState.cursor.line + 1;
     this.vimState.lines = tempLines;
-    // this.vimState.mode = VimMode.INSERT;
+    this.vimState.mode = VimMode.INSERT;
 
     /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: abstract-mode.ts ~ line 502 ~ createNewLine');
     return this.vimState;
@@ -524,14 +540,14 @@ export abstract class AbstractMode {
 
     let newCol = 0;
     if (this.vimState.getPreviousLine()) {
-      newCol = Math.max(0, this.vimState.getPreviousLine().length - 1);
+      newCol = Math.max(0, this.vimState.getPreviousLine().text.length - 1);
     } else {
       newCol = 0;
     }
     this.vimState.cursor.col = newCol;
 
     this.vimState.cursor.line = Math.max(curLine - 1, 0);
-    const activeLine = this.vimState.getActiveLine();
+    const activeLine = this.vimState.getActiveLine().text;
     this.vimState.updateActiveLine(activeLine ?? '');
 
     //
@@ -541,8 +557,8 @@ export abstract class AbstractMode {
   }
 
   joinLine(): VimStateClass {
-    const prev = this.vimState.getPreviousLine();
-    const active = this.vimState.getActiveLine();
+    const prev = this.vimState.getPreviousLine().text;
+    const active = this.vimState.getActiveLine().text;
     const joined = prev.concat(active);
 
     const prevCursor = this.vimState.cursor.line - 1;
@@ -574,7 +590,7 @@ export function isValidHorizontalPosition(
   return result;
 }
 
-export function isValidVerticalPosition(line: number, lines: string[]) {
+export function isValidVerticalPosition(line: number, lines: VimLine[]) {
   const isBigger = line > lines.length;
   /**
    * Should be > technically, but conceptionally, line and text index are off by one.

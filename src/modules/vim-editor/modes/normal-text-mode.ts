@@ -25,7 +25,7 @@ export class NormalTextMode extends AbstractTextMode {
     void this.store.dispatch(
       changeText,
       vimState.cursor.line,
-      vimState.getActiveLine()
+      vimState.getActiveLine().text
     );
   }
 
@@ -33,7 +33,7 @@ export class NormalTextMode extends AbstractTextMode {
     void this.store.dispatch(
       changeText,
       vimState.cursor.line,
-      vimState.getActiveLine()
+      vimState.getActiveLine().text
     );
   }
 }

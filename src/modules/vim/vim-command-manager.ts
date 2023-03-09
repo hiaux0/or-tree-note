@@ -79,14 +79,14 @@ export class VimCommandManager {
   enterInsertMode() {
     logger.culogger.debug(['Enter Insert mode']);
     this.activeMode = VimMode.INSERT;
-    this.insertMode.reTokenizeInput(this.vimState?.getActiveLine());
+    this.insertMode.reTokenizeInput(this.vimState?.getActiveLine().text);
     this.vimState.mode = VimMode.INSERT;
     return this.vimState;
   }
   enterNormalMode() {
     logger.culogger.debug(['Enter Normal mode']);
     this.activeMode = VimMode.NORMAL;
-    this.normalMode.reTokenizeInput(this.vimState?.getActiveLine());
+    this.normalMode.reTokenizeInput(this.vimState?.getActiveLine().text);
     this.vimState.mode = VimMode.NORMAL;
     //
     this.potentialCommands = [];
@@ -404,20 +404,19 @@ export class VimCommandManager {
   newLine(): VimStateClass {
     this.vimState; /* ? */
     const { cursor } = this.vimState;
-    const text = this.vimState.getActiveLine();
+    const text = this.vimState.getActiveLine().text;
     const currentLineIndex = cursor.line;
     const newLineIndex = currentLineIndex + 1;
     const currentMode = this.getCurrentMode();
 
-    const updatedCurrentLineText = text.substring(0, cursor.col);
-    this.vimState.lines; /* ? */
+    const updatedCurrentLineText = { text: text.substring(0, cursor.col) };
     this.vimState.lines[currentLineIndex] = updatedCurrentLineText;
     // this.vimState.lines; /* ? */
     // new line
     const newLineText = text.substring(cursor.col);
     const updatedLines = [...this.vimState.lines];
     // updatedLines; /* ? */
-    updatedLines.splice(newLineIndex, 0, newLineText);
+    updatedLines.splice(newLineIndex, 0, { text: newLineText });
     updatedLines; /* ? */
     // updatedLines; /* ? */
     currentMode.reTokenizeInput(newLineText);

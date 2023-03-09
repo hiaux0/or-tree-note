@@ -61,7 +61,7 @@ let testCaseAsList: TestCaseList[] = [
     [ {}  , '012 45|6'       , 'b'           , '4'            , 'cursorBackwordsStartWord'                   , ]                           ,
     [ {}  , '012 45|6'       , 'bb'          , '4;0'          , 'cursorBackwordsStartWord;'                  , ]                           ,
     [ {}  , '012 |456'       , 'dd'          , '0'            , 'deleteLine'                                 , {rawTexts: ''}]       ,
-    [ {}  , '012 |456\nabc'       , 'dd'          , '0'       , 'deleteLine'                                 , {rawTexts: 'abc'}]       ,
+    [ {}  , '012 |456\nabc'  , 'dd'          , '0'            , 'deleteLine'                                 , {rawTexts: 'abc'}]       ,
     [ {}  , '|012 456'       , 'diw'         , '0'            , 'deleteInnerWord'                            , {rawTexts: '` 456`'}]       ,
     [ {}  , '|012 456'       , 'e'           , '2'            , 'cursorWordForwardEnd'                       , ]                           ,
     [ {}  , '| 12'           , 'e'           , '2'            , 'cursorWordForwardEnd'                       , ]                           ,
@@ -145,7 +145,9 @@ describe('Vim input.', () => {
         describe(`${rawInput} - ${rawCommands}.`, () => {
           it(`Given I activate Vim with the following input: "${rawContent}"`, () => {
             const rawInput = rawContent.split('\n');
-            const input = replaceCursorFromRaw(rawInput);
+            const input = replaceCursorFromRaw(rawInput).map((text) => ({
+              text,
+            }));
 
             // If we provide rawContent, then also a cursor
             if (rawContent) {
@@ -278,7 +280,7 @@ describe('Vim input.', () => {
                 const activeLine =
                   manyQueuedInput[index]?.vimState?.getActiveLine();
                 activeLine; /*?*/
-                expect(activeLine).toBe(lastExpectedText);
+                expect(activeLine.text).toBe(lastExpectedText);
               });
             });
           }
@@ -289,7 +291,7 @@ describe('Vim input.', () => {
                 manyQueuedInput[manyQueuedInput.length - 1].lines[
                   initialCursor.line
                 ];
-              expect(previousLine).toBe(previousText);
+              expect(previousLine.text).toBe(previousText);
             });
           }
 

@@ -1,9 +1,15 @@
-import { Cursor, Line, VimMode, VimState } from './vim-types';
+import {
+  Cursor,
+  EMPTY_VIM_LINE,
+  VimLine,
+  VimMode,
+  VimState,
+  VimStateV2,
+} from './vim-types';
 
 export class VimStateClass {
   cursor: Cursor;
-  lines: Line[];
-  text: string;
+  lines: VimLine[];
   mode: VimMode;
   visualStartCursor: Cursor;
   visualEndCursor: Cursor;
@@ -13,7 +19,6 @@ export class VimStateClass {
   constructor(public vimState: VimState) {
     this.cursor = vimState.cursor;
     this.lines = vimState.lines;
-    this.text = vimState.text;
     this.mode = vimState.mode ?? VimMode.NORMAL;
     this.visualStartCursor = vimState.visualStartCursor;
     this.visualEndCursor = vimState.visualEndCursor;
@@ -21,15 +26,14 @@ export class VimStateClass {
     this.commandName = vimState.commandName;
   }
 
-  public static create(cursor: Cursor, lines?: Line[], text?: string) {
+  public static create(cursor: Cursor, lines?: VimLine[], text?: string) {
     return new VimStateClass({ cursor, lines, text });
   }
 
-  public serialize(): VimState {
+  public serialize(): VimStateV2 {
     return {
       cursor: this.cursor,
       lines: this.lines,
-      text: this.text,
       mode: this.mode,
       visualStartCursor: this.visualStartCursor,
       visualEndCursor: this.visualEndCursor,
@@ -44,7 +48,7 @@ export class VimStateClass {
   }
 
   public getActiveLine() {
-    const active = this.getLineAt(this.cursor.line) ?? '';
+    const active = this.getLineAt(this.cursor.line) ?? EMPTY_VIM_LINE;
     // const active = this.getLineAt(this.cursor.line);
     return active;
   }
@@ -55,8 +59,7 @@ export class VimStateClass {
   }
 
   public updateLine(lineIndex: number, updated: string) {
-    this.lines[lineIndex] = updated;
-    this.text = updated;
+    this.lines[lineIndex] = { text: updated };
   }
 
   public updateActiveLine(updated: string) {

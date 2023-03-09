@@ -15,14 +15,14 @@ export let manyQueuedInput: QueueInputReturn[];
 
 export const commonVimSteps: StepDefinitions = ({ given, when }) => {
   given('I start Vim', () => {
-    vim = new Vim(cloneDeep(['']));
+    vim = new Vim(cloneDeep([{ text: '' }]));
   });
 
   given('I activate Vim with the following input:', (rawContent: string) => {
     const rawInput = rawContent.split('\n');
     initialCursor = findCursor(rawInput);
 
-    const input = cleanupRaw(rawInput);
+    const input = cleanupRaw(rawInput).map((t) => ({ text: t }));
     vim = new Vim(cloneDeep(input), cloneDeep(initialCursor));
   });
 

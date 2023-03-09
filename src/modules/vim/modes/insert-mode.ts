@@ -15,13 +15,13 @@ export class InsertMode extends AbstractMode {
     }
 
     const updatedInput = insert(
-      this.vimState.getActiveLine(),
+      this.vimState.getActiveLine().text,
       this.vimState.cursor.col,
       newInput
     );
     this.vimState.updateActiveLine(updatedInput);
 
-    this.vimState.lines[this.vimState.cursor.line] = updatedInput;
+    this.vimState.lines[this.vimState.cursor.line].text = updatedInput;
     super.cursorRight();
     return this.vimState;
   }

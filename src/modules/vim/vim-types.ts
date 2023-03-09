@@ -29,15 +29,16 @@ export interface FindPotentialCommandReturn {
   potentialCommands: VimCommand[];
 }
 
-export type Line = string;
-
 export type VimLine = {
-  cursor: Cursor;
   text: string;
-  indentation: number;
+  // cursor?: Cursor;
+  indentation?: number;
 };
 
+export const EMPTY_VIM_LINE: VimLine = { text: '' };
+
 export type VimStateV2 = {
+  cursor?: Cursor;
   lines?: VimLine[];
   mode?: VimMode;
   visualStartCursor?: Cursor;
@@ -49,7 +50,7 @@ export type VimStateV2 = {
 export type VimState = {
   cursor: Cursor;
   text: string;
-  lines?: Line[];
+  lines?: VimLine[];
   mode?: VimMode;
   visualStartCursor?: Cursor;
   visualEndCursor?: Cursor;
@@ -60,7 +61,7 @@ export type VimState = {
 export interface QueueInputReturn {
   vimState: VimStateClass | null;
   targetCommand: VIM_COMMAND;
-  lines: string[];
+  lines: VimLine[];
 }
 
 export interface Cursor {

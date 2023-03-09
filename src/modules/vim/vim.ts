@@ -16,7 +16,7 @@ import {
   QueueInputReturn,
   KeyBindingModes,
   VimExecutingMode,
-  Line,
+  VimLine,
 } from './vim-types';
 
 const logger = new Logger({ scope: 'Vim' });
@@ -49,7 +49,7 @@ export class Vim {
   private readonly activeLine: string;
 
   constructor(
-    private readonly lines: Line[],
+    private readonly lines: VimLine[],
     private readonly cursor: Cursor = defaultCursor,
     private readonly vimOptions?: VimOptions
   ) {
@@ -59,8 +59,8 @@ export class Vim {
     };
     const initialVimState = new VimStateClass({
       cursor,
+      text: 'notUsed?!',
       lines,
-      text: lines[0],
     });
     this.vimCommandManager = new VimCommandManager(
       initialVimState,
@@ -212,9 +212,9 @@ export class Vim {
       throw new Error(
         `[ILLEGAL]: Cursor out of bound: Your input has ${this.lines.length} lines, but cursor line is: ${cursorLine}`
       );
-    } else if (cursorCol > this.lines[cursorLine].length) {
+    } else if (cursorCol > this.lines[cursorLine].text.length) {
       throw new Error(
-        `[ILLEGAL]: Cursor out of bound: Your input has ${this.lines[cursorLine].length} columns, but cursor column is: ${cursorCol}`
+        `[ILLEGAL]: Cursor out of bound: Your input has ${this.lines[cursorLine].text.length} columns, but cursor column is: ${cursorCol}`
       );
     }
   }
@@ -231,8 +231,8 @@ export class Vim {
 
     if (actviveLine !== text) {
       const errorMessage = 'Active line and vim state wrong.';
-      const expected = `Expected: ${text}`;
-      const received = `Received: ${actviveLine}`;
+      const expected = `Expected: ${text.text}`;
+      const received = `Received: ${actviveLine.text}`;
       throw new Error(`${errorMessage}\n${expected}\n${received}`);
     }
 
