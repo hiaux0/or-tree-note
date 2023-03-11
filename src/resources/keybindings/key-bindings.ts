@@ -77,6 +77,7 @@ const keyBindings = {
     { key: 'V', command: 'visualStartLineWise' },
     { key: 'x', command: 'delete' },
     { key: 'y', command: 'yank' },
+    { key: 'za', command: 'toggleFold' },
     { key: 'gh', command: 'hint' },
     { key: '<Control>s', command: 'save' },
     { key: '<Control>]', command: 'indentRight' },

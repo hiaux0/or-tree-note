@@ -569,6 +569,10 @@ export abstract class AbstractMode {
     return this.vimState;
   }
 
+  toggleFold(): VimStateClass {
+    return this.vimState;
+  }
+
   nothing(): VimStateClass {
     return this.vimState;
   }

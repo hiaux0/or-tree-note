@@ -19,6 +19,7 @@ export enum VIM_COMMAND {
   'enterInsertMode' = 'enterInsertMode',
   'enterNormalMode' = 'enterNormalMode',
   'enterVisualMode' = 'enterVisualMode',
+  'toggleFold' = 'toggleFold',
   'indentRight' = 'indentRight',
   'indentLeft' = 'indentLeft',
   'joinLine' = 'joinLine',
