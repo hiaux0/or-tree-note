@@ -40,8 +40,8 @@ export class VisualMode extends AbstractMode {
 
     if (!isAtStartOfWord) {
       this.vimState.visualStartCursor = {
-        col: token.start,
         line: this.vimState.cursor.line,
+        col: token.start,
       };
       this.vimState.cursor.col = token.start;
     }
