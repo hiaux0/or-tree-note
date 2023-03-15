@@ -17,6 +17,7 @@
           if.bind="!vimState.foldMap[$index]"
           line.bind="line"
           line-index.bind="$index"
+          cursor-index.bind="vimState.cursor.col"
           editor-line-class.bind="editorLineClass"
           caret-element.bind="caretRef"
           line-highlight-end.bind="vimState.visualEndCursor"

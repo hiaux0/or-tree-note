@@ -19,9 +19,10 @@ module.exports = function (wallaby) {
       // 'test/test-launchers/init-tests.spec.ts',
       // 'test/unit-cucumber/step-definitions/letter-e.spec.ts',
       // 'test/unit-cucumber/step-definitions/vim-input.spec.ts',
-      'test/unit-cucumber/step-definitions/modes/abstract/folding.spec.ts',
+      // 'test/unit-cucumber/step-definitions/modes/abstract/folding.spec.ts',
       // 'test/unit/**/*.spec.ts',
       // 'test/unit/**/insert-mode.spec.ts',
+      'test/unit/modules/cursor-utils.spec.ts',
     ],
 
     testFramework: 'jest',
