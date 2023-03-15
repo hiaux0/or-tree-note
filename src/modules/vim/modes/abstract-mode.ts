@@ -14,6 +14,7 @@ import {
   VimPlugin,
   VimLine,
 } from '../vim-types';
+import { toggleFold } from './modules/folding';
 
 const logger = new Logger({ scope: 'AbstractMode' });
 
@@ -570,6 +571,9 @@ export abstract class AbstractMode {
   }
 
   toggleFold(): VimStateClass {
+    const foldMap = toggleFold(this.vimState.cursor.line, this.vimState.lines);
+    /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: abstract-mode.ts ~ line 575 ~ foldMap', foldMap);
+    this.vimState.foldMap = foldMap;
     return this.vimState;
   }
 

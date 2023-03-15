@@ -1,6 +1,7 @@
 import {
   Cursor,
   EMPTY_VIM_LINE,
+  FoldMap,
   VimLine,
   VimMode,
   VimState,
@@ -9,6 +10,7 @@ import {
 
 export class VimStateClass {
   cursor: Cursor;
+  foldMap: FoldMap;
   lines: VimLine[];
   mode: VimMode;
   visualStartCursor: Cursor;
@@ -16,8 +18,9 @@ export class VimStateClass {
   deletedLinesIndeces: number[];
   commandName: string;
 
-  constructor(public vimState: VimState) {
+  constructor(public vimState: VimStateV2) {
     this.cursor = vimState.cursor;
+    this.foldMap = vimState.foldMap;
     this.lines = vimState.lines;
     this.mode = vimState.mode ?? VimMode.NORMAL;
     this.visualStartCursor = vimState.visualStartCursor;
@@ -26,13 +29,14 @@ export class VimStateClass {
     this.commandName = vimState.commandName;
   }
 
-  public static create(cursor: Cursor, lines?: VimLine[], text?: string) {
-    return new VimStateClass({ cursor, lines, text });
+  public static create(cursor: Cursor, lines?: VimLine[]) {
+    return new VimStateClass({ cursor, lines });
   }
 
   public serialize(): VimStateV2 {
     return {
       cursor: this.cursor,
+      foldMap: this.foldMap,
       lines: this.lines,
       mode: this.mode,
       visualStartCursor: this.visualStartCursor,

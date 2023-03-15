@@ -10,7 +10,11 @@ import { VimStateClass } from 'modules/vim/vim-state';
 import { Cursor, VimMode } from 'modules/vim/vim-types';
 import { VimEditorState } from 'store/initial-state';
 
-import { createNewLine, changeText } from '../actions/actions-vim-editor';
+import {
+  createNewLine,
+  changeText,
+  changeVimState,
+} from '../actions/actions-vim-editor';
 import { ChildrenMutationObserver } from './children-mutation-observer';
 
 const logger = new Logger({ scope: 'AbstractTextMode' });
@@ -181,6 +185,10 @@ export abstract class AbstractTextMode {
       vimState.getActiveLine().text
     );
   }
+
+  // async toggleFold(vimState: VimStateClass) {
+  //   await this.store.dispatch(changeVimState, vimState);
+  // }
 
   resetCaretBlinking() {
     this.caretElement.classList.remove('caret-blinking');

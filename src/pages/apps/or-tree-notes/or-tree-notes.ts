@@ -12,7 +12,7 @@ import {
   VimMode,
   VimExecutingMode,
   Cursor,
-  VimState,
+  VimStateV2,
 } from 'modules/vim/vim-types';
 import { distinctUntilChanged, pluck } from 'rxjs/operators';
 import { EditorLine, VimEditorState } from 'store/initial-state';
@@ -62,7 +62,7 @@ export class OrTreeNotes {
   editorLineClass: string = CSS_SELECTORS['editor-line'];
   currentModeName: VimMode;
   vimEditor: VimEditor;
-  vimState: VimState;
+  vimState: VimStateV2;
 
   constructor(private readonly store: Store<StateHistory<VimEditorState>>) {
     this.store.registerAction('toggleCheckbox', toggleCheckbox);

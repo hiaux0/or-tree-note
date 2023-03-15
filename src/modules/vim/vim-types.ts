@@ -29,18 +29,28 @@ export interface FindPotentialCommandReturn {
   potentialCommands: VimCommand[];
 }
 
-export type VimLine = {
-  text: string;
+export type IndentationLevel = number;
+export type Text = string;
+
+export interface IndentationNode {
+  text: Text;
+  indentation?: IndentationLevel;
+}
+
+export interface VimLine extends IndentationNode {
+  text: Text;
   // cursor?: Cursor;
-  indentation?: number;
-};
+}
 
 export const EMPTY_VIM_LINE: VimLine = { text: '' };
+
+export type FoldMap = Record<string, boolean>;
 
 export type VimStateV2 = {
   cursor?: Cursor;
   lines?: VimLine[];
   mode?: VimMode;
+  foldMap?: FoldMap;
   visualStartCursor?: Cursor;
   visualEndCursor?: Cursor;
   deletedLinesIndeces?: number[];

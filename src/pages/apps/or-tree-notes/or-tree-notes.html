@@ -14,12 +14,14 @@
       <!-- Lines -->
       <template repeat.for="line of lines">
         <note-line
+          if.bind="!vimState.foldMap[$index]"
           line.bind="line"
           line-index.bind="$index"
           editor-line-class.bind="editorLineClass"
           caret-element.bind="caretRef"
           line-highlight-end.bind="vimState.visualEndCursor"
           line-highlight-start.bind="vimState.visualStartCursor"
+          fold-map.bind="vimState.foldMap"
         ></note-line>
       </template>
 

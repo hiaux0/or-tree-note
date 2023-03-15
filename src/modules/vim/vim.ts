@@ -59,7 +59,6 @@ export class Vim {
     };
     const initialVimState = new VimStateClass({
       cursor,
-      text: 'notUsed?!',
       lines,
     });
     this.vimCommandManager = new VimCommandManager(

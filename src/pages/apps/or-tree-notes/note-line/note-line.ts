@@ -3,7 +3,7 @@ import { computedFrom, bindable } from 'aurelia-framework';
 import { CSS_SELECTORS } from 'common/css-selectors';
 import { getCssVar } from 'modules/css/css-variables';
 import { Logger } from 'modules/debug/logger';
-import { Cursor } from 'modules/vim/vim-types';
+import { Cursor, FoldMap } from 'modules/vim/vim-types';
 import { EditorLine } from 'store/initial-state';
 
 import './note-line.scss';
@@ -28,6 +28,7 @@ export class NoteLine {
 
   @bindable lineHighlightStart: Cursor;
   @bindable lineHighlightEnd: Cursor;
+  @bindable foldMap: FoldMap;
 
   constructor(private readonly element: HTMLElement) {}
 

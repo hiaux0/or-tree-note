@@ -9,5 +9,5 @@ export function createVimState(
   cursor: Cursor = initialCursor
 ): VimStateClass {
   const lines: VimLine[] = text.split('\n').map((line) => ({ text: line }));
-  return VimStateClass.create(cursor, lines, text);
+  return VimStateClass.create(cursor, lines);
 }

@@ -2,8 +2,9 @@
   <!-- Default line -->
   <template if.bind="isDefaultLine(line)">
     <div class="${editorLineClass}" data-test="${editorLineClass}"
-      >${line.text}</div
-    >
+      >${line.text} ${!foldMap[lineIndex] && foldMap[lineIndex + 1] ? '...' :
+      ''}
+    </div>
     <div
       if.bind="lineHightlight.left && lineHightlight.width"
       class="editorLine__highlight"
@@ -17,7 +18,14 @@
   <!-- Checkbox -->
   <template if.bind="line.macro.checkbox"
     ><label
-      class="checkbox-label ${line.macro.checkbox.value ? 'checkbox--checked' : ''}"
+      class="
+        checkbox-label
+        ${line.macro.checkbox.value
+        ?
+        'checkbox--checked'
+        :
+        ''}
+      "
     >
       <input type="checkbox" checked.bind="line.macro.checkbox.value" />
       <span class="${editorLineClass}" data-test="${editorLineClass}"
