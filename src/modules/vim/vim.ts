@@ -97,20 +97,22 @@ export class Vim {
     logger.debug(['targetCommandName: %s', targetCommandName], { log: true });
 
     let vimState: VimStateClass | undefined;
+    // insert
     if (targetCommandName === VIM_COMMAND['enterInsertMode']) {
       vimState = this.vimCommandManager.enterInsertMode();
+    } else if (targetCommandName === VIM_COMMAND['createNewLine']) {
+      this.vimCommandManager.enterInsertMode();
+      vimState = this.vimCommandManager.executeVimCommand(
+        targetCommandName,
+        input
+      );
+      // normal
     } else if (targetCommandName === VIM_COMMAND['enterNormalMode']) {
       vimState = this.vimCommandManager.enterNormalMode();
     } else if (targetCommandName === VIM_COMMAND['enterVisualMode']) {
       vimState = this.vimCommandManager.enterVisualMode();
     } else if (targetCommandName === VIM_COMMAND['newLine']) {
       vimState = this.vimCommandManager.newLine();
-
-      // } else if (targetCommandName === VIM_COMMAND['createNewLine']) {
-      //   const executedVimstate = this.vimCommandManager.executeVimCommand(
-      //     targetCommandName,
-      //     input
-      //   );
     } else {
       vimState = this.vimCommandManager.executeVimCommand(
         targetCommandName,
