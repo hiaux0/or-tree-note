@@ -33,7 +33,7 @@ export type IndentationLevel = number;
 export type Text = string;
 
 export interface IndentationNode {
-  text: Text;
+  text?: Text;
   indentation?: IndentationLevel;
 }
 

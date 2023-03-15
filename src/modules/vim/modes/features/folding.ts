@@ -7,7 +7,7 @@ export function toggleFold(
   indentIndex: IndentationLevel,
   nodes: IndentationNode[],
   foldMap: FoldMap = {}
-): FoldMap {
+): { foldMap: FoldMap; parentIndex: number } {
   // initIndentation
   nodes = initIndentation(nodes);
 
@@ -17,16 +17,21 @@ export function toggleFold(
   if (backwardsIndex === forwardsIndex) {
     const folded = foldMap[backwardsIndex];
     foldMap[backwardsIndex] = !folded;
-    return foldMap;
+  } else {
+    // + 1 start with node after current
+    for (let i = backwardsIndex; i <= forwardsIndex; i++) {
+      const folded = foldMap[i];
+      foldMap[i] = !folded;
+    }
   }
 
-  // + 1 start with node after current
-  for (let i = backwardsIndex; i <= forwardsIndex; i++) {
-    const folded = foldMap[i + indentIndex];
-    foldMap[i] = !folded;
-  }
-
-  return foldMap;
+  /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: folding.ts ~ line 32 ~ backwardsIndex', backwardsIndex);
+  /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: folding.ts ~ line 33 ~ foldMap', foldMap);
+  const parentIndex = Math.max(backwardsIndex - 1, 0);
+  return {
+    foldMap,
+    parentIndex,
+  };
 }
 
 function findIndecesToFold(
@@ -94,6 +99,7 @@ function findIndecesToFold(
 function initIndentation(nodes: IndentationNode[]): IndentationNode[] {
   nodes.forEach((node) => {
     if (node.indentation) return;
+    if (!node.text) return;
 
     const result = StringUtil.getLeadingWhitespaceNum(node.text);
     node.indentation = result;
@@ -101,6 +107,5 @@ function initIndentation(nodes: IndentationNode[]): IndentationNode[] {
     // init
   });
 
-  /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: folding.ts ~ line 106 ~ nodes', nodes);
   return nodes;
 }
