@@ -236,6 +236,7 @@ export abstract class AbstractMode {
       // TODO: Call "$" to put cursor to end of line
       this.vimState.cursor.col = Math.max(newActiveLine.text.length - 1, 0);
     }
+    /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: abstract-mode.ts ~ line 238 ~ this.vimState.cursor.col', this.vimState.cursor.col);
 
     const newActiveText = this.vimState.lines[newCurLine];
 

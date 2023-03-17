@@ -108,6 +108,14 @@ const keyBindings = {
     ...cursorAllModes,
     ...cursorNormalAndVisual,
   ],
+  visualline: [
+    { key: 'd', command: 'visualDelete' },
+    { key: 'o', command: 'visualMoveToOtherEndOfMarkedArea' },
+    { key: 'x', command: 'visualDelete' },
+    ...commandsAllModes,
+    ...cursorAllModes,
+    ...cursorNormalAndVisual,
+  ],
   synonyms: {
     '<esc>': '<Escape>',
   },

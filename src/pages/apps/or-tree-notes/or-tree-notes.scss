@@ -83,7 +83,8 @@ $editorLineHeight: 21.4667px;
     }
   }
 
-  &.mode-VISUAL {
+  &.mode-VISUAL,
+  &.mode-VISUALLINE {
     #caret {
       background: rgba(226, 190, 143, 0.63);
       border: 1px solid black;

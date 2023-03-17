@@ -18,6 +18,7 @@ import { VimEditorOptions } from '../vim-editor';
 import { AbstractTextMode } from './abstract-text-mode';
 import { InsertTextMode } from './insert-text-mode';
 import { NormalTextMode } from './normal-text-mode';
+import { VisualLineTextMode } from './visual-line-text-mode';
 import { VisualTextMode } from './visual-text-mode';
 
 const logger = new Logger({ scope: 'VimEditorTextMode' });
@@ -56,6 +57,12 @@ export class VimEditorTextMode {
       this.vimEditorOptions.caretElements[0],
       store
     );
+    const visualLineTextMode = new VisualLineTextMode(
+      this.vimEditorOptions.parentHtmlElement,
+      this.vimEditorOptions.childSelectors[0],
+      this.vimEditorOptions.caretElements[0],
+      store
+    );
 
     this.getCurrentTextMode = () => {
       if (this.vim.getCurrentMode().currentMode === VimMode.INSERT) {
@@ -64,6 +71,8 @@ export class VimEditorTextMode {
         return normalTextMode;
       } else if (this.vim.getCurrentMode().currentMode === VimMode.VISUAL) {
         return visualTextMode;
+      } else if (this.vim.getCurrentMode().currentMode === VimMode.VISUALLINE) {
+        return visualLineTextMode;
       }
     };
   }

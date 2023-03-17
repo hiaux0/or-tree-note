@@ -109,8 +109,11 @@ export class Vim {
       // normal
     } else if (targetCommandName === VIM_COMMAND['enterNormalMode']) {
       vimState = this.vimCommandManager.enterNormalMode();
+      // visual
     } else if (targetCommandName === VIM_COMMAND['enterVisualMode']) {
       vimState = this.vimCommandManager.enterVisualMode();
+    } else if (targetCommandName === VIM_COMMAND['visualStartLineWise']) {
+      vimState = this.vimCommandManager.visualStartLineWise();
     } else if (targetCommandName === VIM_COMMAND['newLine']) {
       vimState = this.vimCommandManager.newLine();
     } else {
@@ -195,6 +198,9 @@ export class Vim {
   }
   enterVisualMode() {
     return this.vimCommandManager.enterVisualMode();
+  }
+  enterVisualLineMode() {
+    return this.vimCommandManager.visualStartLineWise();
   }
 
   private verifyValidCursorPosition() {

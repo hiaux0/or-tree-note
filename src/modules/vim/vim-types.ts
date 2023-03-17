@@ -82,6 +82,7 @@ export enum VimMode {
   'NORMAL' = 'NORMAL',
   'INSERT' = 'INSERT',
   'VISUAL' = 'VISUAL',
+  'VISUALLINE' = 'VISUALLINE',
 }
 export type VimModeKeys = keyof typeof VimMode;
 

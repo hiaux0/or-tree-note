@@ -20,6 +20,7 @@ import {
 
 import { InsertMode } from './modes/insert-mode';
 import { NormalMode } from './modes/normal-mode';
+import { VisualLineMode } from './modes/visual-line-mode';
 import { VisualMode } from './modes/visual-mode';
 import { defaultVimOptions } from './vim';
 import {
@@ -49,6 +50,7 @@ export class VimCommandManager {
   private readonly normalMode: NormalMode;
   private readonly insertMode: InsertMode;
   private readonly visualMode: VisualMode;
+  private readonly visualLineMode: VisualLineMode;
 
   /** Alias for vimOptions.keyBindings */
   private readonly keyBindings: KeyBindingModes;
@@ -64,6 +66,7 @@ export class VimCommandManager {
     this.normalMode = new NormalMode(vimState, this.vimOptions);
     this.insertMode = new InsertMode(vimState, this.vimOptions);
     this.visualMode = new VisualMode(vimState, this.vimOptions);
+    this.visualLineMode = new VisualLineMode(vimState, this.vimOptions);
 
     this.keyBindings = this.vimOptions.keyBindings;
   }
@@ -111,6 +114,22 @@ export class VimCommandManager {
 
     return this.vimState;
   }
+  visualStartLineWise() {
+    logger.culogger.debug(['Enter Visual Line mode']);
+    this.activeMode = VimMode.VISUALLINE;
+    this.vimState.visualStartCursor = {
+      col: 0,
+      line: this.vimState.cursor.line,
+    };
+    this.vimState.visualEndCursor = {
+      col: this.vimState.getActiveLine().text.length,
+      line: this.vimState.cursor.line,
+    };
+    this.vimState.mode = VimMode.VISUALLINE;
+
+    return this.vimState;
+  }
+
   getCurrentMode() {
     if (this.activeMode === VimMode.NORMAL) {
       return this.normalMode;
@@ -118,6 +137,8 @@ export class VimCommandManager {
       return this.insertMode;
     } else if (this.activeMode === VimMode.VISUAL) {
       return this.visualMode;
+    } else if (this.activeMode === VimMode.VISUALLINE) {
+      return this.visualLineMode;
     }
   }
 

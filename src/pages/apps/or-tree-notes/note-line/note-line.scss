@@ -1,7 +1,9 @@
 @import '../or-tree-notes';
 
 .otn-container {
-  &.mode-VISUAL {
+
+  &.mode-VISUAL,
+  &.mode-VISUALLINE {
     note-line {
       .editorLine__highlight {
         position: absolute;
