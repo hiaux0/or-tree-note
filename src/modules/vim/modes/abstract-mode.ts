@@ -584,6 +584,16 @@ export abstract class AbstractMode {
     return this.vimState;
   }
 
+  copy(): VimStateClass {
+    return this.vimState;
+  }
+  undo(): VimStateClass {
+    return this.vimState;
+  }
+  redo(): VimStateClass {
+    return this.vimState;
+  }
+
   nothing(): VimStateClass {
     return this.vimState;
   }

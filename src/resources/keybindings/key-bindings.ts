@@ -29,7 +29,12 @@ export const Modifier = {
   '<Space>': '<Space>',
 };
 
-const commandsAllModes = [{ key: '<Escape>', command: 'enterNormalMode' }];
+const commandsAllModes = [
+  { key: '<Control>c', command: 'copy' },
+  { key: '<Control>z', command: 'undo' },
+  { key: '<Control><Shift>z', command: 'redo' },
+  { key: '<Escape>', command: 'enterNormalMode' },
+];
 /**
  * The very next input
  * TODO: rename? `...VeryNextInput`

@@ -53,6 +53,7 @@ export async function initVimHtml(vimHtmlOptions: VimHtmlOptions) {
   }
 
   function initKeys() {
+    /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: vim-html.ts ~ line 56 ~ initKeys');
     hotkeys('*', (ev) => {
       /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: vim-html.ts ~ line 56 ~ ev', ev);
       if (checkAllowedBrowserShortcuts(ev)) {
@@ -98,11 +99,18 @@ export async function initVimHtml(vimHtmlOptions: VimHtmlOptions) {
     });
   }
 
+  /**
+   *
+   */
   function checkAllowedBrowserShortcuts(ev: KeyboardEvent) {
+    /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: vim-html.ts ~ line 105 ~ checkAllowedBrowserShortcuts');
+
     const mainModifier = isMac ? ev.metaKey : ev.ctrlKey;
     const reload = ev.key === 'r' && mainModifier;
     const hardReload = ev.key === 'R' && mainModifier && ev.shiftKey;
     if (reload || hardReload) {
+      return true;
+    } else if (ev.key === 'l' && mainModifier) {
       return true;
     } else if (ev.key === 'C' && mainModifier && ev.shiftKey) {
       return true;

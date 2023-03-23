@@ -105,6 +105,11 @@ export class OrTreeNotes {
     this.currentModeName = this.vimEditor.getMode();
 
     void this.store.dispatch('changeVimState', this.vimEditor.vim.vimState);
+
+    document.addEventListener('click', (event) => {
+      /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: or-tree-notes.ts ~ line 110 ~ event', event);
+      const { screenX, screenY, pageX, pageY } = event;
+    });
   }
 
   saveToLocalStorage() {
@@ -127,5 +132,40 @@ export class OrTreeNotes {
 
   undo() {
     void this.store.dispatch(jump, -1);
+  }
+
+  private downloadText(): void {
+    function getRandomId() {
+      /**
+       * "0.g6ck5nyod4".substring(2, 9)
+       * -> g6ck5ny
+       */
+      return Math.random().toString(36).substring(2, 9);
+    }
+    function getCurrentDate() {
+      const date = new Date();
+      const dateString = date.toLocaleDateString();
+      return dateString;
+    }
+
+    function download(content: string, fileName: string) {
+      const element = document.createElement('a');
+      element.setAttribute(
+        'href',
+        `data:text/plain;charset=utf-8,${encodeURIComponent(content)}`
+      );
+      element.setAttribute('download', `${fileName}.json`);
+
+      element.style.display = 'none';
+      document.body.appendChild(element);
+
+      element.click();
+
+      document.body.removeChild(element);
+    }
+
+    const stringify = JSON.stringify(this.vimState, null, 4);
+    const fileName = `${getCurrentDate()}-or-tree-note`;
+    download(stringify, fileName);
   }
 }

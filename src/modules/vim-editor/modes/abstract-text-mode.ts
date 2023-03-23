@@ -1,5 +1,6 @@
+/* eslint-disable @typescript-eslint/brace-style */
 import { inject } from 'aurelia-dependency-injection';
-import { StateHistory, Store } from 'aurelia-store';
+import { jump, StateHistory, Store } from 'aurelia-store';
 import {
   getComputedValueFromPixelString,
   getCssVar,
@@ -190,6 +191,12 @@ export abstract class AbstractTextMode {
   // async toggleFold(vimState: VimStateClass) {
   //   await this.store.dispatch(changeVimState, vimState);
   // }
+  async undo() {
+    await this.store.dispatch(jump, -1);
+  }
+  async redo() {
+    await this.store.dispatch(jump, +1);
+  }
 
   resetCaretBlinking() {
     this.caretElement.classList.remove('caret-blinking');
@@ -214,5 +221,45 @@ export abstract class AbstractTextMode {
     logger.debug(['Current caret col: %n', currentCaretCol], { log: true });
 
     return currentCaretCol;
+  }
+
+  private copy(vimState?: VimStateClass): void {
+    const { visualStartCursor, visualEndCursor } = vimState;
+    if (!visualStartCursor) return;
+    if (!visualEndCursor) return;
+
+    // only text
+    let textToCopy = '';
+    const numOflinesToCopy = visualEndCursor.line - visualStartCursor.line;
+    if (numOflinesToCopy === 0) {
+      const { text } = vimState.getActiveLine();
+      textToCopy += text.slice(visualStartCursor.col, visualEndCursor.col - 1);
+    } else {
+      for (let i = visualStartCursor.line; i <= numOflinesToCopy; i++) {
+        const isStartLine = i === visualStartCursor.line;
+        const isEndLine = i === visualEndCursor.line;
+        const { text } = vimState.getLineAt(i);
+
+        if (isStartLine) {
+          textToCopy += text.slice(visualStartCursor.col, text.length - 1);
+        } else if (isEndLine) {
+          const { text } = vimState.getLineAt(i);
+          textToCopy += text.slice(0, visualEndCursor.col - 1);
+        } else {
+          textToCopy += text.slice(0, text.length - 1);
+        }
+      }
+    }
+
+    // TODO also data (ie. is a bullet list)
+
+    const handler = (e: ClipboardEvent) => {
+      e.clipboardData.setData('text/plain', textToCopy);
+      e.preventDefault();
+    };
+
+    document.addEventListener('copy', handler);
+    document.execCommand('copy');
+    document.removeEventListener('copy', handler);
   }
 }

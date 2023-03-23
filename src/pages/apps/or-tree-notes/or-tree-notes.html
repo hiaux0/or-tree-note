@@ -1,7 +1,10 @@
 <template>
   <require from="./note-line/note-line"></require>
 
-  <h1>${value}</h1>
+  <div style="display: flex; justify-content: space-between; align-items: center;">
+    <h1>${value}</h1>
+    <button click.delegate="downloadText()" style="height: 30px;">download</button>
+  </div>
 
   <!-- <button click.delegate="undo()">Undo</button> -->
 
