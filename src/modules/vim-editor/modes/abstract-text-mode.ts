@@ -19,7 +19,7 @@ import {
 import { ChildrenMutationObserver } from './children-mutation-observer';
 
 const logger = new Logger({ scope: 'AbstractTextMode' });
-type Direction = 'up' | 'down' | 'left' | 'right';
+type Direction = 'up' | 'down' | 'left' | 'right' | 'none';
 
 @inject(Store)
 export abstract class AbstractTextMode {
@@ -86,12 +86,10 @@ export abstract class AbstractTextMode {
     this.currentLineNumber = newCursorLine;
     const vertiDirection =
       this.currentCaretCol > newCursorCol ? 'left' : 'right';
-    /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: abstract-text-mode.ts ~ line 88 ~ vertiDirection', vertiDirection);
     const vertiSame = this.currentCaretCol === newCursorCol;
-    /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: abstract-text-mode.ts ~ line 91 ~ vertiSame', vertiSame);
     this.currentCaretCol = newCursorCol;
 
-    let direction = '';
+    let direction: Direction = 'none';
     if (!vertiSame) {
       direction = vertiDirection;
     } else if (!horiSame) {
@@ -99,80 +97,72 @@ export abstract class AbstractTextMode {
     }
 
     // /* prettier-ignore */ console.log('------------------------------------------------------------------------------------------');
-    const cursor = this.caretElement;
-    const editor = this.parentElement;
-    moveCursor.bind(this)(editor, cursor, direction);
+    this.scrollEditor(direction);
     const newTop = newCursorLine * this.caretHeight;
     this.caretElement.style.top = `${newTop}px`;
     const newLeft = newCursorCol * this.caretWidth;
-    /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: abstract-text-mode.ts ~ line 154 ~ newLeft', newLeft);
     this.caretElement.style.left = `${lineOffsetLeft + newLeft}px`;
+  }
 
-    return;
+  private scrollEditor(direction: Direction): void {
+    const cursor = this.caretElement;
+    const editor = this.parentElement;
+    /* prettier-ignore */ console.log('------------------------------------------------------------------------------------------');
+    const lineHeight = this.caretHeight;
+    const containerRect = editor.getBoundingClientRect();
 
-    function moveCursor(
-      editor: HTMLElement,
-      cursor: HTMLElement,
-      direction: Direction
-    ) {
-      /* prettier-ignore */ console.log('------------------------------------------------------------------------------------------');
-      /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: abstract-text-mode.ts ~ line 111 ~ direction', direction);
-      const lineHeight = this.caretHeight as number;
-      const containerRect = editor.getBoundingClientRect();
+    /** Relative to container */
+    const cursorRect = cursor.getBoundingClientRect();
+    const relCursorTop = cursorRect.top; // - containerRect.top;
+    const relCursorLeft = cursorRect.left; // - containerRect.top;
+    const relCursorBottom = cursorRect.bottom; //  - containerRect.top;
+    const relCursorRight = cursorRect.right; //  - containerRect.top;
 
-      /** Relative to container */
-      const cursorRect = cursor.getBoundingClientRect();
-      const relCursorTop = cursorRect.top; // - containerRect.top;
-      const relCursorLeft = cursorRect.left; // - containerRect.top;
-      const relCursorBottom = cursorRect.bottom; //  - containerRect.top;
-      const relCursorRight = cursorRect.right; //  - containerRect.top;
+    const THRESHOLD_VALUE = 40; // - 40: 40 away from <direction>, then should scroll
+    // bottom = right, up = left
 
-      const THRESHOLD_VALUE = 40; // - 40: 40 away from <direction>, then should scroll
-      // bottom = right, up = left
+    const bottomThreshold = containerRect.bottom - THRESHOLD_VALUE;
+    const shouldScrollDown = relCursorBottom > bottomThreshold;
+    const rightThreshold = containerRect.right - THRESHOLD_VALUE;
+    const shouldScrollRight = relCursorRight > rightThreshold;
 
-      const bottomThreshold = containerRect.bottom - THRESHOLD_VALUE;
-      const shouldScrollDown = relCursorBottom > bottomThreshold;
-      const rightThreshold = containerRect.right - THRESHOLD_VALUE;
-      const shouldScrollRight = relCursorRight > rightThreshold;
+    const topThreshold = containerRect.top + THRESHOLD_VALUE;
+    const shouldScrollUp = relCursorTop < topThreshold;
+    const leftThreshold = containerRect.left + THRESHOLD_VALUE;
+    const shouldScrollLeft = relCursorLeft < leftThreshold;
 
-      const topThreshold = containerRect.top + THRESHOLD_VALUE;
-      const shouldScrollUp = relCursorTop < topThreshold;
-      const leftThreshold = containerRect.left + THRESHOLD_VALUE;
-      const shouldScrollLeft = relCursorLeft < leftThreshold;
-
-      switch (direction) {
-        case 'up':
-          if (shouldScrollUp) {
-            editor.scrollTop -= lineHeight;
-          }
-          break;
-        case 'down':
-          if (shouldScrollDown) {
-            editor.scrollTop += lineHeight;
-          }
-          break;
-        case 'left':
-          if (shouldScrollLeft) {
-            editor.scrollLeft -= cursorRect.width;
-          }
-          break;
-        case 'right':
-          if (shouldScrollRight) {
-            editor.scrollLeft += cursorRect.width;
-          }
-          break;
-        default: {
-          console.log('NEITHER');
-          break;
+    switch (direction) {
+      case 'up':
+        if (shouldScrollUp) {
+          editor.scrollTop -= lineHeight;
         }
+        break;
+      case 'down':
+        if (shouldScrollDown) {
+          editor.scrollTop += lineHeight;
+        }
+        break;
+      case 'left':
+        if (shouldScrollLeft) {
+          editor.scrollLeft -= cursorRect.width;
+        }
+        break;
+      case 'right':
+        if (shouldScrollRight) {
+          editor.scrollLeft += cursorRect.width;
+        }
+        break;
+      default: {
+        console.log('NEITHER');
+        break;
       }
-
-      // cursor.scrollIntoView({
-      //   behavior: 'smooth',
-      //   block: 'nearest',
-      //   inline: 'nearest',
-      // });
     }
+
+    // cursor.scrollIntoView({
+    //   behavior: 'smooth',
+    //   block: 'nearest',
+    //   inline: 'nearest',
+    // });
   }
 
   getLineRectOffsetLeft() {
