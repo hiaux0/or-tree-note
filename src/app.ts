@@ -8,6 +8,19 @@ export class App {
 
   constructor(private router: Router) {}
 
+  attached() {
+    const mouseCoordinates = document.getElementById('mouse-coordinates');
+
+    document.addEventListener('mousemove', (event) => {
+      const x = event.clientX;
+      const y = event.clientY;
+
+      mouseCoordinates.textContent = `X: ${x} / Y: ${y}`;
+      mouseCoordinates.style.left = `${x + 15}px`;
+      mouseCoordinates.style.top = `${y + 15}px`;
+    });
+  }
+
   /**
    * @param {object} router - https://aurelia.io/docs/api/router/class/Router
    */
