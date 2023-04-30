@@ -93,10 +93,11 @@ $editorLineHeight: 21.4667px;
   }
 
   .notes-container {
-    // height: 50vh;
+    height: 70vh;
     width: 60vw;
     position: relative;
     border: 1px solid black;
+    overflow-y: scroll;
 
     input[type='checkbox'] {
       // transform: scale(2);
