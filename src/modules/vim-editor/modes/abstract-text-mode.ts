@@ -58,8 +58,6 @@ export abstract class AbstractTextMode {
     this.caretWidth = getCssVar('--caret-size-width');
     this.caretHeight = getCssVar('--caret-size-height');
 
-    this.parentElement.scrollTop = 100;
-
     this.store.registerAction('createNewLine', createNewLine);
   }
 
@@ -78,23 +76,37 @@ export abstract class AbstractTextMode {
     }
 
     console.clear();
-    const horiDirection =
-      this.currentLineNumber > newCursorLine ? 'up' : 'down';
-    this.currentLineNumber = newCursorLine;
-
-    this.currentCaretCol = newCursorCol;
 
     this.commenKeyFunctionality();
     const lineOffsetLeft = this.getLineRectOffsetLeft();
 
+    const horiDirection =
+      this.currentLineNumber > newCursorLine ? 'up' : 'down';
+    const horiSame = this.currentLineNumber === newCursorLine;
+    this.currentLineNumber = newCursorLine;
+    const vertiDirection =
+      this.currentCaretCol > newCursorCol ? 'left' : 'right';
+    /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: abstract-text-mode.ts ~ line 88 ~ vertiDirection', vertiDirection);
+    const vertiSame = this.currentCaretCol === newCursorCol;
+    /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: abstract-text-mode.ts ~ line 91 ~ vertiSame', vertiSame);
+    this.currentCaretCol = newCursorCol;
+
+    let direction = '';
+    if (!vertiSame) {
+      direction = vertiDirection;
+    } else if (!horiSame) {
+      direction = horiDirection;
+    }
+
     // /* prettier-ignore */ console.log('------------------------------------------------------------------------------------------');
     const cursor = this.caretElement;
     const editor = this.parentElement;
-    // @ts-ignore
-    window.cursor = cursor;
-    // @ts-ignore
-    window.editor = editor;
-    moveCursor.bind(this)(editor, cursor, horiDirection);
+    moveCursor.bind(this)(editor, cursor, direction);
+    const newTop = newCursorLine * this.caretHeight;
+    this.caretElement.style.top = `${newTop}px`;
+    const newLeft = newCursorCol * this.caretWidth;
+    /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: abstract-text-mode.ts ~ line 154 ~ newLeft', newLeft);
+    this.caretElement.style.left = `${lineOffsetLeft + newLeft}px`;
 
     return;
 
@@ -104,112 +116,62 @@ export abstract class AbstractTextMode {
       direction: Direction
     ) {
       /* prettier-ignore */ console.log('------------------------------------------------------------------------------------------');
-      /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: abstract-text-mode.ts ~ line 104 ~ direction', direction);
+      /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: abstract-text-mode.ts ~ line 111 ~ direction', direction);
       const lineHeight = this.caretHeight as number;
-      // /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: abstract-text-mode.ts ~ line 101 ~ lineHeight', lineHeight);
-      const scrollAmount = editor.scrollTop % lineHeight;
-      // /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: abstract-text-mode.ts ~ line 104 ~ scrollAmount', scrollAmount);
-      const cursorRect = cursor.getBoundingClientRect();
       const containerRect = editor.getBoundingClientRect();
-      // /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: abstract-text-mode.ts ~ line 107 ~ containerRect', containerRect);
 
       /** Relative to container */
-      const relativeCursorRect = cursor.getBoundingClientRect();
-      // /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: abstract-text-mode.ts ~ line 110 ~ newCursorRect', relativeCursorRect);
-      const relCursorTop = relativeCursorRect.top; // - containerRect.top;
-      // /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: abstract-text-mode.ts ~ line 115 ~ relCursorTop', relCursorTop);
-      const relCursorBottom = relativeCursorRect.bottom; //  - containerRect.top;
-
-      // return;
+      const cursorRect = cursor.getBoundingClientRect();
+      const relCursorTop = cursorRect.top; // - containerRect.top;
+      const relCursorLeft = cursorRect.left; // - containerRect.top;
+      const relCursorBottom = cursorRect.bottom; //  - containerRect.top;
+      const relCursorRight = cursorRect.right; //  - containerRect.top;
 
       const THRESHOLD_VALUE = 40; // - 40: 40 away from <direction>, then should scroll
+      // bottom = right, up = left
+
       const bottomThreshold = containerRect.bottom - THRESHOLD_VALUE;
       const shouldScrollDown = relCursorBottom > bottomThreshold;
-      // const shouldScrollUp = relCursorTop < containerRect.top;
-      const shouldScrollUp = relCursorTop < containerRect.top + THRESHOLD_VALUE;
+      const rightThreshold = containerRect.right - THRESHOLD_VALUE;
+      const shouldScrollRight = relCursorRight > rightThreshold;
+
+      const topThreshold = containerRect.top + THRESHOLD_VALUE;
+      const shouldScrollUp = relCursorTop < topThreshold;
+      const leftThreshold = containerRect.left + THRESHOLD_VALUE;
+      const shouldScrollLeft = relCursorLeft < leftThreshold;
 
       switch (direction) {
         case 'up':
           if (shouldScrollUp) {
-            console.log('top check');
-            // const upScrollAmount = containerRect.top - relCursorTop;
-            const upScrollAmount = lineHeight;
-            /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: abstract-text-mode.ts ~ line 157 ~ upScrollAmount', upScrollAmount);
-            editor.scrollTop -= upScrollAmount;
+            editor.scrollTop -= lineHeight;
           }
           break;
         case 'down':
           if (shouldScrollDown) {
-            console.log('bottom check');
-            const bottomScrollAmount = lineHeight;
-            editor.scrollTop += bottomScrollAmount;
+            editor.scrollTop += lineHeight;
           }
           break;
         case 'left':
-          editor.scrollLeft -= cursorRect.width;
+          if (shouldScrollLeft) {
+            editor.scrollLeft -= cursorRect.width;
+          }
           break;
         case 'right':
-          editor.scrollLeft += cursorRect.width;
+          if (shouldScrollRight) {
+            editor.scrollLeft += cursorRect.width;
+          }
           break;
         default: {
           console.log('NEITHER');
-          return;
+          break;
         }
       }
 
-      const newTop = newCursorLine * this.caretHeight;
-      this.caretElement.style.top = `${newTop}px`;
-      const newLeft = newCursorCol * this.caretWidth;
-      this.caretElement.style.left = `${lineOffsetLeft + newLeft}px`;
       // cursor.scrollIntoView({
       //   behavior: 'smooth',
       //   block: 'nearest',
       //   inline: 'nearest',
       // });
-    }
-
-    return;
-    {
-      // const lineHeight = parseInt( window.getComputedStyle(cursor).lineHeight, 10);
-      const lineHeight = this.caretHeight;
-      const editorHeight = editor.clientHeight;
-      const editorScrollTop = editor.scrollTop;
-      const cursorTop = cursor.offsetTop;
-      const newCursorTop = cursorTop + lineHeight;
-
-      const editorRect = editor.getBoundingClientRect();
-      const editorTop = editorRect.top;
-      /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: abstract-text-mode.ts ~ line 94 ~ editorTop', editorTop);
-
-      // const cursorIsInViewPort = isInViewport(cursor);
-      const shouldScrollDown =
-        newCursorTop < editorScrollTop + editorHeight - lineHeight;
-      /* prettier-ignore */ console.log('>>>> B >>>> ~ file: abstract-text-mode.ts ~ line 102 ~ cursorIsInViewPort', shouldScrollDown);
-      // const shouldScrollCursor = true;
-
-      // If the new cursor position is within the visible editor area, simply move the cursor.
-      if (shouldScrollDown) {
-        /* prettier-ignore */ console.log('>>>> 1 >>>> ~ file: abstract-text-mode.ts ~ line 98 ~ first');
-        // cursor.style.top = `${newCursorTop}px`;
-        //
-        const newTop = newCursorLine * this.caretHeight;
-        this.caretElement.style.top = `${newTop}px`;
-      }
-      // Otherwise, scroll the editor to bring the new cursor position into view.
-      else {
-        /* prettier-ignore */ console.log('>>>> 2 >>>> ~ file: abstract-text-mode.ts ~ line 98 ~ second');
-        const newScrollTop = newCursorTop - editorHeight + lineHeight;
-        /* prettier-ignore */ console.log('>>>> 3.0 >>>> ~ file: abstract-text-mode.ts ~ line 123 ~ newCursorTop', newCursorTop);
-        /* prettier-ignore */ console.log('>>>> 3.1 >>>> ~ file: abstract-text-mode.ts ~ line 123 ~ editorHeight', editorHeight);
-        /* prettier-ignore */ console.log('>>>> 3.2 >>>> ~ file: abstract-text-mode.ts ~ line 123 ~ lineHeight', lineHeight);
-        /* prettier-ignore */ console.log('>>>> 3.3 >>>> ~ file: abstract-text-mode.ts ~ line 123 ~ newScrollTop', newScrollTop);
-        editor.scrollTop = newScrollTop;
-      }
-
-      const newTop = newCursorLine * this.caretHeight;
-      this.caretElement.style.top = `${newTop}px`;
-      const newLeft = newCursorCol * this.caretWidth;
-      this.caretElement.style.left = `${lineOffsetLeft + newLeft}px`;
     }
   }
 
@@ -271,9 +233,7 @@ export abstract class AbstractTextMode {
   /** **** */
   async newLine(vimState: VimStateClass) {
     /* prettier-ignore */ console.log('------------------------------------------------------------------------------------------');
-    /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: abstract-text-mode.ts ~ line 138 ~ vimState', vimState);
     const newLineIndex = vimState.cursor.line;
-    /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: abstract-text-mode.ts ~ line 141 ~ newLineIndex', newLineIndex);
     await this.store.dispatch(
       createNewLine,
       newLineIndex,
