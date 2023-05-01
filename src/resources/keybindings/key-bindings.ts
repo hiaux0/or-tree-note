@@ -48,14 +48,14 @@ export const commandsThatWaitForNextInput: VimCommand[] = [
   // { key: `${Modifier['<Space>']}tc`, command: VIM_COMMAND.space },
 ];
 
-const cursorAllModes = [
+const cursorAllModes: VimCommand[] = [
   { key: '<ArrowLeft>', command: 'cursorLeft' },
   { key: '<ArrowUp>', command: 'cursorUp' },
   { key: '<ArrowRight>', command: 'cursorRight' },
   { key: '<ArrowDown>', command: 'cursorDown' },
 ];
 
-const cursorNormalAndVisual = [
+const cursorNormalAndVisual: VimCommand[] = [
   { key: 'b', command: 'cursorBackwordsStartWord' }, // jump backwards to the start of a word
   { key: 'e', command: 'cursorWordForwardEnd' },
   { key: 'h', command: 'cursorLeft' },
@@ -65,6 +65,8 @@ const cursorNormalAndVisual = [
   { key: 'w', command: 'cursorWordForwardStart' },
   { key: '$', command: 'cursorLineEnd' },
   { key: '^', command: 'cursorLineStart' },
+  { key: '}', command: 'jumpNextBlock' },
+  { key: '{', command: 'jumpPreviousBlock' },
   ...commandsThatWaitForNextInput,
 ];
 

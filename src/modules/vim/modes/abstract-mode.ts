@@ -1,4 +1,5 @@
 import { cloneDeep } from 'lodash';
+import { ArrayUtils } from 'modules/array/array-utils';
 import { Logger } from 'modules/debug/logger';
 import {
   getFirstNonWhiteSpaceCharIndex,
@@ -327,6 +328,88 @@ export abstract class AbstractMode {
     this.vimState.cursor.col = nonWhiteSpaceIndex;
     return this.vimState;
   }
+  jumpNextBlock(): VimStateClass {
+    let finalLine = NaN;
+    const nextNonEmptyLineIndex = ArrayUtils.findIndexFromIndex(
+      this.vimState.lines,
+      this.vimState.cursor.line,
+      (line) => {
+        const isEmpty = line.text.trim() !== '';
+        return isEmpty;
+      }
+    );
+    const amountOnEmptyLines =
+      this.vimState.cursor.line - nextNonEmptyLineIndex + 1; // don't count starting line
+    let startingIndex;
+
+    if (amountOnEmptyLines === 0) {
+      startingIndex = this.vimState.cursor.line;
+    } else {
+      startingIndex = nextNonEmptyLineIndex + 1;
+    }
+
+    const previousBlockIndex = ArrayUtils.findIndexFromIndex(
+      this.vimState.lines,
+      startingIndex,
+      (line) => {
+        const isEmpty = line.text.trim() === '';
+        return isEmpty;
+      }
+    );
+
+    finalLine = previousBlockIndex;
+    if (previousBlockIndex === this.vimState.cursor.line) {
+      /** When we go up, but find nothing, means we should go to very top */
+      finalLine = this.vimState.lines.length - 1;
+    } else if (previousBlockIndex >= 0) {
+      finalLine = previousBlockIndex;
+    }
+
+    this.vimState.cursor.line = finalLine;
+
+    return this.vimState;
+  }
+  jumpPreviousBlock(): VimStateClass {
+    let finalLine = NaN;
+    const nextNonEmptyLineIndex = ArrayUtils.findIndexBackwardFromIndex(
+      this.vimState.lines,
+      this.vimState.cursor.line,
+      (line) => {
+        const isEmpty = line.text.trim() !== '';
+        return isEmpty;
+      }
+    );
+    const amountOnEmptyLines =
+      this.vimState.cursor.line - nextNonEmptyLineIndex - 1; // don't count starting line
+    let startingIndex;
+
+    if (amountOnEmptyLines === 0) {
+      startingIndex = this.vimState.cursor.line;
+    } else {
+      startingIndex = nextNonEmptyLineIndex - 1;
+    }
+
+    const previousBlockIndex = ArrayUtils.findIndexBackwardFromIndex(
+      this.vimState.lines,
+      startingIndex,
+      (line) => {
+        const isEmpty = line.text.trim() === '';
+        return isEmpty;
+      }
+    );
+
+    finalLine = previousBlockIndex;
+    if (previousBlockIndex === this.vimState.cursor.line) {
+      /** When we go up, but find nothing, means we should go to very top */
+      finalLine = 0;
+    } else if (previousBlockIndex >= 0) {
+      finalLine = previousBlockIndex;
+    }
+
+    this.vimState.cursor.line = finalLine;
+
+    return this.vimState;
+  }
   toCharacterAtBack(commandInput: string): VimStateClass {
     const { cursor } = this.vimState;
     const text = this.vimState.getActiveLine().text;
@@ -579,7 +662,6 @@ export abstract class AbstractMode {
     );
     this.vimState.cursor.line = parentIndex;
 
-    /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: abstract-mode.ts ~ line 575 ~ foldMap', foldMap);
     this.vimState.foldMap = foldMap;
     return this.vimState;
   }

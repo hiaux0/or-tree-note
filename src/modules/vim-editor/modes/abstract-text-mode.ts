@@ -203,6 +203,8 @@ export abstract class AbstractTextMode {
   /* prettier-ignore */ cursorBackwordsStartWord(vimState: VimStateClass) { this.setCursorMovement(vimState?.cursor); }
   /* prettier-ignore */ cursorLineEnd(vimState: VimStateClass)            { this.setCursorMovement(vimState?.cursor); }
   /* prettier-ignore */ cursorLineStart(vimState: VimStateClass)          { this.setCursorMovement(vimState?.cursor); }
+  /* prettier-ignore */ jumpNextBlock(vimState: VimStateClass)            { this.setCursorMovement(vimState?.cursor); }
+  /* prettier-ignore */ jumpPreviousBlock(vimState: VimStateClass)        { this.setCursorMovement(vimState?.cursor); }
   /* prettier-ignore */ toCharacterAtBack(vimState: VimStateClass)        { this.setCursorMovement(vimState?.cursor); }
   /* prettier-ignore */ toCharacterAt(vimState: VimStateClass)            { this.setCursorMovement(vimState?.cursor); }
   /* prettier-ignore */ toCharacterAfterBack(vimState: VimStateClass)     { this.setCursorMovement(vimState?.cursor); }

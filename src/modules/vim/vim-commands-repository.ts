@@ -24,6 +24,8 @@ export enum VIM_COMMAND {
   'indentRight' = 'indentRight',
   'indentLeft' = 'indentLeft',
   'joinLine' = 'joinLine',
+  'jumpNextBlock' = 'jumpNextBlock',
+  'jumpPreviousBlock' = 'jumpPreviousBlock',
   'newLine' = 'newLine',
   'redo' = 'redo',
   'replace' = 'replace',
@@ -67,6 +69,8 @@ export const VIM_COMMANDS = [
   VIM_COMMAND['indentRight'],
   VIM_COMMAND['indentLeft'],
   VIM_COMMAND['joinLine'],
+  VIM_COMMAND['jumpNextBlock'],
+  VIM_COMMAND['jumpPreviousBlock'],
   VIM_COMMAND['newLine'],
   VIM_COMMAND['replace'],
   VIM_COMMAND['space'],
@@ -86,7 +90,7 @@ export const VIM_COMMANDS = [
   VIM_COMMAND['enterNormalMode'],
   VIM_COMMAND['enterVisualMode'],
 ];
-export type VimCommandNames = keyof typeof VIM_COMMAND;
+  export type VimCommandNames = keyof typeof VIM_COMMAND;
 
 export const VIM_COMMANDS_THAT_CHANGE_TO_NORMAL_MODE = ['visualDelete'];
 
