@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/brace-style */
 import { inject } from 'aurelia-dependency-injection';
 import { jump, StateHistory, Store } from 'aurelia-store';
+import { cloneDeep } from 'lodash';
 import {
   getComputedValueFromPixelString,
   getCssVar,
@@ -75,44 +76,52 @@ export abstract class AbstractTextMode {
       newCursorCol = this.currentCaretCol;
     }
 
-    console.clear();
-
     this.commenKeyFunctionality();
     const lineOffsetLeft = this.getLineRectOffsetLeft();
 
     const horiDirection =
       this.currentLineNumber > newCursorLine ? 'up' : 'down';
     const horiSame = this.currentLineNumber === newCursorLine;
-    this.currentLineNumber = newCursorLine;
+    const horiDelta = Math.abs(this.currentLineNumber - newCursorLine);
+
     const vertiDirection =
       this.currentCaretCol > newCursorCol ? 'left' : 'right';
     const vertiSame = this.currentCaretCol === newCursorCol;
-    this.currentCaretCol = newCursorCol;
+    const vertiDelta = Math.abs(this.currentCaretCol - newCursorCol);
 
     let direction: Direction = 'none';
+    let delta = 0;
     if (!vertiSame) {
       direction = vertiDirection;
+      delta = vertiDelta;
     } else if (!horiSame) {
       direction = horiDirection;
+      delta = horiDelta;
     }
 
-    // /* prettier-ignore */ console.log('------------------------------------------------------------------------------------------');
-    this.scrollEditor(direction);
+    this.currentLineNumber = newCursorLine;
+    this.currentCaretCol = newCursorCol;
+
     const newTop = newCursorLine * this.caretHeight;
     this.caretElement.style.top = `${newTop}px`;
     const newLeft = newCursorCol * this.caretWidth;
     this.caretElement.style.left = `${lineOffsetLeft + newLeft}px`;
+    this.scrollEditor(direction, delta);
   }
 
-  private scrollEditor(direction: Direction): void {
+  private readonly scrollEditor = (
+    direction: Direction,
+    delta: number
+  ): void => {
+    /* prettier-ignore */ console.log('------------------------------------------------------------------------------------------');
     const cursor = this.caretElement;
     const editor = this.parentElement;
-    /* prettier-ignore */ console.log('------------------------------------------------------------------------------------------');
-    const lineHeight = this.caretHeight;
     const containerRect = editor.getBoundingClientRect();
 
     /** Relative to container */
     const cursorRect = cursor.getBoundingClientRect();
+    const lineHeight = this.caretHeight;
+    const cursorWidth = cursorRect.width;
     const relCursorTop = cursorRect.top; // - containerRect.top;
     const relCursorLeft = cursorRect.left; // - containerRect.top;
     const relCursorBottom = cursorRect.bottom; //  - containerRect.top;
@@ -123,33 +132,35 @@ export abstract class AbstractTextMode {
 
     const bottomThreshold = containerRect.bottom - THRESHOLD_VALUE;
     const shouldScrollDown = relCursorBottom > bottomThreshold;
-    const rightThreshold = containerRect.right - THRESHOLD_VALUE;
-    const shouldScrollRight = relCursorRight > rightThreshold;
-
     const topThreshold = containerRect.top + THRESHOLD_VALUE;
     const shouldScrollUp = relCursorTop < topThreshold;
+
+    const rightThreshold = containerRect.right - THRESHOLD_VALUE;
+    const shouldScrollRight = relCursorRight > rightThreshold;
     const leftThreshold = containerRect.left + THRESHOLD_VALUE;
     const shouldScrollLeft = relCursorLeft < leftThreshold;
 
+    const horiChange = delta * lineHeight;
+    const vertiChange = delta * cursorWidth;
     switch (direction) {
       case 'up':
         if (shouldScrollUp) {
-          editor.scrollTop -= lineHeight;
+          editor.scrollTop -= horiChange;
         }
         break;
       case 'down':
         if (shouldScrollDown) {
-          editor.scrollTop += lineHeight;
+          editor.scrollTop += horiChange;
         }
         break;
       case 'left':
         if (shouldScrollLeft) {
-          editor.scrollLeft -= cursorRect.width;
+          editor.scrollLeft -= vertiChange;
         }
         break;
       case 'right':
         if (shouldScrollRight) {
-          editor.scrollLeft += cursorRect.width;
+          editor.scrollLeft += vertiChange;
         }
         break;
       default: {
@@ -163,7 +174,7 @@ export abstract class AbstractTextMode {
     //   block: 'nearest',
     //   inline: 'nearest',
     // });
-  }
+  };
 
   getLineRectOffsetLeft() {
     const children = this.parentElement.querySelectorAll<HTMLElement>(
