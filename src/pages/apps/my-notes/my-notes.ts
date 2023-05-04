@@ -18,6 +18,8 @@ export class MyNotes {
   private readonly editor: IVimEditor;
   numOfEditors: number;
 
+  constructor(private readonly store: Store<StateHistory<VimEditorState>>) {}
+
   /**
    * History: Use length of editors to display editors in the view
    *   Before, I repeated over `editor of editors`, but that had a mutability problem,
@@ -27,5 +29,17 @@ export class MyNotes {
    */
   bind() {
     this.numOfEditors = this.editors.length;
+  }
+
+  attached() {
+    this.addEventListeners();
+  }
+
+  private addEventListeners() {
+    this.changeActiveEditors();
+  }
+
+  private changeActiveEditors() {
+    // this.store.dispatch(reducer);
   }
 }

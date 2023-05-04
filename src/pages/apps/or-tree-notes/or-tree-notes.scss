@@ -58,6 +58,12 @@ $editorLineHeight: 21.4667px;
     border: 1px solid red;
   }
 
+  &.otn-inactive {
+    #caret {
+      display: none;
+    }
+  }
+
   &.mode-NORMAL {
     #caret {
       border: 1px solid black;

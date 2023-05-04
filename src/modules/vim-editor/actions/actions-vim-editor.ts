@@ -62,3 +62,13 @@ export function createNewLine(
     })
   );
 }
+
+// export function changeActiveEditors(
+//   state: StateHistory<VimEditorState>,
+//   editorId: number
+// ) {
+//   return nextStateHistory(
+//     cloneDeep(state),
+//     produce(state.present, (draftState) => {})
+//   );
+// }
