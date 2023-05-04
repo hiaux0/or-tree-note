@@ -1,14 +1,25 @@
 <template>
   <require from="./note-line/note-line"></require>
 
-  <div style="display: flex; justify-content: space-between; align-items: center;">
+  <div
+    style="display: flex; justify-content: space-between; align-items: center"
+  >
     <h1>${value}</h1>
-    <button click.delegate="downloadText()" style="height: 30px;">download</button>
+    <button click.delegate="downloadText()" style="height: 30px"
+      >download</button
+    >
   </div>
 
   <!-- <button click.delegate="undo()">Undo</button> -->
 
-  <div class="otn-container mode-${vimMode}">
+  <div
+    class="
+      otn-container
+      mode-${vimMode}
+      ${isEditorActive ? 'otn-active' : ''}
+    "
+    data-otn-id="${editorId}"
+  >
     <!-- *** -->
     <!-- OTN -->
     <!-- *** -->

@@ -1,5 +1,5 @@
 import { autoinject } from 'aurelia-dependency-injection';
-import { bindable } from 'aurelia-framework';
+import { bindable, computedFrom } from 'aurelia-framework';
 import { Store, jump, connectTo, StateHistory } from 'aurelia-store';
 import { CSS_SELECTORS } from 'common/css-selectors';
 import { CURRENT_OTN_MODE } from 'local-storage';
@@ -30,6 +30,11 @@ import './or-tree-notes.scss';
 @autoinject()
 @connectTo<StateHistory<VimEditorState>>({
   selector: {
+    activeEditorId: (store) =>
+      store.state.pipe(
+        map((x) => x.present.activeEditor),
+        distinctUntilChanged()
+      ),
     vimMode: (store) =>
       store.state.pipe(
         map((x) => x.present.editors[x.present.activeEditor]?.vimState?.mode),
@@ -59,15 +64,20 @@ export class OrTreeNotes {
   vimEditor: VimEditor;
   pastLines: any;
 
+  private readonly activeEditorId: number;
+
+  @computedFrom('activeEditorId')
+  get isEditorActive() {
+    const is = this.activeEditorId === this.editorId;
+    return is;
+  }
+
   constructor(private readonly store: Store<StateHistory<VimEditorState>>) {
     this.store.registerAction('toggleCheckbox', toggleCheckbox);
     this.store.registerAction('changeVimState', changeVimState);
   }
 
   attached() {
-    this.lines;
-    /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: or-tree-notes.ts ~ line 69 ~ this.lines', this.lines);
-    /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: or-tree-notes.ts ~ line 83 ~ this.cursorPosition', this.cursorPosition);
     const vimEditorOptions: VimEditorOptions = {
       id: this.editorId,
       parentHtmlElement: this.notesContainerRef,

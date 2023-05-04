@@ -54,6 +54,10 @@ $editorLineHeight: 21.4667px;
 .otn-container {
   display: flex;
 
+  &.otn-active {
+    border: 1px solid red;
+  }
+
   &.mode-NORMAL {
     #caret {
       border: 1px solid black;
