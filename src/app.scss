@@ -1,5 +1,9 @@
 @import './common/variables.scss';
 
+* {
+  box-sizing: border-box;
+}
+
 body {
   background: #706363;
   font-size: $fontSize;
