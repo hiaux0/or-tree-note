@@ -2,19 +2,16 @@ import { StateHistory, nextStateHistory } from 'aurelia-store';
 import produce from 'immer';
 import { cloneDeep } from 'lodash';
 import { VimStateClass } from 'modules/vim/vim-state';
-import { VimEditorState } from 'store/initial-state';
+import { EditorIds, VimEditorState } from 'store/initial-state';
 
 export function changeVimState(
   state: StateHistory<VimEditorState>,
   editorId: number,
   newVimState: VimStateClass
 ) {
-  // /* prettier-ignore */ console.trace('>>>> _ >>>> ~ file: actions-vim-editor.ts ~ line 8 ~ changeVimState', changeVimState);
-
   return nextStateHistory(
     cloneDeep(state),
     produce(state.present, (draftState) => {
-      /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: actions-vim-editor.ts ~ line 18 ~ editorId', editorId);
       draftState.editors[editorId].vimState = newVimState.serialize();
       draftState.editors[editorId].vimState.deletedLinesIndeces?.forEach(
         (deletedLineIndex) => {
@@ -64,12 +61,30 @@ export function createNewLine(
   );
 }
 
-// export function changeActiveEditors(
-//   state: StateHistory<VimEditorState>,
-//   editorId: number
-// ) {
-//   return nextStateHistory(
-//     cloneDeep(state),
-//     produce(state.present, (draftState) => {})
-//   );
-// }
+export function changeActiveEditors(
+  state: StateHistory<VimEditorState>,
+  editorIds: EditorIds
+) {
+  return nextStateHistory(
+    cloneDeep(state),
+    produce(state.present, (draftState) => {
+      draftState.activeEditorIds = editorIds;
+    })
+  );
+}
+
+export function toggleActiveEditors(
+  state: StateHistory<VimEditorState>,
+  editorId: number
+) {
+  const asSet = new Set(state.present.activeEditorIds);
+
+  if (asSet.has(editorId)) {
+    asSet.delete(editorId);
+  } else {
+    asSet.add(editorId);
+  }
+
+  const updatedIds = Array.from(asSet);
+  return changeActiveEditors(state, updatedIds);
+}

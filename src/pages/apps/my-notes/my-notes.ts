@@ -1,5 +1,7 @@
 import { autoinject } from 'aurelia-framework';
 import { connectTo, StateHistory, Store } from 'aurelia-store';
+import { findParentElement } from 'modules/dom/dom';
+import { toggleActiveEditors } from 'modules/vim-editor/actions/actions-vim-editor';
 import { distinctUntilChanged, map } from 'rxjs/operators';
 import { IVimEditor, VimEditorState } from 'store/initial-state';
 
@@ -18,7 +20,9 @@ export class MyNotes {
   private readonly editor: IVimEditor;
   numOfEditors: number;
 
-  constructor(private readonly store: Store<StateHistory<VimEditorState>>) {}
+  constructor(private readonly store: Store<StateHistory<VimEditorState>>) {
+    this.store.registerAction('toggleActiveEditors', toggleActiveEditors);
+  }
 
   /**
    * History: Use length of editors to display editors in the view
@@ -36,10 +40,22 @@ export class MyNotes {
   }
 
   private addEventListeners() {
-    this.changeActiveEditors();
+    this.toggleActiveEditors();
   }
 
-  private changeActiveEditors() {
-    // this.store.dispatch(reducer);
+  private toggleActiveEditors() {
+    document.addEventListener('click', (event: MouseEvent) => {
+      const closestParent = findParentElement(
+        event.target as HTMLElement,
+        '.otn-container'
+      );
+
+      if (closestParent !== null) {
+        void this.store.dispatch(
+          'toggleActiveEditors',
+          Number(closestParent.dataset?.otnId)
+        );
+      }
+    });
   }
 }
