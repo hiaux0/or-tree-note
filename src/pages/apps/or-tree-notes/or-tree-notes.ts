@@ -14,7 +14,7 @@ import {
   VimStateV2,
 } from 'modules/vim/vim-types';
 import { distinctUntilChanged, map } from 'rxjs/operators';
-import { EditorLine, VimEditorState } from 'store/initial-state';
+import { EditorIds, EditorLine, VimEditorState } from 'store/initial-state';
 import { toggleCheckbox } from 'store/or-tree-notes/actions-or-tree-notes';
 
 import './or-tree-notes.scss';
@@ -30,19 +30,9 @@ import './or-tree-notes.scss';
 @autoinject()
 @connectTo<StateHistory<VimEditorState>>({
   selector: {
-    activeEditorId: (store) =>
+    activeEditorIds: (store) =>
       store.state.pipe(
-        map((x) => x.present.activeEditor),
-        distinctUntilChanged()
-      ),
-    vimMode: (store) =>
-      store.state.pipe(
-        map((x) => x.present.editors[x.present.activeEditor]?.vimState?.mode),
-        distinctUntilChanged()
-      ),
-    cursorPosition: (store) =>
-      store.state.pipe(
-        map((x) => x.present.editors[x.present.activeEditor]?.vimState?.cursor),
+        map((x) => x.present.activeEditorIds),
         distinctUntilChanged()
       ),
   },
@@ -52,7 +42,6 @@ export class OrTreeNotes {
   @bindable vimState: VimStateV2;
   @bindable editorId: number;
 
-  cursorPosition: Cursor;
   line: EditorLine;
   state: StateHistory<VimEditorState>;
 
@@ -64,17 +53,47 @@ export class OrTreeNotes {
   vimEditor: VimEditor;
   pastLines: any;
 
-  private readonly activeEditorId: number;
+  private readonly activeEditorIds: EditorIds;
+  private vimMode: VimMode;
+  private cursorPosition: Cursor;
 
-  @computedFrom('activeEditorId')
+  /** CONSIDER: because this is an array, observing this might be hard
+   * eg. when one item changes or when multiple ids get addded.
+   * I want to observer eg the length, so an idea could be to convert
+   * the array into a string with comma separation
+   */
+  @computedFrom('activeEditorIds')
   get isEditorActive() {
-    const is = this.activeEditorId === this.editorId;
+    const is = this.activeEditorIds?.includes(this.editorId);
     return is;
   }
 
   constructor(private readonly store: Store<StateHistory<VimEditorState>>) {
     this.store.registerAction('toggleCheckbox', toggleCheckbox);
     this.store.registerAction('changeVimState', changeVimState);
+  }
+
+  bind() {
+    this.initStoreSubscriptions();
+  }
+
+  private initStoreSubscriptions() {
+    this.store.state
+      .pipe(
+        map((x) => x.present.editors[this.editorId]?.vimState?.mode),
+        distinctUntilChanged()
+      )
+      .subscribe((vimMode) => {
+        this.vimMode = vimMode;
+      });
+    this.store.state
+      .pipe(
+        map((x) => x.present.editors[this.editorId]?.vimState?.cursor),
+        distinctUntilChanged()
+      )
+      .subscribe((cursorPosition) => {
+        this.cursorPosition = cursorPosition;
+      });
   }
 
   attached() {

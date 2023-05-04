@@ -57,9 +57,11 @@ export interface IVimEditor {
   vimState?: VimStateV2;
 }
 
+export type EditorIds = number[];
+
 export interface VimEditorState {
   editors?: IVimEditor[];
-  activeEditor?: number;
+  activeEditorIds?: EditorIds;
   lines: EditorLine[];
   vimState?: VimStateV2;
 }
@@ -107,7 +109,7 @@ export const initialVimEditorState: VimEditorState = {
       ],
     },
   ],
-  activeEditor: 0,
+  activeEditorIds: [0],
   lines: [
     {
       text: 'abcdef 89',

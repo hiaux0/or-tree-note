@@ -14,6 +14,7 @@ export function changeVimState(
   return nextStateHistory(
     cloneDeep(state),
     produce(state.present, (draftState) => {
+      /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: actions-vim-editor.ts ~ line 18 ~ editorId', editorId);
       draftState.editors[editorId].vimState = newVimState.serialize();
       draftState.editors[editorId].vimState.deletedLinesIndeces?.forEach(
         (deletedLineIndex) => {

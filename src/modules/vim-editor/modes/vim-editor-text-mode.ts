@@ -11,7 +11,7 @@ import {
   SPACE,
 } from 'resources/keybindings/app-keys';
 import { distinctUntilChanged, map, pluck, take } from 'rxjs/operators';
-import { VimEditorState } from 'store/initial-state';
+import { EditorIds, VimEditorState } from 'store/initial-state';
 
 import { changeText, changeVimState } from '../actions/actions-vim-editor';
 import { VimEditorOptions } from '../vim-editor';
@@ -25,9 +25,9 @@ const logger = new Logger({ scope: 'VimEditorTextMode' });
 
 @connectTo<StateHistory<VimEditorState>>({
   selector: {
-    activeEditorId: (store) =>
+    activeEditorIds: (store) =>
       store.state.pipe(
-        map((x) => x.present.activeEditor),
+        map((x) => x.present.activeEditorIds),
         distinctUntilChanged()
       ),
   },
@@ -37,7 +37,7 @@ export class VimEditorTextMode {
   elementText: VimLine[] = [];
   vim: Vim;
 
-  private activeEditorId: number;
+  private activeEditorIds: EditorIds;
 
   getCurrentTextMode: () => AbstractTextMode;
 
@@ -51,11 +51,11 @@ export class VimEditorTextMode {
     store.registerAction('changeText', changeText);
     store.state
       .pipe(
-        map((x) => x.present.activeEditor),
+        map((x) => x.present.activeEditorIds),
         distinctUntilChanged()
       )
-      .subscribe((activeEditor) => {
-        this.activeEditorId = activeEditor;
+      .subscribe((activeEditorIds) => {
+        this.activeEditorIds = activeEditorIds;
       });
 
     const normalTextMode = new NormalTextMode(
@@ -148,7 +148,7 @@ export class VimEditorTextMode {
     hotkeys('*', (ev) => {
       console.clear();
 
-      if (this.activeEditorId !== this.vimEditorOptions.id) return;
+      if (!this.activeEditorIds.includes(this.vimEditorOptions.id)) return;
 
       if (this.checkAllowedBrowserShortcuts(ev)) {
         return;

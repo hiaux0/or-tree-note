@@ -22,7 +22,8 @@ export function configure(aurelia: Aurelia) {
   aurelia.use.developmentLogging(environment.debug ? 'debug' : 'warn');
   /** https://aurelia.io/docs/plugins/store#introduction */
   aurelia.use.plugin(PLATFORM.moduleName('aurelia-store'), {
-    initialState: localStorageState || initialVimEditorState,
+    // initialState: localStorageState || initialVimEditorState,
+    initialState: initialVimEditorState,
     history: {
       undoable: true,
       limit: 5,
