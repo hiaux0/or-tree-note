@@ -5,6 +5,7 @@ import { VimExecutingMode, VimPlugin } from 'modules/vim/vim-types';
 import { VimEditorTextMode } from './modes/vim-editor-text-mode';
 
 export interface VimEditorOptions {
+  id: number;
   // Input / Setup
   inputList?: string[];
   htmlInputList?: HTMLElement[];
@@ -22,7 +23,6 @@ export interface VimEditorOptions {
 }
 // const defaultVimEditorOptions: VimEditorOptions = { isTextMode: true, };
 
-@inject(VimEditorTextMode)
 export class VimEditor {
   vim: Vim;
 

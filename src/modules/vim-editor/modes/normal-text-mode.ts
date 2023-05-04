@@ -13,17 +13,19 @@ export class NormalTextMode extends AbstractTextMode {
   mode: VimMode.NORMAL;
 
   constructor(
+    public editerId,
     public parentElement,
     public childSelector,
     public caretElement,
     public store: Store<StateHistory<VimEditorState>>
   ) {
-    super(parentElement, childSelector, caretElement, store);
+    super(editerId, parentElement, childSelector, caretElement, store);
   }
 
   deleteInnerWord(vimState?: VimStateClass) {
     void this.store.dispatch(
       changeText,
+      this.editerId,
       vimState.cursor.line,
       vimState.getActiveLine().text
     );
@@ -32,6 +34,7 @@ export class NormalTextMode extends AbstractTextMode {
   visualDelete(vimState?: VimStateClass) {
     void this.store.dispatch(
       changeText,
+      this.editerId,
       vimState.cursor.line,
       vimState.getActiveLine().text
     );

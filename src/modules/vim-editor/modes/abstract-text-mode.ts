@@ -40,6 +40,7 @@ export abstract class AbstractTextMode {
   private readonly childrenMutationObserver: ChildrenMutationObserver;
 
   constructor(
+    public editerId: number,
     public parentElement: HTMLElement,
     public childSelector: string,
     public caretElement: HTMLElement,
@@ -216,6 +217,7 @@ export abstract class AbstractTextMode {
     const newLineIndex = vimState.cursor.line;
     await this.store.dispatch(
       createNewLine,
+      this.editerId,
       newLineIndex,
       vimState.getPreviousLine().text,
       vimState.getActiveLine().text
@@ -239,6 +241,7 @@ export abstract class AbstractTextMode {
     const newLineIndex = vimState.cursor.line;
     await this.store.dispatch(
       createNewLine,
+      this.editerId,
       newLineIndex,
       vimState.getPreviousLine().text,
       vimState.getActiveLine().text
@@ -248,6 +251,7 @@ export abstract class AbstractTextMode {
   async indentRight(vimState: VimStateClass) {
     await this.store.dispatch(
       changeText,
+      this.editerId,
       vimState.cursor.line,
       vimState.getActiveLine().text
     );
@@ -256,6 +260,7 @@ export abstract class AbstractTextMode {
   async indentLeft(vimState: VimStateClass) {
     await this.store.dispatch(
       changeText,
+      this.editerId,
       vimState.cursor.line,
       vimState.getActiveLine().text
     );
@@ -264,6 +269,7 @@ export abstract class AbstractTextMode {
   async delete(vimState: VimStateClass) {
     await this.store.dispatch(
       changeText,
+      this.editerId,
       vimState.cursor.line,
       vimState.getActiveLine().text
     );
@@ -271,6 +277,7 @@ export abstract class AbstractTextMode {
   async replace(vimState: VimStateClass) {
     await this.store.dispatch(
       changeText,
+      this.editerId,
       vimState.cursor.line,
       vimState.getActiveLine().text
     );

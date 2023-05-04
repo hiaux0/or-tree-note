@@ -1,5 +1,5 @@
 import 'aurelia-polyfills';
-import { StateHistory, Store } from 'aurelia-store';
+import { connectTo, StateHistory, Store } from 'aurelia-store';
 import { isMac } from 'common/platform/platform-check';
 import hotkeys from 'hotkeys-js';
 import { Logger } from 'modules/debug/logger';
@@ -10,7 +10,7 @@ import {
   ModifiersType,
   SPACE,
 } from 'resources/keybindings/app-keys';
-import { pluck, take } from 'rxjs/operators';
+import { distinctUntilChanged, map, pluck, take } from 'rxjs/operators';
 import { VimEditorState } from 'store/initial-state';
 
 import { changeText, changeVimState } from '../actions/actions-vim-editor';
@@ -23,10 +23,21 @@ import { VisualTextMode } from './visual-text-mode';
 
 const logger = new Logger({ scope: 'VimEditorTextMode' });
 
+@connectTo<StateHistory<VimEditorState>>({
+  selector: {
+    activeEditorId: (store) =>
+      store.state.pipe(
+        map((x) => x.present.activeEditor),
+        distinctUntilChanged()
+      ),
+  },
+})
 export class VimEditorTextMode {
   childrenElementList: NodeListOf<HTMLElement>;
   elementText: VimLine[] = [];
   vim: Vim;
+
+  private activeEditorId: number;
 
   getCurrentTextMode: () => AbstractTextMode;
 
@@ -38,26 +49,38 @@ export class VimEditorTextMode {
     public store: Store<StateHistory<VimEditorState>>
   ) {
     store.registerAction('changeText', changeText);
+    store.state
+      .pipe(
+        map((x) => x.present.activeEditor),
+        distinctUntilChanged()
+      )
+      .subscribe((activeEditor) => {
+        this.activeEditorId = activeEditor;
+      });
 
     const normalTextMode = new NormalTextMode(
+      this.vimEditorOptions.id,
       this.vimEditorOptions.parentHtmlElement,
       this.vimEditorOptions.childSelectors[0],
       this.vimEditorOptions.caretElements[0],
       store
     );
     const insertTextMode = new InsertTextMode(
+      this.vimEditorOptions.id,
       this.vimEditorOptions.parentHtmlElement,
       this.vimEditorOptions.childSelectors[0],
       this.vimEditorOptions.caretElements[0],
       store
     );
     const visualTextMode = new VisualTextMode(
+      this.vimEditorOptions.id,
       this.vimEditorOptions.parentHtmlElement,
       this.vimEditorOptions.childSelectors[0],
       this.vimEditorOptions.caretElements[0],
       store
     );
     const visualLineTextMode = new VisualLineTextMode(
+      this.vimEditorOptions.id,
       this.vimEditorOptions.parentHtmlElement,
       this.vimEditorOptions.childSelectors[0],
       this.vimEditorOptions.caretElements[0],
@@ -124,6 +147,9 @@ export class VimEditorTextMode {
   initKeys() {
     hotkeys('*', (ev) => {
       console.clear();
+
+      if (this.activeEditorId !== this.vimEditorOptions.id) return;
+
       if (this.checkAllowedBrowserShortcuts(ev)) {
         return;
       }
@@ -177,7 +203,11 @@ export class VimEditorTextMode {
       ]);
     }
 
-    await this.store.dispatch(changeVimState, result.vimState);
+    await this.store.dispatch(
+      changeVimState,
+      this.vimEditorOptions.id,
+      result.vimState
+    );
   }
 
   executeCommandSequenceInEditor(inputSequence: string | string[]) {

@@ -52,7 +52,14 @@ export interface EditorLine {
   macro?: LineMacro;
 }
 
+export interface IVimEditor {
+  lines: EditorLine[];
+  vimState?: VimStateV2;
+}
+
 export interface VimEditorState {
+  editors?: IVimEditor[];
+  activeEditor?: number;
   lines: EditorLine[];
   vimState?: VimStateV2;
 }
@@ -70,6 +77,37 @@ export interface VimEditorState {
  * - snippets
  */
 export const initialVimEditorState: VimEditorState = {
+  editors: [
+    {
+      lines: [
+        {
+          text: 'from editor abcdef 89',
+        },
+        {
+          text: '012 456',
+          macro: {
+            checkbox: {
+              value: true,
+            },
+          },
+        },
+      ],
+    },
+    {
+      lines: [
+        {
+          text: 'one two three',
+          macro: {
+            checkbox: {
+              value: true,
+            },
+          },
+        },
+        { text: 'other' },
+      ],
+    },
+  ],
+  activeEditor: 0,
   lines: [
     {
       text: 'abcdef 89',

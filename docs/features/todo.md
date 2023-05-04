@@ -13,6 +13,7 @@
     ```
     Because, some methods have an input, some don't. I want to make it clearer, what is available
     The methods, I'm using like `this[myMethod](inputs...)`
+  - [ ] `initial-state.ts` remove `lines`  in `VimEditorState`
 
 # Done
 

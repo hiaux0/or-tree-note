@@ -13,6 +13,7 @@ export class InsertTextMode extends AbstractTextMode {
   backspace(vimState?: VimStateClass) {
     void this.store.dispatch(
       changeText,
+      this.editerId,
       vimState.cursor.line,
       vimState.getActiveLine().text
     );
@@ -20,9 +21,9 @@ export class InsertTextMode extends AbstractTextMode {
   }
 
   space(vimState?: VimStateClass) {
-    /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: insert-text-mode.ts ~ line 23 ~ space');
     void this.store.dispatch(
       changeText,
+      this.editerId,
       vimState.cursor.line,
       vimState.getActiveLine().text
     );
@@ -32,6 +33,7 @@ export class InsertTextMode extends AbstractTextMode {
   type(vimState?: VimStateClass) {
     void this.store.dispatch(
       changeText,
+      this.editerId,
       vimState.cursor.line,
       vimState.getActiveLine().text
     );

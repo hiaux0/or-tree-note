@@ -1,0 +1,10 @@
+<template>
+  <require from="../or-tree-notes/or-tree-notes"></require>
+
+  <template repeat.for="numOfEditor of numOfEditors">
+    <or-tree-notes
+      editor-id.bind="$index"
+      lines.bind="editors[$index].lines"
+    ></or-tree-notes>
+  </template>
+</template>

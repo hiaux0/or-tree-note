@@ -11,11 +11,12 @@ export class VisualLineTextMode extends AbstractTextMode {
   mode: VimMode.VISUALLINE;
 
   constructor(
+    public editerId,
     public parentElement,
     public childSelector,
     public caretElement,
     public store: Store<StateHistory<VimEditorState>>
   ) {
-    super(parentElement, childSelector, caretElement, store);
+    super(editerId, parentElement, childSelector, caretElement, store);
   }
 }
