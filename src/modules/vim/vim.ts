@@ -81,7 +81,8 @@ export class Vim {
     input: string,
     modifiers?: string[]
   ): QueueInputReturn | undefined {
-    logger.debug(['Received input: %s', input], { log: true });
+    const modifiersText = `${modifiers?.join('+ ')}`;
+    logger.debug(['Received input: (%s) %s', modifiersText, input], { log: true });
 
     //
     let targetCommandName: VIM_COMMAND | undefined;

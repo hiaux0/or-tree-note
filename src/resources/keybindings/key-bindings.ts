@@ -55,6 +55,11 @@ const cursorAllModes: VimCommand[] = [
   { key: '<ArrowDown>', command: 'cursorDown' },
 ];
 
+export const cursorNormalAndInsert: VimCommand[] = [
+  { key: '<Control>]', command: 'indentRight' },
+  { key: '<Control>[', command: 'indentLeft' },
+];
+
 const cursorNormalAndVisual: VimCommand[] = [
   { key: 'b', command: 'cursorBackwordsStartWord' }, // jump backwards to the start of a word
   { key: 'e', command: 'cursorWordForwardEnd' },
@@ -87,13 +92,12 @@ const keyBindings = {
     { key: 'za', command: 'toggleFold' },
     { key: 'gh', command: 'hint' },
     { key: '<Control>s', command: 'save' },
-    { key: '<Control>]', command: 'indentRight' },
-    { key: '<Control>[', command: 'indentLeft' },
     { key: '<Enter>', command: 'newLine' },
     { key: '<Backspace>', command: 'backspace' },
     { key: '<Meta>', command: 'nothing' },
     ...commandsAllModes,
     ...cursorAllModes,
+    ...cursorNormalAndInsert,
     ...cursorNormalAndVisual,
   ],
   insert: [

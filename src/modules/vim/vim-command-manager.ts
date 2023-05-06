@@ -4,6 +4,7 @@ import { inputContainsSequence } from 'modules/string/string';
 import { SPECIAL_KEYS } from 'resources/keybindings/app-keys';
 import {
   commandsThatWaitForNextInput,
+  cursorNormalAndInsert,
   isAlt,
   isArrowDown,
   isArrowLeft,
@@ -176,7 +177,6 @@ export class VimCommandManager {
     input: string,
     modifiers: string[] = []
   ): PotentialCommandReturn {
-    // /* prettier-ignore */ console.log('------------------------------------------------------------------------------------------');
     const commandAwaitingNextInput = getCommandAwaitingNextInput(
       input,
       this.potentialCommands
@@ -314,6 +314,9 @@ export class VimCommandManager {
           return; // todo
         } else if (isSpace(input)) {
           return VIM_COMMAND.space;
+        } else if (isCommonCommand(input, modifiers) != null) {
+          const targetCommand = isCommonCommand(input, modifiers);
+          return VIM_COMMAND[targetCommand.command];
         }
 
         /* prettier-ignore */ logger.culogger.debug(['Default to the command: type in Insert Mode'], { log: true, });
@@ -506,4 +509,13 @@ function getCommandAwaitingNextInput(
 export function ignoreCaseForModifiers(key: string, keySequence: string) {
   const isIgnoreCase = keySequence.toLowerCase().includes(key.toLowerCase());
   return isIgnoreCase;
+}
+
+function isCommonCommand(input: string, modifiers: string[]): VimCommand {
+  const composite = `${modifiers.join('')}${input}`;
+  const targetCommand = cursorNormalAndInsert.find((command) => {
+    return command.key === composite;
+  });
+
+  return targetCommand;
 }

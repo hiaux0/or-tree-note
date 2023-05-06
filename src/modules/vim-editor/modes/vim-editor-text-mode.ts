@@ -10,6 +10,7 @@ import {
   ModifiersType,
   SPACE,
 } from 'resources/keybindings/app-keys';
+import { Modifier } from 'resources/keybindings/key-bindings';
 import { distinctUntilChanged, map, pluck, take } from 'rxjs/operators';
 import { EditorIds, VimEditorState } from 'store/initial-state';
 
@@ -146,7 +147,6 @@ export class VimEditorTextMode {
 
   initKeys() {
     hotkeys('*', (ev) => {
-
       if (!this.activeEditorIds.includes(this.vimEditorOptions.id)) return;
       console.clear();
 
@@ -161,13 +161,27 @@ export class VimEditorTextMode {
         pressedKey = ev.key;
       }
 
-      const modifiers = `${ev.ctrlKey ? 'Ctrl+' : ''}${
+      const modifiersText = `${ev.ctrlKey ? 'Ctrl+' : ''}${
         ev.shiftKey ? 'Shift+' : ''
       }${ev.altKey ? 'Alt+' : ''}${ev.metaKey ? 'Meta+' : ''}`;
       // /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: vim-editor-text-mode.ts ~ line 133 ~ ev.key', ev.key);
-      /* prettier-ignore */ logger.debug(['-------------- Key pressed: (%s) %s', modifiers, ev.key ?? pressedKey], { log: true, isOnlyGroup: true, });
+      /* prettier-ignore */ logger.debug(['-------------- Key pressed: (%s) %s', modifiersText, ev.key ?? pressedKey], { log: true, isOnlyGroup: true, });
 
-      void this.executeCommandInEditor(pressedKey, ev);
+      const collectedModifiers = [];
+      if (ev.ctrlKey) {
+        collectedModifiers.push(Modifier['<Control>']);
+      }
+      if (ev.shiftKey) {
+        collectedModifiers.push(Modifier['<Shift>']);
+      }
+      if (ev.altKey) {
+        collectedModifiers.push(Modifier['<Alt>']);
+      }
+      if (ev.metaKey) {
+        collectedModifiers.push(Modifier['<Meta>']);
+      }
+
+      void this.executeCommandInEditor(pressedKey, ev, collectedModifiers);
     });
   }
 
@@ -176,9 +190,13 @@ export class VimEditorTextMode {
     return ALL_MODIFIERS.includes(modifierInput);
   }
 
-  async executeCommandInEditor(input: string, ev: KeyboardEvent) {
+  async executeCommandInEditor(
+    input: string,
+    ev: KeyboardEvent,
+    modifiers: string[]
+  ) {
     //
-    const result = this.vim.queueInput(input);
+    const result = this.vim.queueInput(input, modifiers);
     logger.debug(['Received result from vim: %o', result], {
       onlyVerbose: true,
     });
