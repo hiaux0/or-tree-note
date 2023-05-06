@@ -17,13 +17,13 @@ export function configure(aurelia: Aurelia) {
   const currentMode = window.localStorage.getItem(CURRENT_OTN_MODE);
   const localStorageState = JSON.parse(
     window.localStorage.getItem(currentMode)
-  );
+  ) as string;
 
   aurelia.use.developmentLogging(environment.debug ? 'debug' : 'warn');
   /** https://aurelia.io/docs/plugins/store#introduction */
   aurelia.use.plugin(PLATFORM.moduleName('aurelia-store'), {
-    // initialState: localStorageState || initialVimEditorState,
-    initialState: initialVimEditorState,
+    initialState: localStorageState || initialVimEditorState,
+    // initialState: initialVimEditorState,
     history: {
       undoable: true,
       limit: 5,
@@ -34,5 +34,5 @@ export function configure(aurelia: Aurelia) {
     aurelia.use.plugin(PLATFORM.moduleName('aurelia-testing'));
   }
 
-  aurelia.start().then(() => aurelia.setRoot(PLATFORM.moduleName('app')));
+  void aurelia.start().then(() => aurelia.setRoot(PLATFORM.moduleName('app')));
 }
