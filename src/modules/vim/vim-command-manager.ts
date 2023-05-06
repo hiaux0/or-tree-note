@@ -181,9 +181,7 @@ export class VimCommandManager {
       input,
       this.potentialCommands
     );
-    // /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: vim-command-manager.ts ~ line 155 ~ commandAwaitingNextInput', commandAwaitingNextInput);
     const includes = this.includesPotentialCommands(commandAwaitingNextInput);
-    // /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: vim-command-manager.ts ~ line 157 ~ includes', includes);
     // if (includes) {
     if (commandAwaitingNextInput !== undefined) {
       if (this.potentialCommands.length === 0) {
@@ -212,7 +210,6 @@ export class VimCommandManager {
     let keySequence: string = '';
     if (this.queuedKeys.length) {
       keySequence = this.queuedKeys.join('').concat(input);
-      // /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: vim-command-manager.ts ~ line 170 ~ keySequence', keySequence);
     } else if (this.getSynonymModifier(input) || modifiers.length) {
       const synonymInput = this.getSynonymModifier(input);
 
@@ -222,11 +219,9 @@ export class VimCommandManager {
       }
       if (synonymInput) {
         keySequence += synonymInput;
-        // /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: vim-command-manager.ts ~ line 175 ~ keySequence', keySequence);
       }
     } else {
       keySequence = input;
-      // /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: vim-command-manager.ts ~ line 179 ~ keySequence', keySequence);
     }
     /* prettier-ignore */ logger.culogger.debug(['keySequence: %s', keySequence], { log: true});
 

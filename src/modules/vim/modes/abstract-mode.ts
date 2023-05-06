@@ -92,7 +92,14 @@ export abstract class AbstractMode {
     return result;
   }
   executeVimPluginCommand(targetVimPlugin: VimPlugin, commandValue: string) {
-    return targetVimPlugin.execute(this.vimState, commandValue);
+    // return targetVimPlugin.execute(this.vimState, commandValue);
+
+    const pluginResult = targetVimPlugin.execute(this.vimState, commandValue);
+    if (pluginResult) {
+      return pluginResult;
+    }
+
+    return this.vimState;
   }
 
   reTokenizeInput(input: string) {

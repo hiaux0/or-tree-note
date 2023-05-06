@@ -146,9 +146,9 @@ export class VimEditorTextMode {
 
   initKeys() {
     hotkeys('*', (ev) => {
-      console.clear();
 
       if (!this.activeEditorIds.includes(this.vimEditorOptions.id)) return;
+      console.clear();
 
       if (this.checkAllowedBrowserShortcuts(ev)) {
         return;
@@ -157,7 +157,6 @@ export class VimEditorTextMode {
       let pressedKey: string;
       if (ev.code === SPACE) {
         pressedKey = ev.code;
-        /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: vim-editor-text-mode.ts ~ line 124 ~ pressedKey', pressedKey);
       } else {
         pressedKey = ev.key;
       }
@@ -166,7 +165,6 @@ export class VimEditorTextMode {
         ev.shiftKey ? 'Shift+' : ''
       }${ev.altKey ? 'Alt+' : ''}${ev.metaKey ? 'Meta+' : ''}`;
       // /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: vim-editor-text-mode.ts ~ line 133 ~ ev.key', ev.key);
-      // /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: vim-editor-text-mode.ts ~ line 136 ~ pressedKey', pressedKey);
       /* prettier-ignore */ logger.debug(['-------------- Key pressed: (%s) %s', modifiers, ev.key ?? pressedKey], { log: true, isOnlyGroup: true, });
 
       void this.executeCommandInEditor(pressedKey, ev);
@@ -217,7 +215,6 @@ export class VimEditorTextMode {
       this.vimEditorOptions.vimExecutingMode
     );
     resultList.forEach((result) => {
-      /* prettier-ignore */ console.log('TCL ~ file: vim-editor-text-mode.ts ~ line 178 ~ VimEditorTextMode ~ resultList.forEach ~ result', result);
       const currentMode = this.getCurrentTextMode();
 
       /* prettier-ignore */ console.log('TCL ~ file: vim-editor-text-mode.ts ~ line 180 ~ VimEditorTextMode ~ resultList.forEach ~ result.targetCommand', result.targetCommand);
