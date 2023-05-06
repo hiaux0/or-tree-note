@@ -35,6 +35,7 @@ import './or-tree-notes.scss';
         map((x) => x.present.activeEditorIds),
         distinctUntilChanged()
       ),
+    state: (store) => store.state,
   },
 })
 export class OrTreeNotes {
