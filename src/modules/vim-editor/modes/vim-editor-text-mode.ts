@@ -14,7 +14,11 @@ import { Modifier } from 'resources/keybindings/key-bindings';
 import { distinctUntilChanged, map, pluck, take } from 'rxjs/operators';
 import { EditorIds, VimEditorState } from 'store/initial-state';
 
-import { changeText, changeVimState } from '../actions/actions-vim-editor';
+import {
+  changeManyText,
+  changeText,
+  changeVimState,
+} from '../actions/actions-vim-editor';
 import { VimEditorOptions } from '../vim-editor';
 import { AbstractTextMode } from './abstract-text-mode';
 import { InsertTextMode } from './insert-text-mode';
@@ -50,6 +54,7 @@ export class VimEditorTextMode {
     public store: Store<StateHistory<VimEditorState>>
   ) {
     store.registerAction('changeText', changeText);
+    store.registerAction('changeManyText', changeManyText);
     store.state
       .pipe(
         map((x) => x.present.activeEditorIds),
@@ -196,7 +201,7 @@ export class VimEditorTextMode {
     modifiers: string[]
   ) {
     //
-    const result = this.vim.queueInput(input, modifiers);
+    const result = await this.vim.queueInput(input, modifiers);
     logger.debug(['Received result from vim: %o', result], {
       onlyVerbose: true,
     });
@@ -226,9 +231,9 @@ export class VimEditorTextMode {
     );
   }
 
-  executeCommandSequenceInEditor(inputSequence: string | string[]) {
+  async executeCommandSequenceInEditor(inputSequence: string | string[]) {
     logger.bug('executeCommandSequenceInEditor');
-    const resultList = this.vim.queueInputSequence(
+    const resultList = await this.vim.queueInputSequence(
       inputSequence,
       this.vimEditorOptions.vimExecutingMode
     );

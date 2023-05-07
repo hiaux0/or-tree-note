@@ -2,7 +2,7 @@ import { StateHistory, nextStateHistory } from 'aurelia-store';
 import produce from 'immer';
 import { cloneDeep } from 'lodash';
 import { VimStateClass } from 'modules/vim/vim-state';
-import { EditorIds, VimEditorState } from 'store/initial-state';
+import { EditorIds, EditorLine, VimEditorState } from 'store/initial-state';
 
 export function changeVimState(
   state: StateHistory<VimEditorState>,
@@ -39,6 +39,19 @@ export const changeText = (
         draftState.editors[editorId].lines[targetLineNumber];
 
       targetDraftLine.text = newText;
+    })
+  );
+};
+
+export const changeManyText = (
+  state: StateHistory<VimEditorState>,
+  editorId: number,
+  newLines: EditorLine[]
+) => {
+  return nextStateHistory(
+    cloneDeep(state),
+    produce(state.present, (draftState) => {
+      draftState.editors[editorId].lines = newLines;
     })
   );
 };

@@ -10,11 +10,11 @@ import { AbstractMode } from './abstract-mode';
 export class NormalMode extends AbstractMode {
   currentMode = VimMode.NORMAL;
 
-  executeCommand(
+  async executeCommand(
     commandName: VimCommandNames,
     commandValue?: string
-  ): VimStateClass {
-    const result = super.executeCommand(
+  ): Promise<VimStateClass> {
+    const result = await super.executeCommand(
       commandName,
       commandValue,
       this.currentMode

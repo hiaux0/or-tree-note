@@ -58,6 +58,7 @@ const cursorAllModes: VimCommand[] = [
 export const cursorNormalAndInsert: VimCommand[] = [
   { key: '<Control>]', command: 'indentRight' },
   { key: '<Control>[', command: 'indentLeft' },
+  { key: '<Control>v', command: 'paste' },
 ];
 
 const cursorNormalAndVisual: VimCommand[] = [

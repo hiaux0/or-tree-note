@@ -16,6 +16,7 @@ import {
   createNewLine,
   changeText,
   changeVimState,
+  changeManyText,
 } from '../actions/actions-vim-editor';
 import { ChildrenMutationObserver } from './children-mutation-observer';
 
@@ -291,6 +292,10 @@ export abstract class AbstractTextMode {
   }
   async redo() {
     await this.store.dispatch(jump, +1);
+  }
+
+  async paste(vimState: VimStateClass) {
+    await this.store.dispatch(changeManyText, this.editerId, vimState.lines);
   }
 
   resetCaretBlinking() {

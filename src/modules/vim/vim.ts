@@ -77,12 +77,14 @@ export class Vim {
   /**
    * For modifier keys, pass in, eg. <Escape>
    */
-  queueInput(
+  async queueInput(
     input: string,
     modifiers?: string[]
-  ): QueueInputReturn | undefined {
+  ): Promise<QueueInputReturn | undefined> {
     const modifiersText = `${modifiers?.join('+ ')}`;
-    logger.debug(['Received input: (%s) %s', modifiersText, input], { log: true });
+    logger.debug(['Received input: (%s) %s', modifiersText, input], {
+      log: true,
+    });
 
     //
     let targetCommandName: VIM_COMMAND | undefined;
@@ -103,7 +105,7 @@ export class Vim {
       vimState = this.vimCommandManager.enterInsertMode();
     } else if (targetCommandName === VIM_COMMAND['createNewLine']) {
       this.vimCommandManager.enterInsertMode();
-      vimState = this.vimCommandManager.executeVimCommand(
+      vimState = await this.vimCommandManager.executeVimCommand(
         targetCommandName,
         input
       );
@@ -118,7 +120,7 @@ export class Vim {
     } else if (targetCommandName === VIM_COMMAND['newLine']) {
       vimState = this.vimCommandManager.newLine();
     } else {
-      vimState = this.vimCommandManager.executeVimCommand(
+      vimState = await this.vimCommandManager.executeVimCommand(
         targetCommandName,
         input
       );
@@ -153,10 +155,10 @@ export class Vim {
   }
 
   /** */
-  queueInputSequence(
+  async queueInputSequence(
     inputSequence: string | string[],
     vimExecutingMode: VimExecutingMode = VimExecutingMode.INDIVIDUAL
-  ): QueueInputReturn[] {
+  ): Promise<QueueInputReturn[]> {
     const resultList: QueueInputReturn[] = [];
     let givenInputSequence: string[];
 
@@ -167,18 +169,20 @@ export class Vim {
       givenInputSequence = inputSequence;
     }
 
-    givenInputSequence.forEach((input) => {
-      if (input === 'u') {
-        // input; /* ? */
-      }
-      const subResult = this.queueInput(input);
-      if (subResult?.targetCommand !== undefined) {
+    await Promise.all(
+      givenInputSequence.map(async (input) => {
         if (input === 'u') {
-          // subResult; /* ? */
+          // input; /* ? */
         }
-        resultList.push(subResult);
-      }
-    });
+        const subResult = await this.queueInput(input);
+        if (subResult?.targetCommand !== undefined) {
+          if (input === 'u') {
+            // subResult; /* ? */
+          }
+          resultList.push(subResult);
+        }
+      })
+    );
 
     if (vimExecutingMode === VimExecutingMode.INDIVIDUAL) {
       // resultList; /* ? */

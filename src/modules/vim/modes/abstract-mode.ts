@@ -1,6 +1,6 @@
+import { Logger } from 'common/logging/logging';
 import { cloneDeep } from 'lodash';
 import { ArrayUtils } from 'modules/array/array-utils';
-import { Logger } from 'modules/debug/logger';
 import {
   getFirstNonWhiteSpaceCharIndex,
   replaceAt,
@@ -17,7 +17,7 @@ import {
 } from '../vim-types';
 import { toggleFold } from './features/folding';
 
-const logger = new Logger({ scope: 'AbstractMode' });
+const logger = new Logger('AbstractMode', { log: true, disableLogger: false });
 
 export interface TokenizedString {
   string: string;
@@ -42,11 +42,11 @@ export abstract class AbstractMode {
     // this.vimState.lines = this.vimState.lines;
   }
 
-  executeCommand(
+  async executeCommand(
     commandName: string,
     commandInput: string,
     currentMode: VimMode
-  ): VimStateClass {
+  ): Promise<VimStateClass> {
     const targetVimPluginCommand = this.vimOptions.vimPlugins?.find(
       (plugin) => {
         return plugin.commandName === commandName;
@@ -63,24 +63,25 @@ export abstract class AbstractMode {
       return;
     }
 
-    if (this[commandName] !== undefined) {
-      logger.debug(
+    if (this[commandName] === undefined) {
+      logger.culogger.debug(
         [
           'No command "%s" found in %s Mode. ((modes.ts-executeCommand))',
           commandName,
           currentMode,
         ],
-        { isError: true }
+        { log: true, isError: true }
       );
+      return;
     }
 
     const previousOutput = cloneDeep(this.vimState); // side effect, thus clone before executing command
-    const result = this[commandName](commandInput) as VimStateClass;
+    const result = (await this[commandName](commandInput)) as VimStateClass;
 
     try {
       this.validateHorizontalCursor(result);
     } catch {
-      logger.debug([
+      logger.culogger.debug([
         'Not valid state. Returning to previous state: %o',
         previousOutput,
       ]);
@@ -107,7 +108,7 @@ export abstract class AbstractMode {
 
     const tokenizedInput = tokenizeInput(input);
 
-    logger.debug(['reTokenizeInput: %o', tokenizedInput], {
+    logger.culogger.debug(['reTokenizeInput: %o', tokenizedInput], {
       onlyVerbose: true,
     });
 
@@ -122,7 +123,7 @@ export abstract class AbstractMode {
 
     if (!isValid) {
       try {
-        logger.debug(
+        logger.culogger.debug(
           [
             '[INVALID] Cursor col will be: %d, but should be between [0,%d].',
             curCol,
@@ -144,7 +145,7 @@ export abstract class AbstractMode {
     const isValid = isValidVerticalPosition(line, this.vimState.lines);
 
     if (!isValid) {
-      logger.debug(
+      logger.culogger.debug(
         [
           '[INVALID] Line will be: %d, but should be between [0,%d].',
           line,
@@ -488,7 +489,7 @@ export abstract class AbstractMode {
       return isUnderCursor;
     });
 
-    /* prettier-ignore */ logger.debug(['Token under curor: %o', targetToken], { onlyVerbose: true, });
+    /* prettier-ignore */ logger.culogger.debug(['Token under curor: %o', targetToken], { onlyVerbose: true, });
 
     return targetToken;
   }
@@ -683,6 +684,32 @@ export abstract class AbstractMode {
     return this.vimState;
   }
 
+  async paste(): Promise<VimStateClass> {
+    // get clipboard
+    const clipboardTextRaw = await navigator.clipboard.readText();
+    const clipboardTextSplit = clipboardTextRaw.split('\n').map((line) => {
+      return { text: line };
+    });
+
+    const lines = [...this.vimState.lines];
+    const curLine = this.vimState.cursor.line;
+    const insertedText = [
+      ...lines.slice(0, curLine),
+      ...clipboardTextSplit,
+      ...lines.slice(curLine),
+    ];
+    /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: abstract-mode.ts ~ line 698 ~ insertedText', insertedText);
+
+    this.vimState.lines = insertedText;
+
+    // get cursor
+    // this.vimState.cursor.line
+    // insert into place
+
+    /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: abstract-mode.ts ~ line 688 ~ paste');
+    return this.vimState;
+  }
+
   nothing(): VimStateClass {
     return this.vimState;
   }
@@ -737,7 +764,7 @@ export function tokenizeInput(input: string): TokenizedString[] {
     return token;
   });
 
-  logger.debug(['Tokens: %o', tokens], { onlyVerbose: true });
+  logger.culogger.debug(['Tokens: %o', tokens], { onlyVerbose: true });
 
   return tokens;
 }

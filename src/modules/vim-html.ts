@@ -37,7 +37,7 @@ export async function initVimHtml(vimHtmlOptions: VimHtmlOptions) {
   });
   const { commandListener, modeChanged, afterInit } = vimHtmlOptions;
 
-  initKeys();
+  await initKeys();
   if (afterInit) {
     const afterResults = await afterInit(vim);
 
@@ -52,9 +52,11 @@ export async function initVimHtml(vimHtmlOptions: VimHtmlOptions) {
     }
   }
 
-  function initKeys() {
+  async function initKeys() {
     /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: vim-html.ts ~ line 56 ~ initKeys');
-    hotkeys('*', (ev) => {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    hotkeys('*', async (ev) => {
       /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: vim-html.ts ~ line 56 ~ ev', ev);
       if (checkAllowedBrowserShortcuts(ev)) {
         return;
@@ -88,7 +90,11 @@ export async function initVimHtml(vimHtmlOptions: VimHtmlOptions) {
       }
 
       /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: vim-html.ts ~ line 73 ~ pressedKey', pressedKey);
-      const result = executeCommandInEditor(pressedKey, ev, collectedModifiers);
+      const result = await executeCommandInEditor(
+        pressedKey,
+        ev,
+        collectedModifiers
+      );
       if (result == null) return;
 
       if (isModeChangeCommand(result.targetCommand)) {
