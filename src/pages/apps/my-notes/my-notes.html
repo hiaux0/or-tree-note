@@ -1,10 +1,10 @@
 <template>
-  <require from="../or-tree-notes/or-tree-notes"></require>
+  <require from="../vim-notes/vim-notes"></require>
 
   <template repeat.for="numOfEditor of numOfEditors">
-    <or-tree-notes
+    <vim-notes
       editor-id.bind="$index"
       lines.bind="editors[$index].lines"
-    ></or-tree-notes>
+    ></vim-notes>
   </template>
 </template>

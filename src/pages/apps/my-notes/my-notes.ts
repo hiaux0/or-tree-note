@@ -27,7 +27,7 @@ export class MyNotes {
   /**
    * History: Use length of editors to display editors in the view
    *   Before, I repeated over `editor of editors`, but that had a mutability problem,
-   *   where changing the state, would trigger re-rendering of or-tree-notes.
+   *   where changing the state, would trigger re-rendering of vim-notes.
    *     This could be an architecture issue, but I opted for the editors.length appraoch
    *     just to make the code work
    */

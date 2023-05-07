@@ -43,7 +43,7 @@ export class VimEditorTextMode {
   getCurrentTextMode: () => AbstractTextMode;
 
   /**
-   * Injected in or-tree-notes.ts
+   * Injected in vim-notes.ts
    */
   constructor(
     public vimEditorOptions: VimEditorOptions,

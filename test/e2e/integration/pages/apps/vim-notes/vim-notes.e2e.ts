@@ -15,7 +15,7 @@ describe('Aurelia skeleton app', () => {
       });
       window.localStorage.setItem(OTN_STATE_KEY, initialTestState);
     });
-    cy.visit('#/apps/or-tree-notes');
+    cy.visit('#/apps/vim-notes');
   });
 
   it('Should move cursor', () => {

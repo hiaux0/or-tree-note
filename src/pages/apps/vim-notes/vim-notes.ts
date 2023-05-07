@@ -15,11 +15,11 @@ import {
 } from 'modules/vim/vim-types';
 import { distinctUntilChanged, map } from 'rxjs/operators';
 import { EditorIds, EditorLine, VimEditorState } from 'store/initial-state';
-import { toggleCheckbox } from 'store/or-tree-notes/actions-or-tree-notes';
+import { toggleCheckbox } from 'store/vim-notes/actions-vim-notes';
 
-import './or-tree-notes.scss';
+import './vim-notes.scss';
 
-// const logger = new Logger({ scope: 'OrTreeNotes' });
+// const logger = new Logger({ scope: 'VimNotes' });
 
 // declare global {
 //   interface Window {
@@ -38,7 +38,7 @@ import './or-tree-notes.scss';
     state: (store) => store.state,
   },
 })
-export class OrTreeNotes {
+export class VimNotes {
   @bindable lines: EditorLine[];
   @bindable vimState: VimStateV2;
   @bindable editorId: number;
