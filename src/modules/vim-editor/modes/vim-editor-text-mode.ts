@@ -106,7 +106,7 @@ export class VimEditorTextMode {
     };
   }
 
-  setupElementMode() {
+  public setupElementMode() {
     this.childrenElementList =
       this.vimEditorOptions.parentHtmlElement.querySelectorAll<HTMLElement>(
         `.${this.vimEditorOptions.childSelectors[0]}`
@@ -117,7 +117,7 @@ export class VimEditorTextMode {
     });
   }
 
-  initVim() {
+  public initVim() {
     this.store.state
       .pipe(
         map(
@@ -155,7 +155,7 @@ export class VimEditorTextMode {
     return false;
   }
 
-  initKeys() {
+  public initKeys() {
     hotkeys('*', (ev) => {
       if (!this.activeEditorIds.includes(this.vimEditorOptions.id)) return;
       console.clear();
@@ -252,7 +252,7 @@ export class VimEditorTextMode {
     });
   }
 
-  getVim() {
+  public getVim() {
     return this.vim;
   }
 }
