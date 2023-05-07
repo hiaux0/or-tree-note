@@ -115,7 +115,6 @@ export abstract class AbstractTextMode {
     direction: Direction,
     delta: number
   ): void => {
-    /* prettier-ignore */ console.log('------------------------------------------------------------------------------------------');
     const cursor = this.caretElement;
     const editor = this.parentElement;
     const containerRect = editor.getBoundingClientRect();
@@ -166,7 +165,6 @@ export abstract class AbstractTextMode {
         }
         break;
       default: {
-        console.log('NEITHER');
         break;
       }
     }
