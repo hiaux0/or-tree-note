@@ -6,6 +6,22 @@
   - [ ] enter in normal should not split text
   - [ ] `queueInputSequence` should support <ctrl> (additionally to <Control>)
 
+# Bug
+  - [ ][fold]
+  ```
+    loem oditoa abcdeheeof 89
+
+    012 456
+    |next thing  // <--- fold here folds the two lines below, + some ui issue
+
+    What do I need to make this work?
+        handy shortcuts over
+
+    text snippets
+    tags
+    templates
+  ```
+
 # Refactor
   - [ ] abstract-mode.ts - `toCharacterAtBack(commandInput: string): VimStateClass {` should be like
     ```ts
