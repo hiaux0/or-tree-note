@@ -20,6 +20,8 @@ export interface VimEditorOptions {
   isTextMode?: boolean;
   vimExecutingMode?: VimExecutingMode;
   plugins?: VimPlugin[];
+
+  removeTrailingWhitespace?: boolean;
 }
 // const defaultVimEditorOptions: VimEditorOptions = { isTextMode: true, };
 

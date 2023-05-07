@@ -3,6 +3,7 @@ import { bindable, computedFrom } from 'aurelia-framework';
 import { Store, jump, connectTo, StateHistory } from 'aurelia-store';
 import { CSS_SELECTORS } from 'common/css-selectors';
 import { CURRENT_OTN_MODE } from 'local-storage';
+import { cloneDeep } from 'lodash';
 // import { Logger } from 'modules/debug/logger';
 import { changeVimState } from 'modules/vim-editor/actions/actions-vim-editor';
 import { VimEditorTextMode } from 'modules/vim-editor/modes/vim-editor-text-mode';
@@ -14,7 +15,12 @@ import {
   VimStateV2,
 } from 'modules/vim/vim-types';
 import { distinctUntilChanged, map } from 'rxjs/operators';
-import { EditorIds, EditorLine, VimEditorState } from 'store/initial-state';
+import {
+  EditorIds,
+  EditorLine,
+  IVimEditor,
+  VimEditorState,
+} from 'store/initial-state';
 import { toggleCheckbox } from 'store/vim-notes/actions-vim-notes';
 
 import './vim-notes.scss';
@@ -106,6 +112,10 @@ export class VimNotes {
   }
 
   attached() {
+    this.initVimEditor();
+  }
+
+  private initVimEditor() {
     const vimEditorOptions: VimEditorOptions = {
       id: this.editorId,
       parentHtmlElement: this.notesContainerRef,
@@ -113,21 +123,32 @@ export class VimNotes {
       caretElements: [this.caretRef],
       isTextMode: true,
       vimExecutingMode: VimExecutingMode.BATCH,
-      plugins: [
-        {
-          commandName: 'toggleCheckbox',
-          execute: () => {
-            this.toggleCheckbox();
-          },
-        },
-        {
-          commandName: 'save',
-          execute: () => {
-            this.saveToLocalStorage();
-          },
-        },
-      ],
+      removeTrailingWhitespace: true,
     };
+    vimEditorOptions.plugins = [
+      {
+        commandName: 'toggleCheckbox',
+        execute: () => {
+          this.toggleCheckbox();
+        },
+      },
+      {
+        commandName: 'save',
+        execute: () => {
+          const currentState = this.state.present;
+
+          if (vimEditorOptions.removeTrailingWhitespace) {
+            const withoutTrailingWhitespace = this.removeTrailingWhitespace(
+              this.state.present.editors
+            );
+            currentState.editors = withoutTrailingWhitespace;
+          }
+
+          const stringified = JSON.stringify(currentState);
+          this.saveToLocalStorage(stringified);
+        },
+      },
+    ];
     const vimEditorTextMode = new VimEditorTextMode(
       vimEditorOptions,
       this.store
@@ -143,12 +164,24 @@ export class VimNotes {
     // document.addEventListener('click', () => {});
   }
 
-  saveToLocalStorage() {
+  private removeTrailingWhitespace(editors: IVimEditor[]) {
+    editors.forEach((editor) => {
+      const updated = editor.vimState.lines.map((line) => {
+        return {
+          ...line,
+          text: line.text.trim(),
+        };
+      });
+      editor.vimState.lines = updated;
+    });
+    return editors;
+  }
+
+  saveToLocalStorage(state: string) {
     try {
-      const currentState = JSON.stringify(this.state.present);
       const currentMode = window.localStorage.getItem(CURRENT_OTN_MODE);
 
-      window.localStorage.setItem(currentMode, currentState);
+      window.localStorage.setItem(currentMode, state);
     } catch (error) {
       console.warn(error);
     }
