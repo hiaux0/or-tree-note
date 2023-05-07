@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/brace-style */
 import { inject } from 'aurelia-dependency-injection';
 import { jump, StateHistory, Store } from 'aurelia-store';
-import { cloneDeep } from 'lodash';
 import {
   getComputedValueFromPixelString,
   getCssVar,
@@ -15,7 +14,6 @@ import { VimEditorState } from 'store/initial-state';
 import {
   createNewLine,
   changeText,
-  changeVimState,
   changeManyText,
 } from '../actions/actions-vim-editor';
 import { ChildrenMutationObserver } from './children-mutation-observer';
@@ -281,10 +279,6 @@ export abstract class AbstractTextMode {
       vimState.getActiveLine().text
     );
   }
-
-  // async toggleFold(vimState: VimStateClass) {
-  //   await this.store.dispatch(changeVimState, vimState);
-  // }
   async undo() {
     await this.store.dispatch(jump, -1);
   }

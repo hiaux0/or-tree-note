@@ -2,7 +2,7 @@ import { Aurelia } from 'aurelia-framework';
 import { PLATFORM } from 'aurelia-pal';
 import { setAutoFreeze } from 'immer';
 import { CURRENT_OTN_MODE } from 'local-storage';
-import { initialVimEditorState } from 'store/initial-state';
+import { initialVimEditorState, VimEditorState } from 'store/initial-state';
 
 import * as environment from '../config/environment.json';
 
@@ -17,13 +17,14 @@ export function configure(aurelia: Aurelia) {
   const currentMode = window.localStorage.getItem(CURRENT_OTN_MODE);
   const localStorageState = JSON.parse(
     window.localStorage.getItem(currentMode)
-  ) as string;
+  ) as VimEditorState;
 
   aurelia.use.developmentLogging(environment.debug ? 'debug' : 'warn');
+  const initialState = localStorageState || initialVimEditorState;
+  // const initialState = initialVimEditorState;
   /** https://aurelia.io/docs/plugins/store#introduction */
   aurelia.use.plugin(PLATFORM.moduleName('aurelia-store'), {
-    initialState: localStorageState || initialVimEditorState,
-    // initialState: initialVimEditorState,
+    initialState,
     history: {
       undoable: true,
       limit: 5,
