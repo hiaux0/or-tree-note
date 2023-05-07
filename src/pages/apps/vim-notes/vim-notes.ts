@@ -40,7 +40,6 @@ import './vim-notes.scss';
 })
 export class VimNotes {
   @bindable lines: EditorLine[];
-  @bindable vimState: VimStateV2;
   @bindable editorId: number;
 
   line: EditorLine;
@@ -55,6 +54,7 @@ export class VimNotes {
   pastLines: any;
 
   private readonly activeEditorIds: EditorIds;
+  private vimState: VimStateV2;
   private vimMode: VimMode;
   private cursorPosition: Cursor;
 
@@ -79,6 +79,14 @@ export class VimNotes {
   }
 
   private initStoreSubscriptions() {
+    this.store.state
+      .pipe(
+        map((x) => x.present.editors[this.editorId]?.vimState),
+        distinctUntilChanged()
+      )
+      .subscribe((vimState) => {
+        this.vimState = vimState;
+      });
     this.store.state
       .pipe(
         map((x) => x.present.editors[this.editorId]?.vimState?.mode),
