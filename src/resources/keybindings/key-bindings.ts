@@ -70,8 +70,8 @@ const cursorNormalAndVisual: VimCommand[] = [
   { key: 'w', command: 'cursorWordForwardStart' },
   { key: '$', command: 'cursorLineEnd' },
   { key: '^', command: 'cursorLineStart' },
-  { key: '}', command: 'jumpNextBlock' },
-  { key: '{', command: 'jumpPreviousBlock' },
+  { key: '<Shift>}', command: 'jumpNextBlock' },
+  { key: '<Shift>{', command: 'jumpPreviousBlock' },
   ...commandsThatWaitForNextInput,
 ];
 
