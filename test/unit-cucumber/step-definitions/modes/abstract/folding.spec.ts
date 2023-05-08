@@ -111,6 +111,59 @@ describe(`Folding`, () => {
     });
   });
 
+  describe(`toggleFold() - with empty lines`, () => {
+    const testNodesWithEmptyLines = [
+      {
+        text: 'What do I need to make this work?',
+        indentation: 0,
+      },
+      {
+        text: 'handy shortcuts over',
+        indentation: 4,
+      },
+      {
+        text: '',
+        indentation: 0,
+      },
+      {
+        text: '    text snippets',
+        indentation: 4,
+      },
+      {
+        text: 'tags',
+        indentation: 0,
+      },
+    ];
+    const testCollection: [
+      IndentationNode[],
+      // [foldIndex: number, expected: string[], parentIndex: number][]
+      [number, string[], number][]
+    ][] = [
+      [
+        testNodesWithEmptyLines,
+        [
+          [0, ['1', '2', '3'], 0],
+          [1, ['1', '2', '3'], 0],
+          [2, ['1', '2', '3'], 0],
+          [3, ['1', '2', '3'], 0],
+          [4, [], 4],
+        ],
+      ],
+    ];
+    testCollection.forEach(([nodes, testCase]) => {
+      testCase.forEach(([foldIndex, expected, expectedParentIndex]) => {
+        it(`foldIndex: ${foldIndex}`, () => {
+          const { foldMap, parentIndex } = toggleFold(foldIndex, nodes);
+          foldMap; /*?*/
+          parentIndex; /*?*/
+          expect(Object.keys(foldMap)).toEqual(expected);
+          expect(parentIndex).toEqual(expectedParentIndex);
+          // expect(true).toBeFalsy();
+        });
+      });
+    });
+  });
+
   it(`Folding`, () => {
     const rawContent = `|123\n  456\n789`;
     const rawInput = rawContent.split('\n');

@@ -46,7 +46,9 @@ function findIndecesToFold(
   const currentIndentation = nodes[foldIndex]?.indentation;
   const nextIndex = foldIndex + 1;
   const nextIndentation = nodes[nextIndex]?.indentation;
-  const hasChild = currentIndentation < nextIndentation;
+  const hasChild =
+    currentIndentation < nextIndentation &&
+    nodes[foldIndex]?.text?.trim() !== '';
 
   // if hasChild, then fold all children
 
@@ -56,52 +58,84 @@ function findIndecesToFold(
   let forwardsIndex = foldIndex;
   if (hasChild) {
     for (let i = nextIndex; i < nodes.length; i++) {
+      i; /* ? */
       const thisOne = nodes[i].indentation;
-      const nextOne = nodes[i + 1].indentation;
-      if (thisOne > nextOne) {
+      thisOne; /* ? */
+      const nextOne = nodes[i + 1]?.indentation;
+      nextOne; /* ? */
+      const nextNode = nodes[i + 1];
+
+      if (nextNode?.text?.trim() === '') {
+        continue;
+      } else if (thisOne > nextOne) {
         forwardsIndex = i;
         break;
       }
     }
 
+    backwardsIndex; /* ? */
+    forwardsIndex; /* ? */
     return [backwardsIndex + 1, forwardsIndex]; // + 1: don't fold current one
   }
 
   // Go back until parent
   for (let i = foldIndex; i >= 0; i--) {
-    const thisOneIndent = nodes[i].indentation;
-
+    i; /* ? */
     if (nodes[i - 1] === undefined) {
       backwardsIndex = undefined;
       forwardsIndex = undefined;
       break;
     }
+    const thisOneIndent = nodes[i].indentation;
     const previousOneIndent = nodes[i - 1].indentation;
+    const thisNodeIsEmpty = nodes[i]?.text?.trim() === '';
+    const previousNodeIsEmpty = nodes[i - 1]?.text?.trim() === '';
 
-    if (thisOneIndent < previousOneIndent) {
+    if (thisNodeIsEmpty || previousNodeIsEmpty) {
+      continue;
+    } else if (thisOneIndent < previousOneIndent) {
       backwardsIndex = undefined;
+      backwardsIndex; /* ? */
       break;
     } else if (thisOneIndent > previousOneIndent) {
       backwardsIndex = i;
+      backwardsIndex; /* ? */
       break;
     }
   }
 
   // go forward until parent
   const backwardsIndent = nodes[backwardsIndex - 1]?.indentation;
+  backwardsIndent; /* ? */
   for (let i = foldIndex; i < nodes.length; i++) {
-    const thisOneIndent = nodes[i].indentation;
     if (nodes[i + 1] === undefined) {
-      backwardsIndex = undefined;
       forwardsIndex = undefined;
       break;
     }
-    if (thisOneIndent <= backwardsIndent) {
+
+    const thisOneIndent = nodes[i].indentation;
+    thisOneIndent;
+    const nextIndent = nodes[i + 1]?.indentation;
+    nextIndent; /* ? */
+    const thisNodeIsEmpty = nodes[i]?.text?.trim() === '';
+    const nextNodeIsEmpty = nodes[i + 1]?.text?.trim() === '';
+    i; /* ? */
+    if (nextNodeIsEmpty || thisNodeIsEmpty) {
+      i; /* ? */
+      continue;
+    } else if (thisOneIndent <= backwardsIndent) {
       forwardsIndex = i - 1;
+      forwardsIndex; /* ? */
+      break;
+    } else if (nextIndent <= backwardsIndent) {
+      forwardsIndex = i;
+      forwardsIndex; /* ? */
       break;
     }
   }
 
+  backwardsIndex; /* ? */
+  forwardsIndex; /* ? */
   return [backwardsIndex, forwardsIndex];
 }
 
@@ -109,7 +143,7 @@ function initIndentation(nodes: IndentationNode[]): IndentationNode[] {
   nodes.forEach((node) => {
     if (node.indentation) return;
     if (!node.text) {
-      // node.indentation = -Infinity;
+      node.indentation = 0;
       return;
     }
 
