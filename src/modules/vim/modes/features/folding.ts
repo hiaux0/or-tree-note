@@ -13,21 +13,25 @@ export function toggleFold(
 
   const [backwardsIndex, forwardsIndex] = findIndecesToFold(nodes, indentIndex);
 
+  let parentIndex = NaN;
   // single child
   if (backwardsIndex === forwardsIndex) {
-    const folded = foldMap[backwardsIndex];
-    foldMap[backwardsIndex] = !folded;
+    if (backwardsIndex === undefined) {
+      parentIndex = indentIndex;
+    } else {
+      const folded = foldMap[backwardsIndex];
+      foldMap[backwardsIndex] = !folded;
+      parentIndex = Math.max(backwardsIndex - 1, 0);
+    }
   } else {
     // + 1 start with node after current
     for (let i = backwardsIndex; i <= forwardsIndex; i++) {
       const folded = foldMap[i];
       foldMap[i] = !folded;
     }
+    parentIndex = Math.max(backwardsIndex - 1, 0);
   }
 
-  /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: folding.ts ~ line 32 ~ backwardsIndex', backwardsIndex);
-  /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: folding.ts ~ line 33 ~ foldMap', foldMap);
-  const parentIndex = Math.max(backwardsIndex - 1, 0);
   return {
     foldMap,
     parentIndex,
@@ -45,7 +49,10 @@ function findIndecesToFold(
   const hasChild = currentIndentation < nextIndentation;
 
   // if hasChild, then fold all children
+
+  /** * Go back until last possible fold */
   let backwardsIndex = foldIndex;
+  /** * Go forward until last possible fold */
   let forwardsIndex = foldIndex;
   if (hasChild) {
     for (let i = nextIndex; i < nodes.length; i++) {
@@ -63,32 +70,34 @@ function findIndecesToFold(
   // Go back until parent
   for (let i = foldIndex; i >= 0; i--) {
     const thisOneIndent = nodes[i].indentation;
+
     if (nodes[i - 1] === undefined) {
       backwardsIndex = undefined;
-      foldIndex = undefined;
+      forwardsIndex = undefined;
       break;
     }
     const previousOneIndent = nodes[i - 1].indentation;
 
-    if (thisOneIndent > previousOneIndent) {
-      forwardsIndex = i;
-      backwardsIndex = i; // - 1, return the previous one
+    if (thisOneIndent < previousOneIndent) {
+      backwardsIndex = undefined;
+      break;
+    } else if (thisOneIndent > previousOneIndent) {
+      backwardsIndex = i;
       break;
     }
   }
 
   // go forward until parent
+  const backwardsIndent = nodes[backwardsIndex - 1]?.indentation;
   for (let i = foldIndex; i < nodes.length; i++) {
     const thisOneIndent = nodes[i].indentation;
     if (nodes[i + 1] === undefined) {
       backwardsIndex = undefined;
-      foldIndex = undefined;
+      forwardsIndex = undefined;
       break;
     }
-    const nextOneIndent = nodes[i + 1].indentation;
-
-    if (thisOneIndent > nextOneIndent) {
-      forwardsIndex = i;
+    if (thisOneIndent <= backwardsIndent) {
+      forwardsIndex = i - 1;
       break;
     }
   }
@@ -99,7 +108,10 @@ function findIndecesToFold(
 function initIndentation(nodes: IndentationNode[]): IndentationNode[] {
   nodes.forEach((node) => {
     if (node.indentation) return;
-    if (!node.text) return;
+    if (!node.text) {
+      // node.indentation = -Infinity;
+      return;
+    }
 
     const result = StringUtil.getLeadingWhitespaceNum(node.text);
     node.indentation = result;
