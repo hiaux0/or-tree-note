@@ -11,7 +11,7 @@ import {
   SPACE,
 } from 'resources/keybindings/app-keys';
 import { Modifier } from 'resources/keybindings/key-bindings';
-import { distinctUntilChanged, map, pluck, take } from 'rxjs/operators';
+import { distinctUntilChanged, filter, map, take } from 'rxjs/operators';
 import { EditorIds, VimEditorState } from 'store/initial-state';
 
 import {
@@ -120,16 +120,21 @@ export class VimEditorTextMode {
   public initVim() {
     this.store.state
       .pipe(
-        map(
-          (x) => x.present.editors[this.vimEditorOptions.id]?.vimState?.cursor
-        ),
+        map((x) => x.present.editors[this.vimEditorOptions.id]?.vimState),
+        filter((val) => {
+          return !!val;
+        }),
         take(1)
       )
-      .subscribe((cursorPosition) => {
+      .subscribe((vimState) => {
+        const cursorPosition = vimState.cursor;
         const startCursor: Cursor = { col: 0, line: 0 };
         const shouldCursor = cursorPosition || startCursor;
 
-        this.vim = new Vim(this.elementText, shouldCursor, {
+        const initLines = vimState.lines.length
+          ? vimState.lines
+          : this.elementText;
+        this.vim = new Vim(initLines, shouldCursor, {
           vimPlugins: this.vimEditorOptions.plugins,
         });
 
