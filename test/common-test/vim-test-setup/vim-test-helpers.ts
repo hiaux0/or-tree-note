@@ -1,3 +1,4 @@
+import { Cursor } from '../../../src/modules/vim/vim-types';
 import { testError } from '../errors/test-errors';
 
 export function replaceCursorFromRaw(rawInput: string[]) {

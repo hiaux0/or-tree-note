@@ -21,60 +21,66 @@ describe(`Folding`, () => {
     { indentation: 0 }, // 9
   ];
 
-  describe(`toggleFold() - not folded`, () => {
+  describe(`toggleFold() - nothing folded`, () => {
     const testCollection: [
       IndentationNode[],
-      [foldIndex: number, expected: string[]][]
+      // [foldIndex: number, expected: string[], parentIndex: number][]
+      [number, string[], number][]
     ][] = [
       [
         testNodes,
         [
-          [0, []],
-          [1, ['2', '3', '4', '5']],
-          [2, ['2', '3', '4', '5']],
-          [3, ['4', '5']],
-          [4, ['4', '5']],
-          [5, ['4', '5']],
-          [6, ['7']],
-          [7, ['7']],
-          [8, []],
-          [9, []],
+          [0, [], 0],
+          [1, ['2', '3', '4', '5'], 1],
+          [2, ['2', '3', '4', '5'], 1],
+          [3, ['4', '5'], 3],
+          [4, ['4', '5'], 3],
+          [5, ['4', '5'], 3],
+          [6, ['7'], 6],
+          [7, ['7'], 6],
+          [8, [], 8],
+          [9, [], 9],
         ],
       ],
     ];
     testCollection.forEach(([nodes, testCase]) => {
-      testCase.forEach(([foldIndex, expected]) => {
+      testCase.forEach(([foldIndex, expected, expectedParentIndex]) => {
         it(`foldIndex: ${foldIndex}`, () => {
-          const foldMap = toggleFold(foldIndex, nodes);
+          const { foldMap, parentIndex } = toggleFold(foldIndex, nodes);
+          foldMap; /*?*/
+          parentIndex; /*?*/
           expect(Object.keys(foldMap)).toEqual(expected);
+          expect(parentIndex).toEqual(expectedParentIndex);
           // expect(true).toBeFalsy();
         });
       });
     });
   });
 
-  describe.only(`toggleFold() - not folded`, () => {
+  describe(`toggleFold() - some folded`, () => {
     const testCollection: [
       IndentationNode[],
-      [foldIndex: number, expected: string[]][]
+      // [foldIndex: number, expected: string[], parentIndex: number][],
+      [number, string[], number][]
     ][] = [
       [
         testNodes,
         [
-          [1, []],
-          // [2, ['2', '3', '4', '5']],
-          // [3, ['4', '5']],
-          // [4, ['4', '5']],
-          // [5, ['4', '5']],
-          // [6, ['7']],
-          // [7, ['7']],
-          // [8, []],
-          // [9, []],
+          [0, ['2', '3', '4', '5'], 0],
+          [1, [], 1],
+          // [2, [], 2],          // Should not be possible to fold ,since those lines are collapsed
+          // [3, ['2', '3'], 3],  // Should not be possible to fold ,since those lines are collapsed
+          // [4, ['2', '3'], 3],  // Should not be possible to fold ,since those lines are collapsed
+          // [5, ['2', '3'], 5],  // Should not be possible to fold ,since those lines are collapsed
+          [6, ['2', '3', '4', '5', '7'], 6],
+          [7, ['2', '3', '4', '5', '7'], 6],
+          [8, ['2', '3', '4', '5'], 8],
+          [9, ['2', '3', '4', '5'], 9],
         ],
       ],
     ];
     testCollection.forEach(([nodes, testCase]) => {
-      testCase.forEach(([foldIndex, expected]) => {
+      testCase.forEach(([foldIndex, expected, expectedParentIndex]) => {
         const alreadyFoldedMap = {
           2: true,
           3: true,
@@ -83,8 +89,13 @@ describe(`Folding`, () => {
         };
 
         it(`foldIndex: ${foldIndex}`, () => {
-          const foldMap = toggleFold(foldIndex, nodes, alreadyFoldedMap);
+          const { foldMap, parentIndex } = toggleFold(
+            foldIndex,
+            nodes,
+            alreadyFoldedMap
+          );
           foldMap; /*?*/
+          parentIndex; /*?*/
 
           const filterFolded: string[] = [];
           for (const [key, value] of Object.entries(foldMap)) {
@@ -94,6 +105,7 @@ describe(`Folding`, () => {
           filterFolded; /*?*/
 
           expect(filterFolded).toEqual(expected);
+          expect(parentIndex).toEqual(expectedParentIndex);
         });
       });
     });
@@ -118,6 +130,6 @@ describe(`Folding`, () => {
     const result = vim.queueInput('za');
     result; /*?*/
 
-    expect(true).toBeFalsy();
+    // expect(true).toBeFalsy();
   });
 });
