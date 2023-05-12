@@ -63,7 +63,6 @@ export type EditorIds = number[];
 export interface VimEditorState {
   editors?: IVimEditor[];
   activeEditorIds?: EditorIds;
-  lines: EditorLine[];
 }
 
 /**
@@ -110,17 +109,4 @@ export const initialVimEditorState: VimEditorState = {
     },
   ],
   activeEditorIds: [0],
-  lines: [
-    {
-      text: 'abcdef 89',
-    },
-    {
-      text: '012 456',
-      macro: {
-        checkbox: {
-          value: true,
-        },
-      },
-    },
-  ],
 };

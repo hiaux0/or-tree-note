@@ -15,17 +15,19 @@ import { VimEditorState } from 'store/initial-state';
 
 export const toggleCheckbox = (
   state: StateHistory<VimEditorState>,
+  editorId: number,
   targetLineNumber: number
 ) => {
   return nextStateHistory(
     state,
     produce(state.present, (draftState) => {
-      const targetDraftLine = draftState.lines[targetLineNumber];
+      const targetDraftLine =
+        draftState.editors[editorId].lines[targetLineNumber];
 
       //
       if (targetDraftLine.macro) {
-        targetDraftLine.macro.checkbox.value = !targetDraftLine.macro.checkbox
-          .value;
+        targetDraftLine.macro.checkbox.value =
+          !targetDraftLine.macro.checkbox.value;
         //
       } else {
         targetDraftLine.macro = {

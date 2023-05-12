@@ -191,7 +191,7 @@ export class VimNotes {
     const { vimState } = this.vimEditor.vim;
     const { line: targetLineNumber } = vimState.cursor;
 
-    void this.store.dispatch(toggleCheckbox, targetLineNumber);
+    void this.store.dispatch(toggleCheckbox, this.editorId, targetLineNumber);
   }
 
   undo() {
