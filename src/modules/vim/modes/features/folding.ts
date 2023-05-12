@@ -58,11 +58,8 @@ function findIndecesToFold(
   let forwardsIndex = foldIndex;
   if (hasChild) {
     for (let i = nextIndex; i < nodes.length; i++) {
-      i; /* ? */
       const thisOne = nodes[i].indentation;
-      thisOne; /* ? */
       const nextOne = nodes[i + 1]?.indentation;
-      nextOne; /* ? */
       const nextNode = nodes[i + 1];
 
       if (nextNode?.text?.trim() === '') {
@@ -73,14 +70,11 @@ function findIndecesToFold(
       }
     }
 
-    backwardsIndex; /* ? */
-    forwardsIndex; /* ? */
     return [backwardsIndex + 1, forwardsIndex]; // + 1: don't fold current one
   }
 
   // Go back until parent
   for (let i = foldIndex; i >= 0; i--) {
-    i; /* ? */
     if (nodes[i - 1] === undefined) {
       backwardsIndex = undefined;
       forwardsIndex = undefined;
@@ -95,18 +89,15 @@ function findIndecesToFold(
       continue;
     } else if (thisOneIndent < previousOneIndent) {
       backwardsIndex = undefined;
-      backwardsIndex; /* ? */
       break;
     } else if (thisOneIndent > previousOneIndent) {
       backwardsIndex = i;
-      backwardsIndex; /* ? */
       break;
     }
   }
 
   // go forward until parent
   const backwardsIndent = nodes[backwardsIndex - 1]?.indentation;
-  backwardsIndent; /* ? */
   for (let i = foldIndex; i < nodes.length; i++) {
     if (nodes[i + 1] === undefined) {
       forwardsIndex = undefined;
@@ -114,28 +105,20 @@ function findIndecesToFold(
     }
 
     const thisOneIndent = nodes[i].indentation;
-    thisOneIndent;
     const nextIndent = nodes[i + 1]?.indentation;
-    nextIndent; /* ? */
     const thisNodeIsEmpty = nodes[i]?.text?.trim() === '';
     const nextNodeIsEmpty = nodes[i + 1]?.text?.trim() === '';
-    i; /* ? */
     if (nextNodeIsEmpty || thisNodeIsEmpty) {
-      i; /* ? */
       continue;
     } else if (thisOneIndent <= backwardsIndent) {
       forwardsIndex = i - 1;
-      forwardsIndex; /* ? */
       break;
     } else if (nextIndent <= backwardsIndent) {
       forwardsIndex = i;
-      forwardsIndex; /* ? */
       break;
     }
   }
 
-  backwardsIndex; /* ? */
-  forwardsIndex; /* ? */
   return [backwardsIndex, forwardsIndex];
 }
 

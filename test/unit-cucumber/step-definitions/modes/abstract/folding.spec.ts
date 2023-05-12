@@ -47,8 +47,6 @@ describe(`Folding`, () => {
       testCase.forEach(([foldIndex, expected, expectedParentIndex]) => {
         it(`foldIndex: ${foldIndex}`, () => {
           const { foldMap, parentIndex } = toggleFold(foldIndex, nodes);
-          foldMap; /*?*/
-          parentIndex; /*?*/
           expect(Object.keys(foldMap)).toEqual(expected);
           expect(parentIndex).toEqual(expectedParentIndex);
           // expect(true).toBeFalsy();
@@ -94,15 +92,12 @@ describe(`Folding`, () => {
             nodes,
             alreadyFoldedMap
           );
-          foldMap; /*?*/
-          parentIndex; /*?*/
 
           const filterFolded: string[] = [];
           for (const [key, value] of Object.entries(foldMap)) {
             if (value === false) continue;
             filterFolded.push(key);
           }
-          filterFolded; /*?*/
 
           expect(filterFolded).toEqual(expected);
           expect(parentIndex).toEqual(expectedParentIndex);
@@ -154,8 +149,6 @@ describe(`Folding`, () => {
       testCase.forEach(([foldIndex, expected, expectedParentIndex]) => {
         it(`foldIndex: ${foldIndex}`, () => {
           const { foldMap, parentIndex } = toggleFold(foldIndex, nodes);
-          foldMap; /*?*/
-          parentIndex; /*?*/
           expect(Object.keys(foldMap)).toEqual(expected);
           expect(parentIndex).toEqual(expectedParentIndex);
           // expect(true).toBeFalsy();
@@ -181,7 +174,6 @@ describe(`Folding`, () => {
     }
 
     const result = vim.queueInput('za');
-    result; /*?*/
 
     // expect(true).toBeFalsy();
   });
