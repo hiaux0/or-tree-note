@@ -182,6 +182,7 @@ export class VimCommandManager {
   ): PotentialCommandReturn {
     const commandAwaitingNextInput = getCommandAwaitingNextInput(
       input,
+      this.queuedKeys,
       this.potentialCommands
     );
     const includes = this.includesPotentialCommands(commandAwaitingNextInput);
@@ -473,8 +474,10 @@ export class VimCommandManager {
  */
 function getCommandAwaitingNextInput(
   input: string,
+  queuedKeys: string[],
   potentialCommands: VimCommand[]
 ): PotentialCommandReturn | undefined {
+  const keySequence = queuedKeys.join('').concat(input);
   const awaitingCommand = commandsThatWaitForNextInput.find(
     // BUG?
     /**
@@ -483,7 +486,7 @@ function getCommandAwaitingNextInput(
      * 3. Expect: <space>t
      * 4. But: t
      */
-    (command) => command.key === input
+    (command) => command.key === keySequence
   );
   if (awaitingCommand) {
     return {
