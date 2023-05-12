@@ -1,6 +1,7 @@
 import 'aurelia-polyfills';
 import { connectTo, StateHistory, Store } from 'aurelia-store';
 import { isMac } from 'common/platform/platform-check';
+import { getRandomId } from 'common/random';
 import hotkeys from 'hotkeys-js';
 import { Logger } from 'modules/debug/logger';
 import { Vim } from 'modules/vim/vim';
@@ -134,6 +135,14 @@ export class VimEditorTextMode {
         const initLines = vimState.lines.length
           ? vimState.lines
           : this.elementText;
+
+        // Migration_1
+        initLines.forEach((line) => {
+          if (!line.id) {
+            line.id = getRandomId();
+          }
+        });
+
         this.vim = new Vim(initLines, shouldCursor, {
           vimPlugins: this.vimEditorOptions.plugins,
         });

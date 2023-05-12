@@ -1,9 +1,6 @@
-import {
-  VimCommandNames,
-  VimCommand,
-  SynonymKey,
-  VIM_COMMAND,
-} from './vim-commands-repository';
+import { getRandomId } from 'common/random';
+
+import { VimCommand, SynonymKey, VIM_COMMAND } from './vim-commands-repository';
 import { VimStateClass } from './vim-state';
 
 export interface KeyBindingModes {
@@ -39,10 +36,11 @@ export interface IndentationNode {
 
 export interface VimLine extends IndentationNode {
   text: Text;
+  id?: string; // Migration_1
   // cursor?: Cursor;
 }
 
-export const EMPTY_VIM_LINE: VimLine = { text: '' };
+export const EMPTY_VIM_LINE: VimLine = { text: '', id: getRandomId() };
 
 export type FoldMap = Record<string, boolean>;
 

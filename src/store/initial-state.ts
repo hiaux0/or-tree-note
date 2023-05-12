@@ -48,6 +48,7 @@ export interface LineStage {
 export interface EditorLine {
   lineHighlight?: HighlightCoords;
   text: string;
+  lineId?: string; // Migration_2
   markup?: LineMarkup;
   macro?: LineMacro;
 }
@@ -63,7 +64,6 @@ export interface VimEditorState {
   editors?: IVimEditor[];
   activeEditorIds?: EditorIds;
   lines: EditorLine[];
-  vimState?: VimStateV2;
 }
 
 /**
