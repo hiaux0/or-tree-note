@@ -1,7 +1,7 @@
 import { StateHistory, Store } from 'aurelia-store';
 import { Logger } from 'modules/debug/logger';
 import { VimStateClass } from 'modules/vim/vim-state';
-import { VimMode, VimState } from 'modules/vim/vim-types';
+import { VimMode } from 'modules/vim/vim-types';
 import { VimEditorState } from 'store/initial-state';
 
 import { changeText } from '../actions/actions-vim-editor';

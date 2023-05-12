@@ -1,9 +1,9 @@
 import { insert, replaceAt } from 'modules/string/string';
-import { isSpace, Modifier } from 'resources/keybindings/key-bindings';
+import { isSpace } from 'resources/keybindings/key-bindings';
 
 import { SPACE } from '../../../resources/keybindings/app-keys';
 import { VimStateClass } from '../vim-state';
-import { VimState, VimMode } from '../vim-types';
+import { VimMode } from '../vim-types';
 import { AbstractMode } from './abstract-mode';
 
 export class InsertMode extends AbstractMode {

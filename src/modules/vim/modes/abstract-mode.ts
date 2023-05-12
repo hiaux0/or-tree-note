@@ -9,11 +9,11 @@ import {
 
 import { VimStateClass } from '../vim-state';
 import {
-  VimState,
   VimMode,
   VimOptions,
   VimPlugin,
   VimLine,
+  VimStateV2,
 } from '../vim-types';
 import { toggleFold } from './features/folding';
 
@@ -140,7 +140,7 @@ export abstract class AbstractMode {
 
     return isValid;
   }
-  validateVerticalCursor(vimState: VimState) {
+  validateVerticalCursor(vimState: VimStateV2) {
     const line = vimState.cursor.line + 1;
     const isValid = isValidVerticalPosition(line, this.vimState.lines);
 

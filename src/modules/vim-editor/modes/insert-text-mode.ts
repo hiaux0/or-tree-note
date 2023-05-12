@@ -1,6 +1,6 @@
 import { Logger } from 'modules/debug/logger';
 import { VimStateClass } from 'modules/vim/vim-state';
-import { VimMode, VimState } from 'modules/vim/vim-types';
+import { VimMode } from 'modules/vim/vim-types';
 
 import { changeText } from '../actions/actions-vim-editor';
 import { AbstractTextMode } from './abstract-text-mode';

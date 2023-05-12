@@ -4,7 +4,6 @@ import {
   FoldMap,
   VimLine,
   VimMode,
-  VimState,
   VimStateV2,
 } from './vim-types';
 

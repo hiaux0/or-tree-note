@@ -57,17 +57,6 @@ export type VimStateV2 = {
   commandName?: string;
 };
 
-export type VimState = {
-  cursor: Cursor;
-  text: string;
-  lines?: VimLine[];
-  mode?: VimMode;
-  visualStartCursor?: Cursor;
-  visualEndCursor?: Cursor;
-  deletedLinesIndeces?: number[];
-  commandName?: string;
-};
-
 export interface QueueInputReturn {
   vimState: VimStateClass | null;
   targetCommand: VIM_COMMAND;
