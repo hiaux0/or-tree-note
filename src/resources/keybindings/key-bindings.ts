@@ -1,6 +1,7 @@
 // Naming based on https://vim.rtorr.com/
 
 import { VimCommand, VIM_COMMAND } from 'modules/vim/vim-commands-repository';
+import { KeyBindingModes } from 'modules/vim/vim-types';
 
 import {
   ALT,
@@ -29,7 +30,7 @@ export const Modifier = {
   '<Space>': '<Space>',
 };
 
-const commandsAllModes = [
+const commandsAllModes: VimCommand[] = [
   { key: '<Control>c', command: 'copy' },
   { key: '<Control>z', command: 'undo' },
   { key: '<Control><Shift>z', command: 'redo' },
@@ -76,7 +77,7 @@ const cursorNormalAndVisual: VimCommand[] = [
   ...commandsThatWaitForNextInput,
 ];
 
-const keyBindings = {
+const keyBindings: KeyBindingModes = {
   normal: [
     // { key: "<Space>", command: "vimLeader" },
     { key: '<Space>tc', command: 'toggleCheckbox' },
@@ -108,6 +109,8 @@ const keyBindings = {
     { key: '<Shift>', command: 'shift' },
     { key: Modifier['<Space>'], command: 'space' },
     { key: '<Control>', command: 'nothing' },
+    // snippets
+    { key: 'ia', command: 'type', args: {text: '() => {}' }},
     ...commandsAllModes,
     ...cursorAllModes,
   ],
@@ -131,7 +134,7 @@ const keyBindings = {
   synonyms: {
     '<esc>': '<Escape>',
   },
-} as const;
+};
 
 export default keyBindings;
 

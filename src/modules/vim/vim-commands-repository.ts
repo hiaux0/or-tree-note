@@ -42,6 +42,12 @@ export enum VIM_COMMAND {
   'visualInnerWord' = 'visualInnerWord',
   'visualStartLineWise' = 'visualStartLineWise',
   'visualMoveToOtherEndOfMarkedArea' = 'visualMoveToOtherEndOfMarkedArea',
+  // custom
+  'toggleCheckbox' = 'toggleCheckbox',
+  'hint' = 'hint',
+  'save' = 'save',
+  'shift' = 'shift',
+  'nothing' = 'nothing',
 }
 
 export const VIM_MODE_COMMANDS = [
@@ -92,13 +98,16 @@ export const VIM_COMMANDS = [
   VIM_COMMAND['enterNormalMode'],
   VIM_COMMAND['enterVisualMode'],
 ];
-  export type VimCommandNames = keyof typeof VIM_COMMAND;
+export type VimCommandNames = keyof typeof VIM_COMMAND;
 
 export const VIM_COMMANDS_THAT_CHANGE_TO_NORMAL_MODE = ['visualDelete'];
 
 export interface VimCommand {
   key: string;
   command: VimCommandNames;
+  args?: {
+    text?: string;
+  };
 }
 
 export interface SynonymKey {

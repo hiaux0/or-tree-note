@@ -7,6 +7,7 @@ export interface KeyBindingModes {
   insert?: VimCommand[];
   normal: VimCommand[];
   visual?: VimCommand[];
+  visualline?: VimCommand[];
   synonyms: SynonymKey;
 }
 

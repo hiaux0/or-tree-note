@@ -65,6 +65,7 @@ export const MODIFIERS_WORDS = [
   'Shift',
   'Caps Lock(Capital)',
   'Escape',
+  '<Escape>',
   'Enter',
   'Backspace',
   'CapsLock',
