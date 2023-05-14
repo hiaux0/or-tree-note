@@ -2,18 +2,14 @@
 
 
 # Current
-  - [ ] [Editor] text suggestions/snippets
-  ```json
-		{ "before": [",", "a"], "commands": [{"command": "type", "args": {"text": "() => {}"}}]},
-  ```
-
+  - [ ] [esc] from insert into normal should put cursor one back
 
 # Feat
-  - [ ] `queueInputSequence` should support <ctrl> (additionally to <Control>)
   - [ ] [Editor] code highlighting
 
 # Code Enhancements
-    - [ ] cursor changing (`$1 $0`)
+  - [ ] `queueInputSequence` should support <ctrl> (additionally to <Control>)
+  - [ ] [snippets] cursor changing (`$1 $0`)
   - [ ] [Editor] text replacements
   - [ ] changeText should not execute 2 actions (1 changeText 2 changeVimState (the cursor to the right))
     - could be part of a bigger refactor, where I want to compose the vim actions more
@@ -34,6 +30,11 @@
 
 # Done
 - .
+  - [x] [Editor] text suggestions/snippets
+  ```json
+		{ "before": [",", "a"], "commands": [{"command": "type", "args": {"text": "() => {}"}}]},
+  ```
+
   - [x] `initial-state.ts` remove `lines` in `VimEditorState`
 
   - [x][fold]
