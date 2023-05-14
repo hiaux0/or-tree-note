@@ -1,3 +1,4 @@
+import { SnippetsService } from 'modules/snippets/snippetsService';
 import { insert, replaceAt, replaceRange } from 'modules/string/string';
 import { isSpace } from 'resources/keybindings/key-bindings';
 import { USER_SNIPPETS } from 'resources/keybindings/snippets/snippets';
@@ -20,47 +21,46 @@ export class InsertMode extends AbstractMode {
       newInput = ' ';
     }
 
+    let currentCursorCol = this.vimState.cursor.col;
+    let moveRightBy = newInput.length;
+    const activeText = this.vimState.getActiveLine().text;
+    let updatedInput = activeText;
     // keep track of input for snippets
     // have a trigger time window, in which snippets can be trigged
     clearInterval(this.typingIntervalTimer);
-    this.queuedKeys.push(newInput);
-    this.typingIntervalTimer = setTimeout(() => {
-      this.clearQueuedKeys();
-    }, TIMER);
-    // check snippets
-    const targetSnippet = USER_SNIPPETS.find((snippet) => {
-      const is = snippet.prefix === this.queuedKeys.join('');
-      return is;
-    });
+    if (this.queuedKeys.length || SnippetsService.containsPrefix(newInput)) {
+      this.queuedKeys.push(newInput);
+      this.typingIntervalTimer = setTimeout(() => {
+        this.clearQueuedKeys();
+      }, TIMER);
+      // check snippets
+      const targetSnippet = USER_SNIPPETS.find((snippet) => {
+        const is = snippet.prefix === this.queuedKeys.join('');
+        return is;
+      });
 
-    const activeText = this.vimState.getActiveLine().text;
-    let updatedInput = activeText;
-    /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: insert-mode.ts ~ line 38 ~ targetSnippet', targetSnippet);
-    if (targetSnippet) {
-      newInput = targetSnippet.body[0];
+      if (targetSnippet) {
+        newInput = targetSnippet.body[0];
 
-      // remove old chars
-      /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: insert-mode.ts ~ line 42 ~ activeText', activeText);
-      /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: insert-mode.ts ~ line 44 ~ this.queuedKeys', this.queuedKeys);
-      /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: insert-mode.ts ~ line 47 ~ this.vimState.cursor.col', this.vimState.cursor.col);
-      updatedInput = replaceRange(
-        activeText,
-        this.vimState.cursor.col - (this.queuedKeys.length - 1),
+        // remove old chars
         // - 1; we trigger snippets
         // , when the last char was typed, thus the last char does not gets printed anyway
-        this.queuedKeys.length - 1,
-        ''
-      );
-      /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: insert-mode.ts ~ line 45 ~ updatedInput', updatedInput);
-      this.clearQueuedKeys();
+        const replaceStart = currentCursorCol - (this.queuedKeys.length - 1);
+        const replaceEnd = currentCursorCol - (this.queuedKeys.length - 1);
+        updatedInput = replaceRange(activeText, replaceStart, replaceEnd, '');
+        this.clearQueuedKeys();
+        const newColBasedOnReplaced =
+          currentCursorCol - this.queuedKeys.length - 1; // - 1; go one before because of replacement
+        currentCursorCol = newColBasedOnReplaced;
+        const bodyLength = newInput.length;
+        moveRightBy = bodyLength - 1; // - 1; go one before because of replacement
+      }
     }
 
-    updatedInput = insert(updatedInput, this.vimState.cursor.col, newInput);
-
+    updatedInput = insert(updatedInput, currentCursorCol, newInput);
     this.vimState.updateActiveLine(updatedInput);
-
     this.vimState.lines[this.vimState.cursor.line].text = updatedInput;
-    super.moveRight(newInput.length);
+    super.moveRight(moveRightBy);
     // super.cursorRight();
     return this.vimState;
   }
