@@ -2,7 +2,6 @@
 
 
 # Current
-  - [ ] [esc] from insert into normal should put cursor one back
 
 # Feat
   - [ ] [Editor] code highlighting
@@ -30,6 +29,7 @@
 
 # Done
 - .
+  - [x] [esc] from insert into normal should put cursor one back
   - [x] [Editor] text suggestions/snippets
   ```json
 		{ "before": [",", "a"], "commands": [{"command": "type", "args": {"text": "() => {}"}}]},
