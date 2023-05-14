@@ -20,8 +20,8 @@ export function configure(aurelia: Aurelia) {
   ) as VimEditorState;
 
   aurelia.use.developmentLogging(environment.debug ? 'debug' : 'warn');
-  // const initialState = localStorageState || initialVimEditorState;
-  const initialState = initialVimEditorState;
+  const initialState = localStorageState || initialVimEditorState;
+  // const initialState = initialVimEditorState;
   /** https://aurelia.io/docs/plugins/store#introduction */
   aurelia.use.plugin(PLATFORM.moduleName('aurelia-store'), {
     initialState,
