@@ -34,9 +34,10 @@ export interface IndentationNode {
   indentation?: IndentationLevel;
 }
 
+export type LineId = string;
 export interface VimLine extends IndentationNode {
   text: Text;
-  id?: string; // Migration_1
+  id?: LineId; // Migration_1
   // cursor?: Cursor;
 }
 

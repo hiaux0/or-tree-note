@@ -2,12 +2,27 @@
 - [ ] [Normal]
 
 # TODO
+
   - [ ] [Normal] diw deletes the first word it encounters in the line
   - [ ] enter in normal should not split text
   - [ ] `queueInputSequence` should support <ctrl> (additionally to <Control>)
+  - [ ] [Editor] code highlighting
+  - [ ] [Editor] text suggestions
 
 # Bug
+- .
+  - [ ][indent] ` |hello` Indenting too much, will put cursor out of bound on the left
+  - [ ][t]  not supporting going to upper case chars (because of queued shift)
+
+# Refactor
+
+  - [ ] `initial-state.ts` remove `lines` in `VimEditorState`
+
+# Done
+- .
+
   - [x][fold]
+
     ```
       loem oditoa abcdeheeof 89
 
@@ -21,20 +36,25 @@
       tags
       templates
     ```
-  - [ ][indent] `    |hello` Indenting too much, will put cursor out of bound on the left
-
-# Refactor
-  - [ ] abstract-mode.ts - `toCharacterAtBack(commandInput: string): VimStateClass {` should be like
-    ```ts
-    toCharacterAtBack: TODOTYP = (commandInput: string): VimStateClass => {
-    ```
-    Because, some methods have an input, some don't. I want to make it clearer, what is available
-    The methods, I'm using like `this[myMethod](inputs...)`
-  - [ ] `initial-state.ts` remove `lines`  in `VimEditorState`
-
-# Done
-
-- .
 
   - [x] new line, then cannot up and down all the way
     - [x] src/modules/vim/vim-command-manager.ts 379
+
+# Not possible
+- .
+
+  - [x][--] abstract-mode.ts - `toCharacterAtBack(commandInput: string): VimStateClass {` should be like
+    --> not possible, since in `visual-mode.ts` I got an error for
+    `void super.cursorWordForwardEnd();`
+
+    ```ts
+    (property) AbstractMode.cursorWordForwardEnd: (commandInput?: string) => VimStateClass | Promise<VimStateClass>
+      Only public and protected methods of the base class are accessible via the 'super' keyword.ts(2340)
+    ```
+
+    ```ts
+    toCharacterAtBack: TODOTYP = (commandInput: string): VimStateClass => {
+    ```
+
+    Because, some methods have an input, some don't. I want to make it clearer, what is available
+    The methods, I'm using like `this[myMethod](inputs...)`

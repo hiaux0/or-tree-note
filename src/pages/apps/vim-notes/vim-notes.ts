@@ -3,7 +3,6 @@ import { bindable, computedFrom } from 'aurelia-framework';
 import { Store, jump, connectTo, StateHistory } from 'aurelia-store';
 import { CSS_SELECTORS } from 'common/css-selectors';
 import { CURRENT_OTN_MODE } from 'local-storage';
-import { cloneDeep } from 'lodash';
 // import { Logger } from 'modules/debug/logger';
 import { changeVimState } from 'modules/vim-editor/actions/actions-vim-editor';
 import { VimEditorTextMode } from 'modules/vim-editor/modes/vim-editor-text-mode';
@@ -13,6 +12,7 @@ import {
   VimExecutingMode,
   Cursor,
   VimStateV2,
+  VimLine,
 } from 'modules/vim/vim-types';
 import { distinctUntilChanged, map } from 'rxjs/operators';
 import {
@@ -45,7 +45,7 @@ import './vim-notes.scss';
   },
 })
 export class VimNotes {
-  @bindable lines: EditorLine[];
+  @bindable lines: VimLine[];
   @bindable editorId: number;
 
   line: EditorLine;
@@ -57,7 +57,6 @@ export class VimNotes {
   editorLineClass: string = CSS_SELECTORS['editor-line'];
   currentModeName: VimMode;
   vimEditor: VimEditor;
-  pastLines: any;
 
   private readonly activeEditorIds: EditorIds;
   private vimState: VimStateV2;
@@ -199,13 +198,6 @@ export class VimNotes {
   }
 
   private downloadText(): void {
-    function getRandomId() {
-      /**
-       * "0.g6ck5nyod4".substring(2, 9)
-       * -> g6ck5ny
-       */
-      return Math.random().toString(36).substring(2, 9);
-    }
     function getCurrentDate() {
       const date = new Date();
       const dateString = date.toLocaleDateString();

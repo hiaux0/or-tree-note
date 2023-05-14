@@ -1,4 +1,4 @@
-import { Cursor, VimStateV2 } from 'modules/vim/vim-types';
+import { Cursor, LineId, VimStateV2 } from 'modules/vim/vim-types';
 
 export interface HighlightCoords {
   start: number;
@@ -47,14 +47,12 @@ export interface LineStage {
 
 export interface EditorLine {
   lineHighlight?: HighlightCoords;
-  text: string;
-  lineId?: string; // Migration_2
   markup?: LineMarkup;
   macro?: LineMacro;
 }
 
 export interface IVimEditor {
-  lines: EditorLine[];
+  linesAddons: Record<string, EditorLine>; // Migration_3
   vimState?: VimStateV2;
 }
 
@@ -79,33 +77,37 @@ export interface VimEditorState {
  */
 export const initialVimEditorState: VimEditorState = {
   editors: [
+    // {
+    //   vimState: {
+    //     lines: [
+    //       {
+    //         text: 'Hello, World',
+    //         id: '456'
+    //       }
+    //     ]
+    //   },
+    //   linesAddons: {
+    //     '123': {},
+    //     '456': {
+    //       macro: {
+    //         checkbox: {
+    //           value: true,
+    //         },
+    //       },
+    //     },
+    //   },
+    // },
     {
-      lines: [
-        {
-          text: 'from editor abcdef 89',
-        },
-        {
-          text: '012 456',
+      linesAddons: {
+        'one two three': {
           macro: {
             checkbox: {
               value: true,
             },
           },
         },
-      ],
-    },
-    {
-      lines: [
-        {
-          text: 'one two three',
-          macro: {
-            checkbox: {
-              value: true,
-            },
-          },
-        },
-        { text: 'other' },
-      ],
+        'other': {},
+      },
     },
   ],
   activeEditorIds: [0],

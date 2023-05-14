@@ -2,7 +2,8 @@ import { StateHistory, nextStateHistory } from 'aurelia-store';
 import produce from 'immer';
 import { cloneDeep } from 'lodash';
 import { VimStateClass } from 'modules/vim/vim-state';
-import { EditorIds, EditorLine, VimEditorState } from 'store/initial-state';
+import { VimLine } from 'modules/vim/vim-types';
+import { EditorIds, VimEditorState } from 'store/initial-state';
 
 export function changeVimState(
   state: StateHistory<VimEditorState>,
@@ -15,11 +16,15 @@ export function changeVimState(
       draftState.editors[editorId].vimState = newVimState.serialize();
       draftState.editors[editorId].vimState.deletedLinesIndeces?.forEach(
         (deletedLineIndex) => {
+          const lineThatWillDeleted =
+            draftState.editors[editorId].vimState.lines[deletedLineIndex];
+          const indexOfLineThatWillDeleted = lineThatWillDeleted.id;
           draftState.editors[editorId].vimState.lines.splice(
             deletedLineIndex,
             1
           );
-          draftState.editors[editorId].lines.splice(deletedLineIndex, 1);
+          draftState.editors[editorId].linesAddons[indexOfLineThatWillDeleted] =
+            null;
         }
       );
     })
@@ -36,7 +41,7 @@ export const changeText = (
     cloneDeep(state),
     produce(state.present, (draftState) => {
       const targetDraftLine =
-        draftState.editors[editorId].lines[targetLineNumber];
+        draftState.editors[editorId].vimState.lines[targetLineNumber];
 
       targetDraftLine.text = newText;
     })
@@ -46,12 +51,12 @@ export const changeText = (
 export const changeManyText = (
   state: StateHistory<VimEditorState>,
   editorId: number,
-  newLines: EditorLine[]
+  newLines: VimLine[]
 ) => {
   return nextStateHistory(
     cloneDeep(state),
     produce(state.present, (draftState) => {
-      draftState.editors[editorId].lines = newLines;
+      draftState.editors[editorId].vimState.lines = newLines;
     })
   );
 };
@@ -66,8 +71,9 @@ export function createNewLine(
   return nextStateHistory(
     cloneDeep(state),
     produce(state.present, (draftState) => {
-      draftState.editors[editorId].lines[newLineIndex - 1].text = previousText;
-      draftState.editors[editorId].lines.splice(newLineIndex, 0, {
+      draftState.editors[editorId].vimState.lines[newLineIndex - 1].text =
+        previousText;
+      draftState.editors[editorId].vimState.lines.splice(newLineIndex, 0, {
         text: newText,
       });
     })

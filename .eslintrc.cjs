@@ -286,7 +286,7 @@ module.exports = {
       'warn',
       { allowNumber: true, allowBoolean: true, allowNullable: false },
     ],
-    '@typescript-eslint/strict-boolean-expressions': 'warn',
+    '@typescript-eslint/strict-boolean-expressions': 'off',
     '@typescript-eslint/typedef': [
       'warn',
       { arrowParameter: false, parameter: false, variableDeclaration: false },

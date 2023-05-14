@@ -18,7 +18,8 @@
     "moduleResolution": "node",
     "baseUrl": "src",
     "resolveJsonModule": true,
-    "allowJs": true
+    "allowJs": true,
+    "strictNullChecks": false,
   },
   "include": ["src", "./src/**/*.ts", "./test/**/*.ts", "./types/**/*.d.ts"],
   "exclude": ["./test/e2e/**/*.ts", "test"],

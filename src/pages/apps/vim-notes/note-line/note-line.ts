@@ -3,13 +3,13 @@ import { computedFrom, bindable } from 'aurelia-framework';
 import { CSS_SELECTORS } from 'common/css-selectors';
 import { getCssVar } from 'modules/css/css-variables';
 import { CursorUtils } from 'modules/cursor/cursor-utils';
-import { Logger } from 'modules/debug/logger';
-import { Cursor, FoldMap } from 'modules/vim/vim-types';
+// import { Logger } from 'modules/debug/logger';
+import { Cursor, FoldMap, VimLine } from 'modules/vim/vim-types';
 import { EditorLine } from 'store/initial-state';
 
 import './note-line.scss';
 
-const logger = new Logger({ scope: 'NoteLine' });
+// const logger = new Logger({ scope: 'NoteLine' });
 
 @inject(Element)
 export class NoteLine {
@@ -20,7 +20,7 @@ export class NoteLine {
 
   @bindable value = 'NoteLine';
 
-  @bindable line: EditorLine;
+  @bindable line: VimLine;
   @bindable lineIndex: number;
   @bindable cursorIndex: number;
 

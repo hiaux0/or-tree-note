@@ -21,8 +21,11 @@ export const toggleCheckbox = (
   return nextStateHistory(
     state,
     produce(state.present, (draftState) => {
-      const targetDraftLine =
-        draftState.editors[editorId].lines[targetLineNumber];
+      const index =
+        draftState.editors[editorId].vimState.lines[targetLineNumber].id;
+      /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: actions-vim-notes.ts ~ line 25 ~ index', index);
+      const targetDraftLine = draftState.editors[editorId].linesAddons[index];
+      /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: actions-vim-notes.ts ~ line 28 ~ targetDraftLine', targetDraftLine);
 
       //
       if (targetDraftLine.macro) {
