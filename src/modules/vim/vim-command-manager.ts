@@ -89,6 +89,13 @@ export class VimCommandManager {
   }
   enterNormalMode() {
     logger.culogger.debug(['Enter Normal mode']);
+
+    const beforeMode = this.activeMode;
+    if (beforeMode === VimMode.INSERT) {
+      this.vimState.vimState.cursor.col =
+        this.normalMode.cursorLeft().cursor.col;
+    }
+
     this.activeMode = VimMode.NORMAL;
     this.normalMode.reTokenizeInput(this.vimState?.getActiveLine().text);
     this.vimState.mode = VimMode.NORMAL;
