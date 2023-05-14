@@ -5,7 +5,12 @@ import { getRandomId } from 'common/random';
 import hotkeys from 'hotkeys-js';
 import { Logger } from 'modules/debug/logger';
 import { Vim } from 'modules/vim/vim';
-import { Cursor, VimLine, VimMode } from 'modules/vim/vim-types';
+import {
+  Cursor,
+  EMPTY_VIM_LINE,
+  VimLine,
+  VimMode,
+} from 'modules/vim/vim-types';
 import {
   ALL_MODIFIERS,
   ModifiersType,
@@ -40,7 +45,7 @@ const logger = new Logger({ scope: 'VimEditorTextMode' });
 })
 export class VimEditorTextMode {
   childrenElementList: NodeListOf<HTMLElement>;
-  elementText: VimLine[] = [];
+  elementText: VimLine[] = [EMPTY_VIM_LINE];
   vim: Vim;
 
   private activeEditorIds: EditorIds;
@@ -128,11 +133,13 @@ export class VimEditorTextMode {
         take(1)
       )
       .subscribe((vimState) => {
-        const cursorPosition = vimState.cursor;
+        const cursorPosition = vimState?.cursor;
         const startCursor: Cursor = { col: 0, line: 0 };
+        /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: vim-editor-text-mode.ts ~ line 133 ~ cursorPosition', cursorPosition);
         const shouldCursor = cursorPosition || startCursor;
+        /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: vim-editor-text-mode.ts ~ line 135 ~ shouldCursor', shouldCursor);
 
-        const initLines = vimState.lines.length
+        const initLines = vimState.lines?.length
           ? vimState.lines
           : this.elementText;
 

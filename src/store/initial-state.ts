@@ -98,6 +98,7 @@ export const initialVimEditorState: VimEditorState = {
     //   },
     // },
     {
+      vimState: {},
       linesAddons: {
         'one two three': {
           macro: {
