@@ -135,9 +135,7 @@ export class VimEditorTextMode {
       .subscribe((vimState) => {
         const cursorPosition = vimState?.cursor;
         const startCursor: Cursor = { col: 0, line: 0 };
-        /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: vim-editor-text-mode.ts ~ line 133 ~ cursorPosition', cursorPosition);
         const shouldCursor = cursorPosition || startCursor;
-        /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: vim-editor-text-mode.ts ~ line 135 ~ shouldCursor', shouldCursor);
 
         const initLines = vimState.lines?.length
           ? vimState.lines
