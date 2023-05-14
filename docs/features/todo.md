@@ -1,25 +1,40 @@
 - [ ] [Normal]
-- [ ] [Normal]
 
-# TODO
 
-  - [ ] [Normal] diw deletes the first word it encounters in the line
-  - [ ] enter in normal should not split text
+# Current
+  - [ ] [Editor] text suggestions/snippets
+  ```json
+		{ "before": [",", "a"], "commands": [{"command": "type", "args": {"text": "() => {}"}}]},
+  ```
+
+
+# Feat
   - [ ] `queueInputSequence` should support <ctrl> (additionally to <Control>)
   - [ ] [Editor] code highlighting
-  - [ ] [Editor] text suggestions
+
+# Code Enhancements
+    - [ ] cursor changing (`$1 $0`)
+  - [ ] [Editor] text replacements
+  - [ ] changeText should not execute 2 actions (1 changeText 2 changeVimState (the cursor to the right))
+    - could be part of a bigger refactor, where I want to compose the vim actions more
+  - [ ] add executing method, insteadof 
+    `await currentMode[result.targetCommand](result.vimState);`
+    - with current approach, it is hard to understand where exactly methods of each modes are executed
 
 # Bug
 - .
+  - [ ] enter in normal should not split text
+  - [ ] [Normal] diw deletes the first word it encounters in the line
   - [ ][indent] ` |hello` Indenting too much, will put cursor out of bound on the left
   - [ ][t]  not supporting going to upper case chars (because of queued shift)
+  - [ ][cc] does not clear line
 
 # Refactor
 
-  - [ ] `initial-state.ts` remove `lines` in `VimEditorState`
 
 # Done
 - .
+  - [x] `initial-state.ts` remove `lines` in `VimEditorState`
 
   - [x][fold]
 

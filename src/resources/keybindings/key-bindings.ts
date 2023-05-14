@@ -110,7 +110,6 @@ const keyBindings: KeyBindingModes = {
     { key: Modifier['<Space>'], command: 'space' },
     { key: '<Control>', command: 'nothing' },
     // snippets
-    { key: 'ia', command: 'type', args: {text: '() => {}' }},
     ...commandsAllModes,
     ...cursorAllModes,
   ],

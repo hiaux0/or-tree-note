@@ -1,6 +1,7 @@
 import { Logger } from 'common/logging/logging';
 import { cloneDeep } from 'lodash';
 import { ArrayUtils } from 'modules/array/array-utils';
+import { DebugService } from 'modules/debug/debugService';
 import {
   getFirstNonWhiteSpaceCharIndex,
   replaceAt,
@@ -165,18 +166,7 @@ export abstract class AbstractMode {
   /* Cursor */
   /** ****** */
   cursorRight(): VimStateClass {
-    const updaterCursorCol = this.vimState.cursor.col + 1;
-
-    if (
-      !isValidHorizontalPosition(
-        updaterCursorCol + 1,
-        this.vimState.getActiveLine().text
-      )
-    ) {
-      return this.vimState;
-    }
-
-    this.vimState.cursor.col = updaterCursorCol;
+    this.moveRight(1);
     return this.vimState;
   }
   cursorLeft(): VimStateClass {
@@ -477,6 +467,20 @@ export abstract class AbstractMode {
   /** ************** */
   /* Cursor Helpers */
   /** ************** */
+  public moveRight(amount: number): VimStateClass {
+    const updaterCursorCol = this.vimState.cursor.col + amount;
+
+    const valid = isValidHorizontalPosition(
+      updaterCursorCol + 1,
+      this.vimState.getActiveLine().text
+    );
+    if (!valid) {
+      return this.vimState;
+    }
+
+    this.vimState.cursor.col = updaterCursorCol;
+    return this.vimState;
+  }
   getTokenUnderCursor(): TokenizedString | undefined {
     const tokenizedInput = this.reTokenizeInput(
       this.vimState.getActiveLine().text
@@ -697,7 +701,6 @@ export abstract class AbstractMode {
       ...clipboardTextSplit,
       ...lines.slice(curLine),
     ];
-    /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: abstract-mode.ts ~ line 698 ~ insertedText', insertedText);
 
     this.vimState.lines = insertedText;
 
@@ -718,6 +721,9 @@ export function isValidHorizontalPosition(
   cursorCol: number,
   activeInput: string
 ) {
+  if (DebugService.debugAfterHit(3)) {
+    // debugger;
+  }
   if (cursorCol === activeInput.length + 1) return true;
 
   const isBigger = cursorCol > activeInput.length;

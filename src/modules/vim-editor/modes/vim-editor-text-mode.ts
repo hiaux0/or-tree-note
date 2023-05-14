@@ -228,17 +228,15 @@ export class VimEditorTextMode {
   ) {
     //
     const result = await this.vim.queueInput(input, modifiers);
+    if (result == null) {
+      return;
+    }
     logger.debug(['Received result from vim: %o', result], {
       onlyVerbose: true,
     });
 
     //
     const currentMode = this.getCurrentTextMode();
-
-    if (result == null) {
-      return;
-    }
-
     if (currentMode[result?.targetCommand]) {
       await currentMode[result.targetCommand](result.vimState);
       ev.preventDefault();

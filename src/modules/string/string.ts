@@ -50,14 +50,15 @@ export function insert(str: string, index: number, value: string): string {
   return str.substr(0, ind) + value + str.substr(ind);
 }
 
-// const input = '012345';
+// const input = '0123456';
 // input.length; /* ? */
 // const result = insert(input, 0, ' '); /* ? */
 // result.length; /* ? */
 
 /**
  * @example
- *   ​​​​​​​​replaceAt(input, 4) // 012356
+ *   const input = '0123456';
+ *   replaceAt(input, 4) // 012356
  */
 export function replaceAt(input: string, index: number, char: string) {
   if (index < 0) {
@@ -68,9 +69,10 @@ export function replaceAt(input: string, index: number, char: string) {
 
 /**
  * @example
+ *   const input = '0123456';
  *   replaceRange(input, 2, 4)         // 0156
  *   replaceRange(input, 2, 4, 'x')    // 01x56
- *   ​​​​​​​​replaceRange(input, 2, 4, 'what')​​​ // 01what56
+ *   replaceRange(input, 2, 4, 'what') // 01what56
  */
 export function replaceRange(
   input: string,
@@ -78,6 +80,8 @@ export function replaceRange(
   end: number,
   replace: string = ''
 ) {
+  /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: string.ts ~ line 83 ~ start', start);
+  /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: string.ts ~ line 83 ~ end', end);
   if (replace == '') {
     return input.slice(0, start) + input.substring(end + 1 + replace.length);
   } else {
