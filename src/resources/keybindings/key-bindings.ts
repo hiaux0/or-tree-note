@@ -88,7 +88,7 @@ const keyBindings: KeyBindingModes = {
     { key: 'J', command: 'joinLine' },
     { key: 'o', command: 'createNewLine' },
     { key: 'v', command: 'enterVisualMode' },
-    { key: 'V', command: 'visualStartLineWise' },
+    { key: '<Shift>V', command: 'visualStartLineWise' },
     { key: 'x', command: 'delete' },
     { key: 'y', command: 'yank' },
     { key: 'za', command: 'toggleFold' },
