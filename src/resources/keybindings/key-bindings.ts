@@ -16,6 +16,7 @@ import {
   ESCAPE,
   SHIFT,
   SPACE,
+  TAB,
 } from './app-keys';
 
 export const Modifier = {
@@ -109,6 +110,8 @@ const keyBindings: KeyBindingModes = {
     { key: '<Shift>', command: 'shift' },
     { key: Modifier['<Space>'], command: 'space' },
     { key: '<Control>', command: 'nothing' },
+    { key: '<Tab>', command: 'indentRight' },
+    { key: '<Shift><Tab>', command: 'indentLeft' },
     // snippets
     ...commandsAllModes,
     ...cursorAllModes,
@@ -172,4 +175,7 @@ export function isShift(newInput: string) {
 }
 export function isSpace(newInput: string) {
   return newInput === SPACE || newInput === Modifier['<Space>'];
+}
+export function isTab(newInput: string) {
+  return newInput === TAB || newInput === Modifier['<Tab>'];
 }

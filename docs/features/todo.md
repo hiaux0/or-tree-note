@@ -12,9 +12,9 @@
   - [ ] [Editor] text replacements
   - [ ] changeText should not execute 2 actions (1 changeText 2 changeVimState (the cursor to the right))
     - could be part of a bigger refactor, where I want to compose the vim actions more
-  - [ ] add executing method, insteadof 
-    `await currentMode[result.targetCommand](result.vimState);`
-    - with current approach, it is hard to understand where exactly methods of each modes are executed
+
+# Refactoring
+  - [ ] input + modifiers (shift,t -> <Shift>t) as some service
 
 # Bug
 - .
@@ -29,6 +29,8 @@
 
 # Done
 - .
+  - [x][o] currently, only looks at word vs whitespace and symbols
+    - --> should only whitespace
   - [x] [esc] from insert into normal should put cursor one back
   - [x] [Editor] text suggestions/snippets
   ```json
@@ -58,6 +60,10 @@
 
 # Not possible
 - .
+  - [x][--] add executing method, insteadof
+    --> some issues around types and public method access of methods
+    `await currentMode[result.targetCommand](result.vimState);`
+    - with current approach, it is hard to understand where exactly methods of each modes are executed
 
   - [x][--] abstract-mode.ts - `toCharacterAtBack(commandInput: string): VimStateClass {` should be like
     --> not possible, since in `visual-mode.ts` I got an error for

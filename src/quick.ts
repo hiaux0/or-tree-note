@@ -1,4 +1,5 @@
-import highlightJs from 'highlight.js';
+const text = '### Hello';
+// const text = '    Hello';
+const whiteSpaceAtStartIndex = /\S/g.exec(text);
+ whiteSpaceAtStartIndex;/* ? */
 
-const html = highlightJs.highlightAuto('<h1>Hello World!</h1>').value;
- html;/* ? */

@@ -17,6 +17,7 @@ import {
   isEscape,
   isShift,
   isSpace,
+  isTab,
 } from 'resources/keybindings/key-bindings';
 
 import { InsertMode } from './modes/insert-mode';
@@ -301,6 +302,7 @@ export class VimCommandManager {
     //
     if (!targetCommand) {
       if (this.isInsertMode()) {
+        /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: vim-command-manager.ts ~ line 337 ~ input', input);
         if (isAlt(input)) {
           return; // todo
         } else if (isArrowUp(input)) {
@@ -325,6 +327,8 @@ export class VimCommandManager {
           return; // todo
         } else if (isSpace(input)) {
           return VIM_COMMAND.space;
+        } else if (isTab(input)) {
+          return VIM_COMMAND.indentRight;
         } else if (isCommonCommand(input, modifiers) != null) {
           const targetCommand = isCommonCommand(input, modifiers);
           return VIM_COMMAND[targetCommand.command];
