@@ -2,7 +2,7 @@
   <!-- Default line -->
   <template if.bind="isDefaultLine(line)">
     <div class="${editorLineClass}" data-test="${editorLineClass}"
-      >${line.text} ${!foldMap[lineIndex] && foldMap[lineIndex + 1] ? '...' :
+      ><span highlight>${line.text}</span> ${!foldMap[lineIndex] && foldMap[lineIndex + 1] ? '...' :
       ''}
     </div>
     <div

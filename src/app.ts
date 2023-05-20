@@ -1,5 +1,5 @@
 import { PLATFORM } from 'aurelia-pal';
-import { Router, RouterEvent } from 'aurelia-router';
+import { Router } from 'aurelia-router';
 
 import './app.scss';
 
@@ -60,5 +60,4 @@ export class App {
       mouseCoordinates.style.top = `${y + 15}px`;
     });
   }
-
 }
