@@ -16,7 +16,7 @@ export class StringUtil {
   }
 
   static getLeadingWhitespaceNum(text: string): number {
-    const whiteSpaceAtStartIndex = /\w/g.exec(text);
+    const whiteSpaceAtStartIndex = /\S/g.exec(text);
     let numOfWhiteSpaceAtStart = text.length;
     if (whiteSpaceAtStartIndex !== null) {
       numOfWhiteSpaceAtStart = whiteSpaceAtStartIndex.index;
