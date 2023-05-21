@@ -103,7 +103,7 @@ export type CommandListener = (
 ) => void;
 export type ModeChanged = (newMode: VimMode) => void;
 
-export interface VimEditorOptions {
+export interface VimEditorOptionsV2 {
   commandListener: CommandListener;
   startCursor?: Cursor;
   startLines?: VimLine[];

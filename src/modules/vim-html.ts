@@ -4,13 +4,13 @@ import { SPACE } from 'resources/keybindings/app-keys';
 import { Modifier } from 'resources/keybindings/key-bindings';
 
 import { Vim } from './vim/vim';
-import { Cursor, VimEditorOptions } from './vim/vim-types';
+import { Cursor, VimEditorOptionsV2 } from './vim/vim-types';
 import { isModeChangeCommand } from './vim/vim-utils';
 
 /**
  * Make Vim engine available for HTML usage
  */
-export async function initVimHtml(vimHtmlOptions: VimEditorOptions) {
+export async function initVimHtml(vimHtmlOptions: VimEditorOptionsV2) {
   const startCursor: Cursor = { col: 0, line: 0 };
   const vim = new Vim([{ text: '123' }, { text: 'abc' }], startCursor, {
     vimPlugins: [],

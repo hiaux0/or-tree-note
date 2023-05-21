@@ -2,34 +2,54 @@
 
 # Current
 
-- Vn Input mode
-  - [ ] contenteditable div
-    - [x] init
-    - [x] get input lines
-      - [x] how to transfer to VIM
-        - --> create vim-init.ts
-    - [x] put into vim
+- .
+
+  - Vn Input mode
+
+    - [ ] contenteditable div
+
+      - [x] init
+      - [x] get input lines
+        - [x] how to transfer to VIM
+          - --> create vim-init.ts
+      - [x] put into vim
+
+      - [x] update cursor
+        - background: when I change the cursor inside cediv, the text gets added to the start position
+          - [x] get selection from browser
+          - [x] update inside vim
+            - ! consider method name: `setCursorInternally`
+              - one reason, for later undo redo, we may just want to change the state, without having to dispatch an action
+                - [ ] will then have to listen to text changes outside of the store
+      - [ ] update text
 
 # Feat
 
-- [ ] [Editor] code highlighting
+- .
+
+  - [ ] [Editor] code highlighting
 
 # Code Enhancements
 
-- [ ] `queueInputSequence` should support <ctrl> (additionally to <Control>)
-- [ ] [snippets] cursor changing (`$1 $0`)
-- [ ] [Editor] text replacements
-- [ ] changeText should not execute 2 actions (1 changeText 2 changeVimState (the cursor to the right))
-  - could be part of a bigger refactor, where I want to compose the vim actions more
-- [ ] show whitespace &zwnj;
-- [ ] consider another code highlightin library
-  - https://github.com/shikijs/shiki
-- [ ] undo/redo should not trigger on every keystroke
-  - eg. when I type "hello", and then undo, then the whole word "hello" should be undone, and not every char
+- .
+
+  - [ ] `queueInputSequence` should support <ctrl> (additionally to <Control>)
+  - [ ] [snippets] cursor changing (`$1 $0`)
+  - [ ] [Editor] text replacements
+  - [ ] changeText should not execute 2 actions (1 changeText 2 changeVimState (the cursor to the right))
+    - could be part of a bigger refactor, where I want to compose the vim actions more
+  - [ ] show whitespace &zwnj;
+  - [ ] consider another code highlightin library
+    - https://github.com/shikijs/shiki
+  - [ ] undo/redo should not trigger on every keystroke
+    - eg. when I type "hello", and then undo, then the whole word "hello" should be undone, and not every char
 
 # Refactoring
 
-- [ ] input + modifiers (shift,t -> <Shift>t) as some service
+- .
+
+  - [ ] input + modifiers (shift,t -> <Shift>t) as some service
+  - [ ] (vim-init.ts) vim-notes.ts should also use API similar to `initVim`
 
 # Bug
 
@@ -101,3 +121,7 @@
 
     Because, some methods have an input, some don't. I want to make it clearer, what is available
     The methods, I'm using like `this[myMethod](inputs...)`
+
+---
+
+cediv - contenteditable div

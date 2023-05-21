@@ -1,5 +1,6 @@
 .test-vn-container {
   border: 1px solid black;
+  flex-direction: column;
 
   &.INSERT {
     border-color: red;
@@ -7,5 +8,11 @@
 
   &.NORMAL {
     border-color: green;
+  }
+
+  div {
+    &::selection {
+      background: #006dcc5f;
+    }
   }
 }

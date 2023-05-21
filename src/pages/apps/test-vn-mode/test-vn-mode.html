@@ -1,12 +1,33 @@
 <template>
   <div
-    ref="containerRef"
-    class="test-vn-container ${mode}"
-    autofocus
-    contenteditable.bind="contenteditable"
+    class="
+      otn-container
+      mode-${currentModeName}
+      ${isEditorActive
+      ?
+      'otn-active'
+      :
+      'otn-inactive'}
+    "
+    data-otn-id="${editorId}"
   >
-    <div>hello</div>
-    <div>01234</div>
-    <div><input type="checkbox" checked="true"> world</div>
+    <!-- (Editor) Container -->
+    <div
+      ref="containerRef"
+      class="test-vn-container notes-container"
+      autofocus
+      contenteditable.bind="contenteditable"
+    >
+      <div class="editor-line">hello</div>
+      <div class="editor-line">01234</div>
+      <div class="editor-line"><input type="checkbox" checked="true" /> world</div>
+      <!-- Caret -->
+      <span
+        ref="caretRef"
+        id="caret"
+        data-test="caret"
+        class="caret-${currentModeName} caret-blinking"
+      ></span>
+    </div>
   </div>
 </template>

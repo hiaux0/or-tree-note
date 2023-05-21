@@ -176,7 +176,7 @@ export class VimEditorTextMode {
   }
 
   public initKeys() {
-    hotkeys('*', this.handleKeys);
+    hotkeys('*', (ev) => this.handleKeys(ev));
   }
 
   private handleKeys(ev: KeyboardEvent) {
