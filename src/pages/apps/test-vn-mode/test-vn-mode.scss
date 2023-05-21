@@ -1,0 +1,11 @@
+.test-vn-container {
+  border: 1px solid black;
+
+  &.INSERT {
+    border-color: red;
+  }
+
+  &.NORMAL {
+    border-color: green;
+  }
+}

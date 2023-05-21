@@ -1,24 +1,27 @@
 import { isMac } from 'common/platform/platform-check';
-import hotkeys from 'hotkeys-js';
 import { SPACE } from 'resources/keybindings/app-keys';
 import { Modifier } from 'resources/keybindings/key-bindings';
 
-import { Vim } from './vim/vim';
-import { Cursor, VimEditorOptions } from './vim/vim-types';
-import { isModeChangeCommand } from './vim/vim-utils';
+import { Vim } from './vim';
+import { Cursor, VimEditorOptions, VimLine } from './vim-types';
+import { isModeChangeCommand } from './vim-utils';
 
-/**
- * Make Vim engine available for HTML usage
- */
-export async function initVimHtml(vimHtmlOptions: VimEditorOptions) {
-  const startCursor: Cursor = { col: 0, line: 0 };
-  const vim = new Vim([{ text: '123' }, { text: 'abc' }], startCursor, {
+export async function initVim(vimEditorOptions: VimEditorOptions) {
+  const { startCursor, startLines, commandListener, modeChanged, afterInit } =
+    vimEditorOptions;
+  // Vim
+  const finalCursor: Cursor = startCursor ?? { col: 0, line: 0 };
+  const finalLines: VimLine[] = startLines ?? [
+    { text: '123' },
+    { text: 'abc' },
+  ];
+  const vim = new Vim(finalLines, finalCursor, {
     vimPlugins: [],
   });
   vim.enterInsertMode();
-  const { commandListener, modeChanged, afterInit } = vimHtmlOptions;
 
-  await initKeys(vimHtmlOptions.container);
+  //
+  await initKeys(vimEditorOptions.container);
   if (afterInit) {
     const afterResults = await afterInit(vim);
 
@@ -33,6 +36,7 @@ export async function initVimHtml(vimHtmlOptions: VimEditorOptions) {
     }
   }
 
+  // Key listener
   async function initKeys(container: HTMLElement) {
     /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: vim-html.ts ~ line 56 ~ initKeys');
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment

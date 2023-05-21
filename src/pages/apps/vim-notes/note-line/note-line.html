@@ -1,8 +1,13 @@
 <template>
   <!-- Default line -->
+      <!-- ><span highlight contenteditable.bind="vimMode === VimMode.INSERT">${line.text}</span> ${!foldMap[lineIndex] && foldMap[lineIndex + 1] ? '...' : -->
+      <!-- ><span highlight>${line.text}</span> ${!foldMap[lineIndex] && foldMap[lineIndex + 1] ? '...' : -->
   <template if.bind="isDefaultLine(line)">
-    <div class="${editorLineClass}" data-test="${editorLineClass}"
-      ><span highlight>${line.text}</span> ${!foldMap[lineIndex] && foldMap[lineIndex + 1] ? '...' :
+    <div
+      class="${editorLineClass}"
+      data-test="${editorLineClass}"
+      highlight
+    >${line.text} ${!foldMap[lineIndex] && foldMap[lineIndex + 1] ? '...' :
       ''}
     </div>
     <div

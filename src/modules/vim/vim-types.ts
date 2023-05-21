@@ -1,5 +1,6 @@
 import { getRandomId } from 'common/random';
 
+import { Vim } from './vim';
 import { VimCommand, SynonymKey, VIM_COMMAND } from './vim-commands-repository';
 import { VimStateClass } from './vim-state';
 
@@ -88,4 +89,27 @@ export interface VimPlugin {
     vimState?: VimStateClass,
     commandValue?: string
   ) => VimStateClass | void;
+}
+
+export interface InputData {
+  pressedKey: string;
+  ev: KeyboardEvent;
+  modifiersText: string;
+}
+
+export type CommandListener = (
+  vimResults: QueueInputReturn,
+  inputData?: InputData
+) => void;
+export type ModeChanged = (newMode: VimMode) => void;
+
+export interface VimEditorOptions {
+  commandListener: CommandListener;
+  startCursor?: Cursor;
+  startLines?: VimLine[];
+  container?: HTMLElement;
+  modeChanged?: ModeChanged;
+  afterInit?: (
+    vim: Vim
+  ) => QueueInputReturn[] | Promise<QueueInputReturn[]> | void;
 }

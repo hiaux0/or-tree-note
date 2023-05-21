@@ -1,40 +1,58 @@
 - [ ] [Normal]
 
-
 # Current
 
+- Vn Input mode
+  - [ ] contenteditable div
+    - [x] init
+    - [x] get input lines
+      - [x] how to transfer to VIM
+        - --> create vim-init.ts
+    - [x] put into vim
+
 # Feat
-  - [ ] [Editor] code highlighting
+
+- [ ] [Editor] code highlighting
 
 # Code Enhancements
-  - [ ] `queueInputSequence` should support <ctrl> (additionally to <Control>)
-  - [ ] [snippets] cursor changing (`$1 $0`)
-  - [ ] [Editor] text replacements
-  - [ ] changeText should not execute 2 actions (1 changeText 2 changeVimState (the cursor to the right))
-    - could be part of a bigger refactor, where I want to compose the vim actions more
+
+- [ ] `queueInputSequence` should support <ctrl> (additionally to <Control>)
+- [ ] [snippets] cursor changing (`$1 $0`)
+- [ ] [Editor] text replacements
+- [ ] changeText should not execute 2 actions (1 changeText 2 changeVimState (the cursor to the right))
+  - could be part of a bigger refactor, where I want to compose the vim actions more
+- [ ] show whitespace &zwnj;
+- [ ] consider another code highlightin library
+  - https://github.com/shikijs/shiki
+- [ ] undo/redo should not trigger on every keystroke
+  - eg. when I type "hello", and then undo, then the whole word "hello" should be undone, and not every char
 
 # Refactoring
-  - [ ] input + modifiers (shift,t -> <Shift>t) as some service
+
+- [ ] input + modifiers (shift,t -> <Shift>t) as some service
 
 # Bug
+
 - .
   - [ ] enter in normal should not split text
   - [ ] [Normal] diw deletes the first word it encounters in the line
   - [ ][indent] ` |hello` Indenting too much, will put cursor out of bound on the left
-  - [ ][t]  not supporting going to upper case chars (because of queued shift)
+  - [ ][t] not supporting going to upper case chars (because of queued shift)
   - [ ][cc] does not clear line
 
 # Refactor
 
-
 # Done
+
 - .
+
   - [x][o] currently, only looks at word vs whitespace and symbols
     - --> should only whitespace
   - [x] [esc] from insert into normal should put cursor one back
   - [x] [Editor] text suggestions/snippets
+
   ```json
-		{ "before": [",", "a"], "commands": [{"command": "type", "args": {"text": "() => {}"}}]},
+  	{ "before": [",", "a"], "commands": [{"command": "type", "args": {"text": "() => {}"}}]},
   ```
 
   - [x] `initial-state.ts` remove `lines` in `VimEditorState`
@@ -59,10 +77,13 @@
     - [x] src/modules/vim/vim-command-manager.ts 379
 
 # Not possible
+
 - .
+
   - [x][--] add executing method, insteadof
     --> some issues around types and public method access of methods
     `await currentMode[result.targetCommand](result.vimState);`
+
     - with current approach, it is hard to understand where exactly methods of each modes are executed
 
   - [x][--] abstract-mode.ts - `toCharacterAtBack(commandInput: string): VimStateClass {` should be like

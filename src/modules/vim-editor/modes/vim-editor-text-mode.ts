@@ -13,6 +13,7 @@ import {
 } from 'modules/vim/vim-types';
 import {
   ALL_MODIFIERS,
+  ESCAPE,
   ModifiersType,
   SPACE,
 } from 'resources/keybindings/app-keys';
@@ -175,43 +176,55 @@ export class VimEditorTextMode {
   }
 
   public initKeys() {
-    hotkeys('*', (ev) => {
-      if (!this.activeEditorIds.includes(this.vimEditorOptions.id)) return;
-      console.clear();
+    hotkeys('*', this.handleKeys);
+  }
 
-      if (this.checkAllowedBrowserShortcuts(ev)) {
-        return;
-      }
+  private handleKeys(ev: KeyboardEvent) {
+    if (!this.activeEditorIds.includes(this.vimEditorOptions.id)) return;
 
-      let pressedKey: string;
-      if (ev.code === SPACE) {
-        pressedKey = ev.code;
-      } else {
-        pressedKey = ev.key;
-      }
+    console.clear();
 
-      const modifiersText = `${ev.ctrlKey ? 'Ctrl+' : ''}${
-        ev.shiftKey ? 'Shift+' : ''
-      }${ev.altKey ? 'Alt+' : ''}${ev.metaKey ? 'Meta+' : ''}`;
-      // /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: vim-editor-text-mode.ts ~ line 133 ~ ev.key', ev.key);
-      /* prettier-ignore */ logger.debug(['-------------- Key pressed: (%s) %s', modifiersText, ev.key ?? pressedKey], { log: true, isOnlyGroup: true, });
+    if (this.checkAllowedBrowserShortcuts(ev)) {
+      return;
+    }
 
-      const collectedModifiers = [];
-      if (ev.ctrlKey) {
-        collectedModifiers.push(Modifier['<Control>']);
-      }
-      if (ev.shiftKey) {
-        collectedModifiers.push(Modifier['<Shift>']);
-      }
-      if (ev.altKey) {
-        collectedModifiers.push(Modifier['<Alt>']);
-      }
-      if (ev.metaKey) {
-        collectedModifiers.push(Modifier['<Meta>']);
-      }
+    let pressedKey: string;
+    if (ev.code === SPACE) {
+      pressedKey = ev.code;
+    } else {
+      pressedKey = ev.key;
+    }
 
-      void this.executeCommandInEditor(pressedKey, ev, collectedModifiers);
-    });
+    /**
+     * TODO: want to switch to contenteditable fields to allow vn input
+     * for now, disble insert mode (only allow ESC)
+     */
+    if (this.vim.getCurrentMode().currentMode === VimMode.INSERT) {
+      // allow esc to enter insert
+      if (pressedKey !== ESCAPE) return;
+    }
+
+    const modifiersText = `${ev.ctrlKey ? 'Ctrl+' : ''}${
+      ev.shiftKey ? 'Shift+' : ''
+    }${ev.altKey ? 'Alt+' : ''}${ev.metaKey ? 'Meta+' : ''}`;
+    // /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: vim-editor-text-mode.ts ~ line 133 ~ ev.key', ev.key);
+    /* prettier-ignore */ logger.debug(['-------------- Key pressed: (%s) %s', modifiersText, ev.key ?? pressedKey], { log: true, isOnlyGroup: true, });
+
+    const collectedModifiers = [];
+    if (ev.ctrlKey) {
+      collectedModifiers.push(Modifier['<Control>']);
+    }
+    if (ev.shiftKey) {
+      collectedModifiers.push(Modifier['<Shift>']);
+    }
+    if (ev.altKey) {
+      collectedModifiers.push(Modifier['<Alt>']);
+    }
+    if (ev.metaKey) {
+      collectedModifiers.push(Modifier['<Meta>']);
+    }
+
+    void this.executeCommandInEditor(pressedKey, ev, collectedModifiers);
   }
 
   isModifierKey(input: string): input is ModifiersType {

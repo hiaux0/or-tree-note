@@ -24,7 +24,7 @@
     <!-- OTN -->
     <!-- *** -->
 
-    <div ref="notesContainerRef" class="notes-container">
+    <div ref="notesContainerRef" class="notes-container" contenteditable="true">
       <!-- Lines -->
       <template repeat.for="line of lines">
         <note-line
@@ -37,6 +37,7 @@
           line-highlight-end.bind="vimState.visualEndCursor"
           line-highlight-start.bind="vimState.visualStartCursor"
           fold-map.bind="vimState.foldMap"
+          vim-mode.bind="vimState.mode"
         ></note-line>
       </template>
 
