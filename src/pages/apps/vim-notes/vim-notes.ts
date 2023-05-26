@@ -62,7 +62,6 @@ export class VimNotes {
   private vimState: VimStateV2;
   private vimMode: VimMode;
   private cursorPosition: Cursor;
-  private contenteditable = false;
 
   /** CONSIDER: because this is an array, observing this might be hard
    * eg. when one item changes or when multiple ids get addded.
@@ -100,9 +99,6 @@ export class VimNotes {
       )
       .subscribe((vimMode) => {
         this.vimMode = vimMode;
-        this.contenteditable = this.vimMode === VimMode.INSERT;
-        /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: vim-notes.ts ~ line 104 ~ this.contenteditable', this.contenteditable);
-        this.vimEditor?.vimEditorTextMode.setSelectionCursorToVimCursor();
       });
     this.store.state
       .pipe(

@@ -6,11 +6,6 @@
 
   - Vn Input mode
 
-    - [ ] rangy
-
-      - [ ] get selection
-      - [ ] restore selection NORML->INSE
-
     - [ ] contenteditable div
 
       - [x] init

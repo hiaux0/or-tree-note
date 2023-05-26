@@ -1,43 +1,25 @@
-import { SelectionService } from 'modules/SelectionService';
+import { bindable } from 'aurelia-framework';
 import rangy from 'rangy';
 
 export class QuickComponent {
-  containerRef: HTMLDivElement;
-
-  attached() {
-    setTimeout(() => {
-      this.toggleMode();
-    }, 0);
-  }
-
   toggleMode() {
-    const isInsertMode =
-      this.containerRef.getAttribute('contenteditable') === 'true';
-
-    const $childs = this.containerRef.querySelectorAll('div');
-    const targetNode = $childs[0].childNodes[0];
-    /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: quick-component.ts ~ line 18 ~ targetNode', targetNode)
+    const $container = document.querySelector<HTMLElement>('.container');
+    const isInsertMode = $container.getAttribute('contenteditable') === 'true';
 
     if (isInsertMode) {
-      const range = SelectionService.createRange(targetNode, {
-        line: 0,
-        col: 0,
-      });
-
       // Save selection before switching to Normal mode
-      // const range = rangy.getSelection().getRangeAt(0);
-      /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: quick-component.ts ~ line 12 ~ range', range)
-      this.containerRef.toggleAttribute('contenteditable', false);
+      const range = rangy.getSelection().getRangeAt(0);
+      $container.toggleAttribute('contenteditable', false);
 
       // Restore selection in Insert mode
       setTimeout(() => {
-        this.containerRef.toggleAttribute('contenteditable', true);
-        this.containerRef.focus();
+        $container.toggleAttribute('contenteditable', true);
+        $container.focus();
         rangy.getSelection().setSingleRange(range);
       });
     } else {
-      this.containerRef.toggleAttribute('contenteditable', true);
-      this.containerRef.focus();
+      $container.toggleAttribute('contenteditable', true);
+      $container.focus();
     }
   }
 }

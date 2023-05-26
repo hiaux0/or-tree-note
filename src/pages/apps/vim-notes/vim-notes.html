@@ -16,11 +16,7 @@
     class="
       otn-container
       mode-${vimMode}
-      ${isEditorActive
-      ?
-      'otn-active'
-      :
-      'otn-inactive'}
+      ${isEditorActive ? 'otn-active' : 'otn-inactive'}
     "
     data-otn-id="${editorId}"
   >
@@ -28,11 +24,7 @@
     <!-- OTN -->
     <!-- *** -->
 
-    <div
-      ref="notesContainerRef"
-      class="notes-container"
-      contenteditable.bind="contenteditable"
-    >
+    <div ref="notesContainerRef" class="notes-container" contenteditable="true">
       <!-- Lines -->
       <template repeat.for="line of lines">
         <note-line
