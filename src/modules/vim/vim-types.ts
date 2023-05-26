@@ -64,6 +64,9 @@ export interface QueueInputReturn {
   lines: VimLine[];
 }
 
+/**
+ * 0 based index
+ */
 export interface Cursor {
   col: number;
   line: number;
