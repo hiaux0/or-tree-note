@@ -40,7 +40,7 @@ export class TestVnMode {
       },
       commandListener: (result) => {
         if (this.prevent()) return;
-        console.clear();
+        // console.clear();
         /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: test-vn-mode.ts ~ line 27 ~ result', result);
       },
     });
