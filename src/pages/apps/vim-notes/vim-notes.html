@@ -24,7 +24,11 @@
     <!-- OTN -->
     <!-- *** -->
 
-    <div ref="notesContainerRef" class="notes-container" contenteditable="true">
+    <div
+      ref="notesContainerRef"
+      class="notes-container"
+      contenteditable.bind="contenteditable"
+    >
       <!-- Lines -->
       <template repeat.for="line of lines">
         <note-line

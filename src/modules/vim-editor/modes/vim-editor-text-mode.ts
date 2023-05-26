@@ -3,7 +3,10 @@ import { connectTo, StateHistory, Store } from 'aurelia-store';
 import { isMac } from 'common/platform/platform-check';
 import { getRandomId } from 'common/random';
 import hotkeys from 'hotkeys-js';
+import { CursorUtils } from 'modules/cursor/cursor-utils';
 import { Logger } from 'modules/debug/logger';
+import { DomService } from 'modules/DomService';
+import { SelectionService } from 'modules/SelectionService';
 import { Vim } from 'modules/vim/vim';
 import {
   Cursor,
@@ -163,6 +166,8 @@ export class VimEditorTextMode {
     const hardReload = ev.key === 'R' && mainModifier && ev.shiftKey;
     if (reload || hardReload) {
       return true;
+    } else if (ev.key === 'l' && mainModifier) {
+      return true;
     } else if (ev.key === 'C' && mainModifier && ev.shiftKey) {
       return true;
     } else if (ev.key === '=' && mainModifier) {
@@ -171,18 +176,76 @@ export class VimEditorTextMode {
       return true;
     }
 
-    ev.preventDefault();
     return false;
   }
 
-  public initKeys() {
-    hotkeys('*', (ev) => this.handleKeys(ev));
+  public init() {
+    this.initVim();
+    this.initListeners();
   }
 
-  private handleKeys(ev: KeyboardEvent) {
+  public initListeners() {
+    this.initMouse();
+    this.initKeys();
+  }
+
+  public initMouse() {
+    const container = this.vimEditorOptions.parentHtmlElement;
+    container.addEventListener('click', () => {
+      const range = SelectionService.getSingleRange();
+      const col = range.startOffset;
+      const line = getLineIndex(range.startContainer);
+
+      CursorUtils.updateCursor(this.vim.vimState, {
+        line,
+        col,
+      });
+
+      void this.store.dispatch(
+        changeVimState,
+        this.vimEditorOptions.id,
+        this.vim.vimState
+      );
+    });
+
+    function getLineIndex(startContainer: Node): number {
+      const $children = Array.from(container.children);
+      const positionIndex = $children.indexOf(startContainer.parentElement);
+      return positionIndex;
+    }
+  }
+
+  public initKeys() {
+    this.vimEditorOptions.parentHtmlElement.addEventListener(
+      'keydown',
+      (e) => void this.handleInsert(e)
+    );
+    hotkeys('*', (ev) => this.handleNonInsert(ev));
+  }
+
+  private handleInsert(ev: KeyboardEvent) {
     if (!this.activeEditorIds.includes(this.vimEditorOptions.id)) return;
 
-    console.clear();
+    if (this.checkAllowedBrowserShortcuts(ev)) {
+      return;
+    }
+
+    let pressedKey: string;
+    if (ev.code === SPACE) {
+      pressedKey = ev.code;
+    } else {
+      pressedKey = ev.key;
+    }
+
+    if (pressedKey === ESCAPE) {
+      this.vim.enterNormalMode();
+      this.vimEditorOptions.parentHtmlElement.blur();
+      return;
+    }
+  }
+
+  private handleNonInsert(ev: KeyboardEvent) {
+    if (!this.activeEditorIds.includes(this.vimEditorOptions.id)) return;
 
     if (this.checkAllowedBrowserShortcuts(ev)) {
       return;
@@ -202,6 +265,14 @@ export class VimEditorTextMode {
     if (this.vim.getCurrentMode().currentMode === VimMode.INSERT) {
       // allow esc to enter insert
       if (pressedKey !== ESCAPE) return;
+    }
+
+    // console.clear();
+    // ev.preventDefault();
+
+    if (pressedKey === 'i') {
+      void this.executeCommandInEditor(pressedKey, ev, []);
+      return;
     }
 
     const modifiersText = `${ev.ctrlKey ? 'Ctrl+' : ''}${
@@ -227,6 +298,40 @@ export class VimEditorTextMode {
     void this.executeCommandInEditor(pressedKey, ev, collectedModifiers);
   }
 
+  public setSelectionCursorToVimCursor() {
+    window.setTimeout(() => {
+      const $children = Array.from(
+        this.vimEditorOptions.parentHtmlElement.children
+      );
+      const childIndex = this.vim.vimState.cursor.line;
+      const targetChild = $children[childIndex];
+      /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: vim-editor-text-mode.ts ~ line 340 ~ targetChild', targetChild);
+
+      const textNode = this.getTextNodeOrThrow(targetChild);
+      const range = SelectionService.createRange(
+        textNode,
+        this.vim.vimState.cursor
+      );
+      /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: vim-editor-text-mode.ts ~ line 327 ~ range', range);
+      this.vimEditorOptions.parentHtmlElement.contentEditable = 'true';
+      this.vimEditorOptions.parentHtmlElement.focus();
+      SelectionService.setSingleRange(range);
+    }, 0);
+  }
+
+  private getTextNodeOrThrow(element: Element) {
+    if (element.childNodes.length > 1) {
+      throw new Error('unsupported: should only have one child');
+    }
+
+    const node = Array.from(element.childNodes)[0];
+    if (!DomService.isTextNode(node)) {
+      throw new Error('unsupported: should by TextNode');
+    }
+
+    return node;
+  }
+
   isModifierKey(input: string): input is ModifiersType {
     const modifierInput = input as ModifiersType;
     return ALL_MODIFIERS.includes(modifierInput);
@@ -234,7 +339,7 @@ export class VimEditorTextMode {
 
   async executeCommandInEditor(
     input: string,
-    ev: KeyboardEvent,
+    _ev: KeyboardEvent,
     modifiers: string[]
   ) {
     //
@@ -250,7 +355,7 @@ export class VimEditorTextMode {
     const currentMode = this.getCurrentTextMode();
     if (currentMode[result?.targetCommand]) {
       await currentMode[result.targetCommand](result.vimState);
-      ev.preventDefault();
+      // ev.preventDefault();
     } else {
       logger.debug([
         `The mode ${this.vim.getCurrentMode().currentMode} has no command ${

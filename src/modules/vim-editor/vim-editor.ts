@@ -34,8 +34,7 @@ export class VimEditor {
   ) {
     if (this.vimEditorOptions.isTextMode === true) {
       vimEditorTextMode.setupElementMode();
-      vimEditorTextMode.initVim();
-      vimEditorTextMode.initKeys();
+      vimEditorTextMode.init();
       this.vim = vimEditorTextMode.getVim();
     }
 
