@@ -32,17 +32,27 @@ export class MinimalNotes {
         this.commandListenerVimResult = vimResult;
         // update vimState with dom
         setTimeout(() => {
-          /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: minimal-notes.ts ~ line 36 ~ vimResult', vimResult);
           // vimResult.vimState.reportVimState();
           const $childs = this.containerRef.querySelectorAll('div');
           const childIndex = 0;
-          const targetNode = $childs[childIndex].childNodes[0];
+          let targetNode = $childs[childIndex].childNodes[0];
 
           if (DomService.isTextNode(targetNode)) {
+            let range: Range;
+            if (vim.vimState.snippet) {
+              const snippet = vim.vimState.snippet;
+              const replaced = replaceSequenceWith(
+                snippet.body.join(''),
+                snippet.prefix.length,
+                vim.vimState.lines[childIndex].text
+              );
+              targetNode = replaced.node as ChildNode;
+              range = replaced.range;
+            }
             vim.vimState.lines[childIndex].text = targetNode.textContent;
-            const range = SelectionService.getSingleRange();
+            range = range ?? SelectionService.getSingleRange();
             vim.vimState.cursor.col = range.startOffset;
-            // vimResult.vimState.reportVimState();
+            vimResult.vimState.reportVimState();
           }
         });
       },
@@ -108,5 +118,29 @@ export class MinimalNotes {
   private enterNormalMode() {
     this.containerRef.contentEditable = 'false';
     // this.containerRef.focus();
+  }
+}
+
+function replaceSequenceWith(
+  text: string,
+  snippetLength: number,
+  wholeLine: string
+): { node: Node; range: Range } | undefined {
+  const sel = SelectionService.getSelection();
+  if (sel?.rangeCount) {
+    const range = sel.getRangeAt(0);
+
+    const textNode = range.startContainer;
+    textNode.textContent = wholeLine;
+    const newStart = Math.max(
+      text.length + range.startOffset - snippetLength,
+      0
+    );
+    range.setStart(textNode, newStart);
+    range.deleteContents();
+    sel.removeAllRanges();
+    sel.addRange(range);
+
+    return { node: sel.anchorNode, range };
   }
 }
