@@ -151,7 +151,7 @@ export class Logger {
     //
     const [withSubstitutions] = messages;
     let [, ...placeholderValues] = messages;
-    let updatedSubstitutions = `[${logOpt.scope}] ${withSubstitutions}`;
+    let updatedSubstitutions = `[${logOpt.scope ?? ''}] ${withSubstitutions}`;
 
     if (logOpt.prefix) {
       updatedSubstitutions = `- (${logOpt.prefix}.) - ${updatedSubstitutions}`;
