@@ -51,7 +51,7 @@ export interface LogOptions {
 }
 
 let defautLogOptions: LogOptions = {
-  logMethod: 'log',
+  logLevel: 'VERBOSE',
   clearPreviousGroupsWhen_isOnlyGroup_True: true,
   // dontLogUnlessSpecified: true,
   focusedLogging: false,
@@ -124,9 +124,14 @@ export class Logger {
     }
   }
 
+  /**
+   * 1. Setup
+   * 2. ">>> Actual Log"
+   */
   public debug(
     messages: [string, ...unknown[]],
-    logOptions?: LogOptions
+    logOptions?: LogOptions,
+    callback?: (...message: unknown[]) => void
   ): unknown[] {
     if (!debugMode) return;
 
@@ -244,7 +249,11 @@ export class Logger {
       }
     }
     // >>> Actual log
-    console.log(...messageWithLogScope);
+    if (callback) {
+      callback(...messageWithLogScope);
+    } else {
+      console.log(...messageWithLogScope);
+    }
     this.logTrail.push(messageWithLogScope);
     loggerDevelopmentDebugLog.push(['log', ...messageWithLogScope]);
 
@@ -311,6 +320,13 @@ export class Logger {
 }
 
 export const logger = new Logger(defautLogOptions);
+
+// export const testLogger = new Logger({
+//   scope: 'Test',
+//   // log: false,
+// });
+// testLogger.debug(['first']);
+// testLogger.debug(['another'], { log: true });
 
 /**
  * - [x?] Throw on first error
