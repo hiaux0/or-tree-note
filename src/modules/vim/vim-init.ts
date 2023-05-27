@@ -48,7 +48,6 @@ export async function initVim(vimEditorOptionsV2: VimEditorOptionsV2) {
 
   // Key listener
   async function initKeys(container: HTMLElement) {
-    /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: vim-html.ts ~ line 56 ~ initKeys');
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     hotkeys('*', handleKeys);
@@ -60,7 +59,7 @@ export async function initVim(vimEditorOptionsV2: VimEditorOptionsV2) {
       return;
     }
 
-    // console.clear();
+    console.clear();
     // /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: vim-html.ts ~ line 56 ~ ev', ev);
 
     let pressedKey: string;
@@ -90,7 +89,6 @@ export async function initVim(vimEditorOptionsV2: VimEditorOptionsV2) {
       collectedModifiers.push(Modifier['<Meta>']);
     }
 
-    /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: vim-html.ts ~ line 73 ~ pressedKey', pressedKey);
     const result = await executeCommandInEditor(
       pressedKey,
       ev,
@@ -109,8 +107,6 @@ export async function initVim(vimEditorOptionsV2: VimEditorOptionsV2) {
    *
    */
   function checkAllowedBrowserShortcuts(ev: KeyboardEvent) {
-    /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: vim-html.ts ~ line 105 ~ checkAllowedBrowserShortcuts');
-
     const mainModifier = isMac ? ev.metaKey : ev.ctrlKey;
     const reload = ev.key === 'r' && mainModifier;
     const hardReload = ev.key === 'R' && mainModifier && ev.shiftKey;

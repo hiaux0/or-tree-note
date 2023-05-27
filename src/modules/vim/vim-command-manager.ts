@@ -302,7 +302,6 @@ export class VimCommandManager {
     //
     if (!targetCommand) {
       if (this.isInsertMode()) {
-        /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: vim-command-manager.ts ~ line 337 ~ input', input);
         if (isAlt(input)) {
           return; // todo
         } else if (isArrowUp(input)) {
