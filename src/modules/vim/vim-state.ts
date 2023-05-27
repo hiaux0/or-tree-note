@@ -1,3 +1,5 @@
+import { Logger } from 'common/logging/logging';
+
 import {
   Cursor,
   EMPTY_VIM_LINE,
@@ -6,6 +8,8 @@ import {
   VimMode,
   VimStateV2,
 } from './vim-types';
+
+const logger = new Logger('VimState');
 
 export class VimStateClass {
   cursor: Cursor;
@@ -67,5 +71,14 @@ export class VimStateClass {
 
   public updateActiveLine(updated: string) {
     this.updateLine(this.cursor.line, updated);
+  }
+
+  public reportVimState() {
+    const { cursor, lines, mode } = this.vimState;
+    logger.culogger.overwriteDefaultLogOtpions({ log: true });
+    /* prettier-ignore */ if (mode) logger.culogger.debug(['Starting Vim in Mode:', mode], {}, (...r) => console.log(...r));
+    /* prettier-ignore */ logger.culogger.debug(['Cursor at', cursor], {}, (...r) => console.log(...r));
+    /* prettier-ignore */ logger.culogger.debug(['Lines are', lines], {}, (...r) => console.log(...r));
+    logger.culogger.overwriteDefaultLogOtpions({ log: false });
   }
 }
