@@ -1,11 +1,10 @@
+import { Logger } from 'common/logging/logging';
 import { cloneDeep } from 'lodash';
-import { Logger } from 'modules/debug/logger';
 import { SPACE } from 'resources/keybindings/app-keys';
 import keyBindingsJson from 'resources/keybindings/key-bindings';
 
 import { VimCommandManager } from './vim-command-manager';
 import {
-  VimCommandNames,
   VIM_COMMAND,
   VIM_COMMANDS_THAT_CHANGE_TO_NORMAL_MODE,
 } from './vim-commands-repository';
@@ -19,7 +18,7 @@ import {
   VimLine,
 } from './vim-types';
 
-const logger = new Logger({ scope: 'Vim' });
+const logger = new Logger('Vim');
 
 export class VimError extends Error {}
 
@@ -67,7 +66,15 @@ export class Vim {
     );
     this.vimState = this.vimCommandManager.vimState;
 
+    this.reportInit();
     this.verifyValidCursorPosition();
+  }
+
+  private reportInit() {
+    const { cursor, lines, mode } = this.vimState;
+    /* prettier-ignore */ logger.culogger.debug(['Starting Vim in Mode:', mode], {}, (...r) => console.log(...r));
+    /* prettier-ignore */ logger.culogger.debug(['Cursor at', cursor], {}, (...r) => console.log(...r));
+    /* prettier-ignore */ logger.culogger.debug(['Lines are', lines], {}, (...r) => console.log(...r));
   }
 
   /** *************/
@@ -82,9 +89,7 @@ export class Vim {
     modifiers?: string[]
   ): Promise<QueueInputReturn | undefined> {
     const modifiersText = `${modifiers?.join('+ ')}`;
-    logger.debug(['Received input: (%s) %s', modifiersText, input], {
-      log: true,
-    });
+    /* prettier-ignore */ logger.culogger.debug(['Received input: (%s) %s', modifiersText, input], {}, (...r) => console.log(...r));
 
     //
     let targetCommandName: VIM_COMMAND | undefined;
@@ -97,7 +102,7 @@ export class Vim {
       void 0;
     }
     if (!targetCommandName) return;
-    logger.debug(['targetCommandName: %s', targetCommandName], { log: true });
+    /* prettier-ignore */ logger.culogger.debug(['targetCommandName: %s', targetCommandName], {}, (...r) => console.log(...r));
 
     let vimState: VimStateClass | undefined;
     // insert
@@ -141,7 +146,9 @@ export class Vim {
       targetCommand: targetCommandName,
       lines: [...this.vimState.lines],
     };
-    logger.debug(['vimState: %o', vimState], { log: true });
+    logger.culogger.debug(['vimState: %o', vimState], {}, (...r) =>
+      console.log(...r)
+    );
 
     /**
      * Hack? Need to reset deleted lines for every new command,
@@ -248,9 +255,7 @@ export class Vim {
       throw new Error(`${errorMessage}\n${expected}\n${received}`);
     }
 
-    logger.debug(['Result of input: %s is: %o', input, queueInputReturn], {
-      onlyVerbose: true,
-    });
+    /* prettier-ignore */ logger.culogger.debug(['Result of input: %s is: %o', input, queueInputReturn], { onlyVerbose: true, }, (...r) => console.log(...r));
   }
 
   private handleCommandThatChangesMode(targetCommandName: string) {
