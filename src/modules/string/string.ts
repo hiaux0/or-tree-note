@@ -80,9 +80,7 @@ export function replaceRange(
   end: number,
   replace: string = ''
 ) {
-  /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: string.ts ~ line 83 ~ start', start);
-  /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: string.ts ~ line 83 ~ end', end);
-  if (replace == '') {
+  if (replace === '') {
     return input.slice(0, start) + input.substring(end + 1 + replace.length);
   } else {
     return (
