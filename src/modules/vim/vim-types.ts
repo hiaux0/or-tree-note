@@ -102,11 +102,13 @@ export interface InputData {
 
 export type CommandListener = (
   vimResults: QueueInputReturn,
-  inputData?: InputData
+  inputData: InputData,
+  vim: Vim
 ) => void;
 export type ModeChanged = (
   vimResults: QueueInputReturn,
-  newMode: VimMode
+  newMode: VimMode,
+  vim: Vim
 ) => void;
 
 export interface VimEditorOptionsV2 {

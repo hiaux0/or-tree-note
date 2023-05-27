@@ -25,9 +25,9 @@ export async function initVimHtml(vimHtmlOptions: VimEditorOptionsV2) {
     if (afterResults) {
       afterResults.forEach((result) => {
         if (isModeChangeCommand(result.targetCommand)) {
-          modeChanged(result, result.vimState.mode);
+          modeChanged(result, result.vimState.mode, vim);
         } else {
-          commandListener(result);
+          commandListener(result, undefined, vim);
         }
       });
     }
@@ -85,9 +85,13 @@ export async function initVimHtml(vimHtmlOptions: VimEditorOptionsV2) {
     if (result == null) return;
 
     if (isModeChangeCommand(result.targetCommand)) {
-      modeChanged(result, result.vimState.mode);
+      modeChanged(result, result.vimState.mode, vim);
     } else {
-      commandListener(result, { pressedKey, ev, modifiersText: modifiers });
+      commandListener(
+        result,
+        { pressedKey, ev, modifiersText: modifiers },
+        vim
+      );
     }
   }
 
