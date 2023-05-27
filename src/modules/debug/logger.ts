@@ -9,7 +9,10 @@ type LogLevel = 'INFO' | 'DEBUG' | 'VERBOSE' | 'WARNING' | 'ERROR';
 export interface LogOptions {
   /// //////////// Log
   disableLogger?: boolean;
-  logMethod?: 'log' | 'trace' | 'error' | 'group' | 'groupEnd';
+  /**
+   * Todo: Remove this for explicit methods
+   * Reason: quokka output
+   */
   log?: boolean;
   logLevel?: LogLevel;
   onlyVerbose?: boolean;
@@ -49,7 +52,6 @@ export interface LogOptions {
 
 let defautLogOptions: LogOptions = {
   logMethod: 'log',
-  logLevel: 'VERBOSE',
   clearPreviousGroupsWhen_isOnlyGroup_True: true,
   // dontLogUnlessSpecified: true,
   focusedLogging: false,
@@ -211,12 +213,12 @@ export class Logger {
         if (isExpandGroupBasedOnString) {
           console.group();
         } else {
-          console[logOpt.logMethod](...messageWithLogScope);
+          console.log(...messageWithLogScope);
           console.groupCollapsed();
         }
         //
       } else {
-        console[logOpt.logMethod](...messageWithLogScope);
+        console.log(...messageWithLogScope);
         console.group();
       }
       groupId.push(logOpt.startGroupId);
@@ -242,9 +244,9 @@ export class Logger {
       }
     }
     // >>> Actual log
-    console[logOpt.logMethod](...messageWithLogScope);
+    console.log(...messageWithLogScope);
     this.logTrail.push(messageWithLogScope);
-    loggerDevelopmentDebugLog.push([logOpt.logMethod, ...messageWithLogScope]);
+    loggerDevelopmentDebugLog.push(['log', ...messageWithLogScope]);
 
     if (logOpt.endGroupId !== undefined && logOpt.endGroupId === groupId[0]) {
       console.groupEnd();
