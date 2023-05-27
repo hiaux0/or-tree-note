@@ -1,42 +1,69 @@
-import { SelectionService } from 'modules/SelectionService';
-import rangy from 'rangy';
-
 export class QuickComponent {
-  containerRef: HTMLDivElement;
+  private readonly textResult = '';
+  private readonly lineRef: HTMLDivElement;
 
   attached() {
-    setTimeout(() => {
-      this.toggleMode();
-    }, 0);
-  }
+    const lineRef = this.lineRef;
+    let sequenceBuffer: string[] = [];
 
-  toggleMode() {
-    const isInsertMode =
-      this.containerRef.getAttribute('contenteditable') === 'true';
+    const replacementMapping = {
+      ',a': '() => {}',
+      ',.r': 'return',
+      // Add any other mappings here
+    };
 
-    const $childs = this.containerRef.querySelectorAll('div');
-    const targetNode = $childs[0].childNodes[0];
-    /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: quick-component.ts ~ line 18 ~ targetNode', targetNode)
+    lineRef.addEventListener('keydown', (e) => {
+      sequenceBuffer.push(e.key);
+      const sequence = sequenceBuffer.join('');
+      /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: quick-component.ts ~ line 18 ~ sequence', sequence)
+      if (sequence in replacementMapping) {
+        e.preventDefault();
+        replaceSequenceWith(replacementMapping[sequence]);
+      } else if (e.key === 's') {
+        e.preventDefault();
+        insertTextAtCursor('⭐️');
+      }
+    });
 
-    if (isInsertMode) {
-      const range = SelectionService.createRange(targetNode, {
-        line: 0,
-        col: 0,
-      });
+    lineRef.addEventListener('keyup', () => {
+      const sequence = sequenceBuffer.join('');
+      const keys = Object.keys(replacementMapping);
+      const included = keys.find((key) => key.startsWith(sequence));
+      if (!included) {
+        sequenceBuffer = [];
+      }
+    });
 
-      // Save selection before switching to Normal mode
-      // const range = rangy.getSelection().getRangeAt(0);
-      this.containerRef.toggleAttribute('contenteditable', false);
+    function insertTextAtCursor(text: string) {
+      const sel = window.getSelection();
+      if (sel?.rangeCount) {
+        const range = sel.getRangeAt(0);
+        range.deleteContents();
+        const node = document.createTextNode(text);
+        range.insertNode(node);
+        range.setStartAfter(node);
+        sel.removeAllRanges();
+        sel.addRange(range);
+      }
+    }
 
-      // Restore selection in Insert mode
-      setTimeout(() => {
-        this.containerRef.toggleAttribute('contenteditable', true);
-        this.containerRef.focus();
-        rangy.getSelection().setSingleRange(range);
-      });
-    } else {
-      this.containerRef.toggleAttribute('contenteditable', true);
-      this.containerRef.focus();
+    function replaceSequenceWith(text: string) {
+      const sequenceLength = sequenceBuffer.join('').length;
+      sequenceBuffer = [];
+      const sel = window.getSelection();
+      if (sel?.rangeCount) {
+        const range = sel.getRangeAt(0);
+        range.setStart(
+          range.startContainer,
+          Math.max(range.startOffset - sequenceLength, 0)
+        );
+        range.deleteContents();
+        const node = document.createTextNode(text);
+        range.insertNode(node);
+        range.setStartAfter(node);
+        sel.removeAllRanges();
+        sel.addRange(range);
+      }
     }
   }
 }

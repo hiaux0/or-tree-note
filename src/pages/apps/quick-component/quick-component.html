@@ -1,8 +1,9 @@
 <template>
-  <div ref="containerRef" class="container" contenteditable="true">
-    <div>012</div>
-    <div>abc</div>
-  </div>
+  <require from="../minimal-notes/minimal-notes"></require>
 
-  <button click.delegate="toggleMode()">Toggle Mode</button>
+  <h3>Quick component</h3>
+  <div ref="lineRef" contenteditable="true" autofocus>0123</div>
+  <!-- <minimal-notes text.bind="textResult"></minimal-notes> -->
+
+  <div> ${textResult} </div>
 </template>
