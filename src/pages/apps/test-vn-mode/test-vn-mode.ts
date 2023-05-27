@@ -32,7 +32,7 @@ export class TestVnMode {
         // const result = _vim.queueInputSequence('<Control>[');
         // return result;
       },
-      modeChanged: (mode) => {
+      modeChanged: (_, mode) => {
         if (this.prevent()) return;
 
         this.mode = mode;

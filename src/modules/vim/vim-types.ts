@@ -104,7 +104,10 @@ export type CommandListener = (
   vimResults: QueueInputReturn,
   inputData?: InputData
 ) => void;
-export type ModeChanged = (newMode: VimMode) => void;
+export type ModeChanged = (
+  vimResults: QueueInputReturn,
+  newMode: VimMode
+) => void;
 
 export interface VimEditorOptionsV2 {
   commandListener: CommandListener;

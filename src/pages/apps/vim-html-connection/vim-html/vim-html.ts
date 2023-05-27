@@ -49,7 +49,7 @@ export class VimHtml {
         const result = _vim.queueInputSequence('<Control>[');
         return result;
       },
-      modeChanged: (mode) => {
+      modeChanged: (_, mode) => {
         if (this.prevent()) return;
 
         this.vimHtmlMode = this.getMode(mode);
