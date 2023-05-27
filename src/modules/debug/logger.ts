@@ -50,7 +50,7 @@ export interface LogOptions {
 let defautLogOptions: LogOptions = {
   logMethod: 'log',
   logLevel: 'VERBOSE',
-  clearPreviousGroupsWhen_isOnlyGroup_True: false,
+  clearPreviousGroupsWhen_isOnlyGroup_True: true,
   // dontLogUnlessSpecified: true,
   focusedLogging: false,
   useTable: true,
@@ -89,7 +89,7 @@ let onlyGroup: string[] = [];
 let bugGroupId: string[] = [];
 
 export class Logger {
-  private readonly logTrail: any[] = [];
+  private readonly logTrail: unknown[] = [];
   public getLogTrail() {
     return this.logTrail;
   }
@@ -116,11 +116,16 @@ export class Logger {
 
   public enableBrowserDevelopmentLogging(): void {
     if (window) {
-      (<any>window).loggerDevelopmentDebugLog = loggerDevelopmentDebugLog;
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      (window as unknown).loggerDevelopmentDebugLog = loggerDevelopmentDebugLog;
     }
   }
 
-  public debug(messages: [string, ...any[]], logOptions?: LogOptions): any[] {
+  public debug(
+    messages: [string, ...unknown[]],
+    logOptions?: LogOptions
+  ): unknown[] {
     if (!debugMode) return;
 
     const logOpt = {
@@ -144,7 +149,8 @@ export class Logger {
     }
 
     //
-    let [withSubstitutions, ...placeholderValues] = messages;
+    const [withSubstitutions] = messages;
+    let [, ...placeholderValues] = messages;
     let updatedSubstitutions = `[${logOpt.scope}] ${withSubstitutions}`;
 
     if (logOpt.prefix) {
@@ -158,7 +164,10 @@ export class Logger {
       );
     }
 
-    const messageWithLogScope = [updatedSubstitutions, ...placeholderValues];
+    const messageWithLogScope = [
+      updatedSubstitutions,
+      ...placeholderValues,
+    ] as string[];
 
     //
     if (logOpt.throwOnError && logOpt.isError) {
@@ -166,7 +175,7 @@ export class Logger {
        * We console.error AND throw, because we want to keep the formatting of the console.**
        */
       console.error(...messageWithLogScope);
-      throw '!!! [[ERROR]] Check above message !!!';
+      throw new Error('!!! [[ERROR]] Check above message !!!');
     }
 
     if (logOpt.logLevel !== 'VERBOSE' && logOpt.onlyVerbose) {
@@ -284,6 +293,7 @@ export class Logger {
 
     //
     if (logOptions.debugger) {
+      // eslint-disable-next-line no-debugger
       debugger;
     }
 
