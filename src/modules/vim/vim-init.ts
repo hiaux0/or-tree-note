@@ -69,25 +69,7 @@ export async function initVim(vimEditorOptionsV2: VimEditorOptionsV2) {
       pressedKey = ev.key;
     }
 
-    let modifiers = '';
-
-    const collectedModifiers = [];
-    if (ev.ctrlKey) {
-      modifiers += 'Ctrl+';
-      collectedModifiers.push(Modifier['<Control>']);
-    }
-    if (ev.shiftKey) {
-      modifiers += 'Shift+';
-      collectedModifiers.push(Modifier['<Shift>']);
-    }
-    if (ev.altKey) {
-      modifiers += 'Alt+';
-      collectedModifiers.push(Modifier['<Alt>']);
-    }
-    if (ev.metaKey) {
-      modifiers += 'Meta+';
-      collectedModifiers.push(Modifier['<Meta>']);
-    }
+    const { collectedModifiers, modifiers } = assembleModifiers(ev);
 
     const result = await executeCommandInEditor(
       pressedKey,
@@ -163,4 +145,26 @@ export async function initVim(vimEditorOptionsV2: VimEditorOptionsV2) {
       return positionIndex;
     }
   }
+}
+
+export function assembleModifiers(ev: KeyboardEvent) {
+  let modifiers = '';
+  const collectedModifiers = [];
+  if (ev.ctrlKey) {
+    modifiers += 'Ctrl+';
+    collectedModifiers.push(Modifier['<Control>']);
+  }
+  if (ev.shiftKey) {
+    modifiers += 'Shift+';
+    collectedModifiers.push(Modifier['<Shift>']);
+  }
+  if (ev.altKey) {
+    modifiers += 'Alt+';
+    collectedModifiers.push(Modifier['<Alt>']);
+  }
+  if (ev.metaKey) {
+    modifiers += 'Meta+';
+    collectedModifiers.push(Modifier['<Meta>']);
+  }
+  return { collectedModifiers, modifiers };
 }
