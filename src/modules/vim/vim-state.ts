@@ -1,5 +1,7 @@
 import { Logger } from 'common/logging/logging';
+import { ISnippet } from 'resources/keybindings/snippets/snippets';
 
+import { VimCommandNames } from './vim-commands-repository';
 import {
   Cursor,
   EMPTY_VIM_LINE,
@@ -19,7 +21,8 @@ export class VimStateClass {
   visualStartCursor: Cursor;
   visualEndCursor: Cursor;
   deletedLinesIndeces: number[];
-  commandName: string;
+  commandName: VimCommandNames;
+  snippet: ISnippet;
 
   constructor(public vimState: VimStateV2) {
     this.cursor = vimState.cursor;
@@ -30,6 +33,7 @@ export class VimStateClass {
     this.visualEndCursor = vimState.visualEndCursor;
     this.deletedLinesIndeces = vimState.deletedLinesIndeces;
     this.commandName = vimState.commandName;
+    this.snippet = vimState.snippet;
   }
 
   public static create(cursor: Cursor, lines?: VimLine[]) {

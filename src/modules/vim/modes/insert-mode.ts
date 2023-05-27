@@ -4,6 +4,7 @@ import { isSpace } from 'resources/keybindings/key-bindings';
 import { USER_SNIPPETS } from 'resources/keybindings/snippets/snippets';
 
 import { SPACE } from '../../../resources/keybindings/app-keys';
+import { VIM_COMMAND } from '../vim-commands-repository';
 import { VimStateClass } from '../vim-state';
 import { VimMode } from '../vim-types';
 import { AbstractMode } from './abstract-mode';
@@ -40,6 +41,7 @@ export class InsertMode extends AbstractMode {
       });
 
       if (targetSnippet) {
+        // TODO: support the whole body
         newInput = targetSnippet.body[0];
 
         // remove old chars
@@ -54,6 +56,8 @@ export class InsertMode extends AbstractMode {
         currentCursorCol = newColBasedOnReplaced;
         const bodyLength = newInput.length;
         moveRightBy = bodyLength - 1; // - 1; go one before because of replacement
+        this.vimState.commandName = VIM_COMMAND['snippet'];
+        this.vimState.snippet = targetSnippet;
       }
     }
 

@@ -1,7 +1,13 @@
 import { getRandomId } from 'common/random';
+import { ISnippet } from 'resources/keybindings/snippets/snippets';
 
 import { Vim } from './vim';
-import { VimCommand, SynonymKey, VIM_COMMAND } from './vim-commands-repository';
+import {
+  VimCommand,
+  SynonymKey,
+  VIM_COMMAND,
+  VimCommandNames,
+} from './vim-commands-repository';
 import { VimStateClass } from './vim-state';
 
 export interface KeyBindingModes {
@@ -55,7 +61,8 @@ export type VimStateV2 = {
   visualStartCursor?: Cursor;
   visualEndCursor?: Cursor;
   deletedLinesIndeces?: number[];
-  commandName?: string;
+  commandName?: VimCommandNames;
+  snippet?: ISnippet;
 };
 
 export interface QueueInputReturn {

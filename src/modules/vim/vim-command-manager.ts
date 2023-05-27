@@ -171,7 +171,11 @@ export class VimCommandManager {
         commandInput
       );
       if (vimState !== undefined) {
-        vimState.commandName = commandName;
+        if (vimState.snippet) {
+          vimState.commandName = VIM_COMMAND.snippet;
+        } else {
+          vimState.commandName = commandName;
+        }
       }
 
       return vimState;

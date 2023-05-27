@@ -30,6 +30,7 @@ export enum VIM_COMMAND {
   'paste' = 'paste',
   'redo' = 'redo',
   'replace' = 'replace',
+  'snippet' = 'snippet',
   'space' = 'space',
   'toCharacterAtBack' = 'toCharacterAtBack',
   'toCharacterAt' = 'toCharacterAt',

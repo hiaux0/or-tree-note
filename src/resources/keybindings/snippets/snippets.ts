@@ -1,4 +1,4 @@
-interface ISnippet {
+export interface ISnippet {
   prefix: string;
   body: string[];
   description?: string;
