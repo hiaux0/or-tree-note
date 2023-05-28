@@ -96,7 +96,7 @@ export async function initVim(vimEditorOptionsV2: VimEditorOptionsV2) {
     console.clear();
 
     //
-    const pressedKey = getPressedKey();
+    const pressedKey = getPressedKey(ev);
 
     /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: vim-init.ts ~ line 78 ~ pressedKey', pressedKey);
     switch (vim.vimState.mode) {
@@ -136,39 +136,6 @@ export async function initVim(vimEditorOptionsV2: VimEditorOptionsV2) {
         vim
       );
     }
-
-    function getPressedKey() {
-      let pressedKey: string;
-      if (ev.code === SPACE) {
-        pressedKey = ev.code;
-      } else {
-        pressedKey = ev.key;
-      }
-      return pressedKey;
-    }
-  }
-
-  /**
-   *
-   */
-  function checkAllowedBrowserShortcuts(ev: KeyboardEvent) {
-    const mainModifier = isMac ? ev.metaKey : ev.ctrlKey;
-    const reload = ev.key === 'r' && mainModifier;
-    const hardReload = ev.key === 'R' && mainModifier && ev.shiftKey;
-    if (reload || hardReload) {
-      return true;
-    } else if (ev.key === 'l' && mainModifier) {
-      return true;
-    } else if (ev.key === 'C' && mainModifier && ev.shiftKey) {
-      return true;
-    } else if (ev.key === '=' && mainModifier) {
-      return true;
-    } else if (ev.key === '-' && mainModifier) {
-      return true;
-    }
-
-    // ev.preventDefault();
-    return false;
   }
 
   function executeCommandInEditor(
@@ -234,4 +201,37 @@ export function assembleModifiers(ev: KeyboardEvent) {
     collectedModifiers.push(Modifier['<Meta>']);
   }
   return { collectedModifiers, modifiers };
+}
+
+/**
+ *
+ */
+function checkAllowedBrowserShortcuts(ev: KeyboardEvent) {
+  const mainModifier = isMac ? ev.metaKey : ev.ctrlKey;
+  const reload = ev.key === 'r' && mainModifier;
+  const hardReload = ev.key === 'R' && mainModifier && ev.shiftKey;
+  if (reload || hardReload) {
+    return true;
+  } else if (ev.key === 'l' && mainModifier) {
+    return true;
+  } else if (ev.key === 'C' && mainModifier && ev.shiftKey) {
+    return true;
+  } else if (ev.key === '=' && mainModifier) {
+    return true;
+  } else if (ev.key === '-' && mainModifier) {
+    return true;
+  }
+
+  // ev.preventDefault();
+  return false;
+}
+
+function getPressedKey(ev: KeyboardEvent) {
+  let pressedKey: string;
+  if (ev.code === SPACE) {
+    pressedKey = ev.code;
+  } else {
+    pressedKey = ev.key;
+  }
+  return pressedKey;
 }
