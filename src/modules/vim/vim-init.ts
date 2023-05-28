@@ -62,13 +62,7 @@ export async function initVim(vimEditorOptionsV2: VimEditorOptionsV2) {
     console.clear();
     // /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: vim-html.ts ~ line 56 ~ ev', ev);
 
-    let pressedKey: string;
-    if (ev.code === SPACE) {
-      pressedKey = ev.code;
-    } else {
-      pressedKey = ev.key;
-    }
-
+    const pressedKey = getPressedKey();
     const { collectedModifiers, modifiers } = assembleModifiers(ev);
 
     const result = await executeCommandInEditor(
@@ -86,6 +80,16 @@ export async function initVim(vimEditorOptionsV2: VimEditorOptionsV2) {
         { pressedKey, ev, modifiersText: modifiers },
         vim
       );
+    }
+
+    function getPressedKey() {
+      let pressedKey: string;
+      if (ev.code === SPACE) {
+        pressedKey = ev.code;
+      } else {
+        pressedKey = ev.key;
+      }
+      return pressedKey;
     }
   }
 
