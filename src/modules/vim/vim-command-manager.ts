@@ -79,9 +79,7 @@ export class VimCommandManager {
   /** *******/
 
   enterInsertMode() {
-    logger.culogger.debug(['Enter Insert mode'], {}, (...r) =>
-      console.log(...r)
-    );
+    /* prettier-ignore */ logger.culogger.debug(['Enter Insert mode'], {}, (...r) => console.log(...r));
     this.activeMode = VimMode.INSERT;
     this.insertMode.reTokenizeInput(this.vimState?.getActiveLine().text);
     this.vimState.mode = VimMode.INSERT;

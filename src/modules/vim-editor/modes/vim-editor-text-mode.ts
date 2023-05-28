@@ -242,6 +242,8 @@ export class VimEditorTextMode {
       this.vimEditorOptions.parentHtmlElement.blur();
       return;
     }
+
+    void this.executeCommandInEditor(pressedKey, ev, []);
   }
 
   private handleNonInsert(ev: KeyboardEvent) {

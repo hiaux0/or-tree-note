@@ -123,6 +123,8 @@ export interface VimEditorOptionsV2 {
   startCursor?: Cursor;
   startLines?: VimLine[];
   container?: HTMLElement;
+  caret?: HTMLElement;
+  childSelector?: string;
   modeChanged?: ModeChanged;
   afterInit?: (
     vim: Vim

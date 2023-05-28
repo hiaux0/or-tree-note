@@ -4,7 +4,13 @@ import { SPACE } from 'resources/keybindings/app-keys';
 import { Modifier } from 'resources/keybindings/key-bindings';
 
 import { Vim } from './vim';
-import { Cursor, VimEditorOptionsV2, VimLine } from './vim-types';
+import {
+  Cursor,
+  QueueInputReturn,
+  VimEditorOptionsV2,
+  VimLine,
+} from './vim-types';
+import { VimUi } from './vim-ui/vimUi';
 import { isModeChangeCommand } from './vim-utils';
 
 /**
@@ -13,6 +19,8 @@ import { isModeChangeCommand } from './vim-utils';
  *   - start lines
  * 2. init key listener
  *   - differentiate between normal and insert mode
+ * 3. afterInit
+ *   - Eg. for automation, execute commands by sending keys
  */
 export async function initVim(vimEditorOptionsV2: VimEditorOptionsV2) {
   const { startCursor, startLines, commandListener, modeChanged, afterInit } =
@@ -26,7 +34,7 @@ export async function initVim(vimEditorOptionsV2: VimEditorOptionsV2) {
   const vim = new Vim(finalLines, finalCursor, {
     vimPlugins: [],
   });
-  vim.enterInsertMode();
+  const vimUi = new VimUi(vimEditorOptionsV2);
 
   //
   await initKeys(vimEditorOptionsV2.container);
@@ -48,23 +56,25 @@ export async function initVim(vimEditorOptionsV2: VimEditorOptionsV2) {
 
   // Key listener
   async function initKeys(container: HTMLElement) {
+    // Normal modes inputs
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     hotkeys('*', handleKeys);
+    // Insert (Conteneditable) inptus
     container.addEventListener('keydown', (e) => void handleKeys(e));
   }
 
   async function handleKeys(ev: KeyboardEvent) {
+    //
     if (checkAllowedBrowserShortcuts(ev)) {
       return;
     }
 
     console.clear();
-    // /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: vim-html.ts ~ line 56 ~ ev', ev);
 
+    //
     const pressedKey = getPressedKey();
     const { collectedModifiers, modifiers } = assembleModifiers(ev);
-
     const result = await executeCommandInEditor(
       pressedKey,
       ev,
@@ -72,6 +82,10 @@ export async function initVim(vimEditorOptionsV2: VimEditorOptionsV2) {
     );
     if (result == null) return;
 
+    // update UI
+    updateUi(result);
+
+    //
     if (isModeChangeCommand(result.targetCommand)) {
       modeChanged(result, result.vimState.mode, vim);
     } else {
@@ -136,7 +150,6 @@ export async function initVim(vimEditorOptionsV2: VimEditorOptionsV2) {
         rangeIndex++
       ) {
         const range = selection.getRangeAt(rangeIndex);
-        /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: test-vn-mode.ts ~ line 26 ~ range', range);
         const col = range.startOffset;
         const line = getLineIndex(range.startContainer);
 
@@ -144,6 +157,7 @@ export async function initVim(vimEditorOptionsV2: VimEditorOptionsV2) {
           line,
           col,
         });
+        vimUi.update(vim.vimState);
       }
     });
 
@@ -152,6 +166,10 @@ export async function initVim(vimEditorOptionsV2: VimEditorOptionsV2) {
       const positionIndex = $children.indexOf(startContainer.parentElement);
       return positionIndex;
     }
+  }
+
+  function updateUi(result: QueueInputReturn) {
+    vimUi.update(result.vimState);
   }
 }
 
