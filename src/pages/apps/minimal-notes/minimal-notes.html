@@ -1,10 +1,17 @@
 <template>
-  <div
-    ref="containerRef"
-    class="container"
-    contenteditable.bind="contenteditable"
-  >
-    <div>012</div>
-    <div>abc</div>
+  <div class="container mode-${currentModeName}">
+    <div
+      ref="inputContainerRef"
+      class="inputContainer"
+      contenteditable.bind="contenteditable"
+    >
+      <div>012</div>
+      <div>abc</div>
+    </div>
+    <div
+      id="caret"
+      ref="caretRef"
+      class="caret-${currentModeName} caret-blinking"
+    ></div>
   </div>
 </template>
