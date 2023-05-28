@@ -16,7 +16,7 @@ export class MinimalNotes {
 
   attached() {
     setTimeout(() => {
-      this.enterInsertMode();
+      this.enterNormalMode();
     }, 0);
 
     // this.initEventListener();
@@ -26,8 +26,12 @@ export class MinimalNotes {
   private async initVim() {
     const vimEditorOptionsV2: VimEditorOptionsV2 = {
       container: this.inputContainerRef,
+      caret: this.caretRef,
+      childSelector: 'inputLine',
       commandListener: (vimResult, _, vim) => {
         // TODO: extract to somewhere in the core, update vimState with dom
+        /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: minimal-notes.ts ~ line 34 ~ vimResult.vimState.mode', vimResult.vimState.mode)
+        if (vimResult.vimState.mode !== VimMode.INSERT) return;
         setTimeout(() => {
           const $childs = this.inputContainerRef.querySelectorAll('div');
           const childIndex = 0;

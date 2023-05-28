@@ -98,6 +98,11 @@ $editorLineHeight: 21.4667px;
 
   .inputContainer {
     border: 1px solid black;
+
+    .inputLine {
+      white-space: pre;
+      height: $editorLineHeight;
+    }
   }
 
   #caret {
