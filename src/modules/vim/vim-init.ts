@@ -24,8 +24,16 @@ import { isModeChangeCommand } from './vim-utils';
  *   - Eg. for automation, execute commands by sending keys
  */
 export async function initVim(vimEditorOptionsV2: VimEditorOptionsV2) {
-  const { startCursor, startLines, commandListener, modeChanged, afterInit } =
-    vimEditorOptionsV2;
+  let isComposing = false;
+
+  const {
+    startCursor,
+    startLines,
+    commandListener,
+    modeChanged,
+    onCompositionUpdate,
+    afterInit,
+  } = vimEditorOptionsV2;
   // Vim
   const finalCursor: Cursor = startCursor ?? { col: 0, line: 0 };
   const finalLines: VimLine[] = startLines ?? [
@@ -63,6 +71,16 @@ export async function initVim(vimEditorOptionsV2: VimEditorOptionsV2) {
     hotkeys('*', handleKeys);
     // Insert (Conteneditable) inptus
     container.addEventListener('keydown', (e) => void handleKeys(e));
+    container.addEventListener('compositionstart', () => {
+      isComposing = true;
+    });
+    container.addEventListener(
+      'input',
+      (e) => void onCompositionUpdate(vim, e)
+    );
+    container.addEventListener('compositionend', () => {
+      isComposing = false;
+    });
   }
 
   async function handleKeys(ev: KeyboardEvent) {
@@ -70,15 +88,30 @@ export async function initVim(vimEditorOptionsV2: VimEditorOptionsV2) {
     if (checkAllowedBrowserShortcuts(ev)) {
       return;
     }
+    if (isComposing) {
+      return;
+      // onCompositionUpdate(vim);
+    }
 
     console.clear();
 
     //
     const pressedKey = getPressedKey();
-    if (vim.vimState.mode === VimMode.NORMAL) {
-      if (pressedKey === 'i') {
-        // Bug, where an 'i' is typed, when switching from normal to insert
-        ev.preventDefault();
+
+    /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: vim-init.ts ~ line 78 ~ pressedKey', pressedKey);
+    switch (vim.vimState.mode) {
+      case VimMode.NORMAL: {
+        if (pressedKey === 'i') {
+          // Bug, where an 'i' is typed, when switching from normal to insert
+          ev.preventDefault();
+        }
+        break;
+      }
+      case VimMode.INSERT: {
+        if (pressedKey === 'Process') {
+          return;
+        }
+        break;
       }
     }
 

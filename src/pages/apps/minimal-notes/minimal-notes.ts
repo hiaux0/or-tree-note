@@ -24,36 +24,39 @@ export class MinimalNotes {
   }
 
   private async initVim() {
+    const childIndex = 0;
     const vimEditorOptionsV2: VimEditorOptionsV2 = {
       container: this.inputContainerRef,
       caret: this.caretRef,
       childSelector: 'inputLine',
       commandListener: (vimResult, _, vim) => {
+        /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: minimal-notes.ts ~ line 33 ~ commandListener');
         // TODO: extract to somewhere in the core, update vimState with dom
-        /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: minimal-notes.ts ~ line 34 ~ vimResult.vimState.mode', vimResult.vimState.mode)
         if (vimResult.vimState.mode !== VimMode.INSERT) return;
-        setTimeout(() => {
-          const $childs = this.inputContainerRef.querySelectorAll('div');
-          const childIndex = 0;
-          let targetNode = $childs[childIndex].childNodes[0];
+        const $childs = this.inputContainerRef.querySelectorAll('div');
+        let targetNode = $childs[childIndex].childNodes[0];
 
-          if (DomService.isTextNode(targetNode)) {
-            let range: Range;
-            if (vim.vimState.snippet) {
-              const snippet = vim.vimState.snippet;
-              const replaced = replaceSequenceWith(
-                snippet.body.join(''),
-                snippet.prefix.length,
-                vim.vimState.lines[childIndex].text
-              );
-              targetNode = replaced.node as ChildNode;
-              range = replaced.range;
-            }
-            vim.vimState.lines[childIndex].text = targetNode.textContent;
-            range = range ?? SelectionService.getSingleRange();
-            vim.vimState.cursor.col = range.startOffset;
+        // wait until keydown got painted to the dom
+        // setTimeout(() => {
+        if (DomService.isTextNode(targetNode)) {
+          let range: Range;
+          if (vim.vimState.snippet) {
+            const snippet = vim.vimState.snippet;
+            const replaced = replaceSequenceWith(
+              snippet.body.join(''),
+              snippet.prefix.length,
+              vim.vimState.lines[childIndex].text
+            );
+            targetNode = replaced.node as ChildNode;
+            range = replaced.range;
           }
-        });
+          /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: minimal-notes.ts ~ line 52 ~ targetNode.textContent', targetNode.textContent);
+          vim.vimState.lines[childIndex].text = targetNode.textContent;
+          range = range ?? SelectionService.getSingleRange();
+          vim.vimState.cursor.col = range.startOffset;
+        }
+        vim.vimState.reportVimState();
+        // }, 0);
       },
       modeChanged: (vimResult, newMode, vim) => {
         // TODO: extract to somewhere in the core, update vimState with dom
@@ -67,6 +70,11 @@ export class MinimalNotes {
           case VimMode.NORMAL: {
             console.log('Enter Normal Mode');
             this.enterNormalMode();
+            const range = SelectionService.getSingleRange();
+            vim.vimState.updateCursor({
+              line: childIndex,
+              col: range.startOffset,
+            });
             vim.vimState.reportVimState();
             break;
           }
@@ -74,6 +82,20 @@ export class MinimalNotes {
             return;
           }
         }
+      },
+      onCompositionUpdate: (vim, event) => {
+        // wait until keydown got painted to the dom
+        /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: minimal-notes.ts ~ line 81 ~ event', event);
+
+        const $childs = (event.target as HTMLElement).querySelectorAll('div');
+        const targetNode = $childs[childIndex].childNodes[0];
+        /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: minimal-notes.ts ~ line 81 ~ targetNode.textContent', targetNode.textContent);
+        vim.vimState.updateLine(childIndex, targetNode.textContent);
+        const range = SelectionService.getSingleRange();
+        vim.vimState.updateCursor({ line: childIndex, col: range.startOffset });
+        vim.vimState.reportVimState();
+        // setTimeout(() => {
+        // }, 0);
       },
     };
     await initVim(vimEditorOptionsV2);

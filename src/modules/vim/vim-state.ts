@@ -77,12 +77,16 @@ export class VimStateClass {
     this.updateLine(this.cursor.line, updated);
   }
 
+  public updateCursor(cursor: Cursor) {
+    this.cursor = cursor;
+  }
+
   public reportVimState() {
     const { cursor, lines, mode } = this.vimState;
-    // logger.culogger.overwriteDefaultLogOtpions({ log: true });
+    logger.culogger.overwriteDefaultLogOtpions({ log: true });
     /* prettier-ignore */ if (mode) logger.culogger.debug(['Starting Vim in Mode:', mode], {}, (...r) => console.log(...r));
     /* prettier-ignore */ logger.culogger.debug(['Cursor at', cursor], {}, (...r) => console.log(...r));
     /* prettier-ignore */ logger.culogger.debug(['Lines are', lines], {}, (...r) => console.log(...r));
-    // logger.culogger.overwriteDefaultLogOtpions({ log: false });
+    logger.culogger.overwriteDefaultLogOtpions({ log: false });
   }
 }

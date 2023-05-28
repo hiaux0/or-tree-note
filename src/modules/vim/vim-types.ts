@@ -119,14 +119,15 @@ export type ModeChanged = (
 ) => void;
 
 export interface VimEditorOptionsV2 {
-  commandListener: CommandListener;
   startCursor?: Cursor;
   startLines?: VimLine[];
   container?: HTMLElement;
   caret?: HTMLElement;
   childSelector?: string;
-  modeChanged?: ModeChanged;
   afterInit?: (
     vim: Vim
   ) => QueueInputReturn[] | Promise<QueueInputReturn[]> | void;
+  commandListener: CommandListener;
+  modeChanged?: ModeChanged;
+  onCompositionUpdate?: (vim: Vim, event: Event) => void;
 }
