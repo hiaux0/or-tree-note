@@ -15,6 +15,7 @@ import {
   isDelete,
   isEnter,
   isEscape,
+  isOs,
   isShift,
   isSpace,
   isTab,
@@ -333,6 +334,8 @@ export class VimCommandManager {
           return VIM_COMMAND.newLine;
         } else if (isEscape(input)) {
           return VIM_COMMAND.enterNormalMode;
+        } else if (isOs(input)) {
+          return;
         } else if (isShift(input)) {
           return; // todo
         } else if (isSpace(input)) {

@@ -14,6 +14,7 @@ import {
   DELETE,
   ENTER,
   ESCAPE,
+  OS,
   SHIFT,
   SPACE,
   TAB,
@@ -21,14 +22,19 @@ import {
 
 export const Modifier = {
   '<Alt>': '<Alt>',
+  '<ArrowUp>': '<ArrowUp>',
+  '<ArrowDown>': '<ArrowDown>',
+  '<ArrowLeft>': '<ArrowLeft>',
+  '<ArrowRight>': '<ArrowRight>',
   '<Backspace>': '<Backspace>',
   '<Control>': '<Control>',
   '<Delete>': '<Delete>',
   '<Enter>': '<Enter>',
   '<Escape>': '<Escape>',
-  '<Meta>': '<Meta>',
+  '<OS>': '<OS>',
   '<Shift>': '<Shift>',
   '<Space>': '<Space>',
+  '<Tab>': '<Tab>',
 };
 
 const commandsAllModes: VimCommand[] = [
@@ -169,6 +175,9 @@ export function isEnter(newInput: string) {
 }
 export function isEscape(newInput: string) {
   return newInput === ESCAPE || newInput === Modifier['<Escape>'];
+}
+export function isOs(newInput: string) {
+  return newInput === OS || newInput === Modifier['<OS>'];
 }
 export function isShift(newInput: string) {
   return newInput === SHIFT || newInput === Modifier['<Shift>'];

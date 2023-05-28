@@ -53,6 +53,7 @@ export const DELETE = 'Delete';
 export const ENTER = 'Enter';
 export const ESCAPE = 'Escape';
 export const META = 'Meta';
+export const OS = 'OS';
 export const SHIFT = 'Shift';
 export const SHIFT_KEY_CODE = 16;
 export const SPACE = 'Space';
