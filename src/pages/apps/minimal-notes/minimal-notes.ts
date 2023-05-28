@@ -2,7 +2,12 @@ import { bindable, bindingMode } from 'aurelia-framework';
 import { DomService } from 'modules/DomService';
 import { SelectionService } from 'modules/SelectionService';
 import { initVim } from 'modules/vim/vim-init';
-import { Cursor, VimEditorOptionsV2, VimMode } from 'modules/vim/vim-types';
+import {
+  Cursor,
+  VimEditorOptionsV2,
+  VimLine,
+  VimMode,
+} from 'modules/vim/vim-types';
 import rangy from 'rangy';
 import './minimal-notes.scss';
 
@@ -24,11 +29,17 @@ export class MinimalNotes {
   }
 
   private async initVim() {
+    const texts: string[] = this.inputContainerRef.innerText.split('\n');
+    const startLines: VimLine[] = texts.map((text) => ({ text }));
     const childIndex = 0;
     const vimEditorOptionsV2: VimEditorOptionsV2 = {
       container: this.inputContainerRef,
       caret: this.caretRef,
       childSelector: 'inputLine',
+      startLines,
+      afterInit: (vim) => {
+        vim.vimState.reportVimState();
+      },
       commandListener: (vimResult, _, vim) => {
         /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: minimal-notes.ts ~ line 33 ~ commandListener');
         // TODO: extract to somewhere in the core, update vimState with dom
