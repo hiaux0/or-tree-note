@@ -9,6 +9,7 @@ import {
   QueueInputReturn,
   VimEditorOptionsV2,
   VimLine,
+  VimMode,
 } from './vim-types';
 import { VimUi } from './vim-ui/vimUi';
 import { isModeChangeCommand } from './vim-utils';
@@ -74,6 +75,13 @@ export async function initVim(vimEditorOptionsV2: VimEditorOptionsV2) {
 
     //
     const pressedKey = getPressedKey();
+    if (vim.vimState.mode === VimMode.NORMAL) {
+      if (pressedKey === 'i') {
+        // Bug, where an 'i' is typed, when switching from normal to insert
+        ev.preventDefault();
+      }
+    }
+
     const { collectedModifiers, modifiers } = assembleModifiers(ev);
     const result = await executeCommandInEditor(
       pressedKey,
