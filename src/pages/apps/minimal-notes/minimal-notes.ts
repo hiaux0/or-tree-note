@@ -82,9 +82,10 @@ export class MinimalNotes {
             console.log('Enter Normal Mode');
             this.enterNormalMode();
             const range = SelectionService.getSingleRange();
+            // TODO: investigate the vimCore handling of cursorLeft from IN->NO
             vim.vimState.updateCursor({
               line: childIndex,
-              col: range.startOffset,
+              col: Math.max(range.startOffset - 1, 0),
             });
             vim.vimState.reportVimState();
             break;
