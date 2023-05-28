@@ -1,37 +1,44 @@
 export class QuickComponent {
-  private readonly textResult = '';
+  private textResult = '';
+  private textResult_compositionstart = '';
+  private textResult_compositionend = '';
+  private textResult_keydown = '';
+  private textResult_keyup = '';
+  private textResult_keypress = '';
+  private textResult_input = '';
+  textResult_compositionupdate: string;
   private readonly lineRef: HTMLDivElement;
 
   attached() {
     const lineRef = this.lineRef;
     let sequenceBuffer: string[] = [];
+    let isComposing = false;
 
-    const replacementMapping = {
-      ',a': '() => {}',
-      ',.r': 'return',
-      // Add any other mappings here
-    };
+    console.log('Text content: ', lineRef.innerText);
 
-    lineRef.addEventListener('keydown', (e) => {
-      sequenceBuffer.push(e.key);
-      const sequence = sequenceBuffer.join('');
-      /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: quick-component.ts ~ line 18 ~ sequence', sequence)
-      if (sequence in replacementMapping) {
-        e.preventDefault();
-        replaceSequenceWith(replacementMapping[sequence]);
-      } else if (e.key === 's') {
-        e.preventDefault();
-        insertTextAtCursor('⭐️');
-      }
+    lineRef.addEventListener('compositionstart', (e) => {
+      isComposing = true;
+      this.textResult_compositionstart = this.lineRef.textContent;
     });
-
+    lineRef.addEventListener('compositionupdate', (e) => {
+      this.textResult_compositionupdate = this.lineRef.textContent;
+    });
+    lineRef.addEventListener('compositionend', (e) => {
+      isComposing = false;
+      this.textResult_compositionend = this.lineRef.textContent;
+    });
+    lineRef.addEventListener('keydown', (e) => {
+      this.textResult_keydown = this.lineRef.textContent;
+    });
     lineRef.addEventListener('keyup', () => {
-      const sequence = sequenceBuffer.join('');
-      const keys = Object.keys(replacementMapping);
-      const included = keys.find((key) => key.startsWith(sequence));
-      if (!included) {
-        sequenceBuffer = [];
-      }
+      this.textResult_keyup = this.lineRef.textContent;
+    });
+    lineRef.addEventListener('keypress', () => {
+      this.textResult_keypress = this.lineRef.textContent;
+    });
+    lineRef.addEventListener('input', (event: InputEvent) => {
+      /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: quick-component.ts ~ line 36 ~ event', event.data)
+      this.textResult_input = this.lineRef.textContent;
     });
 
     function insertTextAtCursor(text: string) {
