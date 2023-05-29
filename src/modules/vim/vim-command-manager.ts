@@ -93,8 +93,7 @@ export class VimCommandManager {
 
     const beforeMode = this.activeMode;
     if (beforeMode === VimMode.INSERT) {
-      this.vimState.vimState.cursor.col =
-        this.normalMode.cursorLeft().cursor.col;
+      this.vimState.cursor.col = this.normalMode.cursorLeft().cursor.col;
     }
 
     this.activeMode = VimMode.NORMAL;
@@ -453,7 +452,6 @@ export class VimCommandManager {
 
   /** TODO: newline bug */
   newLine(): VimStateClass {
-    this.vimState; /* ? */
     const { cursor } = this.vimState;
     const text = this.vimState.getActiveLine().text;
     const currentLineIndex = cursor.line;
@@ -468,7 +466,6 @@ export class VimCommandManager {
     const updatedLines = [...this.vimState.lines];
     // updatedLines; /* ? */
     updatedLines.splice(newLineIndex, 0, { text: newLineText });
-    updatedLines; /* ? */
     // updatedLines; /* ? */
     currentMode.reTokenizeInput(newLineText);
     // this.vimState.lines; /* ? */
@@ -476,12 +473,10 @@ export class VimCommandManager {
     // this.vimState.lines; /* ? */
 
     this.vimState.lines = updatedLines;
-    this.vimState.lines; /* ? */
     this.vimState.cursor = {
       line: newLineIndex,
       col: 0,
     };
-    this.vimState.lines; /* ? */
 
     return this.vimState;
   }
