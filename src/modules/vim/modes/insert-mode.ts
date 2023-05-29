@@ -48,7 +48,7 @@ export class InsertMode extends AbstractMode {
         // - 1; we trigger snippets
         // , when the last char was typed, thus the last char does not gets printed anyway
         const replaceStart = currentCursorCol - (this.queuedKeys.length - 1);
-        const replaceEnd = currentCursorCol - (this.queuedKeys.length - 1);
+        const replaceEnd = currentCursorCol - (this.queuedKeys.length - 2);
         updatedInput = replaceRange(activeText, replaceStart, replaceEnd, '');
         this.clearQueuedKeys();
         const newColBasedOnReplaced =
