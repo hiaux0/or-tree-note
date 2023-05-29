@@ -137,7 +137,10 @@ export async function initVim(vimEditorOptionsV2: VimEditorOptionsV2) {
       );
     }
 
-    ev.preventDefault();
+    // Let browser input pass
+    if (result.vimState.mode !== VimMode.INSERT) {
+      ev.preventDefault();
+    }
   }
 
   function executeCommandInEditor(
