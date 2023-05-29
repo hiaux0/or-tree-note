@@ -99,7 +99,6 @@ export async function initVim(vimEditorOptionsV2: VimEditorOptionsV2) {
     //
     const pressedKey = getPressedKey(ev);
 
-    /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: vim-init.ts ~ line 78 ~ pressedKey', pressedKey);
     switch (vim.vimState.mode) {
       case VimMode.NORMAL: {
         if (pressedKey === 'i') {
@@ -137,6 +136,8 @@ export async function initVim(vimEditorOptionsV2: VimEditorOptionsV2) {
         vim
       );
     }
+
+    ev.preventDefault();
   }
 
   function executeCommandInEditor(
