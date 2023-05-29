@@ -1,7 +1,7 @@
 import { Logger } from 'common/logging/logging';
 import { isMac } from 'common/platform/platform-check';
 import { CursorUtils } from 'modules/cursor/cursor-utils';
-import { SPACE } from 'resources/keybindings/app-keys';
+import { ESCAPE, SPACE } from 'resources/keybindings/app-keys';
 import { Modifier } from 'resources/keybindings/key-bindings';
 
 import { VimCore } from './vim-core';
@@ -69,18 +69,21 @@ export async function initVim(vimEditorOptionsV2: VimEditorOptionsV2) {
 
   // Key listener
   async function initKeys(container: HTMLElement) {
+    // Insert (Conteneditable) inptus
+    container.addEventListener('keydown', (e) => {
+      console.clear();
+      if (vim.vimState.mode !== VimMode.INSERT) return;
+      /* prettier-ignore */ logger.culogger.debug(['Keydown']);
+      void handleKeysInsert(e);
+    });
     // Normal modes inputs
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     hotkeys('*', async (e) => {
-      /* prettier-ignore */ logger.culogger.debug(['Hotkeys'],{log:true});
-      await handleKeys(e);
-    });
-    // Insert (Conteneditable) inptus
-    container.addEventListener('keydown', (e) => {
-      console.clear();
-      /* prettier-ignore */ logger.culogger.debug(['Keydown'],{log:true});
-      void handleKeys(e);
+      // might be obsolete, since not hit anyways, if `container` has focus
+      if (vim.vimState.mode === VimMode.INSERT) return;
+      /* prettier-ignore */ logger.culogger.debug(['Hotkeys']);
+      await handleKeysNonInsert(e);
     });
     container.addEventListener('compositionstart', () => {
       isComposing = true;
@@ -94,17 +97,80 @@ export async function initVim(vimEditorOptionsV2: VimEditorOptionsV2) {
     });
   }
 
-  async function handleKeys(ev: KeyboardEvent) {
+  async function handleKeysInsert(ev: KeyboardEvent) {
     //
     if (checkAllowedBrowserShortcuts(ev)) {
       return;
     }
     if (isComposing) {
       return;
-      // onCompositionUpdate(vim);
     }
 
-    console.clear();
+    // console.clear();
+
+    //
+    const pressedKey = getPressedKey(ev);
+    const currentMode = vim.vimState.mode;
+    switch (currentMode) {
+      case VimMode.NORMAL: {
+        if (pressedKey === 'i' || pressedKey === 'o') {
+          // Bug, where an 'i' is typed, when switching from normal to insert
+          ev.preventDefault();
+        }
+        break;
+      }
+      case VimMode.INSERT: {
+        if (pressedKey === 'Process') {
+          return;
+        } else if (pressedKey === ESCAPE) {
+          // /* prettier-ignore */ logger.culogger.todo('bug with dupe lines', (...r)=>console.log(...r));
+          // return;
+        }
+        break;
+      }
+    }
+
+    const { collectedModifiers, modifiers } = assembleModifiers(ev);
+    const result = await executeCommandInEditor(
+      pressedKey,
+      ev,
+      collectedModifiers
+    );
+    if (result == null) return;
+
+    // update UI
+    updateUi(result);
+
+    //
+    const newMode = result.vimState.mode;
+    if (isModeChangeCommand(result.targetCommand, currentMode, newMode)) {
+      modeChanged(result, newMode, currentMode, vim);
+    } else {
+      commandListener(
+        result,
+        { pressedKey, ev, modifiersText: modifiers },
+        vim
+      );
+    }
+
+    // Let browser input pass
+    if (result.vimState.mode !== VimMode.INSERT) {
+      ev.preventDefault();
+    } else if (result.vimState.snippet) {
+      ev.preventDefault();
+    }
+  }
+
+  async function handleKeysNonInsert(ev: KeyboardEvent) {
+    //
+    if (checkAllowedBrowserShortcuts(ev)) {
+      return;
+    }
+    if (isComposing) {
+      return;
+    }
+
+    // console.clear();
 
     //
     const pressedKey = getPressedKey(ev);
