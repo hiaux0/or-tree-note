@@ -49,9 +49,11 @@ export class MinimalNotes {
         this.vimState = vim.vimState;
       },
       commandListener: (vimResult, _, vim) => {
+        /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: minimal-notes.ts ~ line 53 ~ vimResult.vimState.lines', vimResult.vimState.lines.length);
         // TODO: extract to somewhere in the core, update vimState with dom
         if (vimResult.vimState.mode !== VimMode.INSERT) {
           this.vimState = vimResult.vimState;
+          vimResult.vimState.reportVimState();
           return;
         }
         const $childs = this.inputContainerRef.querySelectorAll('div');
@@ -71,17 +73,15 @@ export class MinimalNotes {
             targetNode = replaced.node as ChildNode;
             range = replaced.range;
           }
-          /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: minimal-notes.ts ~ line 52 ~ targetNode.textContent', targetNode.textContent);
           vim.vimState.lines[vimResult.vimState.cursor.line].text =
             targetNode.textContent;
           range = range ?? SelectionService.getSingleRange();
           vim.vimState.cursor.col = range.startOffset;
         }
-        // vim.vimState.reportVimState();
+        vimResult.vimState.reportVimState();
         // }, 0);
 
         this.vimState = vimResult.vimState;
-        /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: minimal-notes.ts ~ line 125 ~ this.vimState', this.vimState);
       },
       modeChanged: (vimResult, newMode, vim) => {
         // TODO: extract to somewhere in the core, update vimState with dom
@@ -113,11 +113,9 @@ export class MinimalNotes {
       },
       onCompositionUpdate: (vim, event) => {
         // wait until keydown got painted to the dom
-        /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: minimal-notes.ts ~ line 81 ~ event', event);
 
         const $childs = (event.target as HTMLElement).querySelectorAll('div');
         const targetNode = $childs[vim.vimState.cursor.line].childNodes[0];
-        /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: minimal-notes.ts ~ line 81 ~ targetNode.textContent', targetNode.textContent);
         vim.vimState.updateLine(
           vim.vimState.cursor.line,
           targetNode.textContent

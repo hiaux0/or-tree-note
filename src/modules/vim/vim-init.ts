@@ -122,6 +122,10 @@ export async function initVim(vimEditorOptionsV2: VimEditorOptionsV2) {
       collectedModifiers
     );
     if (result == null) return;
+    /* prettier-ignore */ console.log('------------------------------------------------------------------------------------------');
+    /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: vim-init.ts ~ line 127 ~ result', result.vimState.lines.length);
+    result.vimState.reportVimState();
+    /* prettier-ignore */ console.log('------------------------------------------------------------------------------------------');
 
     // update UI
     updateUi(result);
