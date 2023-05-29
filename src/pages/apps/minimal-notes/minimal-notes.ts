@@ -34,8 +34,6 @@ export class MinimalNotes {
   }
 
   private async initVim() {
-    const childIndex = 0;
-
     const savedVimState = await StorageService.getVimState();
     const startLines = savedVimState.lines ?? [];
     this.lines = startLines;
@@ -48,7 +46,6 @@ export class MinimalNotes {
       startCursor: savedVimState.cursor,
       removeTrailingWhitespace: true,
       afterInit: (vim) => {
-        vim.vimState.reportVimState();
         this.vimState = vim.vimState;
       },
       commandListener: (vimResult, _, vim) => {
@@ -58,7 +55,7 @@ export class MinimalNotes {
           return;
         }
         const $childs = this.inputContainerRef.querySelectorAll('div');
-        let targetNode = $childs[childIndex].childNodes[0];
+        let targetNode = $childs[vimResult.vimState.cursor.line].childNodes[0];
 
         // wait until keydown got painted to the dom
         // setTimeout(() => {
@@ -69,13 +66,14 @@ export class MinimalNotes {
             const replaced = replaceSequenceWith(
               snippet.body.join(''),
               snippet.prefix.length,
-              vim.vimState.lines[childIndex].text
+              vim.vimState.lines[vimResult.vimState.cursor.line].text
             );
             targetNode = replaced.node as ChildNode;
             range = replaced.range;
           }
           /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: minimal-notes.ts ~ line 52 ~ targetNode.textContent', targetNode.textContent);
-          vim.vimState.lines[childIndex].text = targetNode.textContent;
+          vim.vimState.lines[vimResult.vimState.cursor.line].text =
+            targetNode.textContent;
           range = range ?? SelectionService.getSingleRange();
           vim.vimState.cursor.col = range.startOffset;
         }
@@ -100,7 +98,7 @@ export class MinimalNotes {
             const range = SelectionService.getSingleRange();
             // TODO: investigate the vimCore handling of cursorLeft from IN->NO
             vim.vimState.updateCursor({
-              line: childIndex,
+              line: vimResult.vimState.cursor.line,
               col: Math.max(range.startOffset - 1, 0),
             });
             // vim.vimState.reportVimState();
@@ -118,11 +116,17 @@ export class MinimalNotes {
         /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: minimal-notes.ts ~ line 81 ~ event', event);
 
         const $childs = (event.target as HTMLElement).querySelectorAll('div');
-        const targetNode = $childs[childIndex].childNodes[0];
+        const targetNode = $childs[vim.vimState.cursor.line].childNodes[0];
         /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: minimal-notes.ts ~ line 81 ~ targetNode.textContent', targetNode.textContent);
-        vim.vimState.updateLine(childIndex, targetNode.textContent);
+        vim.vimState.updateLine(
+          vim.vimState.cursor.line,
+          targetNode.textContent
+        );
         const range = SelectionService.getSingleRange();
-        vim.vimState.updateCursor({ line: childIndex, col: range.startOffset });
+        vim.vimState.updateCursor({
+          line: vim.vimState.cursor.line,
+          col: range.startOffset,
+        });
         // vim.vimState.reportVimState();
         // setTimeout(() => {
         // }, 0);
@@ -144,16 +148,15 @@ export class MinimalNotes {
     this.text = this.inputContainerRef.innerText;
   }
 
-  private enterInsertMode(cursor?: Cursor) {
+  private enterInsertMode(
+    cursor: Cursor = {
+      line: 0,
+      col: 0,
+    }
+  ) {
     const $childs = this.inputContainerRef.querySelectorAll('div');
-    const targetNode = $childs[0].childNodes[0];
-    const range = SelectionService.createRange(
-      targetNode,
-      cursor ?? {
-        line: 0,
-        col: 0,
-      }
-    );
+    const targetNode = $childs[cursor.line].childNodes[0];
+    const range = SelectionService.createRange(targetNode, cursor);
 
     setTimeout(() => {
       this.inputContainerRef.contentEditable = 'true';
