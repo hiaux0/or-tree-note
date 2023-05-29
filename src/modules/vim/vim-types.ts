@@ -1,7 +1,7 @@
 import { getRandomId } from 'common/random';
 import { ISnippet } from 'resources/keybindings/snippets/snippets';
 
-import { Vim } from './vim';
+import { VimCore } from './vim';
 import {
   VimCommand,
   SynonymKey,
@@ -109,12 +109,12 @@ export interface InputData {
 export type CommandListener = (
   vimResults: QueueInputReturn,
   inputData: InputData,
-  vim: Vim
+  vim: VimCore
 ) => void;
 export type ModeChanged = (
   vimResults: QueueInputReturn,
   newMode: VimMode,
-  vim: Vim
+  vim: VimCore
 ) => void;
 
 export interface VimEditorOptionsV2 {
@@ -126,9 +126,9 @@ export interface VimEditorOptionsV2 {
   removeTrailingWhitespace?: boolean;
   plugins?: VimPlugin[];
   afterInit?: (
-    vim: Vim
+    vim: VimCore
   ) => QueueInputReturn[] | Promise<QueueInputReturn[]> | void;
   commandListener: CommandListener;
   modeChanged?: ModeChanged;
-  onCompositionUpdate?: (vim: Vim, event: Event) => void;
+  onCompositionUpdate?: (vim: VimCore, event: Event) => void;
 }

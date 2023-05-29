@@ -7,7 +7,7 @@ import { CursorUtils } from 'modules/cursor/cursor-utils';
 import { Logger } from 'modules/debug/logger';
 import { DomService } from 'modules/DomService';
 import { SelectionService } from 'modules/SelectionService';
-import { Vim } from 'modules/vim/vim';
+import { VimCore } from 'modules/vim/vim';
 import {
   Cursor,
   EMPTY_VIM_LINE,
@@ -50,7 +50,7 @@ const logger = new Logger({ scope: 'VimEditorTextMode' });
 export class VimEditorTextMode {
   childrenElementList: NodeListOf<HTMLElement>;
   elementText: VimLine[] = [EMPTY_VIM_LINE];
-  vim: Vim;
+  vim: VimCore;
 
   private activeEditorIds: EditorIds;
 
@@ -152,7 +152,7 @@ export class VimEditorTextMode {
           }
         });
 
-        this.vim = new Vim(initLines, shouldCursor, {
+        this.vim = new VimCore(initLines, shouldCursor, {
           vimPlugins: this.vimEditorOptions.plugins,
         });
 

@@ -3,7 +3,7 @@ import { CursorUtils } from 'modules/cursor/cursor-utils';
 import { SPACE } from 'resources/keybindings/app-keys';
 import { Modifier } from 'resources/keybindings/key-bindings';
 
-import { Vim } from './vim';
+import { VimCore } from './vim';
 import {
   Cursor,
   QueueInputReturn,
@@ -41,7 +41,7 @@ export async function initVim(vimEditorOptionsV2: VimEditorOptionsV2) {
     { text: '123' },
     { text: 'abc' },
   ];
-  const vim = new Vim(finalLines, finalCursor, {
+  const vim = new VimCore(finalLines, finalCursor, {
     vimPlugins: plugins ?? [],
   });
   const vimUi = new VimUi(vim, vimEditorOptionsV2);

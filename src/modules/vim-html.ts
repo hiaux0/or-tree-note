@@ -3,7 +3,7 @@ import hotkeys from 'hotkeys-js';
 import { SPACE } from 'resources/keybindings/app-keys';
 import { Modifier } from 'resources/keybindings/key-bindings';
 
-import { Vim } from './vim/vim';
+import { VimCore } from './vim/vim';
 import { Cursor, VimEditorOptionsV2 } from './vim/vim-types';
 import { isModeChangeCommand } from './vim/vim-utils';
 
@@ -12,7 +12,7 @@ import { isModeChangeCommand } from './vim/vim-utils';
  */
 export async function initVimHtml(vimHtmlOptions: VimEditorOptionsV2) {
   const startCursor: Cursor = { col: 0, line: 0 };
-  const vim = new Vim([{ text: '123' }, { text: 'abc' }], startCursor, {
+  const vim = new VimCore([{ text: '123' }, { text: 'abc' }], startCursor, {
     vimPlugins: [],
   });
   vim.enterInsertMode();

@@ -41,7 +41,12 @@ const defaultCursor = {
  * - the input
  * - the cursor location
  */
-export class Vim {
+export class VimCore {
+  /**
+   * TODO: remove state from the core?
+   *   Have class outised the core handle it
+   *   Idea: core just i/o
+   */
   public vimState: VimStateClass;
 
   private readonly vimCommandManager: VimCommandManager;
