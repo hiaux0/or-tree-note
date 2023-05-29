@@ -311,9 +311,18 @@ export class Logger {
     return finalMessage;
   }
 
-  public todo(message: string): string {
+  public todo(
+    message: string,
+    callback?: (...message: unknown[]) => void
+  ): string {
     const todoMessage = `>>>> [TODO]: %c${message}`;
-    console.log(todoMessage, `background: ${'darkgreen'}`);
+    const finalMsg = [todoMessage, `background: ${'darkgreen'}`];
+
+    if (callback) {
+      callback(...finalMsg);
+    } else {
+      console.log(...finalMsg);
+    }
 
     return todoMessage;
   }
