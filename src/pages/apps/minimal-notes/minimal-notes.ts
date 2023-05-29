@@ -52,6 +52,7 @@ export class MinimalNotes {
         // TODO: extract to somewhere in the core, update vimState with dom
         if (vimResult.vimState.mode !== VimMode.INSERT) {
           vimResult.vimState.reportVimState();
+          this.vimState = vimResult.vimState;
           return;
         }
 
