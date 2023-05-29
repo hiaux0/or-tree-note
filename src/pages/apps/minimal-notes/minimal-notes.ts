@@ -110,6 +110,14 @@ export class MinimalNotes {
         // }, 0);
       },
     };
+    vimEditorOptionsV2.plugins = [
+      {
+        commandName: 'save',
+        execute: (vimState) => {
+          void StorageService.saveVimState(vimState.serialize());
+        },
+      },
+    ];
     await initVim(vimEditorOptionsV2);
   }
 

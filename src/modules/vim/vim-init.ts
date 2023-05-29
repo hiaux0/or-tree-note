@@ -33,6 +33,7 @@ export async function initVim(vimEditorOptionsV2: VimEditorOptionsV2) {
     modeChanged,
     onCompositionUpdate,
     afterInit,
+    plugins,
   } = vimEditorOptionsV2;
   // Vim
   const finalCursor: Cursor = startCursor ?? { col: 0, line: 0 };
@@ -41,7 +42,7 @@ export async function initVim(vimEditorOptionsV2: VimEditorOptionsV2) {
     { text: 'abc' },
   ];
   const vim = new Vim(finalLines, finalCursor, {
-    vimPlugins: [],
+    vimPlugins: plugins ?? [],
   });
   const vimUi = new VimUi(vimEditorOptionsV2);
 

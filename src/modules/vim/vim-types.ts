@@ -124,6 +124,8 @@ export interface VimEditorOptionsV2 {
   container?: HTMLElement;
   caret?: HTMLElement;
   childSelector?: string;
+  removeTrailingWhitespace?: boolean;
+  plugins?: VimPlugin[];
   afterInit?: (
     vim: Vim
   ) => QueueInputReturn[] | Promise<QueueInputReturn[]> | void;
