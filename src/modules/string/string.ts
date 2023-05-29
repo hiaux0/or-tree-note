@@ -24,6 +24,10 @@ export class StringUtil {
     return numOfWhiteSpaceAtStart;
   }
 
+  static insert = insert;
+  static replaceAt = replaceAt;
+  static replaceRange = replaceRange;
+
   // static getIndentation(): number {
   //   const { indentSize } = this.vimOptions;
   //   const text = this.vimState.getActiveLine();
