@@ -690,27 +690,25 @@ export abstract class AbstractMode {
   async paste(): Promise<VimStateClass> {
     // get clipboard
     const clipboardTextRaw = await navigator.clipboard.readText();
-    /** TODO: don't need to map? */
-    const clipboardTextSplit = clipboardTextRaw.split('\n').map((line) => {
-      return { text: line };
-    });
-
-    const lines = [...this.vimState.lines];
+    const clipboardTextSplit = clipboardTextRaw.split('\n');
 
     // get current line text
-    const curLine = this.vimState.cursor.line;
     const line = this.vimState.getActiveLine();
     // get cursor position
     const col = this.vimState.cursor.col;
     // merge with line
     let replaced = '';
     if (clipboardTextSplit.length === 1) {
-      replaced = StringUtil.insert(line.text, col, clipboardTextSplit[0].text);
+      replaced = StringUtil.insert(line.text, col, clipboardTextSplit[0]);
+    } else {
+      throw new Error('Multi line not supported');
     }
 
     // need: merge with current line
     // bug: whole new line gets inserted
     const updatedLine: VimLine = { ...line, text: replaced };
+    const lines = [...this.vimState.lines];
+    const curLine = this.vimState.cursor.line;
     const beforeText = [...lines.slice(0, curLine)];
     const afterText = [...lines.slice(curLine + 1, lines.length)];
     const insertedText = [...beforeText, updatedLine, ...afterText];
