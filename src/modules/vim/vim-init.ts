@@ -143,12 +143,12 @@ export async function initVim(vimEditorOptionsV2: VimEditorOptionsV2) {
     }
   }
 
-  function executeCommandInEditor(
+  async function executeCommandInEditor(
     input: string,
     _ev: KeyboardEvent,
     modifiers: string[]
   ) {
-    const result = vim.queueInput(input, modifiers);
+    const result = await vim.queueInput(input, modifiers);
     // ev.preventDefault();
 
     return result;
