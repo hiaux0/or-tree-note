@@ -66,15 +66,7 @@ export class Vim {
     );
     this.vimState = this.vimCommandManager.vimState;
 
-    this.reportInit();
     this.verifyValidCursorPosition();
-  }
-
-  private reportInit() {
-    const { cursor, lines, mode } = this.vimState;
-    /* prettier-ignore */ logger.culogger.debug(['Starting Vim in Mode:', mode], {}, (...r) => console.log(...r));
-    /* prettier-ignore */ logger.culogger.debug(['Cursor at', cursor], {}, (...r) => console.log(...r));
-    /* prettier-ignore */ logger.culogger.debug(['Lines are', lines], {}, (...r) => console.log(...r));
   }
 
   /** *************/
