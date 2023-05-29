@@ -1,4 +1,5 @@
 import { bindable, bindingMode } from 'aurelia-framework';
+// import { Logger } from 'common/logging/logging';
 import { DomService } from 'modules/DomService';
 import { SelectionService } from 'modules/SelectionService';
 import { initVim } from 'modules/vim/vim-init';
@@ -12,6 +13,8 @@ import {
 import rangy from 'rangy';
 import { StorageService } from 'storage/vimStorage';
 import './minimal-notes.scss';
+
+// const logger = new Logger('MinimalNotes');
 
 export class MinimalNotes {
   @bindable({ defaultBindingMode: bindingMode.fromView }) text: string;
@@ -173,8 +176,9 @@ function replaceSequenceWith(
 
     const textNode = range.startContainer;
     textNode.textContent = wholeLine;
+    const finalNewStart = text.length + range.startOffset - snippetLength + 1;
     const newStart = Math.max(
-      text.length + range.startOffset - snippetLength + 1, // account for char pressed, but not typed out
+      finalNewStart, // account for char pressed, but not typed out
       0
     );
     range.setStart(textNode, newStart);
