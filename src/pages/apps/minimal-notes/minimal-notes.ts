@@ -7,6 +7,7 @@ import {
   VimEditorOptionsV2,
   VimLine,
   VimMode,
+  VimStateV2,
 } from 'modules/vim/vim-types';
 import rangy from 'rangy';
 import { StorageService } from 'storage/vimStorage';
@@ -21,6 +22,7 @@ export class MinimalNotes {
   currentModeName = VimMode.NORMAL;
 
   lines: VimLine[] = [];
+  vimState: VimStateV2;
 
   attached() {
     setTimeout(() => {
@@ -47,10 +49,14 @@ export class MinimalNotes {
       removeTrailingWhitespace: true,
       afterInit: (vim) => {
         vim.vimState.reportVimState();
+        this.vimState = vim.vimState;
       },
       commandListener: (vimResult, _, vim) => {
         // TODO: extract to somewhere in the core, update vimState with dom
-        if (vimResult.vimState.mode !== VimMode.INSERT) return;
+        if (vimResult.vimState.mode !== VimMode.INSERT) {
+          this.vimState = vimResult.vimState;
+          return;
+        }
         const $childs = this.inputContainerRef.querySelectorAll('div');
         let targetNode = $childs[childIndex].childNodes[0];
 
@@ -75,6 +81,9 @@ export class MinimalNotes {
         }
         // vim.vimState.reportVimState();
         // }, 0);
+
+        this.vimState = vimResult.vimState;
+        /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: minimal-notes.ts ~ line 125 ~ this.vimState', this.vimState);
       },
       modeChanged: (vimResult, newMode, vim) => {
         // TODO: extract to somewhere in the core, update vimState with dom
@@ -101,6 +110,8 @@ export class MinimalNotes {
             return;
           }
         }
+
+        this.vimState = vimResult.vimState;
       },
       onCompositionUpdate: (vim, event) => {
         // wait until keydown got painted to the dom
@@ -115,6 +126,7 @@ export class MinimalNotes {
         // vim.vimState.reportVimState();
         // setTimeout(() => {
         // }, 0);
+        this.vimState = vim.vimState;
       },
     };
     vimEditorOptionsV2.plugins = [

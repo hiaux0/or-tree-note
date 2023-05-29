@@ -91,32 +91,41 @@ $editorLineHeight: 21.4667px;
   }
 }
 
-.container {
-  position: relative;
+.notesComponentContainer {
+  display: flex;
 
-  @include caretStylesPerMode();
+  .container {
+    position: relative;
+    width: 65%;
+    @include caretStylesPerMode();
 
-  .inputContainer {
-    border: 1px solid black;
+    .inputContainer {
+      border: 1px solid black;
 
-    .inputLine {
-      white-space: pre;
-      height: $editorLineHeight;
+      .inputLine {
+        white-space: pre;
+        height: $editorLineHeight;
+      }
+    }
+
+    #caret {
+      height: 25px;
+      width: 10px;
+      border: 1px solid black;
+      background: gray;
+
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: $caretSizeHeight;
+      width: $caretSizeWidth;
+
+      opacity: 0.5;
     }
   }
 
-  #caret {
-    height: 25px;
-    width: 10px;
+  .debugContainer {
+    width: 35%;
     border: 1px solid black;
-    background: gray;
-
-    position: absolute;
-    top: 0;
-    left: 0;
-    height: $caretSizeHeight;
-    width: $caretSizeWidth;
-
-    opacity: 0.5;
   }
 }
