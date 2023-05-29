@@ -8,7 +8,6 @@
 
     ## Bugs
 
-    - [ ] multi line (not just first one)
     - [ ] fix paste
 
     ## Enhancement
@@ -18,6 +17,13 @@
 
     ## Done
 
+    - [x] text duped
+      - new line, esc
+      - bug: --> duped
+    - [x] snippets, for ",a", inserts the a here: () => {a}
+      - if snippet, preventdefault?
+      - bug in insert-mode.ts
+    - [x] multi line (not just first one)
     - [x] show cursor and current text
     - [x] saving
     - [x] `Process` sometimes appears, and lets the cursor jump
@@ -63,11 +69,14 @@
 
   - [ ] [Editor] code highlighting
   - [ ] [testing] write about, why I'm not doing tdd anymore
+  - [ ] [debug] history to access state, so I can reproduce the issue
 
 # Code Enhancements
 
 - .
   - [ ] allow caret and container option have selector (and not element itself)
+  - [ ] [modes] differentiate for <Esc>, if a mode change, or cancelling
+    - background, just thought, it might be helpful to differentiate
   - [ ] `queueInputSequence` should support <ctrl> (additionally to <Control>)
   - [ ] [snippets] cursor changing (`$1 $0`)
   - [ ] [Editor] text replacements
