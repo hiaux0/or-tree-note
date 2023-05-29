@@ -66,7 +66,6 @@ const cursorAllModes: VimCommand[] = [
 export const cursorNormalAndInsert: VimCommand[] = [
   { key: '<Control>]', command: 'indentRight' },
   { key: '<Control>[', command: 'indentLeft' },
-  { key: '<Control>v', command: 'paste' },
 ];
 
 const cursorNormalAndVisual: VimCommand[] = [
@@ -101,6 +100,7 @@ const keyBindings: KeyBindingModes = {
     { key: 'za', command: 'toggleFold' },
     { key: 'gh', command: 'hint' },
     { key: '<Control>s', command: 'save' },
+    { key: '<Control>v', command: 'paste' },
     { key: '<Enter>', command: 'newLine' },
     { key: '<Backspace>', command: 'backspace' },
     { key: '<Meta>', command: 'nothing' },
