@@ -152,6 +152,8 @@ export async function initVim(vimEditorOptionsV2: VimEditorOptionsV2) {
     // Let browser input pass
     if (result.vimState.mode !== VimMode.INSERT) {
       ev.preventDefault();
+    } else if (result.vimState.snippet) {
+      ev.preventDefault();
     }
   }
 

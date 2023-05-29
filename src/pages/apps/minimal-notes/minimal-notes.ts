@@ -174,7 +174,7 @@ function replaceSequenceWith(
     const textNode = range.startContainer;
     textNode.textContent = wholeLine;
     const newStart = Math.max(
-      text.length + range.startOffset - snippetLength,
+      text.length + range.startOffset - snippetLength + 1, // account for char pressed, but not typed out
       0
     );
     range.setStart(textNode, newStart);
