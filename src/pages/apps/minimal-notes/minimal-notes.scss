@@ -74,11 +74,7 @@ $editorLineHeight: 21.4667px;
   &.mode-INSERT {
     #caret {
       background: transparent;
-      border-left: $carentWidth solid $caretColor;
-
-      &.caret-blinking {
-        @include caretBlinking(blinkInsert);
-      }
+      border: none;
     }
   }
 

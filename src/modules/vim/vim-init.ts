@@ -1,3 +1,4 @@
+import { Logger } from 'common/logging/logging';
 import { isMac } from 'common/platform/platform-check';
 import { CursorUtils } from 'modules/cursor/cursor-utils';
 import { SPACE } from 'resources/keybindings/app-keys';
@@ -13,6 +14,8 @@ import {
 } from './vim-types';
 import { VimUi } from './vim-ui/vimUi';
 import { isModeChangeCommand } from './vim-utils';
+
+const logger = new Logger('VimInit');
 
 /**
  * 1. Options
@@ -69,9 +72,16 @@ export async function initVim(vimEditorOptionsV2: VimEditorOptionsV2) {
     // Normal modes inputs
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
-    hotkeys('*', handleKeys);
+    hotkeys('*', async (e) => {
+      /* prettier-ignore */ logger.culogger.debug(['Hotkeys'],{log:true});
+      await handleKeys(e);
+    });
     // Insert (Conteneditable) inptus
-    container.addEventListener('keydown', (e) => void handleKeys(e));
+    container.addEventListener('keydown', (e) => {
+      console.clear();
+      /* prettier-ignore */ logger.culogger.debug(['Keydown'],{log:true});
+      void handleKeys(e);
+    });
     container.addEventListener('compositionstart', () => {
       isComposing = true;
     });
@@ -99,9 +109,10 @@ export async function initVim(vimEditorOptionsV2: VimEditorOptionsV2) {
     //
     const pressedKey = getPressedKey(ev);
 
-    switch (vim.vimState.mode) {
+    const currentMode = vim.vimState.mode;
+    switch (currentMode) {
       case VimMode.NORMAL: {
-        if (pressedKey === 'i') {
+        if (pressedKey === 'i' || pressedKey === 'o') {
           // Bug, where an 'i' is typed, when switching from normal to insert
           ev.preventDefault();
         }
@@ -122,17 +133,14 @@ export async function initVim(vimEditorOptionsV2: VimEditorOptionsV2) {
       collectedModifiers
     );
     if (result == null) return;
-    /* prettier-ignore */ console.log('------------------------------------------------------------------------------------------');
-    /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: vim-init.ts ~ line 127 ~ result', result.vimState.lines.length);
-    result.vimState.reportVimState();
-    /* prettier-ignore */ console.log('------------------------------------------------------------------------------------------');
 
     // update UI
     updateUi(result);
 
     //
-    if (isModeChangeCommand(result.targetCommand)) {
-      modeChanged(result, result.vimState.mode, vim);
+    const newMode = result.vimState.mode;
+    if (isModeChangeCommand(result.targetCommand, currentMode, newMode)) {
+      modeChanged(result, newMode, vim);
     } else {
       commandListener(
         result,

@@ -2,12 +2,12 @@ import { bindable, bindingMode } from 'aurelia-framework';
 import { DomService } from 'modules/DomService';
 import { SelectionService } from 'modules/SelectionService';
 import { initVim } from 'modules/vim/vim-init';
+import { VimStateClass } from 'modules/vim/vim-state';
 import {
   Cursor,
   VimEditorOptionsV2,
   VimLine,
   VimMode,
-  VimStateV2,
 } from 'modules/vim/vim-types';
 import rangy from 'rangy';
 import { StorageService } from 'storage/vimStorage';
@@ -22,7 +22,7 @@ export class MinimalNotes {
   currentModeName = VimMode.NORMAL;
 
   lines: VimLine[] = [];
-  vimState: VimStateV2;
+  vimState: VimStateClass;
 
   attached() {
     setTimeout(() => {
@@ -49,20 +49,17 @@ export class MinimalNotes {
         this.vimState = vim.vimState;
       },
       commandListener: (vimResult, _, vim) => {
-        /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: minimal-notes.ts ~ line 53 ~ vimResult.vimState.lines', vimResult.vimState.lines.length);
         // TODO: extract to somewhere in the core, update vimState with dom
         if (vimResult.vimState.mode !== VimMode.INSERT) {
-          this.vimState = vimResult.vimState;
           vimResult.vimState.reportVimState();
           return;
         }
+
+        // Insert Mode logic
+        // wait until keydown got painted to the dom
         const $childs = this.inputContainerRef.querySelectorAll('div');
         let targetNode = $childs[vimResult.vimState.cursor.line].childNodes[0];
-
-        // wait until keydown got painted to the dom
-        // setTimeout(() => {
         if (DomService.isTextNode(targetNode)) {
-          let range: Range;
           if (vim.vimState.snippet) {
             const snippet = vim.vimState.snippet;
             const replaced = replaceSequenceWith(
@@ -71,17 +68,14 @@ export class MinimalNotes {
               vim.vimState.lines[vimResult.vimState.cursor.line].text
             );
             targetNode = replaced.node as ChildNode;
-            range = replaced.range;
           }
           vim.vimState.lines[vimResult.vimState.cursor.line].text =
             targetNode.textContent;
-          range = range ?? SelectionService.getSingleRange();
-          vim.vimState.cursor.col = range.startOffset;
         }
+        // Only update cursor, but not text
+        // Text will be updated once insert mode is left
+        this.vimState.cursor = vimResult.vimState.cursor;
         vimResult.vimState.reportVimState();
-        // }, 0);
-
-        this.vimState = vimResult.vimState;
       },
       modeChanged: (vimResult, newMode, vim) => {
         // TODO: extract to somewhere in the core, update vimState with dom
@@ -89,27 +83,27 @@ export class MinimalNotes {
           case VimMode.INSERT: {
             console.log('Enter Insert Mode');
 
+            this.vimState = vimResult.vimState;
             this.enterInsertMode(vimResult.vimState.cursor);
             break;
           }
           case VimMode.NORMAL: {
             console.log('Enter Normal Mode');
-            this.enterNormalMode();
             const range = SelectionService.getSingleRange();
-            // TODO: investigate the vimCore handling of cursorLeft from IN->NO
-            vim.vimState.updateCursor({
+            const updatedCursor = {
               line: vimResult.vimState.cursor.line,
-              col: Math.max(range.startOffset - 1, 0),
-            });
-            // vim.vimState.reportVimState();
+              col: Math.max(range.startOffset - 1, 0), // - 1 INS -> NO, cursor moves one left
+            };
+            // TODO: investigate the vimCore handling of cursorLeft from IN->NO
+            vim.vimState.updateCursor(updatedCursor);
+            this.vimState = vimResult.vimState;
+            this.enterNormalMode();
             break;
           }
           default: {
             return;
           }
         }
-
-        this.vimState = vimResult.vimState;
       },
       onCompositionUpdate: (vim, event) => {
         // wait until keydown got painted to the dom
@@ -128,7 +122,6 @@ export class MinimalNotes {
         // vim.vimState.reportVimState();
         // setTimeout(() => {
         // }, 0);
-        this.vimState = vim.vimState;
       },
     };
     vimEditorOptionsV2.plugins = [
@@ -142,21 +135,17 @@ export class MinimalNotes {
     await initVim(vimEditorOptionsV2);
   }
 
-  updateText() {
-    this.text = this.inputContainerRef.innerText;
-  }
-
   private enterInsertMode(
     cursor: Cursor = {
       line: 0,
       col: 0,
     }
   ) {
-    const $childs = this.inputContainerRef.querySelectorAll('div');
-    const targetNode = $childs[cursor.line].childNodes[0];
-    const range = SelectionService.createRange(targetNode, cursor);
-
     setTimeout(() => {
+      const $childs = this.inputContainerRef.querySelectorAll('div');
+      const targetNode = $childs[cursor.line].childNodes[0];
+      const range = SelectionService.createRange(targetNode, cursor);
+
       this.inputContainerRef.contentEditable = 'true';
       this.inputContainerRef.focus();
       rangy.getSelection().setSingleRange(range);
@@ -164,7 +153,9 @@ export class MinimalNotes {
   }
   private enterNormalMode() {
     this.inputContainerRef.contentEditable = 'false';
-    // this.containerRef.focus();
+
+    // STOP: When trying to setTimeout, the contenteditable border does not go away
+    // setTimeout(() => { }, 0);
   }
 }
 
