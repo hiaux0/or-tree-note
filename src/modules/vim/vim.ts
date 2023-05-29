@@ -137,11 +137,8 @@ export class Vim {
     const result: QueueInputReturn = {
       vimState: cloneDeep(vimState),
       targetCommand: targetCommandName,
-      lines: [...this.vimState.lines],
     };
-    logger.culogger.debug(['vimState: %o', vimState], {}, (...r) =>
-      console.log(...r)
-    );
+    /* prettier-ignore */ logger.culogger.debug(['vimState: %o', vimState], {}, (...r) => console.log(...r));
 
     /**
      * Hack? Need to reset deleted lines for every new command,

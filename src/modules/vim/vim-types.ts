@@ -68,7 +68,6 @@ export type VimStateV2 = {
 export interface QueueInputReturn {
   vimState: VimStateClass | null;
   targetCommand: VIM_COMMAND;
-  lines: VimLine[];
 }
 
 /**
