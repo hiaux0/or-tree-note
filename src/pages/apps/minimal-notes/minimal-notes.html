@@ -6,7 +6,7 @@
         class="inputContainer"
         contenteditable.bind="contenteditable"
       >
-        <div highlight class="inputLine" repeat.for="line of lines"
+        <div highlight class="inputLine" repeat.for="line of vimState.lines"
           >${line.text}</div
         >
       </div>
@@ -25,11 +25,11 @@
       </div>
       <div>
         <strong>Text:</strong>
-        ${lines[vimState.cursor.line].text}</div
+        ${vimState.lines[vimState.cursor.line].text}</div
       >
       <div>
         <strong># of lines: </strong>
-        ${lines.length}
+        ${vimState.lines.length}
       </div>
     </div>
   </div>
