@@ -1,6 +1,6 @@
 <template>
   <div class="notesComponentContainer">
-    <div class="container mode-${currentModeName}">
+    <div class="container mode-${vimState.mode}">
       <div
         ref="inputContainerRef"
         class="inputContainer"
@@ -17,11 +17,10 @@
       ></div>
     </div>
     <div class="debugContainer">
-      <div style="text-decoration: underline"> Debug mode </div>
+      <div style="text-decoration: underline"> Debug mode (${vimState.mode})</div>
       <div>
         <strong>Cursor</strong>
-        L: ${vimState.cursor.line} -
-        C: ${vimState.cursor.col}
+        L: ${vimState.cursor.line} - C: ${vimState.cursor.col}
       </div>
       <div>
         <strong>Text:</strong>
