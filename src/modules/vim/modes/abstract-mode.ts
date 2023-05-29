@@ -704,16 +704,15 @@ export abstract class AbstractMode {
       throw new Error('Multi line not supported');
     }
 
-    // need: merge with current line
-    // bug: whole new line gets inserted
-    const updatedLine: VimLine = { ...line, text: replaced };
     const lines = [...this.vimState.lines];
     const curLine = this.vimState.cursor.line;
+
     const beforeText = [...lines.slice(0, curLine)];
     const afterText = [...lines.slice(curLine + 1, lines.length)];
-    const insertedText = [...beforeText, updatedLine, ...afterText];
+    const updatedLine: VimLine = { ...line, text: replaced };
+    const withPastedText = [...beforeText, updatedLine, ...afterText];
 
-    this.vimState.lines = insertedText;
+    this.vimState.lines = withPastedText;
 
     /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: abstract-mode.ts ~ line 688 ~ paste');
     return this.vimState;
