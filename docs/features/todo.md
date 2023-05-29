@@ -6,12 +6,41 @@
 
   - Vn Input mode
 
-    - [ ] rangy
+    ## Bugs
+
+    - [ ] multi line (not just first one)
+    - [ ] fix paste
+
+    ## Enhancement
+
+    - [ ] text replacements - WITH composition possiliibty (eg. ,a , cause a can become â)
+    - [ ] highilgiht on every keystroke (to register when I type eg. "#" as md header)
+
+    ## Done
+
+    - [x] show cursor and current text
+    - [x] saving
+    - [x] `Process` sometimes appears, and lets the cursor jump
+
+      - not consistently repoducible, have to type fast-ish
+
+    - [x] add cursor back
+    - [x] text replacements
+
+      - [x] cursor
+      - [x] show in output
+
+    - [x] "Process" and cursor col position --> use vim instance directly
+
+    - [x] rangy
 
       - [x] get selection
-      - [ ] restore selection NORML->INSE
+      - [x] restore selection NORML->INSE
 
-    - [ ] contenteditable div
+    - [x] contenteditable div
+
+      - [x] replacement should go back to input
+      - [x] text changes should go to vim
 
       - [x] init
       - [x] get input lines
@@ -26,18 +55,19 @@
             - ! consider method name: `setCursorInternally`
               - one reason, for later undo redo, we may just want to change the state, without having to dispatch an action
                 - [ ] will then have to listen to text changes outside of the store
-      - [ ] update text
+      - [x] update text
 
 # Feat
 
 - .
 
   - [ ] [Editor] code highlighting
+  - [ ] [testing] write about, why I'm not doing tdd anymore
 
 # Code Enhancements
 
 - .
-
+  - [ ] allow caret and container option have selector (and not element itself)
   - [ ] `queueInputSequence` should support <ctrl> (additionally to <Control>)
   - [ ] [snippets] cursor changing (`$1 $0`)
   - [ ] [Editor] text replacements
