@@ -10,4 +10,8 @@ export const USER_SNIPPETS: ISnippet[] = [
     prefix: ',a',
     body: ['() => {}'],
   },
+  {
+    prefix: ',.r',
+    body: ['return '],
+  },
 ];
