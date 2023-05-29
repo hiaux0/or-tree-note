@@ -6,9 +6,9 @@
         class="inputContainer"
         contenteditable.bind="contenteditable"
       >
-        <div highlight class="inputLine" repeat.for="line of vimState.lines"
-          >${line.text}</div
-        >
+        <template repeat.for="line of vimState.lines">
+          <div highlight class="inputLine">${line.text}</div>
+        </template>
       </div>
       <div
         id="caret"
@@ -17,7 +17,9 @@
       ></div>
     </div>
     <div class="debugContainer">
-      <div style="text-decoration: underline"> Debug mode (${vimState.mode})</div>
+      <div style="text-decoration: underline">
+        Debug mode (${vimState.mode})</div
+      >
       <div>
         <strong>Cursor</strong>
         L: ${vimState.cursor.line} - C: ${vimState.cursor.col}
