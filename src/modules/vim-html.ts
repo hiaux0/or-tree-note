@@ -3,7 +3,7 @@ import hotkeys from 'hotkeys-js';
 import { SPACE } from 'resources/keybindings/app-keys';
 import { Modifier } from 'resources/keybindings/key-bindings';
 
-import { VimCore } from './vim/vim';
+import { VimCore } from './vim/vim-core';
 import { Cursor, VimEditorOptionsV2 } from './vim/vim-types';
 import { isModeChangeCommand } from './vim/vim-utils';
 

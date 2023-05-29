@@ -18,7 +18,7 @@ import {
   VimLine,
 } from './vim-types';
 
-const logger = new Logger('Vim');
+const logger = new Logger('VimCore');
 
 export class VimError extends Error {}
 
@@ -69,7 +69,7 @@ export class VimCore {
       initialVimState,
       finalVimOptions
     );
-    this.vimState = this.vimCommandManager.vimState;
+    this.vimState = initialVimState;
 
     this.verifyValidCursorPosition();
   }

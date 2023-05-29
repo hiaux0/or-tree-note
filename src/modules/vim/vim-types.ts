@@ -1,13 +1,13 @@
 import { getRandomId } from 'common/random';
 import { ISnippet } from 'resources/keybindings/snippets/snippets';
 
-import { VimCore } from './vim';
 import {
   VimCommand,
   SynonymKey,
   VIM_COMMAND,
   VimCommandNames,
 } from './vim-commands-repository';
+import { VimCore } from './vim-core';
 import { VimStateClass } from './vim-state';
 
 export interface KeyBindingModes {

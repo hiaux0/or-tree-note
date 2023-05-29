@@ -7,7 +7,7 @@ import { CursorUtils } from 'modules/cursor/cursor-utils';
 import { Logger } from 'modules/debug/logger';
 import { DomService } from 'modules/DomService';
 import { SelectionService } from 'modules/SelectionService';
-import { VimCore } from 'modules/vim/vim';
+import { VimCore } from 'modules/vim/vim-core';
 import {
   Cursor,
   EMPTY_VIM_LINE,

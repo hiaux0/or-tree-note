@@ -25,12 +25,12 @@ import { InsertMode } from './modes/insert-mode';
 import { NormalMode } from './modes/normal-mode';
 import { VisualLineMode } from './modes/visual-line-mode';
 import { VisualMode } from './modes/visual-mode';
-import { defaultVimOptions } from './vim';
 import {
   VimCommandNames,
   VimCommand,
   VIM_COMMAND,
 } from './vim-commands-repository';
+import { defaultVimOptions } from './vim-core';
 import { VimStateClass } from './vim-state';
 import {
   FindPotentialCommandReturn as PotentialCommandReturn,

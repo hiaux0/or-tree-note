@@ -3,7 +3,7 @@ import { CursorUtils } from 'modules/cursor/cursor-utils';
 import { SPACE } from 'resources/keybindings/app-keys';
 import { Modifier } from 'resources/keybindings/key-bindings';
 
-import { VimCore } from './vim';
+import { VimCore } from './vim-core';
 import {
   Cursor,
   QueueInputReturn,

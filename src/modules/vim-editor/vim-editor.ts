@@ -1,4 +1,4 @@
-import { VimCore } from 'modules/vim/vim';
+import { VimCore } from 'modules/vim/vim-core';
 import { VimExecutingMode, VimPlugin } from 'modules/vim/vim-types';
 
 import { VimEditorTextMode } from './modes/vim-editor-text-mode';

@@ -6,7 +6,7 @@ import {
 import { Logger } from 'modules/debug/logger';
 import { Cursor, VimMode } from 'modules/vim/vim-types';
 
-import { VimCore } from '../vim';
+import { VimCore } from '../vim-core';
 import { VimStateClass } from '../vim-state';
 import { VimEditorOptionsV2 } from '../vim-types';
 
