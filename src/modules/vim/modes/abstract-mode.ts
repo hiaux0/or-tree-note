@@ -690,23 +690,32 @@ export abstract class AbstractMode {
   async paste(): Promise<VimStateClass> {
     // get clipboard
     const clipboardTextRaw = await navigator.clipboard.readText();
+    /** TODO: don't need to map? */
     const clipboardTextSplit = clipboardTextRaw.split('\n').map((line) => {
       return { text: line };
     });
 
     const lines = [...this.vimState.lines];
+
+    // get current line text
     const curLine = this.vimState.cursor.line;
-    const insertedText = [
-      ...lines.slice(0, curLine),
-      ...clipboardTextSplit,
-      ...lines.slice(curLine),
-    ];
+    const line = this.vimState.getActiveLine();
+    // get cursor position
+    const col = this.vimState.cursor.col;
+    // merge with line
+    let replaced = '';
+    if (clipboardTextSplit.length === 1) {
+      replaced = StringUtil.insert(line.text, col, clipboardTextSplit[0].text);
+    }
+
+    // need: merge with current line
+    // bug: whole new line gets inserted
+    const updatedLine: VimLine = { ...line, text: replaced };
+    const beforeText = [...lines.slice(0, curLine)];
+    const afterText = [...lines.slice(curLine + 1, lines.length)];
+    const insertedText = [...beforeText, updatedLine, ...afterText];
 
     this.vimState.lines = insertedText;
-
-    // get cursor
-    // this.vimState.cursor.line
-    // insert into place
 
     /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: abstract-mode.ts ~ line 688 ~ paste');
     return this.vimState;
