@@ -9,6 +9,7 @@ import {
   VimMode,
 } from 'modules/vim/vim-types';
 import rangy from 'rangy';
+import { StorageService } from 'storage/vimStorage';
 import './minimal-notes.scss';
 
 export class MinimalNotes {
@@ -18,6 +19,8 @@ export class MinimalNotes {
   caretRef: HTMLDivElement;
   contenteditable = true;
   currentModeName = VimMode.NORMAL;
+
+  lines: VimLine[] = [];
 
   attached() {
     setTimeout(() => {
@@ -29,19 +32,23 @@ export class MinimalNotes {
   }
 
   private async initVim() {
-    const texts: string[] = this.inputContainerRef.innerText.split('\n');
-    const startLines: VimLine[] = texts.map((text) => ({ text }));
     const childIndex = 0;
+
+    const savedVimState = await StorageService.getVimState();
+    const startLines = savedVimState.lines ?? [];
+    this.lines = startLines;
+
     const vimEditorOptionsV2: VimEditorOptionsV2 = {
       container: this.inputContainerRef,
       caret: this.caretRef,
       childSelector: 'inputLine',
       startLines,
+      startCursor: savedVimState.cursor,
+      removeTrailingWhitespace: true,
       afterInit: (vim) => {
         vim.vimState.reportVimState();
       },
       commandListener: (vimResult, _, vim) => {
-        /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: minimal-notes.ts ~ line 33 ~ commandListener');
         // TODO: extract to somewhere in the core, update vimState with dom
         if (vimResult.vimState.mode !== VimMode.INSERT) return;
         const $childs = this.inputContainerRef.querySelectorAll('div');
@@ -66,7 +73,7 @@ export class MinimalNotes {
           range = range ?? SelectionService.getSingleRange();
           vim.vimState.cursor.col = range.startOffset;
         }
-        vim.vimState.reportVimState();
+        // vim.vimState.reportVimState();
         // }, 0);
       },
       modeChanged: (vimResult, newMode, vim) => {
@@ -87,7 +94,7 @@ export class MinimalNotes {
               line: childIndex,
               col: Math.max(range.startOffset - 1, 0),
             });
-            vim.vimState.reportVimState();
+            // vim.vimState.reportVimState();
             break;
           }
           default: {
@@ -105,7 +112,7 @@ export class MinimalNotes {
         vim.vimState.updateLine(childIndex, targetNode.textContent);
         const range = SelectionService.getSingleRange();
         vim.vimState.updateCursor({ line: childIndex, col: range.startOffset });
-        vim.vimState.reportVimState();
+        // vim.vimState.reportVimState();
         // setTimeout(() => {
         // }, 0);
       },
