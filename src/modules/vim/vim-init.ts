@@ -59,7 +59,7 @@ export async function initVim(vimEditorOptionsV2: VimEditorOptionsV2) {
     if (afterResults) {
       afterResults.forEach((result) => {
         if (isModeChangeCommand(result.targetCommand)) {
-          modeChanged(result, result.vimState.mode, vim);
+          modeChanged(result, result.vimState.mode, undefined, vim);
         } else {
           commandListener(result, undefined, vim);
         }
@@ -140,7 +140,7 @@ export async function initVim(vimEditorOptionsV2: VimEditorOptionsV2) {
     //
     const newMode = result.vimState.mode;
     if (isModeChangeCommand(result.targetCommand, currentMode, newMode)) {
-      modeChanged(result, newMode, vim);
+      modeChanged(result, newMode, currentMode, vim);
     } else {
       commandListener(
         result,

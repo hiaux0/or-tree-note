@@ -77,7 +77,7 @@ export class MinimalNotes {
         this.vimState.cursor = vimResult.vimState.cursor;
         vimResult.vimState.reportVimState();
       },
-      modeChanged: (vimResult, newMode, vim) => {
+      modeChanged: (vimResult, newMode, oldMode, vim) => {
         // TODO: extract to somewhere in the core, update vimState with dom
         switch (newMode) {
           case VimMode.INSERT: {
@@ -88,6 +88,8 @@ export class MinimalNotes {
             break;
           }
           case VimMode.NORMAL: {
+            if (oldMode !== VimMode.INSERT) return;
+
             console.log('Enter Normal Mode');
             const range = SelectionService.getSingleRange();
             const updatedCursor = {

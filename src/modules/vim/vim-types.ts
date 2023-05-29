@@ -114,6 +114,7 @@ export type CommandListener = (
 export type ModeChanged = (
   vimResults: QueueInputReturn,
   newMode: VimMode,
+  oldMode: VimMode,
   vim: VimCore
 ) => void;
 
