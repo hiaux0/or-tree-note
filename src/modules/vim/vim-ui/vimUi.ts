@@ -6,6 +6,7 @@ import {
 import { Logger } from 'modules/debug/logger';
 import { Cursor, VimMode } from 'modules/vim/vim-types';
 
+import { Vim } from '../vim';
 import { VimStateClass } from '../vim-state';
 import { VimEditorOptionsV2 } from '../vim-types';
 
@@ -29,13 +30,15 @@ export class VimUi {
   }
   private currentCaretCol: number = 0;
 
-  constructor(public vimEditorOptionsV2: VimEditorOptionsV2) {
+  constructor(public vim: Vim, public vimEditorOptionsV2: VimEditorOptionsV2) {
     this.container = vimEditorOptionsV2.container;
     this.caret = vimEditorOptionsV2.caret;
     this.childSelector = vimEditorOptionsV2.childSelector;
 
     this.caretWidth = getCssVar('--caret-size-width');
     this.caretHeight = getCssVar('--caret-size-height');
+
+    this.update(vim.vimState);
   }
 
   public update(vimState: VimStateClass): void {

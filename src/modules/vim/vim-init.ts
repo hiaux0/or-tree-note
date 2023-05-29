@@ -44,7 +44,7 @@ export async function initVim(vimEditorOptionsV2: VimEditorOptionsV2) {
   const vim = new Vim(finalLines, finalCursor, {
     vimPlugins: plugins ?? [],
   });
-  const vimUi = new VimUi(vimEditorOptionsV2);
+  const vimUi = new VimUi(vim, vimEditorOptionsV2);
 
   //
   await initKeys(vimEditorOptionsV2.container);
