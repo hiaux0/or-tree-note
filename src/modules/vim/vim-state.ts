@@ -24,7 +24,7 @@ export class VimStateClass {
   commandName: VimCommandNames;
   snippet: ISnippet;
 
-  constructor(public vimState: VimStateV2) {
+  constructor(readonly vimState: VimStateV2) {
     this.cursor = vimState.cursor;
     this.foldMap = vimState.foldMap;
     this.lines = vimState.lines;
@@ -82,7 +82,7 @@ export class VimStateClass {
   }
 
   public reportVimState() {
-    const { cursor, lines, mode } = this.vimState;
+    const { cursor, lines, mode } = this;
     logger.culogger.overwriteDefaultLogOtpions({ log: true });
     /* prettier-ignore */ if (mode) logger.culogger.debug(['Starting Vim in Mode:', mode], {}, (...r) => console.log(...r));
     /* prettier-ignore */ logger.culogger.debug(['Cursor at', {...cursor}], {}, (...r) => console.log(...r));
