@@ -28,11 +28,6 @@ export class MinimalNotes {
   vimState: VimStateClass;
 
   attached() {
-    setTimeout(() => {
-      this.enterNormalMode();
-    }, 0);
-
-    // this.initEventListener();
     void this.initVim();
   }
 
@@ -55,7 +50,6 @@ export class MinimalNotes {
         // TODO: extract to somewhere in the core, update vimState with dom
         if (vimResult.vimState.mode !== VimMode.INSERT) {
           vimResult.vimState.reportVimState();
-          this.vimState = vimResult.vimState;
           return;
         }
 
@@ -125,9 +119,6 @@ export class MinimalNotes {
           line: vim.vimState.cursor.line,
           col: range.startOffset,
         });
-        // vim.vimState.reportVimState();
-        // setTimeout(() => {
-        // }, 0);
       },
     };
     vimEditorOptionsV2.plugins = [
