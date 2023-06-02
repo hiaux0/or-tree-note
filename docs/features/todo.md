@@ -8,8 +8,6 @@
 
     ## Bugs
 
-    - [ ] fix paste
-
     ## Enhancement
 
     - [ ] text replacements - WITH composition possiliibty (eg. ,a , cause a can become â)
@@ -17,6 +15,7 @@
 
     ## Done
 
+    - [x] fix paste
     - [x] text duped
       - new line, esc
       - bug: --> duped
@@ -74,6 +73,7 @@
 # Code Enhancements
 
 - .
+  - [ ] [paste] in insert, paste keeps formatting.. Want?
   - [ ] allow caret and container option have selector (and not element itself)
   - [ ] [modes] differentiate for <Esc>, if a mode change, or cancelling
     - background, just thought, it might be helpful to differentiate
@@ -99,6 +99,7 @@
 
 - .
   - [ ] enter in normal should not split text
+  - [ ] [nor] 'o' on vim with only one line throws some error
   - [ ] [Normal] diw deletes the first word it encounters in the line
   - [ ][indent] ` |hello` Indenting too much, will put cursor out of bound on the left
   - [ ][t] not supporting going to upper case chars (because of queued shift)
