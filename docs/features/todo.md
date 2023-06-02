@@ -4,14 +4,60 @@
 
 - .
 
-  - Vn Input mode
 
-    ## Bugs
+# Feat
 
-    ## Enhancement
+- .
 
-    - [ ] text replacements - WITH composition possiliibty (eg. ,a , cause a can become â)
-    - [ ] highilgiht on every keystroke (to register when I type eg. "#" as md header)
+  - [ ] [testing] write about, why I'm not doing tdd anymore
+  - [ ] [debug] history to access state, so I can reproduce the issue
+
+# Code Enhancements
+
+- .
+  - [ ] highilgiht on every keystroke (to register when I type eg. "#" as md header)
+
+  - [ ] text replacements - WITH composition possiliibty (eg. ,a , cause a can become â)
+  - [ ] [paste] in insert, paste keeps formatting.. Want?
+  - [ ] allow caret and container option have selector (and not element itself)
+  - [ ] [modes] differentiate for <Esc>, if a mode change, or cancelling
+    - background, just thought, it might be helpful to differentiate
+  - [ ] `queueInputSequence` should support <ctrl> (additionally to <Control>)
+  - [ ] [snippets] cursor changing (`$1 $0`)
+  - [ ] [Editor] text replacements
+  - [ ] changeText should not execute 2 actions (1 changeText 2 changeVimState (the cursor to the right))
+    - could be part of a bigger refactor, where I want to compose the vim actions more
+  - [ ] show whitespace &zwnj;
+  - [ ] consider another code highlightin library
+    - https://github.com/shikijs/shiki
+  - [ ] undo/redo should not trigger on every keystroke
+    - eg. when I type "hello", and then undo, then the whole word "hello" should be undone, and not every char
+
+# Refactoring
+
+- .
+
+  - [ ] input + modifiers (shift,t -> <Shift>t) as some service
+  - [ ] (vim-init.ts) vim-notes.ts should also use API similar to `initVim`
+
+# Bug
+
+- .
+  - [ ] enter in normal should not split text
+  - [ ] [nor] 'o' on vim with only one line throws some error
+  - [ ] [Normal] diw deletes the first word it encounters in the line
+  - [ ][indent] ` |hello` Indenting too much, will put cursor out of bound on the left
+  - [ ][t] not supporting going to upper case chars (because of queued shift)
+  - [ ][cc] does not clear line
+
+# Refactor
+
+# Done
+
+- .
+
+  - [x] [Editor] code highlighting
+  - [x] Vn Input mode
 
     ## Done
 
@@ -62,54 +108,6 @@
                 - [ ] will then have to listen to text changes outside of the store
       - [x] update text
 
-# Feat
-
-- .
-
-  - [ ] [Editor] code highlighting
-  - [ ] [testing] write about, why I'm not doing tdd anymore
-  - [ ] [debug] history to access state, so I can reproduce the issue
-
-# Code Enhancements
-
-- .
-  - [ ] [paste] in insert, paste keeps formatting.. Want?
-  - [ ] allow caret and container option have selector (and not element itself)
-  - [ ] [modes] differentiate for <Esc>, if a mode change, or cancelling
-    - background, just thought, it might be helpful to differentiate
-  - [ ] `queueInputSequence` should support <ctrl> (additionally to <Control>)
-  - [ ] [snippets] cursor changing (`$1 $0`)
-  - [ ] [Editor] text replacements
-  - [ ] changeText should not execute 2 actions (1 changeText 2 changeVimState (the cursor to the right))
-    - could be part of a bigger refactor, where I want to compose the vim actions more
-  - [ ] show whitespace &zwnj;
-  - [ ] consider another code highlightin library
-    - https://github.com/shikijs/shiki
-  - [ ] undo/redo should not trigger on every keystroke
-    - eg. when I type "hello", and then undo, then the whole word "hello" should be undone, and not every char
-
-# Refactoring
-
-- .
-
-  - [ ] input + modifiers (shift,t -> <Shift>t) as some service
-  - [ ] (vim-init.ts) vim-notes.ts should also use API similar to `initVim`
-
-# Bug
-
-- .
-  - [ ] enter in normal should not split text
-  - [ ] [nor] 'o' on vim with only one line throws some error
-  - [ ] [Normal] diw deletes the first word it encounters in the line
-  - [ ][indent] ` |hello` Indenting too much, will put cursor out of bound on the left
-  - [ ][t] not supporting going to upper case chars (because of queued shift)
-  - [ ][cc] does not clear line
-
-# Refactor
-
-# Done
-
-- .
 
   - [x][o] currently, only looks at word vs whitespace and symbols
     - --> should only whitespace
