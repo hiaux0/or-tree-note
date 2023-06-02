@@ -1,6 +1,6 @@
 import { Logger } from 'common/logging/logging';
 import { cloneDeep } from 'lodash';
-import { ArrayUtils } from 'modules/array/array-utils';
+import { ArrayUtils, ThreeSplitType } from 'modules/array/array-utils';
 import { DebugService } from 'modules/debug/debugService';
 import {
   getFirstNonWhiteSpaceCharIndex,
@@ -688,20 +688,51 @@ export abstract class AbstractMode {
   }
 
   async paste(): Promise<VimStateClass> {
-    // get clipboard
     const clipboardTextRaw = await navigator.clipboard.readText();
     const clipboardTextSplit = clipboardTextRaw.split('\n');
 
-    // get current line text
     const line = this.vimState.getActiveLine();
-    // get cursor position
     const col = this.vimState.cursor.col;
-    // merge with line
+
     let replaced = '';
+    const updatedLines: VimLine[] = [];
     if (clipboardTextSplit.length === 1) {
+      // insert normally at current line
       replaced = StringUtil.insert(line.text, col, clipboardTextSplit[0]);
+      updatedLines.push({ ...line, text: replaced });
+    } else if (clipboardTextSplit.length === 2) {
+      const beforePaste = line.text.slice(0, col);
+      const beforeWithPasted = beforePaste.concat(clipboardTextSplit[0]);
+      const updatedBeforeLine: VimLine = { ...line, text: beforeWithPasted };
+      const afterPaste = line.text.slice(col, line.text.length);
+      const afterPasted = clipboardTextSplit[1].concat(afterPaste);
+      const updatedAfterLine: VimLine = { ...line, text: afterPasted };
+      // insert
+      // and then split
+      updatedLines.push(updatedBeforeLine);
+      updatedLines.push(updatedAfterLine);
     } else {
-      throw new Error('Multi line not supported');
+      const [clipboardFirstLine, clipboardMiddleLines, clipboardLastLine] =
+        ArrayUtils.splitFirstMiddleLast<string[]>(
+          clipboardTextSplit
+        ) as ThreeSplitType<string[]>;
+
+      // for new lines, append at current line
+      // acount for current line split at '\n' char from pasted
+      const beforePaste = line.text.slice(0, col);
+      const beforeWithPasted = beforePaste.concat(clipboardFirstLine);
+      const updatedBeforeLine: VimLine = { ...line, text: beforeWithPasted };
+      const afterPaste = line.text.slice(col, line.text.length);
+      const afterPasted = clipboardLastLine.concat(afterPaste);
+      const updatedAfterLine: VimLine = { ...line, text: afterPasted };
+      // insert
+      // and then split
+      const otherPastedLines: VimLine[] = clipboardMiddleLines.map((text) => {
+        return { text };
+      });
+      updatedLines.push(updatedBeforeLine);
+      updatedLines.push(...otherPastedLines);
+      updatedLines.push(updatedAfterLine);
     }
 
     const lines = [...this.vimState.lines];
@@ -709,12 +740,10 @@ export abstract class AbstractMode {
 
     const beforeText = [...lines.slice(0, curLine)];
     const afterText = [...lines.slice(curLine + 1, lines.length)];
-    const updatedLine: VimLine = { ...line, text: replaced };
-    const withPastedText = [...beforeText, updatedLine, ...afterText];
+    const withPastedText = [...beforeText, ...updatedLines, ...afterText];
 
     this.vimState.lines = withPastedText;
 
-    /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: abstract-mode.ts ~ line 688 ~ paste');
     return this.vimState;
   }
 
