@@ -99,8 +99,11 @@ $editorLineHeight: 21.4667px;
       border: 1px solid black;
 
       .inputLine {
-        white-space: pre;
-        height: $editorLineHeight;
+        white-space: break-spaces;
+        // white-space: pre;
+        // white-space: pre-line;
+        min-height: $editorLineHeight;
+        line-height: $editorLineHeight;
       }
     }
 
