@@ -40,10 +40,15 @@ export async function initVim(vimEditorOptionsV2: VimEditorOptionsV2) {
   } = vimEditorOptionsV2;
   // Vim
   const finalCursor: Cursor = startCursor ?? { col: 0, line: 0 };
-  const finalLines: VimLine[] = startLines ?? [
-    { text: '123' },
-    { text: 'abc' },
-  ];
+  let finalLines: VimLine[];
+
+  if (startLines?.length) {
+    finalLines = startLines;
+  } else {
+    finalLines = [{ text: '123' }, { text: 'abc' }];
+  }
+
+  /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: vim-init.ts ~ line 48 ~ finalLines', finalLines)
   const vim = new VimCore(finalLines, finalCursor, {
     vimPlugins: plugins ?? [],
   });
