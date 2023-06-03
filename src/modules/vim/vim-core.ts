@@ -121,7 +121,7 @@ export class VimCore {
     } else if (targetCommandName === VIM_COMMAND['visualStartLineWise']) {
       vimState = this.vimCommandManager.visualStartLineWise();
     } else if (targetCommandName === VIM_COMMAND['newLine']) {
-      vimState = this.vimCommandManager.newLine();
+      await this.queueInputSequence('u^'); // TODO: side effect? why works without assigning to `vimState`?
     } else {
       vimState = await this.vimCommandManager.executeVimCommand(
         targetCommandName,
