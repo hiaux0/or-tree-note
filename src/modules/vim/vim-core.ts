@@ -137,6 +137,16 @@ export class VimCore {
       case VIM_COMMAND['newLine']:
         await this.queueInputSequence('u^'); // TODO: side effect? why works without assigning to `vimState`?
         break;
+      case VIM_COMMAND['paste']: {
+        const clipboardTextRaw = await navigator.clipboard.readText();
+        const clipboardTextSplit = clipboardTextRaw.split('\n');
+        vimState = await this.vimCommandManager.executeVimCommand(
+          targetCommandName,
+          clipboardTextSplit
+        );
+        break;
+      }
+
       /** ******* */
       /** Default */
       /** ******* */

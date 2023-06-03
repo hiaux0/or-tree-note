@@ -689,10 +689,7 @@ export abstract class AbstractMode {
     return this.vimState;
   }
 
-  async paste(): Promise<VimStateClass> {
-    const clipboardTextRaw = await navigator.clipboard.readText();
-    const clipboardTextSplit = clipboardTextRaw.split('\n');
-
+  async paste(clipboardTextSplit: string[]): Promise<VimStateClass> {
     const line = this.vimState.getActiveLine();
     const col = this.vimState.cursor.col;
 
