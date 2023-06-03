@@ -6,8 +6,6 @@ const logger = new Logger({ scope: 'ChildrenMutationObserver' });
 export class ChildrenMutationObserver {
   private observer: MutationObserver;
 
-  constructor() {}
-
   createObserver(targetElement: HTMLElement, afterObserved: () => void) {
     // Callback function to execute when mutations are observed
     const callback: MutationCallback = (mutationsList) => {

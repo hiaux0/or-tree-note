@@ -1,8 +1,9 @@
-import { getCssVar as getCssVarModule } from "src/modules/css/css-variables";
+import { getCssVar as getCssVarModule } from '../../../../../src/modules/css/css-variables';
 
 declare global {
+  // eslint-disable-next-line @typescript-eslint/no-namespace
   namespace Cypress {
-    interface Chainable<Subject = any> {
+    interface Chainable {
       /**
        * @example
        *   cy.getCssVar()
@@ -13,7 +14,7 @@ declare global {
 }
 function getCssVar(varName: string, isPixel = true) {
   Cypress.log({
-    name: "getCssVar",
+    name: 'getCssVar',
   });
 
   return cy.document().then((document) => {
@@ -21,6 +22,6 @@ function getCssVar(varName: string, isPixel = true) {
     return cy.wrap(cssVar);
   });
 }
-Cypress.Commands.add("getCssVar", getCssVar);
+Cypress.Commands.add('getCssVar', getCssVar);
 
 export {};

@@ -174,7 +174,7 @@ export function inputContainsSequence(input: string, sequence: string) {
   return execedRegex !== null;
 }
 
-function escapeRegex(string) {
+function escapeRegex(string: string) {
   return string.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
 }
 

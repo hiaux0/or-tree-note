@@ -1,5 +1,5 @@
 import { PLATFORM } from 'aurelia-pal';
-import { Router } from 'aurelia-router';
+import { Router, RouterConfiguration } from 'aurelia-router';
 
 import './app.scss';
 
@@ -9,49 +9,45 @@ export class App {
   constructor(private router: Router) {}
 
   attached() {
+    const editor = document.getElementById('editor');
+    let isComposing = false;
 
-      const editor = document.getElementById('editor');
-      let isComposing = false;
+    editor.addEventListener('compositionstart', () => {
+      isComposing = true;
+    });
 
-      editor.addEventListener('compositionstart', () => {
-        isComposing = true;
-      });
+    editor.addEventListener('compositionupdate', handleCompositionUpdate);
 
-      editor.addEventListener('compositionupdate', handleCompositionUpdate);
+    editor.addEventListener('compositionend', (event) => {
+      isComposing = false;
+      handleCompositionUpdate(event);
+      /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: app.ts ~ line 26 ~ compositionend');
+    });
 
-      editor.addEventListener('compositionend', (event) => {
-        isComposing = false;
-        handleCompositionUpdate(event);
-        /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: app.ts ~ line 26 ~ compositionend');
-      });
+    editor.addEventListener('input', handleInput);
 
-      editor.addEventListener('input', handleInput);
-
-      function handleCompositionUpdate(event) {
-        if (isComposing) {
-          console.log('handleCompositionUpdate');
-          const text = event.target.innerText;
-          /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: app.ts ~ line 32 ~ text', text);
-          // Process the composition text here
-          // You can update your editor's content or perform any necessary transformations
-        }
+    function handleCompositionUpdate(event) {
+      if (isComposing) {
+        console.log('handleCompositionUpdate');
+        const text = event.target.innerText;
+        /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: app.ts ~ line 32 ~ text', text);
+        // Process the composition text here
+        // You can update your editor's content or perform any necessary transformations
       }
+    }
 
-      function handleInput(event) {
-        if (!isComposing) {
-          console.log('handleInput');
-          const text = event.target.innerText;
-          /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: app.ts ~ line 39 ~ text', text);
-          // Process the entered text here
-          // You can update your editor's content or perform any necessary transformations
-        }
+    function handleInput(event) {
+      if (!isComposing) {
+        console.log('handleInput');
+        const text = event.target.innerText;
+        /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: app.ts ~ line 39 ~ text', text);
+        // Process the entered text here
+        // You can update your editor's content or perform any necessary transformations
       }
+    }
   }
 
-  /**
-   * @param {object} router - https://aurelia.io/docs/api/router/class/Router
-   */
-  configureRouter(config, router) {
+  configureRouter(config: RouterConfiguration, router: Router) {
     config.map([
       {
         name: 'home',

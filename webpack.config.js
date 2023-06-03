@@ -1,12 +1,14 @@
 const path = require('path');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
-const CopyWebpackPlugin = require('copy-webpack-plugin');
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const DuplicatePackageCheckerPlugin = require('duplicate-package-checker-webpack-plugin');
-const project = require('./aurelia_project/aurelia.json');
+
 const { AureliaPlugin, ModuleDependenciesPlugin } = require('aurelia-webpack-plugin');
-const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
+const DuplicatePackageCheckerPlugin = require('duplicate-package-checker-webpack-plugin');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
+
+const project = require('./aurelia_project/aurelia.json');
 
 // config helpers:
 const ensureArray = (config) => config && (Array.isArray(config) ? config : [config]) || [];
@@ -33,7 +35,7 @@ const cssRules = [
 
 const sassRules = [
   {
-    loader: "sass-loader",
+    loader: 'sass-loader',
     options: {
       sassOptions: {
         includePaths: ['node_modules']
@@ -83,7 +85,7 @@ module.exports = ({ production } = {}, {extractCss, analyze, tests, hmr, port, h
     // https://webpack.js.org/plugins/split-chunks-plugin/
     splitChunks: {
       hidePathInfo: true, // prevents the path from being used in the filename when using maxSize
-      chunks: "initial",
+      chunks: 'initial',
       // sizes are compared against source before minification
       maxInitialRequests: Infinity, // Default is 3, make this unlimited if using HTTP/2
       maxAsyncRequests: Infinity, // Default is 5, make this unlimited if using HTTP/2
@@ -120,7 +122,7 @@ module.exports = ({ production } = {}, {extractCss, analyze, tests, hmr, port, h
         },
         vendors: { // picks up everything else being used from node_modules that is less than minSize
           test: /[\\/]node_modules[\\/]/,
-          name: "vendors",
+          name: 'vendors',
           priority: 19,
           enforce: true // create chunk regardless of the size of the chunk
         },
@@ -214,7 +216,7 @@ module.exports = ({ production } = {}, {extractCss, analyze, tests, hmr, port, h
         issuer: /\.html?$/i
       },
       { test: /\.html$/i, loader: 'html-loader' },
-      { test: /\.ts$/, loader: "ts-loader" },
+      { test: /\.ts$/, loader: 'ts-loader' },
       // embed small images and fonts as Data Urls and larger ones as files:
       { test: /\.(png|gif|jpg|cur)$/i, loader: 'url-loader', options: { limit: 8192 } },
       { test: /\.woff2(\?v=[0-9]\.[0-9]\.[0-9])?$/i, loader: 'url-loader', options: { limit: 10000, mimetype: 'application/font-woff2' } },
@@ -222,7 +224,7 @@ module.exports = ({ production } = {}, {extractCss, analyze, tests, hmr, port, h
       // load these fonts normally, as files:
       { test: /\.(ttf|eot|svg|otf)(\?v=[0-9]\.[0-9]\.[0-9])?$/i, loader: 'file-loader' },
       { test: /environment\.json$/i, use: [
-        {loader: "app-settings-loader", options: {env: production ? 'production' : 'development' }},
+        {loader: 'app-settings-loader', options: {env: production ? 'production' : 'development' }},
       ]},
       ...when(tests, {
         test: /\.[jt]s$/i, loader: 'istanbul-instrumenter-loader',

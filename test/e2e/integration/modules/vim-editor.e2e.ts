@@ -1,6 +1,6 @@
-import { CSS_SELECTORS } from 'src/common/css-selectors';
-import { OTN_STATE_KEY } from 'src/local-storage';
-import { VimEditorState } from 'src/store/initial-state';
+import { CSS_SELECTORS } from '../../../../src/common/css-selectors';
+import { OTN_STATE_KEY } from '../../../../src/local-storage';
+import { VimEditorState } from '../../../../src/store/initial-state';
 
 const initialContent = '012 456';
 const secondContent = 'abcdef 89';
@@ -103,7 +103,7 @@ describe('VimEditor - Visual', () => {
             cy.get(`%${CSS_SELECTORS['editor-line']}`)
               .siblings('.editorLine__highlight')
               .invoke('attr', 'style')
-              .should('contain', `left: ${(caretWidth * 2) + offsetLeft}px`)
+              .should('contain', `left: ${caretWidth * 2 + offsetLeft}px`)
               .should('contain', `width: ${caretWidth * 1}px`);
           });
         });

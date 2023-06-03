@@ -356,6 +356,7 @@ export class VimEditorTextMode {
     //
     const currentMode = this.getCurrentTextMode();
     if (currentMode[result?.targetCommand]) {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-call
       await currentMode[result.targetCommand](result.vimState);
       // ev.preventDefault();
     } else {
@@ -384,6 +385,7 @@ export class VimEditorTextMode {
 
       /* prettier-ignore */ console.log('TCL ~ file: vim-editor-text-mode.ts ~ line 180 ~ VimEditorTextMode ~ resultList.forEach ~ result.targetCommand', result.targetCommand);
       if (currentMode[result.targetCommand] != null) {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-call
         currentMode[result.targetCommand](result.vimState);
       }
     });

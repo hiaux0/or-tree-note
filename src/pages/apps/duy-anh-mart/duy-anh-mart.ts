@@ -6,12 +6,7 @@ import {
 } from 'aurelia-framework';
 
 import { ProductDatabase } from './ProductDatabase';
-import {
-  Product,
-  EMPTY_PRODUCT,
-  TEST_PRODUCT,
-  SessionProduct,
-} from './ProductEntity';
+import { Product, SessionProduct } from './ProductEntity';
 
 import './duy-anh-mart.scss';
 
@@ -194,6 +189,7 @@ export class DuyAnhMart {
   }
 
   private clearCurrentProduct() {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     this.currentProduct = {};
     // this.currentProduct = undefined;

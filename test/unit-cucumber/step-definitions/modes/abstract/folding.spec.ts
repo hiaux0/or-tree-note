@@ -1,13 +1,14 @@
 import { cloneDeep } from 'lodash';
+
 import { toggleFold } from '../../../../../src/modules/vim/modes/features/folding';
-import { Vim } from '../../../../../src/modules/vim/vim';
+import { VimCore } from '../../../../../src/modules/vim/vim-core';
 import { IndentationNode } from '../../../../../src/modules/vim/vim-types';
 import {
   findCursor,
   replaceCursorFromRaw,
 } from '../../../../common-test/vim-test-setup/vim-test-helpers';
 
-describe(`Folding`, () => {
+describe('Folding', () => {
   const testNodes = [
     { indentation: 0 }, // 0
     { indentation: 0 }, // 1
@@ -21,7 +22,7 @@ describe(`Folding`, () => {
     { indentation: 0 }, // 9
   ];
 
-  describe(`toggleFold() - nothing folded`, () => {
+  describe('toggleFold() - nothing folded', () => {
     const testCollection: [
       IndentationNode[],
       // [foldIndex: number, expected: string[], parentIndex: number][]
@@ -55,7 +56,7 @@ describe(`Folding`, () => {
     });
   });
 
-  describe(`toggleFold() - some folded`, () => {
+  describe('toggleFold() - some folded', () => {
     const testCollection: [
       IndentationNode[],
       // [foldIndex: number, expected: string[], parentIndex: number][],
@@ -106,7 +107,7 @@ describe(`Folding`, () => {
     });
   });
 
-  describe(`toggleFold() - with empty lines`, () => {
+  describe('toggleFold() - with empty lines', () => {
     const testNodesWithEmptyLines = [
       {
         text: 'What do I need to make this work?',
@@ -157,23 +158,24 @@ describe(`Folding`, () => {
     });
   });
 
-  it(`Folding`, () => {
-    const rawContent = `|123\n  456\n789`;
+  it('Folding', () => {
+    const rawContent = '|123\n  456\n789';
     const rawInput = rawContent.split('\n');
     const input = replaceCursorFromRaw(rawInput).map((text) => ({
       text,
     }));
 
     // If we provide rawContent, then also a cursor
-    let vim: Vim;
+    let vim: VimCore;
     if (rawContent) {
       const initialCursor = findCursor(rawInput);
-      vim = new Vim(cloneDeep(input), initialCursor);
+      vim = new VimCore(cloneDeep(input), initialCursor);
     } else {
-      vim = new Vim(cloneDeep(input));
+      vim = new VimCore(cloneDeep(input));
     }
 
     const result = vim.queueInput('za');
+    /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: folding.spec.ts ~ line 178 ~ result', result);
 
     // expect(true).toBeFalsy();
   });

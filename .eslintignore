@@ -1,0 +1,13 @@
+cypress.config.js
+jest.config.js
+karma.conf.js
+karma-bundle.js
+wallaby.conf.js
+wallaby.vim.js
+webpack.config.js
+
+quick.ts
+
+aurelia_project
+test/e2e/plugins/index.js
+_code-dep/index.ts

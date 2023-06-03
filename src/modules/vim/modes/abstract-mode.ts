@@ -77,6 +77,7 @@ export abstract class AbstractMode {
     }
 
     const previousOutput = cloneDeep(this.vimState); // side effect, thus clone before executing command
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
     const result = (await this[commandName](commandInput)) as VimStateClass;
 
     try {
@@ -249,7 +250,7 @@ export abstract class AbstractMode {
     const isAtEnd = tokenUnderCursor?.end === this.vimState.cursor.col;
     const isNotAtEnd = tokenUnderCursor === undefined;
 
-    let resultCol;
+    let resultCol: number;
     if (isAtEnd) {
       const nextToken = this.getTokenAtIndex(tokenUnderCursor.index + 1);
       resultCol = nextToken.end;
@@ -272,7 +273,7 @@ export abstract class AbstractMode {
     const isAtEnd = nextToken?.end === this.vimState.cursor.col;
     const isNotAtEnd = nextToken === undefined;
 
-    let resultCol;
+    let resultCol: number;
     if (isAtEnd) {
       const nextNextToken = this.getTokenAtIndex(nextToken.index + 1);
       resultCol = nextNextToken.end;
@@ -296,7 +297,7 @@ export abstract class AbstractMode {
       tokenUnderCursor?.start === this.vimState.cursor.col; /* ? */
     const tokenNotUnderCursor = tokenUnderCursor === undefined;
 
-    let resultCol;
+    let resultCol: number;
     if (isAtStart) {
       const previousToken = this.getTokenAtIndex(tokenUnderCursor.index - 1);
       resultCol = previousToken.start;

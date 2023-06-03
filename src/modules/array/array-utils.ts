@@ -49,7 +49,9 @@ export class ArrayUtils {
 
     const split = this.splitIntoParts(array, [1, array.length - 1]);
     const result = [split[0][0], split[1], split[2][0]];
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
     return result;
   }
 
@@ -57,6 +59,7 @@ export class ArrayUtils {
     array: T,
     splitIndeces: number[]
   ): T {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     const result: T[] = Array.from(
       { length: splitIndeces.length + 1 },
@@ -74,6 +77,7 @@ export class ArrayUtils {
       result[splitTracker].push(entry);
     });
 
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     return result;
   }

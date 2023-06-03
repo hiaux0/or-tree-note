@@ -1,11 +1,11 @@
 import { StepDefinitions } from 'jest-cucumber';
+
 import {
   VimCommandNames,
   VIM_COMMANDS,
   VIM_COMMAND,
 } from '../../../../src/modules/vim/vim-commands-repository';
 import { QueueInputReturn } from '../../../../src/modules/vim/vim-types';
-
 import { testError, TestError } from '../../../common-test/errors/test-errors';
 import { GherkinTestUtil } from '../../../common-test/gherkin/gherkin-test-util';
 import { initialCursor, manyQueuedInput } from './modes/common-vim.spec';
@@ -18,13 +18,12 @@ export const commonVimAssertionsSteps: StepDefinitions = ({ then, and }) => {
 
     (rawCommands: VimCommandNames) => {
       const conmmands = rawCommands.split(',');
-      conmmands; /*?*/
       expect(conmmands.length).toBe(
         manyQueuedInput.length,
         'Expected equal commands of lines and result'
       );
 
-      let expectedCommand = null;
+      let expectedCommand: string | null = null;
       conmmands.forEach((command, index) => {
         expectedCommand = memoizeExpected(command, expectedCommand);
 
@@ -34,9 +33,9 @@ export const commonVimAssertionsSteps: StepDefinitions = ({ then, and }) => {
   );
 
   and(/^there should be (\d+) lines$/, (numOfLines: string) => {
-    expect(manyQueuedInput[manyQueuedInput.length - 1].lines.length).toBe(
-      Number(numOfLines)
-    );
+    expect(
+      manyQueuedInput[manyQueuedInput.length - 1].vimState?.lines.length
+    ).toBe(Number(numOfLines));
   });
 
   and(
@@ -49,7 +48,7 @@ export const commonVimAssertionsSteps: StepDefinitions = ({ then, and }) => {
       columns.forEach((column, index) => {
         expectedColumn = memoizeExpected(column, expectedColumn);
 
-        expect(manyQueuedInput[index].vimState.cursor.col).toEqual(
+        expect(manyQueuedInput[index].vimState?.cursor.col).toEqual(
           Number(expectedColumn),
           `Expected equal number of columns and result. Test index: ${index}`
         );
@@ -63,7 +62,7 @@ export const commonVimAssertionsSteps: StepDefinitions = ({ then, and }) => {
       let expectedLine;
       lines.forEach((line, index) => {
         expectedLine = memoizeExpected(line, expectedLine);
-        expect(manyQueuedInput[index].vimState.cursor.line).toEqual(
+        expect(manyQueuedInput[index].vimState?.cursor.line).toEqual(
           Number(expectedLine)
         );
       });
@@ -78,7 +77,7 @@ export const commonVimAssertionsSteps: StepDefinitions = ({ then, and }) => {
       const text = GherkinTestUtil.replaceQuotes(rawText);
       lastExpectedText = memoizeExpected(text, lastExpectedText);
 
-      expect(manyQueuedInput[index].vimState.getActiveLine().text).toBe(
+      expect(manyQueuedInput[index].vimState?.getActiveLine().text).toBe(
         lastExpectedText
       );
     });
@@ -86,16 +85,20 @@ export const commonVimAssertionsSteps: StepDefinitions = ({ then, and }) => {
 
   and(/^the previous line text should be (.*)$/, (previousText: string) => {
     const previousLine =
-      manyQueuedInput[manyQueuedInput.length - 1].lines[initialCursor.line];
-    expect(previousLine.text).toBe(previousText);
+      manyQueuedInput[manyQueuedInput.length - 1].vimState?.lines[
+        initialCursor.line
+      ];
+    expect(previousLine?.text).toBe(previousText);
   });
 };
 
 function theExpectedCommandShouldBe(
   expectedInput: QueueInputReturn,
-  rawCommand: string
+  rawCommand: string | null
 ) {
-  const command = GherkinTestUtil.replaceQuotes(rawCommand) as VIM_COMMAND;
+  const command = GherkinTestUtil.replaceQuotes(
+    rawCommand ?? ''
+  ) as VIM_COMMAND;
 
   verifyCommandsName(command);
 
@@ -105,7 +108,7 @@ function theExpectedCommandShouldBe(
 /**
  * Better DX: allow sth like "foo,,,bar"
  */
-function memoizeExpected(input: string, expected: string) {
+function memoizeExpected(input: string, expected: string | null) {
   if (input === '') {
     // use expected
   } else if (expected !== input) {
@@ -114,7 +117,7 @@ function memoizeExpected(input: string, expected: string) {
     testError.log('Expected results and inputs not equal');
   }
 
-  return expected;
+  return expected ?? '';
 }
 
 function verifyCommandsName(command: VIM_COMMAND) {

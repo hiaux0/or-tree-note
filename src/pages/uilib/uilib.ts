@@ -1,5 +1,5 @@
 import { bindable, PLATFORM } from 'aurelia-framework';
-import { Router, RouterEvent } from 'aurelia-router';
+import { Router, RouterConfiguration } from 'aurelia-router';
 
 import './uilib.scss';
 
@@ -8,7 +8,7 @@ export class Uilib {
 
   constructor(private router: Router) {}
 
-  configureRouter(config, router) {
+  configureRouter(config: RouterConfiguration, router: Router) {
     config.map([
       {
         name: 'uilibWelcome',

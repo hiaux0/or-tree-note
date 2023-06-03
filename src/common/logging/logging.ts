@@ -28,7 +28,7 @@ export class Logger {
   public readonly culogger: Culogger;
 
   constructor(
-    scope: string = 'Aurelia',
+    public scope = 'Aurelia',
     private readonly options: ILogOptions = DEFAULT_LOG_OPTIONS
   ) {
     this.culogger = new Culogger({ scope });

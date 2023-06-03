@@ -11,23 +11,19 @@ export class QuickComponent {
 
   attached() {
     const lineRef = this.lineRef;
-    let sequenceBuffer: string[] = [];
-    let isComposing = false;
 
     console.log('Text content: ', lineRef.innerText);
 
-    lineRef.addEventListener('compositionstart', (e) => {
-      isComposing = true;
+    lineRef.addEventListener('compositionstart', () => {
       this.textResult_compositionstart = this.lineRef.textContent;
     });
-    lineRef.addEventListener('compositionupdate', (e) => {
+    lineRef.addEventListener('compositionupdate', () => {
       this.textResult_compositionupdate = this.lineRef.textContent;
     });
-    lineRef.addEventListener('compositionend', (e) => {
-      isComposing = false;
+    lineRef.addEventListener('compositionend', () => {
       this.textResult_compositionend = this.lineRef.textContent;
     });
-    lineRef.addEventListener('keydown', (e) => {
+    lineRef.addEventListener('keydown', () => {
       this.textResult_keydown = this.lineRef.textContent;
     });
     lineRef.addEventListener('keyup', () => {
@@ -40,37 +36,5 @@ export class QuickComponent {
       /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: quick-component.ts ~ line 36 ~ event', event.data);
       this.textResult_input = this.lineRef.textContent;
     });
-
-    function insertTextAtCursor(text: string) {
-      const sel = window.getSelection();
-      if (sel?.rangeCount) {
-        const range = sel.getRangeAt(0);
-        range.deleteContents();
-        const node = document.createTextNode(text);
-        range.insertNode(node);
-        range.setStartAfter(node);
-        sel.removeAllRanges();
-        sel.addRange(range);
-      }
-    }
-
-    function replaceSequenceWith(text: string) {
-      const sequenceLength = sequenceBuffer.join('').length;
-      sequenceBuffer = [];
-      const sel = window.getSelection();
-      if (sel?.rangeCount) {
-        const range = sel.getRangeAt(0);
-        range.setStart(
-          range.startContainer,
-          Math.max(range.startOffset - sequenceLength, 0)
-        );
-        range.deleteContents();
-        const node = document.createTextNode(text);
-        range.insertNode(node);
-        range.setStartAfter(node);
-        sel.removeAllRanges();
-        sel.addRange(range);
-      }
-    }
   }
 }

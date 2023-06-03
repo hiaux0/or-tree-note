@@ -1,4 +1,4 @@
-import { ModifiersType, SPACE } from '../../resources/keybindings/app-keys';
+import { ModifiersType } from '../../resources/keybindings/app-keys';
 
 export enum VIM_COMMAND {
   'backspace' = 'backspace',
@@ -56,7 +56,7 @@ export const VIM_MODE_COMMANDS = [
   VIM_COMMAND['enterNormalMode'],
   VIM_COMMAND['enterVisualMode'],
   VIM_COMMAND['createNewLine'],
-];
+] as VIM_COMMAND[];
 
 export const VIM_COMMANDS = [
   VIM_COMMAND.newLine,
@@ -106,7 +106,7 @@ export const VIM_COMMANDS_THAT_CHANGE_TO_NORMAL_MODE = ['visualDelete'];
 
 export interface VimCommand {
   key: string;
-  command: VimCommandNames;
+  command: VIM_COMMAND;
   args?: {
     text?: string;
   };

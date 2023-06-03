@@ -1,9 +1,9 @@
-describe("Aurelia skeleton app", () => {
+describe('Aurelia skeleton app', () => {
   beforeEach(() => {
-    cy.visit("/");
+    cy.visit('/');
   });
 
-  it("should display greeting", () => {
-    cy.get("h1").contains("Hello World!");
+  it('should display greeting', () => {
+    cy.get('h1').contains('Hello World!');
   });
 });

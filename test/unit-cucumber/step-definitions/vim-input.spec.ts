@@ -1,15 +1,15 @@
 import { cloneDeep } from 'lodash';
-import { Vim } from '../../../src/modules/vim/vim';
+
 import {
   VIM_COMMANDS,
   VIM_COMMAND,
 } from '../../../src/modules/vim/vim-commands-repository';
+import { VimCore } from '../../../src/modules/vim/vim-core';
 import {
   Cursor,
   QueueInputReturn,
   VimMode,
 } from '../../../src/modules/vim/vim-types';
-
 import { TestError, testError } from '../../common-test/errors/test-errors';
 import { GherkinTestUtil } from '../../common-test/gherkin/gherkin-test-util';
 import {
@@ -43,19 +43,8 @@ interface MoreTestCaseAssertions {
 
 const RAW_SPLIT = ';';
 
-const TWO_LINES_NUMBERS = `012 456
-789`;
-const TWO_LINES_WORDS = `foo
-bar`;
-
-function addCursorAt(line: number, textWithCursor: string, rawInput: string) {
-  const input = rawInput.split('\n');
-  input[line] = textWithCursor;
-  return input.join('\n');
-}
-
 let initialCursor: Cursor;
-let vim: Vim;
+let vim: VimCore;
 let manyQueuedInput: QueueInputReturn[] = [];
 
 /* prettier-ignore */
@@ -156,9 +145,9 @@ describe('Vim input.', () => {
             // If we provide rawContent, then also a cursor
             if (rawContent) {
               initialCursor = findCursor(rawInput);
-              vim = new Vim(cloneDeep(input), initialCursor);
+              vim = new VimCore(cloneDeep(input), initialCursor);
             } else {
-              vim = new Vim(cloneDeep(input));
+              vim = new VimCore(cloneDeep(input));
             }
           });
 
@@ -185,15 +174,14 @@ describe('Vim input.', () => {
             }
           });
 
-          it(`When I type "${rawInput}"`, () => {
+          it(`When I type "${rawInput}"`, async () => {
             if (['replace'].includes(rawCommands)) {
               return;
             }
 
             const input = GherkinTestUtil.replaceQuotes(rawInput);
 
-            manyQueuedInput = vim.queueInputSequence(input);
-            manyQueuedInput; /*?*/
+            manyQueuedInput = await vim.queueInputSequence(input);
             // expect(true).toBeFalsy();
           });
 
@@ -223,7 +211,8 @@ describe('Vim input.', () => {
           if (numOfLines !== undefined) {
             it(`there should be "${numOfLines}" lines`, () => {
               expect(
-                manyQueuedInput[manyQueuedInput.length - 1].lines.length
+                manyQueuedInput[manyQueuedInput.length - 1].vimState?.lines
+                  .length
               ).toBe(Number(numOfLines), 'hi');
             });
           }
@@ -280,11 +269,9 @@ describe('Vim input.', () => {
                 const text = GherkinTestUtil.replaceQuotes(rawText);
                 lastExpectedText = memoizeExpected(text, lastExpectedText);
 
-                manyQueuedInput; /*?*/
                 const activeLine =
                   manyQueuedInput[index]?.vimState?.getActiveLine();
-                activeLine; /*?*/
-                expect(activeLine.text).toBe(lastExpectedText);
+                expect(activeLine?.text).toBe(lastExpectedText);
               });
             });
           }
@@ -292,10 +279,10 @@ describe('Vim input.', () => {
           if (previousText !== undefined) {
             it(`And the previous line text should be "${previousText}"`, () => {
               const previousLine =
-                manyQueuedInput[manyQueuedInput.length - 1].lines[
+                manyQueuedInput[manyQueuedInput.length - 1].vimState?.lines[
                   initialCursor.line
                 ];
-              expect(previousLine.text).toBe(previousText);
+              expect(previousLine?.text).toBe(previousText);
             });
           }
 

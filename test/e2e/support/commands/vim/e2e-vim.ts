@@ -1,6 +1,7 @@
 declare global {
+  // eslint-disable-next-line @typescript-eslint/no-namespace
   namespace Cypress {
-    interface Chainable<Subject = any> {
+    interface Chainable {
       /**
        * @example
        *   cy.vim()
@@ -11,10 +12,10 @@ declare global {
 }
 function vim(input: string) {
   Cypress.log({
-    name: "vim",
+    name: 'vim',
   });
   cy.main().type(input);
 }
-Cypress.Commands.add("vim", vim);
+Cypress.Commands.add('vim', vim);
 
 export {};

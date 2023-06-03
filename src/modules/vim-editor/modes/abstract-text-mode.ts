@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/brace-style */
 import { inject } from 'aurelia-dependency-injection';
 import { jump, StateHistory, Store } from 'aurelia-store';
 import {
@@ -64,8 +63,8 @@ export abstract class AbstractTextMode {
 
   setCursorMovement(newCursorValue?: Cursor) {
     //
-    let newCursorLine;
-    let newCursorCol;
+    let newCursorLine: number;
+    let newCursorCol: number;
 
     if (newCursorValue) {
       newCursorLine = newCursorValue.line;
@@ -357,22 +356,22 @@ export abstract class AbstractTextMode {
   }
 }
 
-function isInside(parent: HTMLElement, child: HTMLElement): boolean {
-  return parent.contains(child);
-}
+// function isInside(parent: HTMLElement, child: HTMLElement): boolean {
+//   return parent.contains(child);
+// }
 
-function isInViewport(element) {
-  const rect = element.getBoundingClientRect();
-  const viewportHeight =
-    window.innerHeight || document.documentElement.clientHeight;
-  const viewportWidth =
-    window.innerWidth || document.documentElement.clientWidth;
+// function isInViewport(element) {
+//   const rect = element.getBoundingClientRect();
+//   const viewportHeight =
+//     window.innerHeight || document.documentElement.clientHeight;
+//   const viewportWidth =
+//     window.innerWidth || document.documentElement.clientWidth;
 
-  const first = rect.top >= 0 + 0;
-  const second = rect.left >= 0 + 0;
-  // const third = rect.bottom <= viewportHeight - 30;
-  const third = rect.bottom <= viewportHeight - 0;
-  const fourth = rect.right <= viewportWidth + 0;
+//   const first = rect.top >= 0 + 0;
+//   const second = rect.left >= 0 + 0;
+//   // const third = rect.bottom <= viewportHeight - 30;
+//   const third = rect.bottom <= viewportHeight - 0;
+//   const fourth = rect.right <= viewportWidth + 0;
 
-  return first && second && third && fourth;
-}
+//   return first && second && third && fourth;
+// }

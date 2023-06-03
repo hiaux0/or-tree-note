@@ -2,7 +2,6 @@ import {
   filterListByCharSequence,
   getFirstNonWhiteSpaceCharIndex,
   inputContainsSequence,
-  replaceAt,
   StringUtil,
 } from '../../../src/modules/string/string';
 

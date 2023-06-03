@@ -2,8 +2,6 @@ import { nextStateHistory, StateHistory } from 'aurelia-store';
 import produce from 'immer';
 import { VimEditorState } from 'store/initial-state';
 
-/** @typedef {Wellplate.CompositeToolbar['legend']} CompositeToolbarLegend */
-
 // /**
 //  */
 // export function toggleCheckbox(state: VimEditorState, newText: string) {

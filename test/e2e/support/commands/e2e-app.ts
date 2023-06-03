@@ -1,6 +1,7 @@
 declare global {
+  // eslint-disable-next-line @typescript-eslint/no-namespace
   namespace Cypress {
-    interface Chainable<Subject = any> {
+    interface Chainable {
       /**
        * @example
        *   cy.main()
@@ -11,10 +12,10 @@ declare global {
 }
 function main() {
   Cypress.log({
-    name: "main",
+    name: 'main',
   });
   return cy.get('[aurelia-app="main"]');
 }
-Cypress.Commands.add("main", main);
+Cypress.Commands.add('main', main);
 
 export {};

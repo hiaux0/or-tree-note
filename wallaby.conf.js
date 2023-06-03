@@ -1,11 +1,12 @@
 const path = require('path');
-let wallabyWebpack = require('wallaby-webpack');
-let AureliaPlugin = require('aurelia-webpack-plugin').AureliaPlugin;
-let DefinePlugin = require('webpack').DefinePlugin;
-let webpack = require('webpack');
+
+const wallabyWebpack = require('wallaby-webpack');
+const AureliaPlugin = require('aurelia-webpack-plugin').AureliaPlugin;
+const DefinePlugin = require('webpack').DefinePlugin;
+const webpack = require('webpack');
 
 module.exports = function (wallaby) {
-  let wallabyPostprocessor = wallabyWebpack({
+  const wallabyPostprocessor = wallabyWebpack({
     resolve: {
       modules: [
         path.join(wallaby.projectCacheDir, 'src'),
@@ -59,9 +60,9 @@ module.exports = function (wallaby) {
       new AureliaPlugin({
         aureliaApp: undefined,
         viewsFor:
-          '{' +
-          path.relative(path.resolve(), wallaby.projectCacheDir) +
-          '/,}**/!(tslib)*.{ts,js}',
+          `{${
+          path.relative(path.resolve(), wallaby.projectCacheDir)
+          }/,}**/!(tslib)*.{ts,js}`,
       }),
       new webpack.NormalModuleReplacementPlugin(
         /\.(png|jpe?g|gif|svg|woff|woff2|ttf|eot|ico||scss|css)$/,

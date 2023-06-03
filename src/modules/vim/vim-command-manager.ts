@@ -200,7 +200,7 @@ export class VimCommandManager {
       this.queuedKeys,
       this.potentialCommands
     );
-    const includes = this.includesPotentialCommands(commandAwaitingNextInput);
+    // const includes = this.includesPotentialCommands(commandAwaitingNextInput);
     // if (includes) {
     if (commandAwaitingNextInput !== undefined) {
       if (this.potentialCommands.length === 0) {
@@ -254,7 +254,7 @@ export class VimCommandManager {
 
     /* prettier-ignore */ logger.culogger.debug(['potentialCommands: %o', potentialCommands], {}, (...r) => console.log(...r));
 
-    let targetCommand;
+    let targetCommand: VimCommand;
     if (potentialCommands.length === 0) {
       this.emptyQueuedKeys();
       throw new Error('Empty Array');
@@ -290,7 +290,7 @@ export class VimCommandManager {
     input: string,
     modifiers: string[] = []
   ): VIM_COMMAND | undefined {
-    let targetCommand;
+    let targetCommand: VimCommand;
     let potentialCommands: PotentialCommandReturn['potentialCommands'];
 
     try {

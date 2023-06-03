@@ -1,4 +1,5 @@
 import { StepDefinitions } from 'jest-cucumber';
+
 import { vim } from '../common-steps/modes/common-vim.spec';
 
 export const initializationSteps: StepDefinitions = ({ then, and }) => {

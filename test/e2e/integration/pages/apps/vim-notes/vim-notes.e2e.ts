@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-call */
 import { CURRENT_OTN_MODE, OTN_STATE_KEY } from 'src/local-storage';
 
 const initialContent = '012 456';
@@ -131,7 +132,7 @@ describe('Aurelia skeleton app', () => {
     cy.get('.editor-line')
       .invoke('text')
       .then((updatedContent) => {
-        expect(updatedContent).equal(` 456`);
+        expect(updatedContent).equal(' 456');
       });
   });
 
@@ -144,7 +145,7 @@ describe('Aurelia skeleton app', () => {
       .first()
       .invoke('text')
       .then((updatedContent) => {
-        expect(updatedContent).equal(`01`);
+        expect(updatedContent).equal('01');
       });
 
     // 2nd line
@@ -152,7 +153,7 @@ describe('Aurelia skeleton app', () => {
       .last()
       .invoke('text')
       .then((updatedContent) => {
-        expect(updatedContent).equal(`2 456`);
+        expect(updatedContent).equal('2 456');
       });
   });
 });

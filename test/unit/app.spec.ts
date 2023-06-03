@@ -1,9 +1,9 @@
 import { bootstrap } from 'aurelia-bootstrapper';
 import { PLATFORM } from 'aurelia-pal';
-import { StageComponent } from 'aurelia-testing';
+import { ComponentTester, StageComponent } from 'aurelia-testing';
 
 describe('Stage App Component', () => {
-  let component;
+  let component: ComponentTester;
 
   beforeEach(() => {
     component = StageComponent.withResources(PLATFORM.moduleName('app')).inView(
@@ -18,7 +18,7 @@ describe('Stage App Component', () => {
       .create(bootstrap)
       .then(() => {
         const view = component.element;
-        expect(view.textContent.trim()).toBeTruthy();
+        expect(view.textContent?.trim()).toBeTruthy();
         done();
       })
       .catch((e) => {

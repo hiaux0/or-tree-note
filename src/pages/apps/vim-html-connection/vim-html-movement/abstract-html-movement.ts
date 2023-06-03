@@ -58,7 +58,6 @@ export abstract class AbstractHtmlMovement {
         const isInWidthInterval_Left =
           curRect.left - widthDelta <= siblingRect.left;
         const isInWidthInterval_Right =
-          // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
           curRect.right + widthDelta >= siblingRect.right;
         const isInWidthInterval =
           isInWidthInterval_Left && isInWidthInterval_Right;
@@ -97,7 +96,6 @@ export abstract class AbstractHtmlMovement {
       const isInWidthInterval_Left =
         curRect.left - widthDelta <= siblingRect.left;
       const isInWidthInterval_Right =
-        // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
         curRect.right + widthDelta >= siblingRect.right;
       const isInWidthInterval =
         isInWidthInterval_Left && isInWidthInterval_Right;

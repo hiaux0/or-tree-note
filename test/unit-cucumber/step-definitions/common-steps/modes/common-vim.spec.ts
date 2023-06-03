@@ -1,21 +1,24 @@
 import { StepDefinitions } from 'jest-cucumber';
 import { cloneDeep } from 'lodash';
-import { Vim } from '../../../../../src/modules/vim/vim';
+
+import { VimCore } from '../../../../../src/modules/vim/vim-core';
 import {
   Cursor,
   QueueInputReturn,
 } from '../../../../../src/modules/vim/vim-types';
-
 import { testError } from '../../../../common-test/errors/test-errors';
 import { GherkinTestUtil } from '../../../../common-test/gherkin/gherkin-test-util';
 
-export let vim: Vim;
-export let initialCursor;
+// eslint-disable-next-line import/no-mutable-exports
+export let vim: VimCore;
+// eslint-disable-next-line import/no-mutable-exports
+export let initialCursor: Cursor;
+// eslint-disable-next-line import/no-mutable-exports
 export let manyQueuedInput: QueueInputReturn[];
 
 export const commonVimSteps: StepDefinitions = ({ given, when }) => {
   given('I start Vim', () => {
-    vim = new Vim(cloneDeep([{ text: '' }]));
+    vim = new VimCore(cloneDeep([{ text: '' }]));
   });
 
   given('I activate Vim with the following input:', (rawContent: string) => {
@@ -23,14 +26,13 @@ export const commonVimSteps: StepDefinitions = ({ given, when }) => {
     initialCursor = findCursor(rawInput);
 
     const input = cleanupRaw(rawInput).map((t) => ({ text: t }));
-    vim = new Vim(cloneDeep(input), cloneDeep(initialCursor));
+    vim = new VimCore(cloneDeep(input), cloneDeep(initialCursor));
   });
 
-  when(/^I (?:queueInputSequence|type) (.*)$/, (rawInput: string) => {
+  when(/^I (?:queueInputSequence|type) (.*)$/, async (rawInput: string) => {
     const input = GherkinTestUtil.replaceQuotes(rawInput);
 
-    manyQueuedInput = vim.queueInputSequence(input);
-    manyQueuedInput; /* ? */
+    manyQueuedInput = await vim.queueInputSequence(input);
   });
 };
 
@@ -44,8 +46,8 @@ export const commonVimSteps: StepDefinitions = ({ given, when }) => {
  *
  */
 function findCursor(input: string[]): Cursor {
-  let cursorLine: number | undefined;
-  let cursorColumn: number | undefined;
+  let cursorLine = NaN;
+  let cursorColumn = NaN;
   input.forEach((line, index) => {
     const matchedCursor = matchCursor(line);
     if (matchedCursor === null) return;
@@ -54,7 +56,7 @@ function findCursor(input: string[]): Cursor {
     }
 
     /* prettier-ignore */
-    if (matchedCursor[0] === '\|') {
+    if (matchedCursor[0] === '|') {
       cursorColumn = matchedCursor.index - 1; // - 1 for \
     } else {
       cursorColumn = matchedCursor.index;

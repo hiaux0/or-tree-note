@@ -1,3 +1,7 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-return */
 // ***********************************************
 // This example commands.js shows you how to
 // create various custom commands and overwrite
@@ -29,9 +33,9 @@ const markedTestTag = /%([A-Z_a-z-]+)/g;
 const enableLogging = true;
 
 // replace tagging with [data-test=xy]
-export const normalizeSelector = (selector: any): any =>
-  typeof selector === "string"
-    ? selector.replace(markedTestTag, "[data-test=$1]")
+export const normalizeSelector = (selector: unknown): unknown =>
+  typeof selector === 'string'
+    ? selector.replace(markedTestTag, '[data-test=$1]')
     : selector;
 
 /*
@@ -39,7 +43,7 @@ export const normalizeSelector = (selector: any): any =>
  */
 
 //  https://docs.cypress.io/api/cypress-api/custom-commands.html#Parent-Commands
-["get"].forEach((cmd) => {
+['get'].forEach((cmd) => {
   Cypress.Commands.overwrite(cmd, (fn, selector, ...rest) => {
     if (enableLogging || rest[0]?.log === true) {
       return fn(normalizeSelector(selector), ...rest);
@@ -50,7 +54,7 @@ export const normalizeSelector = (selector: any): any =>
 });
 
 // https://docs.cypress.io/api/cypress-api/custom-commands.html#Dual-Commands
-["contains"].forEach((cmd) => {
+['contains'].forEach((cmd) => {
   Cypress.Commands.overwrite(cmd, (fn, element, selector, content) => {
     if (enableLogging) {
       if (content === undefined) {
@@ -74,20 +78,20 @@ export const normalizeSelector = (selector: any): any =>
 
 // https://docs.cypress.io/api/cypress-api/custom-commands.html#Child-Commands
 [
-  "children",
-  "closest",
-  "filter",
-  "find",
-  "next",
-  "nextAll",
-  "nextUntil",
-  "not",
-  "parent",
-  "parents",
-  "prev",
-  "prevAll",
-  "prevUntil",
-  "siblings",
+  'children',
+  'closest',
+  'filter',
+  'find',
+  'next',
+  'nextAll',
+  'nextUntil',
+  'not',
+  'parent',
+  'parents',
+  'prev',
+  'prevAll',
+  'prevUntil',
+  'siblings',
 ].forEach((cmd) => {
   Cypress.Commands.overwrite(cmd, (fn, element, selector, ...rest) => {
     if (enableLogging) {

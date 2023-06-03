@@ -1,11 +1,11 @@
-import { Logger } from 'modules/debug/logger';
+// import { Logger } from 'modules/debug/logger';
 import { VimStateClass } from 'modules/vim/vim-state';
 import { VimMode } from 'modules/vim/vim-types';
 
 import { changeText } from '../actions/actions-vim-editor';
 import { AbstractTextMode } from './abstract-text-mode';
 
-const logger = new Logger({ scope: 'InsertTextMode' });
+// const logger = new Logger({ scope: 'InsertTextMode' });
 
 export class InsertTextMode extends AbstractTextMode {
   mode: VimMode.INSERT;
