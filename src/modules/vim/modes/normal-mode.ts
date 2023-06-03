@@ -24,10 +24,13 @@ export class NormalMode extends AbstractMode {
 
   deleteInnerWord(): VimStateClass {
     const token = super.getTokenUnderCursor();
-    const newText = this.vimState
-      .getActiveLine()
-      .text.replace(token.string, '');
-    this.vimState.updateActiveLine(newText);
+    let newText = '';
+    if (token) {
+      newText = this.vimState.getActiveLine().text.replace(token.string, '');
+      this.vimState.updateActiveLine(newText);
+    } else {
+      this.delete();
+    }
 
     return this.vimState;
   }
