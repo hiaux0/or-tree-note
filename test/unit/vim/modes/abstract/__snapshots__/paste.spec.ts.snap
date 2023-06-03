@@ -1,0 +1,52 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`AbstractMode - paste 1 line 1`] = `
+Object {
+  "cursor": Object {
+    "col": 1,
+    "line": 0,
+  },
+  "lines": Array [
+    Object {
+      "text": "0test12",
+    },
+  ],
+}
+`;
+
+exports[`AbstractMode - paste 2 lines 1`] = `
+Object {
+  "cursor": Object {
+    "col": 1,
+    "line": 0,
+  },
+  "lines": Array [
+    Object {
+      "text": "0rs",
+    },
+    Object {
+      "text": "st12",
+    },
+  ],
+}
+`;
+
+exports[`AbstractMode - paste 3 lines 1`] = `
+Object {
+  "cursor": Object {
+    "col": 1,
+    "line": 0,
+  },
+  "lines": Array [
+    Object {
+      "text": "0rs",
+    },
+    Object {
+      "text": "st",
+    },
+    Object {
+      "text": "tu12",
+    },
+  ],
+}
+`;
