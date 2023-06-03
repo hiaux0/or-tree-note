@@ -1,3 +1,7 @@
+# Configs
+  - firefox
+    - dom.events.testing.asyncClipboard -> true
+
 # How to add a new command
 
 1. Add to key-bindings.ts
