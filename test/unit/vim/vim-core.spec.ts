@@ -191,10 +191,7 @@ describe('Vim input.', () => {
             }
 
             const conmmands = rawCommands.split(RAW_SPLIT);
-            expect(conmmands.length).toBe(
-              manyQueuedInput.length,
-              'Expected equal commands of lines and result'
-            );
+            expect(conmmands.length).toBe(manyQueuedInput.length);
 
             let expectedCommand = '';
             conmmands.forEach((command, index) => {
@@ -213,7 +210,7 @@ describe('Vim input.', () => {
               expect(
                 manyQueuedInput[manyQueuedInput.length - 1].vimState?.lines
                   .length
-              ).toBe(Number(numOfLines), 'hi');
+              ).toBe(Number(numOfLines));
             });
           }
 
@@ -234,18 +231,14 @@ describe('Vim input.', () => {
               expectedColumn = memoizeExpected(column, expectedColumn);
 
               expect(manyQueuedInput[index]?.vimState?.cursor.col).toEqual(
-                Number(expectedColumn),
-                `Expected equal number of columns and result. Test index: ${index}`
+                Number(expectedColumn)
               );
             });
 
             if (!(rawLines ?? '')) return;
 
             const lines = rawLines?.split(RAW_SPLIT);
-            expect(lines?.length).toBe(
-              manyQueuedInput.length,
-              'Expected equal number of lines and result'
-            );
+            expect(lines?.length).toBe(manyQueuedInput.length);
             let expectedLine;
             lines?.forEach((line, index) => {
               expectedLine = memoizeExpected(line, expectedLine);
