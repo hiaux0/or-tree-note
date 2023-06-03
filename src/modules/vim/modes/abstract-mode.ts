@@ -8,6 +8,7 @@ import {
   StringUtil,
 } from 'modules/string/string';
 
+import { VIM_COMMAND } from '../vim-commands-repository';
 import { VimStateClass } from '../vim-state';
 import {
   VimMode,
@@ -44,7 +45,7 @@ export abstract class AbstractMode {
   }
 
   async executeCommand(
-    commandName: string,
+    commandName: VIM_COMMAND,
     commandInput: string,
     currentMode: VimMode
   ): Promise<VimStateClass> {

@@ -74,7 +74,7 @@ export class InsertMode extends AbstractMode {
   }
 
   async executeCommand(
-    commandName: string,
+    commandName: VIM_COMMAND,
     commandValue: string
   ): Promise<VimStateClass> {
     return super.executeCommand(commandName, commandValue, this.currentMode);

@@ -159,7 +159,7 @@ export class VimCommandManager {
   /** **********/
 
   async executeVimCommand(
-    commandName: VimCommandNames,
+    commandName: VIM_COMMAND,
     commandInput?: string
   ): Promise<VimStateClass> {
     const currentMode = this.getCurrentMode();

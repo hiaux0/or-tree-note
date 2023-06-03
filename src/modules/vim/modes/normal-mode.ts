@@ -1,6 +1,6 @@
 // import { Logger } from 'modules/debug/logger';
 
-import { VimCommandNames } from '../vim-commands-repository';
+import { VIM_COMMAND } from '../vim-commands-repository';
 import { VimStateClass } from '../vim-state';
 import { VimMode } from '../vim-types';
 import { AbstractMode } from './abstract-mode';
@@ -11,7 +11,7 @@ export class NormalMode extends AbstractMode {
   currentMode = VimMode.NORMAL;
 
   async executeCommand(
-    commandName: VimCommandNames,
+    commandName: VIM_COMMAND,
     commandValue?: string
   ): Promise<VimStateClass> {
     const result = await super.executeCommand(

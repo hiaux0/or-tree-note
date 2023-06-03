@@ -1,6 +1,7 @@
 import { Logger } from 'modules/debug/logger';
 import { replaceRange } from 'modules/string/string';
 
+import { VIM_COMMAND } from '../vim-commands-repository';
 import { VimStateClass } from '../vim-state';
 import { VimMode } from '../vim-types';
 import { AbstractMode } from './abstract-mode';
@@ -11,7 +12,7 @@ export class VisualLineMode extends AbstractMode {
   currentMode = VimMode.VISUALLINE;
 
   async executeCommand(
-    commandName: string,
+    commandName: VIM_COMMAND,
     commandValue: string
   ): Promise<VimStateClass> {
     const newVimState = await super.executeCommand(
