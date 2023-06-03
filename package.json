@@ -103,7 +103,7 @@
     "start": "webpack-dev-server --extractCss",
     "build:dev": "webpack --extractCss",
     "analyze": "webpack --env.production --analyze",
-    "test": "au test",
+    "test": "export CHROME_BIN=/usr/bin/chromium && au test",
     "e2e": "au cypress",
     "e2e:headless": "au cypress --start --run",
     "lint": "      npx eslint ./ --ext js,ts",
