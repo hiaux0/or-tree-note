@@ -3,7 +3,8 @@
 # Current
 
 - .
-
+  - [x] [r] replaced not reflected in UI (have to go to insert mode to see)
+  - [ ] fix testing
 
 # Feat
 
@@ -12,19 +13,35 @@
   - [ ] [testing] write about, why I'm not doing tdd anymore
   - [ ] [debug] history to access state, so I can reproduce the issue
 
+# Bug
+- .
+  ## Current
+  - [ ] [$] at start of empty line goes to -1
+
+  ## Backlog
+  - [ ] [Normal] diw deletes the first word it encounters in the line
+  - [ ][indent] ` |hello` Indenting too much, will put cursor out of bound on the left
+  - [ ][t] not supporting going to upper case chars (because of queued shift)
+  - [ ][cc] does not clear line
+  - [ ] await this.queueInputSequence('u^'); // TODO: side effect? why works without assigning to `vimState`?
+
+  ## Done
+  - [x] [nor] 'o' on vim with only one line throws some error
+    - not repro
+  - [x] enter in normal should not split text
+    - should: next line, start of line (do, when chaining vim commands is easier?)
+      - --> queueInputSequence
+
 # Code Enhancements
 
 - .
-  - [ ] highilgiht on every keystroke (to register when I type eg. "#" as md header)
 
-  - [ ] text replacements - WITH composition possiliibty (eg. ,a , cause a can become â)
   - [ ] [paste] in insert, paste keeps formatting.. Want?
   - [ ] allow caret and container option have selector (and not element itself)
   - [ ] [modes] differentiate for <Esc>, if a mode change, or cancelling
     - background, just thought, it might be helpful to differentiate
   - [ ] `queueInputSequence` should support <ctrl> (additionally to <Control>)
-  - [ ] [snippets] cursor changing (`$1 $0`)
-  - [ ] [Editor] text replacements
+  - [ ] [snippets] cursor placeholder support (`$1 $0`)
   - [ ] changeText should not execute 2 actions (1 changeText 2 changeVimState (the cursor to the right))
     - could be part of a bigger refactor, where I want to compose the vim actions more
   - [ ] show whitespace &zwnj;
@@ -33,6 +50,14 @@
   - [ ] undo/redo should not trigger on every keystroke
     - eg. when I type "hello", and then undo, then the whole word "hello" should be undone, and not every char
 
+  ## Later
+
+  - .
+    - [ ] text replacements - WITH composition possiliibty (eg. ,a , cause a can become â)
+      - do when find annoying
+    - [ ] highilgiht on every keystroke (to register when I type eg. "#" as md header)
+      - later: need to do some children mutation observation (abstract-text-mode.ts)?
+
 # Refactoring
 
 - .
@@ -40,22 +65,13 @@
   - [ ] input + modifiers (shift,t -> <Shift>t) as some service
   - [ ] (vim-init.ts) vim-notes.ts should also use API similar to `initVim`
 
-# Bug
-
-- .
-  - [ ] enter in normal should not split text
-  - [ ] [nor] 'o' on vim with only one line throws some error
-  - [ ] [Normal] diw deletes the first word it encounters in the line
-  - [ ][indent] ` |hello` Indenting too much, will put cursor out of bound on the left
-  - [ ][t] not supporting going to upper case chars (because of queued shift)
-  - [ ][cc] does not clear line
-
 # Refactor
 
 # Done
 
 - .
 
+  - [x] [Editor] text replacements
   - [x] [Editor] code highlighting
   - [x] Vn Input mode
 
@@ -107,7 +123,6 @@
               - one reason, for later undo redo, we may just want to change the state, without having to dispatch an action
                 - [ ] will then have to listen to text changes outside of the store
       - [x] update text
-
 
   - [x][o] currently, only looks at word vs whitespace and symbols
     - --> should only whitespace
