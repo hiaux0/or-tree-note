@@ -48,7 +48,7 @@ export async function initVim(vimEditorOptionsV2: VimEditorOptionsV2) {
     finalLines = [{ text: '123' }, { text: 'abc' }];
   }
 
-  /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: vim-init.ts ~ line 48 ~ finalLines', finalLines)
+  /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: vim-init.ts ~ line 48 ~ finalLines', finalLines);
   const vim = new VimCore(finalLines, finalCursor, {
     vimPlugins: plugins ?? [],
   });

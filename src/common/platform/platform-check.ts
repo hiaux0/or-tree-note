@@ -1,1 +1,1 @@
-export const isMac = navigator.userAgent.toUpperCase().indexOf('MAC') >= 0;
+export const isMac = navigator.userAgent.toUpperCase().includes('MAC');

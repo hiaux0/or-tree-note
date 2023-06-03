@@ -1,5 +1,5 @@
 export class QuickComponent {
-  private textResult = '';
+  private readonly textResult = '';
   private textResult_compositionstart = '';
   private textResult_compositionend = '';
   private textResult_keydown = '';
@@ -37,7 +37,7 @@ export class QuickComponent {
       this.textResult_keypress = this.lineRef.textContent;
     });
     lineRef.addEventListener('input', (event: InputEvent) => {
-      /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: quick-component.ts ~ line 36 ~ event', event.data)
+      /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: quick-component.ts ~ line 36 ~ event', event.data);
       this.textResult_input = this.lineRef.textContent;
     });
 
