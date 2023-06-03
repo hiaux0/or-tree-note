@@ -46,7 +46,7 @@ export abstract class AbstractMode {
 
   async executeCommand(
     commandName: VIM_COMMAND,
-    commandInput: string,
+    commandInput: unknown,
     currentMode: VimMode
   ): Promise<VimStateClass> {
     const targetVimPluginCommand = this.vimOptions.vimPlugins?.find(
@@ -95,7 +95,7 @@ export abstract class AbstractMode {
 
     return result;
   }
-  executeVimPluginCommand(targetVimPlugin: VimPlugin, commandValue: string) {
+  executeVimPluginCommand(targetVimPlugin: VimPlugin, commandValue: unknown) {
     // return targetVimPlugin.execute(this.vimState, commandValue);
 
     const pluginResult = targetVimPlugin.execute(this.vimState, commandValue);

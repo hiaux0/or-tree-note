@@ -96,7 +96,7 @@ export interface VimPlugin {
   commandName: string;
   execute: (
     vimState?: VimStateClass,
-    commandValue?: string
+    commandValue?: unknown
   ) => VimStateClass | void;
 }
 

@@ -13,7 +13,7 @@ export class VisualMode extends AbstractMode {
 
   async executeCommand(
     commandName: VIM_COMMAND,
-    commandValue: string
+    commandValue: unknown
   ): Promise<VimStateClass> {
     const newVimState = await super.executeCommand(
       commandName,
