@@ -2,7 +2,7 @@ import { CursorUtils } from '../../../src/modules/cursor/cursor-utils';
 import { Cursor } from '../../../src/modules/vim/vim-types';
 
 describe('CursorUtils', () => {
-  describe.only('isWithinLines', () => {
+  describe('isWithinLines', () => {
     const startCursor: Cursor = {
       col: 1,
       line: 1,
