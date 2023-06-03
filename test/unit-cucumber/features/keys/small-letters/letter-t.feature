@@ -1,3 +1,4 @@
+@included
 Feature: Letter t.
   Scenario Outline: t - toCharacterBefore - Start
     Given I activate Vim with the following input:
@@ -13,7 +14,6 @@ Feature: Letter t.
       | Input | Commands          | Lines | Columns |
       | t0    | toCharacterBefore | 0     | 0       |
 
-  # @focus
   Scenario Outline: t - toCharacterBefore - Middle
     Given I activate Vim with the following input:
       """

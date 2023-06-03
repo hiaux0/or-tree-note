@@ -23,6 +23,7 @@ export const commonVimSteps: StepDefinitions = ({ given, when }) => {
 
   given('I activate Vim with the following input:', (rawContent: string) => {
     const rawInput = rawContent.split('\n');
+    rawInput; /*?*/
     initialCursor = findCursor(rawInput);
 
     const input = cleanupRaw(rawInput).map((t) => ({ text: t }));
@@ -51,11 +52,11 @@ function findCursor(input: string[]): Cursor {
   input.forEach((line, index) => {
     const matchedCursor = matchCursor(line);
     if (matchedCursor === null) return;
-    if (cursorLine !== undefined && cursorColumn !== undefined) {
+    if (cursorLine && cursorColumn) {
       /* prettier-ignore */ logAlreadyFoundCursorError(cursorLine, cursorColumn, index, matchedCursor);
     }
 
-    /* prettier-ignore */
+    // eslint-disable-next-line no-useless-escape
     if (matchedCursor[0] === '|') {
       cursorColumn = matchedCursor.index - 1; // - 1 for \
     } else {

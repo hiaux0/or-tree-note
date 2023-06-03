@@ -1,3 +1,4 @@
+@included
 Feature: Letter i.
   Scenario: Start Normal - i
     Given I start Vim

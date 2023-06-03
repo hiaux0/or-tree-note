@@ -1,3 +1,4 @@
+@included
 Feature: Letter l.
   Background:
     Given I activate Vim with the following input:

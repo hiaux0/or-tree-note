@@ -1,5 +1,4 @@
 Feature: Letter T(capital).
-  # @focus
   Scenario Outline: T - toCharacterAfterBack - Middle
     Given I activate Vim with the following input:
       """

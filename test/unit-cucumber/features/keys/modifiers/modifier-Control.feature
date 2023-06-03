@@ -1,3 +1,4 @@
+@included
 Feature: Modifier Control.
   Scenario Outline: Control+] - Indent Right
     Given I activate Vim with the following input:

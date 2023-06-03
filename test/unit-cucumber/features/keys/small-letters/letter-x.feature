@@ -1,3 +1,4 @@
+@included
 Feature: Letter x.
   Scenario Outline: Delete Character.
     Given I activate Vim with the following input:

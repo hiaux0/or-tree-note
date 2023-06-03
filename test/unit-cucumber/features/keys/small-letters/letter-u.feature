@@ -1,3 +1,4 @@
+@included
 Feature: Letter u.
   Scenario Outline: Cursor down - Multi line.
     Given I activate Vim with the following input:

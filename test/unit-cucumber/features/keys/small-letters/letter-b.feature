@@ -1,3 +1,4 @@
+@included
 Feature: Letter b.
   Scenario Outline: Cursor left - Word - Start.
     Given I activate Vim with the following input:

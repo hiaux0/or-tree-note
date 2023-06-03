@@ -1,3 +1,4 @@
+@included
 Feature: Modifier Enter.
   Scenario Outline: New Line - Start of line
     Given I activate Vim with the following input:

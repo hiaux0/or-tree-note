@@ -1,3 +1,4 @@
+@included
 Feature: Letter k - complex.
   Background:
     Given I activate Vim with the following input:

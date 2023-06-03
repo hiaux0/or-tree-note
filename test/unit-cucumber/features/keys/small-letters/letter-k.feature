@@ -1,3 +1,4 @@
+@included
 Feature: Letter k.
   Scenario Outline: Cursor up - Multi line - First line.
     Given I activate Vim with the following input:

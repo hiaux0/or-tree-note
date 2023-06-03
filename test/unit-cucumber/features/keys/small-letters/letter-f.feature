@@ -1,3 +1,4 @@
+@included
 Feature: Letter f.
   Scenario Outline: f - toCharacterAt - Start
     Given I activate Vim with the following input:

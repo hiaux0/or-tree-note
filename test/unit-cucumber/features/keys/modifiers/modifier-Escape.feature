@@ -1,3 +1,4 @@
+@included
 Feature: Modifier Escape.
   Scenario: Start Insert - Escape
     Given I start Vim
