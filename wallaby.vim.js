@@ -16,6 +16,7 @@ module.exports = function (wallaby) {
       // 'test/unit/**/*.spec.ts',
       // 'test/unit/**/insert-mode.spec.ts',
       // 'test/unit/modules/cursor-utils.spec.ts',
+      'test/unit/vim/modes/abstract/paste.spec.ts',
     ],
 
     testFramework: 'jest',
