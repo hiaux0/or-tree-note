@@ -103,30 +103,49 @@ export class VimCore {
     /* prettier-ignore */ logger.culogger.debug(['targetCommandName: %s', targetCommandName], {}, (...r) => console.log(...r));
 
     let vimState: VimStateClass | undefined;
+
     // insert
-    if (targetCommandName === VIM_COMMAND['enterInsertMode']) {
-      vimState = this.vimCommandManager.enterInsertMode();
-    } else if (targetCommandName === VIM_COMMAND['createNewLine']) {
-      this.vimCommandManager.enterInsertMode();
-      vimState = await this.vimCommandManager.executeVimCommand(
-        targetCommandName,
-        input
-      );
-      // normal
-    } else if (targetCommandName === VIM_COMMAND['enterNormalMode']) {
-      vimState = this.vimCommandManager.enterNormalMode();
-      // visual
-    } else if (targetCommandName === VIM_COMMAND['enterVisualMode']) {
-      vimState = this.vimCommandManager.enterVisualMode();
-    } else if (targetCommandName === VIM_COMMAND['visualStartLineWise']) {
-      vimState = this.vimCommandManager.visualStartLineWise();
-    } else if (targetCommandName === VIM_COMMAND['newLine']) {
-      await this.queueInputSequence('u^'); // TODO: side effect? why works without assigning to `vimState`?
-    } else {
-      vimState = await this.vimCommandManager.executeVimCommand(
-        targetCommandName,
-        input
-      );
+    switch (targetCommandName) {
+      /** ****** */
+      /** Modes */
+      /** ****** */
+      case VIM_COMMAND['enterInsertMode']:
+        vimState = this.vimCommandManager.enterInsertMode();
+        break;
+      case VIM_COMMAND['createNewLine']:
+        this.vimCommandManager.enterInsertMode();
+        vimState = await this.vimCommandManager.executeVimCommand(
+          targetCommandName,
+          input
+        );
+        // normal
+        break;
+      case VIM_COMMAND['enterNormalMode']:
+        vimState = this.vimCommandManager.enterNormalMode();
+        // visual
+        break;
+      case VIM_COMMAND['enterVisualMode']:
+        vimState = this.vimCommandManager.enterVisualMode();
+        break;
+      case VIM_COMMAND['visualStartLineWise']:
+        vimState = this.vimCommandManager.visualStartLineWise();
+        break;
+
+      /** ******** */
+      /** Commands */
+      /** ******** */
+      case VIM_COMMAND['newLine']:
+        await this.queueInputSequence('u^'); // TODO: side effect? why works without assigning to `vimState`?
+        break;
+      /** ******* */
+      /** Default */
+      /** ******* */
+      default:
+        vimState = await this.vimCommandManager.executeVimCommand(
+          targetCommandName,
+          input
+        );
+        break;
     }
 
     //
