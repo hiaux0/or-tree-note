@@ -36,6 +36,9 @@ export class NormalMode extends AbstractMode {
   }
 
   clearLine(): VimStateClass {
+    this.vimState.updateActiveLine('');
+    this.cursorLineEnd();
+
     return this.vimState;
   }
 }
