@@ -292,10 +292,13 @@ export abstract class AbstractMode {
     return this.vimState;
   }
   cursorBackwordsStartWord(): VimStateClass {
-    const tokenUnderCursor = this.getTokenUnderCursor(); /* ? */
+    let tokenUnderCursor: TokenizedString;
+    tokenUnderCursor = this.getTokenUnderCursor();
+    if (!tokenUnderCursor) {
+      tokenUnderCursor = this.getPreviousToken();
+    }
 
-    const isAtStart =
-      tokenUnderCursor?.start === this.vimState.cursor.col; /* ? */
+    const isAtStart = tokenUnderCursor?.start === this.vimState.cursor.col;
     const tokenNotUnderCursor = tokenUnderCursor === undefined;
 
     let resultCol: number;
@@ -550,12 +553,22 @@ export abstract class AbstractMode {
     const tokenizedInput = this.reTokenizeInput(
       this.vimState.getActiveLine().text
     );
-    const currentToken = this.getTokenUnderCursor();
-    const previousToken = tokenizedInput[currentToken.index - 1];
 
-    if (previousToken === undefined) {
-      return currentToken;
+    let previousIndex = 0;
+    const curCol = this.vimState.cursor.col;
+    for (let index = 0; index < tokenizedInput.length; index++) {
+      const token = tokenizedInput[index];
+      const previousToken = tokenizedInput[index - 1];
+      if (!previousToken) continue;
+
+      const isPrevious = curCol <= token.start && curCol >= previousToken.end;
+      if (!isPrevious) continue;
+
+      previousIndex = index - 1;
+      break;
     }
+    const previousToken = tokenizedInput[previousIndex];
+
     return previousToken;
   }
 
