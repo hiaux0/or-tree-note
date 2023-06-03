@@ -14,6 +14,7 @@ import {
   DELETE,
   ENTER,
   ESCAPE,
+  OS,
   SHIFT,
   SPACE,
   TAB,
@@ -21,14 +22,19 @@ import {
 
 export const Modifier = {
   '<Alt>': '<Alt>',
+  '<ArrowUp>': '<ArrowUp>',
+  '<ArrowDown>': '<ArrowDown>',
+  '<ArrowLeft>': '<ArrowLeft>',
+  '<ArrowRight>': '<ArrowRight>',
   '<Backspace>': '<Backspace>',
   '<Control>': '<Control>',
   '<Delete>': '<Delete>',
   '<Enter>': '<Enter>',
   '<Escape>': '<Escape>',
-  '<Meta>': '<Meta>',
+  '<OS>': '<OS>',
   '<Shift>': '<Shift>',
   '<Space>': '<Space>',
+  '<Tab>': '<Tab>',
 };
 
 const commandsAllModes: VimCommand[] = [
@@ -60,7 +66,6 @@ const cursorAllModes: VimCommand[] = [
 export const cursorNormalAndInsert: VimCommand[] = [
   { key: '<Control>]', command: 'indentRight' },
   { key: '<Control>[', command: 'indentLeft' },
-  { key: '<Control>v', command: 'paste' },
 ];
 
 const cursorNormalAndVisual: VimCommand[] = [
@@ -72,9 +77,13 @@ const cursorNormalAndVisual: VimCommand[] = [
   { key: 'u', command: 'cursorDown' },
   { key: 'w', command: 'cursorWordForwardStart' },
   { key: '<Shift>$', command: 'cursorLineEnd' },
+  { key: '$', command: 'cursorLineEnd' },
   { key: '<Shift>^', command: 'cursorLineStart' },
+  { key: '^', command: 'cursorLineStart' },
   { key: '<Shift>}', command: 'jumpNextBlock' },
+  { key: '}', command: 'jumpNextBlock' },
   { key: '<Shift>{', command: 'jumpPreviousBlock' },
+  { key: '{', command: 'jumpPreviousBlock' },
   ...commandsThatWaitForNextInput,
 ];
 
@@ -95,6 +104,7 @@ const keyBindings: KeyBindingModes = {
     { key: 'za', command: 'toggleFold' },
     { key: 'gh', command: 'hint' },
     { key: '<Control>s', command: 'save' },
+    { key: '<Control>v', command: 'paste' },
     { key: '<Enter>', command: 'newLine' },
     { key: '<Backspace>', command: 'backspace' },
     { key: '<Meta>', command: 'nothing' },
@@ -169,6 +179,9 @@ export function isEnter(newInput: string) {
 }
 export function isEscape(newInput: string) {
   return newInput === ESCAPE || newInput === Modifier['<Escape>'];
+}
+export function isOs(newInput: string) {
+  return newInput === OS || newInput === Modifier['<OS>'];
 }
 export function isShift(newInput: string) {
   return newInput === SHIFT || newInput === Modifier['<Shift>'];

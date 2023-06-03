@@ -1,5 +1,4 @@
-import { inject } from 'aurelia-dependency-injection';
-import { Vim } from 'modules/vim/vim';
+import { VimCore } from 'modules/vim/vim-core';
 import { VimExecutingMode, VimPlugin } from 'modules/vim/vim-types';
 
 import { VimEditorTextMode } from './modes/vim-editor-text-mode';
@@ -26,7 +25,7 @@ export interface VimEditorOptions {
 // const defaultVimEditorOptions: VimEditorOptions = { isTextMode: true, };
 
 export class VimEditor {
-  vim: Vim;
+  vim: VimCore;
 
   constructor(
     public vimEditorOptions: VimEditorOptions,
@@ -34,8 +33,7 @@ export class VimEditor {
   ) {
     if (this.vimEditorOptions.isTextMode === true) {
       vimEditorTextMode.setupElementMode();
-      vimEditorTextMode.initVim();
-      vimEditorTextMode.initKeys();
+      vimEditorTextMode.init();
       this.vim = vimEditorTextMode.getVim();
     }
 

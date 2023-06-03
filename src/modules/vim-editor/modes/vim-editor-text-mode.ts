@@ -3,8 +3,11 @@ import { connectTo, StateHistory, Store } from 'aurelia-store';
 import { isMac } from 'common/platform/platform-check';
 import { getRandomId } from 'common/random';
 import hotkeys from 'hotkeys-js';
+import { CursorUtils } from 'modules/cursor/cursor-utils';
 import { Logger } from 'modules/debug/logger';
-import { Vim } from 'modules/vim/vim';
+import { DomService } from 'modules/DomService';
+import { SelectionService } from 'modules/SelectionService';
+import { VimCore } from 'modules/vim/vim-core';
 import {
   Cursor,
   EMPTY_VIM_LINE,
@@ -13,6 +16,7 @@ import {
 } from 'modules/vim/vim-types';
 import {
   ALL_MODIFIERS,
+  ESCAPE,
   ModifiersType,
   SPACE,
 } from 'resources/keybindings/app-keys';
@@ -46,7 +50,7 @@ const logger = new Logger({ scope: 'VimEditorTextMode' });
 export class VimEditorTextMode {
   childrenElementList: NodeListOf<HTMLElement>;
   elementText: VimLine[] = [EMPTY_VIM_LINE];
-  vim: Vim;
+  vim: VimCore;
 
   private activeEditorIds: EditorIds;
 
@@ -148,7 +152,7 @@ export class VimEditorTextMode {
           }
         });
 
-        this.vim = new Vim(initLines, shouldCursor, {
+        this.vim = new VimCore(initLines, shouldCursor, {
           vimPlugins: this.vimEditorOptions.plugins,
         });
 
@@ -162,6 +166,8 @@ export class VimEditorTextMode {
     const hardReload = ev.key === 'R' && mainModifier && ev.shiftKey;
     if (reload || hardReload) {
       return true;
+    } else if (ev.key === 'l' && mainModifier) {
+      return true;
     } else if (ev.key === 'C' && mainModifier && ev.shiftKey) {
       return true;
     } else if (ev.key === '=' && mainModifier) {
@@ -170,48 +176,162 @@ export class VimEditorTextMode {
       return true;
     }
 
-    ev.preventDefault();
     return false;
   }
 
-  public initKeys() {
-    hotkeys('*', (ev) => {
-      if (!this.activeEditorIds.includes(this.vimEditorOptions.id)) return;
-      console.clear();
+  public init() {
+    this.initVim();
+    this.initListeners();
+  }
 
-      if (this.checkAllowedBrowserShortcuts(ev)) {
-        return;
-      }
+  public initListeners() {
+    this.initMouse();
+    this.initKeys();
+  }
 
-      let pressedKey: string;
-      if (ev.code === SPACE) {
-        pressedKey = ev.code;
-      } else {
-        pressedKey = ev.key;
-      }
+  public initMouse() {
+    const container = this.vimEditorOptions.parentHtmlElement;
+    container.addEventListener('click', () => {
+      const range = SelectionService.getSingleRange();
+      const col = range.startOffset;
+      const line = getLineIndex(range.startContainer);
 
-      const modifiersText = `${ev.ctrlKey ? 'Ctrl+' : ''}${
-        ev.shiftKey ? 'Shift+' : ''
-      }${ev.altKey ? 'Alt+' : ''}${ev.metaKey ? 'Meta+' : ''}`;
-      // /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: vim-editor-text-mode.ts ~ line 133 ~ ev.key', ev.key);
-      /* prettier-ignore */ logger.debug(['-------------- Key pressed: (%s) %s', modifiersText, ev.key ?? pressedKey], { log: true, isOnlyGroup: true, });
+      CursorUtils.updateCursor(this.vim.vimState, {
+        line,
+        col,
+      });
 
-      const collectedModifiers = [];
-      if (ev.ctrlKey) {
-        collectedModifiers.push(Modifier['<Control>']);
-      }
-      if (ev.shiftKey) {
-        collectedModifiers.push(Modifier['<Shift>']);
-      }
-      if (ev.altKey) {
-        collectedModifiers.push(Modifier['<Alt>']);
-      }
-      if (ev.metaKey) {
-        collectedModifiers.push(Modifier['<Meta>']);
-      }
-
-      void this.executeCommandInEditor(pressedKey, ev, collectedModifiers);
+      void this.store.dispatch(
+        changeVimState,
+        this.vimEditorOptions.id,
+        this.vim.vimState
+      );
     });
+
+    function getLineIndex(startContainer: Node): number {
+      const $children = Array.from(container.children);
+      const positionIndex = $children.indexOf(startContainer.parentElement);
+      return positionIndex;
+    }
+  }
+
+  public initKeys() {
+    this.vimEditorOptions.parentHtmlElement.addEventListener(
+      'keydown',
+      (e) => void this.handleInsert(e)
+    );
+    hotkeys('*', (ev) => this.handleNonInsert(ev));
+  }
+
+  private handleInsert(ev: KeyboardEvent) {
+    if (!this.activeEditorIds.includes(this.vimEditorOptions.id)) return;
+
+    if (this.checkAllowedBrowserShortcuts(ev)) {
+      return;
+    }
+
+    let pressedKey: string;
+    if (ev.code === SPACE) {
+      pressedKey = ev.code;
+    } else {
+      pressedKey = ev.key;
+    }
+
+    if (pressedKey === ESCAPE) {
+      this.vim.enterNormalMode();
+      this.vimEditorOptions.parentHtmlElement.blur();
+      return;
+    }
+
+    void this.executeCommandInEditor(pressedKey, ev, []);
+  }
+
+  private handleNonInsert(ev: KeyboardEvent) {
+    if (!this.activeEditorIds.includes(this.vimEditorOptions.id)) return;
+
+    if (this.checkAllowedBrowserShortcuts(ev)) {
+      return;
+    }
+
+    let pressedKey: string;
+    if (ev.code === SPACE) {
+      pressedKey = ev.code;
+    } else {
+      pressedKey = ev.key;
+    }
+
+    /**
+     * TODO: want to switch to contenteditable fields to allow vn input
+     * for now, disble insert mode (only allow ESC)
+     */
+    if (this.vim.getCurrentMode().currentMode === VimMode.INSERT) {
+      // allow esc to enter insert
+      if (pressedKey !== ESCAPE) return;
+    }
+
+    // console.clear();
+    // ev.preventDefault();
+
+    if (pressedKey === 'i') {
+      void this.executeCommandInEditor(pressedKey, ev, []);
+      return;
+    }
+
+    const modifiersText = `${ev.ctrlKey ? 'Ctrl+' : ''}${
+      ev.shiftKey ? 'Shift+' : ''
+    }${ev.altKey ? 'Alt+' : ''}${ev.metaKey ? 'Meta+' : ''}`;
+    // /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: vim-editor-text-mode.ts ~ line 133 ~ ev.key', ev.key);
+    /* prettier-ignore */ logger.debug(['-------------- Key pressed: (%s) %s', modifiersText, ev.key ?? pressedKey], { log: true, isOnlyGroup: true, });
+
+    const collectedModifiers = [];
+    if (ev.ctrlKey) {
+      collectedModifiers.push(Modifier['<Control>']);
+    }
+    if (ev.shiftKey) {
+      collectedModifiers.push(Modifier['<Shift>']);
+    }
+    if (ev.altKey) {
+      collectedModifiers.push(Modifier['<Alt>']);
+    }
+    if (ev.metaKey) {
+      collectedModifiers.push(Modifier['<Meta>']);
+    }
+
+    void this.executeCommandInEditor(pressedKey, ev, collectedModifiers);
+  }
+
+  public setSelectionCursorToVimCursor() {
+    window.setTimeout(() => {
+      const $children = Array.from(
+        this.vimEditorOptions.parentHtmlElement.children
+      );
+      const childIndex = this.vim.vimState.cursor.line;
+      const targetChild = $children[childIndex];
+      /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: vim-editor-text-mode.ts ~ line 340 ~ targetChild', targetChild);
+
+      const textNode = this.getTextNodeOrThrow(targetChild);
+      const range = SelectionService.createRange(
+        textNode,
+        this.vim.vimState.cursor
+      );
+      /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: vim-editor-text-mode.ts ~ line 327 ~ range', range);
+      this.vimEditorOptions.parentHtmlElement.contentEditable = 'true';
+      this.vimEditorOptions.parentHtmlElement.focus();
+      SelectionService.setSingleRange(range);
+    }, 0);
+  }
+
+  private getTextNodeOrThrow(element: Element) {
+    if (element.childNodes.length > 1) {
+      throw new Error('unsupported: should only have one child');
+    }
+
+    const node = Array.from(element.childNodes)[0];
+    if (!DomService.isTextNode(node)) {
+      throw new Error('unsupported: should by TextNode');
+    }
+
+    return node;
   }
 
   isModifierKey(input: string): input is ModifiersType {
@@ -221,7 +341,7 @@ export class VimEditorTextMode {
 
   async executeCommandInEditor(
     input: string,
-    ev: KeyboardEvent,
+    _ev: KeyboardEvent,
     modifiers: string[]
   ) {
     //
@@ -237,7 +357,7 @@ export class VimEditorTextMode {
     const currentMode = this.getCurrentTextMode();
     if (currentMode[result?.targetCommand]) {
       await currentMode[result.targetCommand](result.vimState);
-      ev.preventDefault();
+      // ev.preventDefault();
     } else {
       logger.debug([
         `The mode ${this.vim.getCurrentMode().currentMode} has no command ${

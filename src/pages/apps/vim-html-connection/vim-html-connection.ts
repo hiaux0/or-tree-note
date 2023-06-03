@@ -36,7 +36,7 @@ export class VimHtmlConnection {
        * 1. Set mode
        * 2. Movement mode
        */
-      modeChanged: (mode) => {
+      modeChanged: (_, mode) => {
         switch (mode) {
           case VimMode.NORMAL:
             this.isMoveMode = false;

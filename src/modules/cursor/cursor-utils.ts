@@ -1,3 +1,4 @@
+import { VimStateClass } from 'modules/vim/vim-state';
 import { Cursor } from 'modules/vim/vim-types';
 
 export class CursorUtils {
@@ -43,5 +44,15 @@ export class CursorUtils {
     if (notAfterEnd) return false;
 
     return true;
+  }
+
+  static updateCursor(
+    vimState: VimStateClass,
+    newCursor: Partial<Cursor>
+  ): void {
+    vimState.cursor = {
+      ...vimState.cursor,
+      ...newCursor,
+    };
   }
 }

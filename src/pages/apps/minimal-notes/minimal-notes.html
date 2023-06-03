@@ -1,0 +1,37 @@
+<template>
+  <div class="notesComponentContainer">
+    <div class="container mode-${vimState.mode}">
+      <div
+        ref="inputContainerRef"
+        class="inputContainer"
+        contenteditable.bind="contenteditable"
+      >
+        <template repeat.for="line of vimState.lines">
+          <div highlight class="inputLine">${line.text}</div>
+        </template>
+      </div>
+      <div
+        id="caret"
+        ref="caretRef"
+        class="caret-${currentModeName} caret-blinking"
+      ></div>
+    </div>
+    <div class="debugContainer">
+      <div style="text-decoration: underline">
+        Debug mode (${vimState.mode})</div
+      >
+      <div>
+        <strong>Cursor</strong>
+        L: ${vimState.cursor.line} - C: ${vimState.cursor.col}
+      </div>
+      <div>
+        <strong>Text:</strong>
+        ${vimState.lines[vimState.cursor.line].text}</div
+      >
+      <div>
+        <strong># of lines: </strong>
+        ${vimState.lines.length}
+      </div>
+    </div>
+  </div>
+</template>

@@ -1,6 +1,13 @@
 import { getRandomId } from 'common/random';
+import { ISnippet } from 'resources/keybindings/snippets/snippets';
 
-import { VimCommand, SynonymKey, VIM_COMMAND } from './vim-commands-repository';
+import {
+  VimCommand,
+  SynonymKey,
+  VIM_COMMAND,
+  VimCommandNames,
+} from './vim-commands-repository';
+import { VimCore } from './vim-core';
 import { VimStateClass } from './vim-state';
 
 export interface KeyBindingModes {
@@ -54,15 +61,18 @@ export type VimStateV2 = {
   visualStartCursor?: Cursor;
   visualEndCursor?: Cursor;
   deletedLinesIndeces?: number[];
-  commandName?: string;
+  commandName?: VimCommandNames;
+  snippet?: ISnippet;
 };
 
 export interface QueueInputReturn {
   vimState: VimStateClass | null;
   targetCommand: VIM_COMMAND;
-  lines: VimLine[];
 }
 
+/**
+ * 0 based index
+ */
 export interface Cursor {
   col: number;
   line: number;
@@ -88,4 +98,38 @@ export interface VimPlugin {
     vimState?: VimStateClass,
     commandValue?: string
   ) => VimStateClass | void;
+}
+
+export interface InputData {
+  pressedKey: string;
+  ev: KeyboardEvent;
+  modifiersText: string;
+}
+
+export type CommandListener = (
+  vimResults: QueueInputReturn,
+  inputData: InputData,
+  vim: VimCore
+) => void;
+export type ModeChanged = (
+  vimResults: QueueInputReturn,
+  newMode: VimMode,
+  oldMode: VimMode,
+  vim: VimCore
+) => void;
+
+export interface VimEditorOptionsV2 {
+  startCursor?: Cursor;
+  startLines?: VimLine[];
+  container?: HTMLElement;
+  caret?: HTMLElement;
+  childSelector?: string;
+  removeTrailingWhitespace?: boolean;
+  plugins?: VimPlugin[];
+  afterInit?: (
+    vim: VimCore
+  ) => QueueInputReturn[] | Promise<QueueInputReturn[]> | void;
+  commandListener: CommandListener;
+  modeChanged?: ModeChanged;
+  onCompositionUpdate?: (vim: VimCore, event: Event) => void;
 }

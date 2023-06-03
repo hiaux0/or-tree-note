@@ -9,7 +9,10 @@ type LogLevel = 'INFO' | 'DEBUG' | 'VERBOSE' | 'WARNING' | 'ERROR';
 export interface LogOptions {
   /// //////////// Log
   disableLogger?: boolean;
-  logMethod?: 'log' | 'trace' | 'error' | 'group' | 'groupEnd';
+  /**
+   * Todo: Remove this for explicit methods
+   * Reason: quokka output
+   */
   log?: boolean;
   logLevel?: LogLevel;
   onlyVerbose?: boolean;
@@ -48,9 +51,8 @@ export interface LogOptions {
 }
 
 let defautLogOptions: LogOptions = {
-  logMethod: 'log',
   logLevel: 'VERBOSE',
-  clearPreviousGroupsWhen_isOnlyGroup_True: false,
+  clearPreviousGroupsWhen_isOnlyGroup_True: true,
   // dontLogUnlessSpecified: true,
   focusedLogging: false,
   useTable: true,
@@ -89,7 +91,7 @@ let onlyGroup: string[] = [];
 let bugGroupId: string[] = [];
 
 export class Logger {
-  private readonly logTrail: any[] = [];
+  private readonly logTrail: unknown[] = [];
   public getLogTrail() {
     return this.logTrail;
   }
@@ -116,11 +118,21 @@ export class Logger {
 
   public enableBrowserDevelopmentLogging(): void {
     if (window) {
-      (<any>window).loggerDevelopmentDebugLog = loggerDevelopmentDebugLog;
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      (window as unknown).loggerDevelopmentDebugLog = loggerDevelopmentDebugLog;
     }
   }
 
-  public debug(messages: [string, ...any[]], logOptions?: LogOptions): any[] {
+  /**
+   * 1. Setup
+   * 2. ">>> Actual Log"
+   */
+  public debug(
+    messages: [string, ...unknown[]],
+    logOptions?: LogOptions,
+    callback?: (...message: unknown[]) => void
+  ): unknown[] {
     if (!debugMode) return;
 
     const logOpt = {
@@ -144,8 +156,9 @@ export class Logger {
     }
 
     //
-    let [withSubstitutions, ...placeholderValues] = messages;
-    let updatedSubstitutions = `[${logOpt.scope}] ${withSubstitutions}`;
+    const [withSubstitutions] = messages;
+    let [, ...placeholderValues] = messages;
+    let updatedSubstitutions = `[${logOpt.scope ?? ''}] ${withSubstitutions}`;
 
     if (logOpt.prefix) {
       updatedSubstitutions = `- (${logOpt.prefix}.) - ${updatedSubstitutions}`;
@@ -158,7 +171,10 @@ export class Logger {
       );
     }
 
-    const messageWithLogScope = [updatedSubstitutions, ...placeholderValues];
+    const messageWithLogScope = [
+      updatedSubstitutions,
+      ...placeholderValues,
+    ] as string[];
 
     //
     if (logOpt.throwOnError && logOpt.isError) {
@@ -166,7 +182,7 @@ export class Logger {
        * We console.error AND throw, because we want to keep the formatting of the console.**
        */
       console.error(...messageWithLogScope);
-      throw '!!! [[ERROR]] Check above message !!!';
+      throw new Error('!!! [[ERROR]] Check above message !!!');
     }
 
     if (logOpt.logLevel !== 'VERBOSE' && logOpt.onlyVerbose) {
@@ -202,12 +218,12 @@ export class Logger {
         if (isExpandGroupBasedOnString) {
           console.group();
         } else {
-          console[logOpt.logMethod](...messageWithLogScope);
+          console.log(...messageWithLogScope);
           console.groupCollapsed();
         }
         //
       } else {
-        console[logOpt.logMethod](...messageWithLogScope);
+        console.log(...messageWithLogScope);
         console.group();
       }
       groupId.push(logOpt.startGroupId);
@@ -233,9 +249,13 @@ export class Logger {
       }
     }
     // >>> Actual log
-    console[logOpt.logMethod](...messageWithLogScope);
+    if (callback) {
+      callback(...messageWithLogScope);
+    } else {
+      console.log(...messageWithLogScope);
+    }
     this.logTrail.push(messageWithLogScope);
-    loggerDevelopmentDebugLog.push([logOpt.logMethod, ...messageWithLogScope]);
+    loggerDevelopmentDebugLog.push(['log', ...messageWithLogScope]);
 
     if (logOpt.endGroupId !== undefined && logOpt.endGroupId === groupId[0]) {
       console.groupEnd();
@@ -284,21 +304,38 @@ export class Logger {
 
     //
     if (logOptions.debugger) {
+      // eslint-disable-next-line no-debugger
       debugger;
     }
 
     return finalMessage;
   }
 
-  public todo(message: string): string {
+  public todo(
+    message: string,
+    callback?: (...message: unknown[]) => void
+  ): string {
     const todoMessage = `>>>> [TODO]: %c${message}`;
-    console.log(todoMessage, `background: ${'darkgreen'}`);
+    const finalMsg = [todoMessage, `background: ${'darkgreen'}`];
+
+    if (callback) {
+      callback(...finalMsg);
+    } else {
+      console.log(...finalMsg);
+    }
 
     return todoMessage;
   }
 }
 
 export const logger = new Logger(defautLogOptions);
+
+// export const testLogger = new Logger({
+//   scope: 'Test',
+//   // log: false,
+// });
+// testLogger.debug(['first']);
+// testLogger.debug(['another'], { log: true });
 
 /**
  * - [x?] Throw on first error

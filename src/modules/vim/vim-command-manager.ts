@@ -15,6 +15,7 @@ import {
   isDelete,
   isEnter,
   isEscape,
+  isOs,
   isShift,
   isSpace,
   isTab,
@@ -24,12 +25,12 @@ import { InsertMode } from './modes/insert-mode';
 import { NormalMode } from './modes/normal-mode';
 import { VisualLineMode } from './modes/visual-line-mode';
 import { VisualMode } from './modes/visual-mode';
-import { defaultVimOptions } from './vim';
 import {
   VimCommandNames,
   VimCommand,
   VIM_COMMAND,
 } from './vim-commands-repository';
+import { defaultVimOptions } from './vim-core';
 import { VimStateClass } from './vim-state';
 import {
   FindPotentialCommandReturn as PotentialCommandReturn,
@@ -39,10 +40,7 @@ import {
   VimOptions,
 } from './vim-types';
 
-const logger = new Logger('VimCommandManager', {
-  log: true,
-  disableLogger: false,
-});
+const logger = new Logger('VimCommandManager');
 
 /**
  * I know about the "manager" naming, but `VimCommand` interface also makes sense
@@ -82,19 +80,20 @@ export class VimCommandManager {
   /** *******/
 
   enterInsertMode() {
-    logger.culogger.debug(['Enter Insert mode']);
+    /* prettier-ignore */ logger.culogger.debug(['Enter Insert mode'], {}, (...r) => console.log(...r));
     this.activeMode = VimMode.INSERT;
     this.insertMode.reTokenizeInput(this.vimState?.getActiveLine().text);
     this.vimState.mode = VimMode.INSERT;
     return this.vimState;
   }
   enterNormalMode() {
-    logger.culogger.debug(['Enter Normal mode']);
+    logger.culogger.debug(['Enter Normal mode'], {}, (...r) =>
+      console.log(...r)
+    );
 
     const beforeMode = this.activeMode;
     if (beforeMode === VimMode.INSERT) {
-      this.vimState.vimState.cursor.col =
-        this.normalMode.cursorLeft().cursor.col;
+      this.vimState.cursor.col = this.normalMode.cursorLeft().cursor.col;
     }
 
     this.activeMode = VimMode.NORMAL;
@@ -109,7 +108,9 @@ export class VimCommandManager {
     return this.vimState;
   }
   enterVisualMode() {
-    logger.culogger.debug(['Enter Visual mode']);
+    logger.culogger.debug(['Enter Visual mode'], {}, (...r) =>
+      console.log(...r)
+    );
     this.activeMode = VimMode.VISUAL;
     this.vimState.visualStartCursor = {
       col: this.vimState.cursor.col,
@@ -124,7 +125,9 @@ export class VimCommandManager {
     return this.vimState;
   }
   visualStartLineWise() {
-    logger.culogger.debug(['Enter Visual Line mode']);
+    logger.culogger.debug(['Enter Visual Line mode'], {}, (...r) =>
+      console.log(...r)
+    );
     this.activeMode = VimMode.VISUALLINE;
     this.vimState.visualStartCursor = {
       col: 0,
@@ -166,7 +169,11 @@ export class VimCommandManager {
         commandInput
       );
       if (vimState !== undefined) {
-        vimState.commandName = commandName;
+        if (vimState.snippet) {
+          vimState.commandName = VIM_COMMAND.snippet;
+        } else {
+          vimState.commandName = commandName;
+        }
       }
 
       return vimState;
@@ -218,7 +225,7 @@ export class VimCommandManager {
 
     //
     input = this.ensureVimModifier(input);
-    /* prettier-ignore */ logger.culogger.debug(['Finding potential command for: ', input], {log: true});
+    /* prettier-ignore */ logger.culogger.debug(['Finding potential command for: ', input], {}, (...r) => console.log(...r));
     let keySequence: string = '';
     if (this.queuedKeys.length) {
       keySequence = this.queuedKeys.join('').concat(input);
@@ -235,7 +242,7 @@ export class VimCommandManager {
     } else {
       keySequence = input;
     }
-    /* prettier-ignore */ logger.culogger.debug(['keySequence: %s', keySequence], { log: true});
+    /* prettier-ignore */ logger.culogger.debug(['keySequence: %s', keySequence], {}, (...r) => console.log(...r));
 
     const potentialCommands = targetKeyBinding.filter((keyBinding) => {
       // if (ignoreCaseForModifiers(keyBinding.key, keySequence)) {
@@ -245,7 +252,7 @@ export class VimCommandManager {
       return result;
     });
 
-    /* prettier-ignore */ logger.culogger.debug(['potentialCommands: %o', potentialCommands], { log: true});
+    /* prettier-ignore */ logger.culogger.debug(['potentialCommands: %o', potentialCommands], {}, (...r) => console.log(...r));
 
     let targetCommand;
     if (potentialCommands.length === 0) {
@@ -295,14 +302,13 @@ export class VimCommandManager {
         ));
       }
     } catch (error) {
-      logger.culogger.debug(['Error: %s', error], { onlyVerbose: true });
+      /* prettier-ignore */ logger.culogger.debug(['Error: %s', error], { onlyVerbose: true }, (...r) => console.log(...r));
       // throw error;
     }
 
     //
     if (!targetCommand) {
       if (this.isInsertMode()) {
-        /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: vim-command-manager.ts ~ line 337 ~ input', input);
         if (isAlt(input)) {
           return; // todo
         } else if (isArrowUp(input)) {
@@ -323,6 +329,8 @@ export class VimCommandManager {
           return VIM_COMMAND.newLine;
         } else if (isEscape(input)) {
           return VIM_COMMAND.enterNormalMode;
+        } else if (isOs(input)) {
+          return;
         } else if (isShift(input)) {
           return; // todo
         } else if (isSpace(input)) {
@@ -334,20 +342,20 @@ export class VimCommandManager {
           return VIM_COMMAND[targetCommand.command];
         }
 
-        /* prettier-ignore */ logger.culogger.debug(['Default to the command: type in Insert Mode'], { log: true, });
+        /* prettier-ignore */ logger.culogger.debug(['Default to the command: type in Insert Mode'], {}, (...r) => console.log(...r));
         return VIM_COMMAND.type;
       }
 
       if (potentialCommands?.length) {
-        /* prettier-ignore */ logger.culogger.debug(['Awaiting potential commands: %o', potentialCommands], {log: false});
+        /* prettier-ignore */ logger.culogger.debug(['Awaiting potential commands: %o', potentialCommands], {}, (...r) => console.log(...r));
       } else {
-        /* prettier-ignore */ logger.culogger.debug([ 'No command for key: %s in Mode: %s ((vim.ts-getCommandName))', input, this.activeMode, ], { isError: true, log: true });
+        /* prettier-ignore */ logger.culogger.debug([ 'No command for key: %s in Mode: %s ((vim.ts-getCommandName))', input, this.activeMode, ], { isError: true }, (...r) => console.log(...r));
       }
 
       return;
     }
 
-    logger.culogger.debug(['Command: %s', targetCommand.command]);
+    /* prettier-ignore */ logger.culogger.debug(['Command: %s', targetCommand.command], {}, (...r) => console.log(...r));
 
     //
     return targetCommand.command;
@@ -367,12 +375,7 @@ export class VimCommandManager {
     if (SPECIAL_KEYS.includes(input)) {
       const asVimModifier = `<${input}>`;
 
-      logger.culogger.debug(
-        ['Converted to vim modifier key: %s', asVimModifier],
-        {
-          onlyVerbose: true,
-        }
-      );
+      /* prettier-ignore */ logger.culogger.debug(['Converted to vim modifier key: %s', asVimModifier], { onlyVerbose: true, }, (...r) => console.log(...r));
       return asVimModifier;
     }
     return input;
@@ -382,7 +385,11 @@ export class VimCommandManager {
     const synonymInput = this.keyBindings.synonyms[input.toLowerCase()];
 
     if (synonymInput) {
-      logger.culogger.debug(['Found synonym: %s for %s', synonymInput, input]);
+      logger.culogger.debug(
+        ['Found synonym: %s for %s', synonymInput, input],
+        {},
+        (...r) => console.log(...r)
+      );
       return synonymInput;
     } else {
       return input;
@@ -439,7 +446,6 @@ export class VimCommandManager {
 
   /** TODO: newline bug */
   newLine(): VimStateClass {
-    this.vimState; /* ? */
     const { cursor } = this.vimState;
     const text = this.vimState.getActiveLine().text;
     const currentLineIndex = cursor.line;
@@ -454,7 +460,6 @@ export class VimCommandManager {
     const updatedLines = [...this.vimState.lines];
     // updatedLines; /* ? */
     updatedLines.splice(newLineIndex, 0, { text: newLineText });
-    updatedLines; /* ? */
     // updatedLines; /* ? */
     currentMode.reTokenizeInput(newLineText);
     // this.vimState.lines; /* ? */
@@ -462,12 +467,10 @@ export class VimCommandManager {
     // this.vimState.lines; /* ? */
 
     this.vimState.lines = updatedLines;
-    this.vimState.lines; /* ? */
     this.vimState.cursor = {
       line: newLineIndex,
       col: 0,
     };
-    this.vimState.lines; /* ? */
 
     return this.vimState;
   }

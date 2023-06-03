@@ -30,6 +30,7 @@ export enum VIM_COMMAND {
   'paste' = 'paste',
   'redo' = 'redo',
   'replace' = 'replace',
+  'snippet' = 'snippet',
   'space' = 'space',
   'toCharacterAtBack' = 'toCharacterAtBack',
   'toCharacterAt' = 'toCharacterAt',
@@ -54,6 +55,7 @@ export const VIM_MODE_COMMANDS = [
   VIM_COMMAND['enterInsertMode'],
   VIM_COMMAND['enterNormalMode'],
   VIM_COMMAND['enterVisualMode'],
+  VIM_COMMAND['createNewLine'],
 ];
 
 export const VIM_COMMANDS = [

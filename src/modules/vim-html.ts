@@ -3,106 +3,96 @@ import hotkeys from 'hotkeys-js';
 import { SPACE } from 'resources/keybindings/app-keys';
 import { Modifier } from 'resources/keybindings/key-bindings';
 
-import { Vim } from './vim/vim';
-import { QueueInputReturn, Cursor, VimMode } from './vim/vim-types';
+import { VimCore } from './vim/vim-core';
+import { Cursor, VimEditorOptionsV2 } from './vim/vim-types';
 import { isModeChangeCommand } from './vim/vim-utils';
-
-export interface InputData {
-  pressedKey: string;
-  ev: KeyboardEvent;
-  modifiersText: string;
-}
-
-export type CommandListener = (
-  vimResults: QueueInputReturn,
-  inputData?: InputData
-) => void;
-export type ModeChanged = (newMode: VimMode) => void;
-
-export interface VimHtmlOptions {
-  commandListener: CommandListener;
-  modeChanged?: ModeChanged;
-  afterInit?: (
-    vim: Vim
-  ) => QueueInputReturn[] | Promise<QueueInputReturn[]> | void;
-}
 
 /**
  * Make Vim engine available for HTML usage
  */
-export async function initVimHtml(vimHtmlOptions: VimHtmlOptions) {
+export async function initVimHtml(vimHtmlOptions: VimEditorOptionsV2) {
   const startCursor: Cursor = { col: 0, line: 0 };
-  const vim = new Vim([{ text: '123' }, { text: 'abc' }], startCursor, {
+  const vim = new VimCore([{ text: '123' }, { text: 'abc' }], startCursor, {
     vimPlugins: [],
   });
+  vim.enterInsertMode();
   const { commandListener, modeChanged, afterInit } = vimHtmlOptions;
 
-  await initKeys();
+  await initKeys(vimHtmlOptions.container);
   if (afterInit) {
     const afterResults = await afterInit(vim);
 
     if (afterResults) {
       afterResults.forEach((result) => {
         if (isModeChangeCommand(result.targetCommand)) {
-          modeChanged(result.vimState.mode);
+          modeChanged(result, result.vimState.mode, undefined, vim);
         } else {
-          commandListener(result);
+          commandListener(result, undefined, vim);
         }
       });
     }
   }
 
-  async function initKeys() {
+  async function initKeys(container: HTMLElement) {
     /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: vim-html.ts ~ line 56 ~ initKeys');
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
-    hotkeys('*', async (ev) => {
-      /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: vim-html.ts ~ line 56 ~ ev', ev);
-      if (checkAllowedBrowserShortcuts(ev)) {
-        return;
-      }
+    hotkeys('*', handleKeys);
+    container.addEventListener('keydown', (e) => void handleKeys(e));
+  }
 
-      let pressedKey: string;
-      if (ev.code === SPACE) {
-        pressedKey = ev.code;
-      } else {
-        pressedKey = ev.key;
-      }
+  async function handleKeys(ev: KeyboardEvent) {
+    if (checkAllowedBrowserShortcuts(ev)) {
+      return;
+    }
 
-      let modifiers = '';
+    // console.clear();
+    // /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: vim-html.ts ~ line 56 ~ ev', ev);
 
-      const collectedModifiers = [];
-      if (ev.ctrlKey) {
-        modifiers += 'Ctrl+';
-        collectedModifiers.push(Modifier['<Control>']);
-      }
-      if (ev.shiftKey) {
-        modifiers += 'Shift+';
-        collectedModifiers.push(Modifier['<Shift>']);
-      }
-      if (ev.altKey) {
-        modifiers += 'Alt+';
-        collectedModifiers.push(Modifier['<Alt>']);
-      }
-      if (ev.metaKey) {
-        modifiers += 'Meta+';
-        collectedModifiers.push(Modifier['<Meta>']);
-      }
+    let pressedKey: string;
+    if (ev.code === SPACE) {
+      pressedKey = ev.code;
+    } else {
+      pressedKey = ev.key;
+    }
 
-      /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: vim-html.ts ~ line 73 ~ pressedKey', pressedKey);
-      const result = await executeCommandInEditor(
-        pressedKey,
-        ev,
-        collectedModifiers
+    let modifiers = '';
+
+    const collectedModifiers = [];
+    if (ev.ctrlKey) {
+      modifiers += 'Ctrl+';
+      collectedModifiers.push(Modifier['<Control>']);
+    }
+    if (ev.shiftKey) {
+      modifiers += 'Shift+';
+      collectedModifiers.push(Modifier['<Shift>']);
+    }
+    if (ev.altKey) {
+      modifiers += 'Alt+';
+      collectedModifiers.push(Modifier['<Alt>']);
+    }
+    if (ev.metaKey) {
+      modifiers += 'Meta+';
+      collectedModifiers.push(Modifier['<Meta>']);
+    }
+
+    /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: vim-html.ts ~ line 73 ~ pressedKey', pressedKey);
+    const result = await executeCommandInEditor(
+      pressedKey,
+      ev,
+      collectedModifiers
+    );
+    if (result == null) return;
+
+    if (isModeChangeCommand(result.targetCommand)) {
+      modeChanged(result, result.vimState.mode, undefined, vim);
+    } else {
+      commandListener(
+        result,
+        { pressedKey, ev, modifiersText: modifiers },
+        vim
       );
-      if (result == null) return;
-
-      if (isModeChangeCommand(result.targetCommand)) {
-        modeChanged(result.vimState.mode);
-      } else {
-        commandListener(result, { pressedKey, ev, modifiersText: modifiers });
-      }
-    });
+    }
   }
 
   /**
@@ -126,17 +116,17 @@ export async function initVimHtml(vimHtmlOptions: VimHtmlOptions) {
       return true;
     }
 
-    ev.preventDefault();
+    // ev.preventDefault();
     return false;
   }
 
   function executeCommandInEditor(
     input: string,
-    ev: KeyboardEvent,
+    _ev: KeyboardEvent,
     modifiers: string[]
   ) {
     const result = vim.queueInput(input, modifiers);
-    ev.preventDefault();
+    // ev.preventDefault();
 
     return result;
   }

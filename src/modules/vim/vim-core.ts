@@ -1,11 +1,10 @@
+import { Logger } from 'common/logging/logging';
 import { cloneDeep } from 'lodash';
-import { Logger } from 'modules/debug/logger';
 import { SPACE } from 'resources/keybindings/app-keys';
 import keyBindingsJson from 'resources/keybindings/key-bindings';
 
 import { VimCommandManager } from './vim-command-manager';
 import {
-  VimCommandNames,
   VIM_COMMAND,
   VIM_COMMANDS_THAT_CHANGE_TO_NORMAL_MODE,
 } from './vim-commands-repository';
@@ -19,7 +18,7 @@ import {
   VimLine,
 } from './vim-types';
 
-const logger = new Logger({ scope: 'Vim' });
+const logger = new Logger('VimCore');
 
 export class VimError extends Error {}
 
@@ -42,7 +41,12 @@ const defaultCursor = {
  * - the input
  * - the cursor location
  */
-export class Vim {
+export class VimCore {
+  /**
+   * TODO: remove state from the core?
+   *   Have class outised the core handle it
+   *   Idea: core just i/o
+   */
   public vimState: VimStateClass;
 
   private readonly vimCommandManager: VimCommandManager;
@@ -65,7 +69,7 @@ export class Vim {
       initialVimState,
       finalVimOptions
     );
-    this.vimState = this.vimCommandManager.vimState;
+    this.vimState = initialVimState;
 
     this.verifyValidCursorPosition();
   }
@@ -81,10 +85,9 @@ export class Vim {
     input: string,
     modifiers?: string[]
   ): Promise<QueueInputReturn | undefined> {
+    this.vimState.snippet = undefined;
     const modifiersText = `${modifiers?.join('+ ')}`;
-    logger.debug(['Received input: (%s) %s', modifiersText, input], {
-      log: true,
-    });
+    /* prettier-ignore */ logger.culogger.debug(['Received input: (%s) %s', modifiersText, input], {}, (...r) => console.log(...r));
 
     //
     let targetCommandName: VIM_COMMAND | undefined;
@@ -97,7 +100,7 @@ export class Vim {
       void 0;
     }
     if (!targetCommandName) return;
-    logger.debug(['targetCommandName: %s', targetCommandName], { log: true });
+    /* prettier-ignore */ logger.culogger.debug(['targetCommandName: %s', targetCommandName], {}, (...r) => console.log(...r));
 
     let vimState: VimStateClass | undefined;
     // insert
@@ -118,7 +121,7 @@ export class Vim {
     } else if (targetCommandName === VIM_COMMAND['visualStartLineWise']) {
       vimState = this.vimCommandManager.visualStartLineWise();
     } else if (targetCommandName === VIM_COMMAND['newLine']) {
-      vimState = this.vimCommandManager.newLine();
+      await this.queueInputSequence('u^'); // TODO: side effect? why works without assigning to `vimState`?
     } else {
       vimState = await this.vimCommandManager.executeVimCommand(
         targetCommandName,
@@ -139,9 +142,8 @@ export class Vim {
     const result: QueueInputReturn = {
       vimState: cloneDeep(vimState),
       targetCommand: targetCommandName,
-      lines: [...this.vimState.lines],
     };
-    logger.debug(['vimState: %o', vimState], { log: true });
+    /* prettier-ignore */ logger.culogger.debug(['vimState: %o', vimState], {}, (...r) => console.log(...r));
 
     /**
      * Hack? Need to reset deleted lines for every new command,
@@ -171,21 +173,14 @@ export class Vim {
 
     await Promise.all(
       givenInputSequence.map(async (input) => {
-        if (input === 'u') {
-          // input; /* ? */
-        }
         const subResult = await this.queueInput(input);
         if (subResult?.targetCommand !== undefined) {
-          if (input === 'u') {
-            // subResult; /* ? */
-          }
           resultList.push(subResult);
         }
       })
     );
 
     if (vimExecutingMode === VimExecutingMode.INDIVIDUAL) {
-      // resultList; /* ? */
       return resultList;
     }
 
@@ -248,9 +243,7 @@ export class Vim {
       throw new Error(`${errorMessage}\n${expected}\n${received}`);
     }
 
-    logger.debug(['Result of input: %s is: %o', input, queueInputReturn], {
-      onlyVerbose: true,
-    });
+    /* prettier-ignore */ logger.culogger.debug(['Result of input: %s is: %o', input, queueInputReturn], { onlyVerbose: true, }, (...r) => console.log(...r));
   }
 
   private handleCommandThatChangesMode(targetCommandName: string) {

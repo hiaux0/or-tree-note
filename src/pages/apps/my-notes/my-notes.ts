@@ -40,7 +40,7 @@ export class MyNotes {
   }
 
   private addEventListeners() {
-    this.toggleActiveEditors();
+    // this.toggleActiveEditors();
   }
 
   private toggleActiveEditors() {

@@ -1,10 +1,10 @@
 import { inject } from 'aurelia-dependency-injection';
-import { computedFrom, bindable } from 'aurelia-framework';
+import { computedFrom, bindable, containerless } from 'aurelia-framework';
 import { CSS_SELECTORS } from 'common/css-selectors';
 import { getCssVar } from 'modules/css/css-variables';
 import { CursorUtils } from 'modules/cursor/cursor-utils';
 // import { Logger } from 'modules/debug/logger';
-import { Cursor, FoldMap, VimLine } from 'modules/vim/vim-types';
+import { Cursor, FoldMap, VimLine, VimMode } from 'modules/vim/vim-types';
 import { EditorLine } from 'store/initial-state';
 
 import './note-line.scss';
@@ -12,11 +12,13 @@ import './note-line.scss';
 // const logger = new Logger({ scope: 'NoteLine' });
 
 @inject(Element)
+@containerless()
 export class NoteLine {
   private cachedStartCol: number;
   private cachedEndCol: number;
   private cachedLeft: string;
   private cachedWidth: string;
+  private readonly VimMode = VimMode;
 
   @bindable value = 'NoteLine';
 
@@ -31,6 +33,7 @@ export class NoteLine {
   @bindable lineHighlightStart: Cursor;
   @bindable lineHighlightEnd: Cursor;
   @bindable foldMap: FoldMap;
+  @bindable vimMode: VimMode;
 
   constructor(private readonly element: HTMLElement) {}
 

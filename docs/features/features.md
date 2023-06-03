@@ -7,6 +7,7 @@
     - [ ] after current
 
 - moving mode
+
   - v then m
   - [ ] move between containers
     - v, m, select target,
@@ -21,34 +22,59 @@
 
 - [ ] paste
   ```ts
-    document.addEventListener('paste', (event) => {
-        /* prettier-ignore */ console.log('TCL ~ file: vim-html-connection.ts ~ line 29 ~ VimHtmlConnection ~ document.addEventListener ~ event', event);
-        let paste = (
-          event.clipboardData || (window as any).clipboardData
-        ).getData('text');
-        /* prettier-ignore */ console.log('TCL ~ file: vim-html-connection.ts ~ line 30 ~ VimHtmlConnection ~ document.addEventListener ~ paste', paste);
-        paste = paste.toUpperCase();
-        const selection = window.getSelection();
-        if (!selection.rangeCount) return false;
-        selection.deleteFromDocument();
-        selection.getRangeAt(0).insertNode(document.createTextNode(paste));
-        event.preventDefault();
-      });
- ```
+  document.addEventListener('paste', (event) => {
+    /* prettier-ignore */ console.log('TCL ~ file: vim-html-connection.ts ~ line 29 ~ VimHtmlConnection ~ document.addEventListener ~ event', event);
+    let paste = (event.clipboardData || (window as any).clipboardData).getData(
+      'text'
+    );
+    /* prettier-ignore */ console.log('TCL ~ file: vim-html-connection.ts ~ line 30 ~ VimHtmlConnection ~ document.addEventListener ~ paste', paste);
+    paste = paste.toUpperCase();
+    const selection = window.getSelection();
+    if (!selection.rangeCount) return false;
+    selection.deleteFromDocument();
+    selection.getRangeAt(0).insertNode(document.createTextNode(paste));
+    event.preventDefault();
+  });
+  ```
 
-- Architecture
+# Architecture New
+
+- .
+  - VimCore/VimEngine
+    - Modes
+      - Normal
+      - Insert
+      - Visual
+      - VisualLine
+    - Cursor
+    - Lines
+    - Plugins
+    - Other Features
+  - VimUi
+    - Showing different Modes
+    - User Input
+      - Handle user input/events
+
+# Architecture Old
+
+- .
+
   - to easily hook into different modes
   - [ ] Support different "containers"
+
     - How?
+
       - Control via pure HTML
       - Control via Aurelia (`{id: string}`)
-      |         | pro                            | con          |
-      | ------- | ------------------------------ | ------------ |
-      | html    | Easily navigate to any element | CRUD harder? |
-      | Aurelia | Harder                         | Easier       |
+        | | pro | con |
+        | ------- | ------------------------------ | ------------ |
+        | html | Easily navigate to any element | CRUD harder? |
+        | Aurelia | Harder | Easier |
 
       CRUD
+
       - HTML: problem might be, when moving elments around, we would insert them via js-html methods
+
         - which might break other fncalities? (like enter vim text mode)
 
         - ! Might not be possible at all

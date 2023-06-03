@@ -1,40 +1,136 @@
 - [ ] [Normal]
 
-
 # Current
 
+- .
+  - [x] [r] replaced not reflected in UI (have to go to insert mode to see)
+  - [ ] fix testing
+
 # Feat
-  - [ ] [Editor] code highlighting
 
-# Code Enhancements
-  - [ ] `queueInputSequence` should support <ctrl> (additionally to <Control>)
-  - [ ] [snippets] cursor changing (`$1 $0`)
-  - [ ] [Editor] text replacements
-  - [ ] changeText should not execute 2 actions (1 changeText 2 changeVimState (the cursor to the right))
-    - could be part of a bigger refactor, where I want to compose the vim actions more
+- .
 
-# Refactoring
-  - [ ] input + modifiers (shift,t -> <Shift>t) as some service
+  - [ ] [testing] write about, why I'm not doing tdd anymore
+  - [ ] [debug] history to access state, so I can reproduce the issue
 
 # Bug
 - .
-  - [ ] enter in normal should not split text
+  ## Current
+  - [ ] [$] at start of empty line goes to -1
+
+  ## Backlog
   - [ ] [Normal] diw deletes the first word it encounters in the line
   - [ ][indent] ` |hello` Indenting too much, will put cursor out of bound on the left
-  - [ ][t]  not supporting going to upper case chars (because of queued shift)
+  - [ ][t] not supporting going to upper case chars (because of queued shift)
   - [ ][cc] does not clear line
+  - [ ] await this.queueInputSequence('u^'); // TODO: side effect? why works without assigning to `vimState`?
+
+  ## Done
+  - [x] [nor] 'o' on vim with only one line throws some error
+    - not repro
+  - [x] enter in normal should not split text
+    - should: next line, start of line (do, when chaining vim commands is easier?)
+      - --> queueInputSequence
+
+# Code Enhancements
+
+- .
+
+  - [ ] [paste] in insert, paste keeps formatting.. Want?
+  - [ ] allow caret and container option have selector (and not element itself)
+  - [ ] [modes] differentiate for <Esc>, if a mode change, or cancelling
+    - background, just thought, it might be helpful to differentiate
+  - [ ] `queueInputSequence` should support <ctrl> (additionally to <Control>)
+  - [ ] [snippets] cursor placeholder support (`$1 $0`)
+  - [ ] changeText should not execute 2 actions (1 changeText 2 changeVimState (the cursor to the right))
+    - could be part of a bigger refactor, where I want to compose the vim actions more
+  - [ ] show whitespace &zwnj;
+  - [ ] consider another code highlightin library
+    - https://github.com/shikijs/shiki
+  - [ ] undo/redo should not trigger on every keystroke
+    - eg. when I type "hello", and then undo, then the whole word "hello" should be undone, and not every char
+
+  ## Later
+
+  - .
+    - [ ] text replacements - WITH composition possiliibty (eg. ,a , cause a can become â)
+      - do when find annoying
+    - [ ] highilgiht on every keystroke (to register when I type eg. "#" as md header)
+      - later: need to do some children mutation observation (abstract-text-mode.ts)?
+
+# Refactoring
+
+- .
+
+  - [ ] input + modifiers (shift,t -> <Shift>t) as some service
+  - [ ] (vim-init.ts) vim-notes.ts should also use API similar to `initVim`
 
 # Refactor
 
-
 # Done
+
 - .
+
+  - [x] [Editor] text replacements
+  - [x] [Editor] code highlighting
+  - [x] Vn Input mode
+
+    ## Done
+
+    - [x] fix paste
+    - [x] text duped
+      - new line, esc
+      - bug: --> duped
+    - [x] snippets, for ",a", inserts the a here: () => {a}
+      - if snippet, preventdefault?
+      - bug in insert-mode.ts
+    - [x] multi line (not just first one)
+    - [x] show cursor and current text
+    - [x] saving
+    - [x] `Process` sometimes appears, and lets the cursor jump
+
+      - not consistently repoducible, have to type fast-ish
+
+    - [x] add cursor back
+    - [x] text replacements
+
+      - [x] cursor
+      - [x] show in output
+
+    - [x] "Process" and cursor col position --> use vim instance directly
+
+    - [x] rangy
+
+      - [x] get selection
+      - [x] restore selection NORML->INSE
+
+    - [x] contenteditable div
+
+      - [x] replacement should go back to input
+      - [x] text changes should go to vim
+
+      - [x] init
+      - [x] get input lines
+        - [x] how to transfer to VIM
+          - --> create vim-init.ts
+      - [x] put into vim
+
+      - [x] update cursor
+        - background: when I change the cursor inside cediv, the text gets added to the start position
+          - [x] get selection from browser
+          - [x] update inside vim
+            - ! consider method name: `setCursorInternally`
+              - one reason, for later undo redo, we may just want to change the state, without having to dispatch an action
+                - [ ] will then have to listen to text changes outside of the store
+      - [x] update text
+
   - [x][o] currently, only looks at word vs whitespace and symbols
     - --> should only whitespace
   - [x] [esc] from insert into normal should put cursor one back
   - [x] [Editor] text suggestions/snippets
+
   ```json
-		{ "before": [",", "a"], "commands": [{"command": "type", "args": {"text": "() => {}"}}]},
+  	{ "before": [",", "a"], "commands": [{"command": "type", "args": {"text": "() => {}"}}]},
   ```
 
   - [x] `initial-state.ts` remove `lines` in `VimEditorState`
@@ -59,10 +155,13 @@
     - [x] src/modules/vim/vim-command-manager.ts 379
 
 # Not possible
+
 - .
+
   - [x][--] add executing method, insteadof
     --> some issues around types and public method access of methods
     `await currentMode[result.targetCommand](result.vimState);`
+
     - with current approach, it is hard to understand where exactly methods of each modes are executed
 
   - [x][--] abstract-mode.ts - `toCharacterAtBack(commandInput: string): VimStateClass {` should be like
@@ -80,3 +179,7 @@
 
     Because, some methods have an input, some don't. I want to make it clearer, what is available
     The methods, I'm using like `this[myMethod](inputs...)`
+
+---
+
+cediv - contenteditable div

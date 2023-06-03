@@ -1,3 +1,7 @@
+import { Logger } from 'common/logging/logging';
+import { ISnippet } from 'resources/keybindings/snippets/snippets';
+
+import { VimCommandNames } from './vim-commands-repository';
 import {
   Cursor,
   EMPTY_VIM_LINE,
@@ -7,6 +11,8 @@ import {
   VimStateV2,
 } from './vim-types';
 
+const logger = new Logger('VimState');
+
 export class VimStateClass {
   cursor: Cursor;
   foldMap: FoldMap;
@@ -15,9 +21,10 @@ export class VimStateClass {
   visualStartCursor: Cursor;
   visualEndCursor: Cursor;
   deletedLinesIndeces: number[];
-  commandName: string;
+  commandName: VimCommandNames;
+  snippet: ISnippet;
 
-  constructor(public vimState: VimStateV2) {
+  constructor(readonly vimState: VimStateV2) {
     this.cursor = vimState.cursor;
     this.foldMap = vimState.foldMap;
     this.lines = vimState.lines;
@@ -26,6 +33,7 @@ export class VimStateClass {
     this.visualEndCursor = vimState.visualEndCursor;
     this.deletedLinesIndeces = vimState.deletedLinesIndeces;
     this.commandName = vimState.commandName;
+    this.snippet = vimState.snippet;
   }
 
   public static create(cursor: Cursor, lines?: VimLine[]) {
@@ -67,5 +75,18 @@ export class VimStateClass {
 
   public updateActiveLine(updated: string) {
     this.updateLine(this.cursor.line, updated);
+  }
+
+  public updateCursor(cursor: Cursor) {
+    this.cursor = cursor;
+  }
+
+  public reportVimState() {
+    const { cursor, lines, mode } = this;
+    logger.culogger.overwriteDefaultLogOtpions({ log: true });
+    /* prettier-ignore */ if (mode) logger.culogger.debug(['Vim in Mode:', mode], {}, (...r) => console.log(...r));
+    /* prettier-ignore */ logger.culogger.debug(['Cursor at', {...cursor}], {}, (...r) => console.log(...r));
+    /* prettier-ignore */ logger.culogger.debug(['Lines are', lines.map(l => l.text)], {}, (...r) => console.log(...r));
+    logger.culogger.overwriteDefaultLogOtpions({ log: false });
   }
 }
