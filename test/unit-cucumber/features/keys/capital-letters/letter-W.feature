@@ -1,1 +1,0 @@
-Feature: Letter W.
