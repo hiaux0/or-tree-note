@@ -3,8 +3,6 @@
 # Current
 
 - .
-  - [x] [r] replaced not reflected in UI (have to go to insert mode to see)
-  - [ ] fix testing
 
 # Feat
 
@@ -14,11 +12,15 @@
   - [ ] [debug] history to access state, so I can reproduce the issue
 
 # Bug
+
 - .
+
   ## Current
+
   - [ ] [$] at start of empty line goes to -1
 
   ## Backlog
+
   - [ ] [Normal] diw deletes the first word it encounters in the line
   - [ ][indent] ` |hello` Indenting too much, will put cursor out of bound on the left
   - [ ][t] not supporting going to upper case chars (because of queued shift)
@@ -26,6 +28,9 @@
   - [ ] await this.queueInputSequence('u^'); // TODO: side effect? why works without assigning to `vimState`?
 
   ## Done
+
+  - [x] [r] replaced not reflected in UI (have to go to insert mode to see)
+  - [x] fix testing
   - [x] [nor] 'o' on vim with only one line throws some error
     - not repro
   - [x] enter in normal should not split text
@@ -37,6 +42,9 @@
 - .
 
   - [ ] [paste] in insert, paste keeps formatting.. Want?
+  - [ ] [refac] consider making vim-core nodejs compatible (currently, for paste, has `navigator`)
+    - move to `vim-init` instead?
+      - since it has Browser code
   - [ ] allow caret and container option have selector (and not element itself)
   - [ ] [modes] differentiate for <Esc>, if a mode change, or cancelling
     - background, just thought, it might be helpful to differentiate
