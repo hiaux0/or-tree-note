@@ -5,7 +5,8 @@
     "baseUrl": "../node_modules",
     "target": "es5",
     "lib": ["es2015", "dom"],
-    "types": ["cypress", "chai"],
+    "types": ["cypress", "chai", "jest"],
+    "typeRoots": ["../../node_modules/@types"],
     "paths": {
       "src/*": ["../../src/*"]
     }

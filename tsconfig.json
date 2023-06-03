@@ -5,7 +5,7 @@
     "strictPropertyInitialization": false,
     "module": "esnext",
     "skipLibCheck": true,
-    "types": ["jasmine", "mocha", "cypress", "chai"],
+    "types": ["jest", "mocha", "cypress", "chai"],
     "typeRoots": ["./node_modules/@types"],
     "removeComments": true,
     "emitDecoratorMetadata": true,
