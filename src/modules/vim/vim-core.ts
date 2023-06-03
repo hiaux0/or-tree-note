@@ -100,7 +100,6 @@ export class VimCore {
       void 0;
     }
     if (!targetCommandName) return;
-    /* prettier-ignore */ logger.culogger.debug(['targetCommandName: %s', targetCommandName], {}, (...r) => console.log(...r));
 
     let vimState: VimStateClass | undefined;
 
