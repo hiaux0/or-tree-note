@@ -173,21 +173,14 @@ export class VimCore {
 
     await Promise.all(
       givenInputSequence.map(async (input) => {
-        if (input === 'u') {
-          // input; /* ? */
-        }
         const subResult = await this.queueInput(input);
         if (subResult?.targetCommand !== undefined) {
-          if (input === 'u') {
-            // subResult; /* ? */
-          }
           resultList.push(subResult);
         }
       })
     );
 
     if (vimExecutingMode === VimExecutingMode.INDIVIDUAL) {
-      // resultList; /* ? */
       return resultList;
     }
 

@@ -302,11 +302,7 @@ export class VimCommandManager {
         ));
       }
     } catch (error) {
-      logger.culogger.debug(
-        ['Error: %s', error],
-        { onlyVerbose: true },
-        (...r) => console.log(...r)
-      );
+      /* prettier-ignore */ logger.culogger.debug(['Error: %s', error], { onlyVerbose: true }, (...r) => console.log(...r));
       // throw error;
     }
 
@@ -359,9 +355,7 @@ export class VimCommandManager {
       return;
     }
 
-    logger.culogger.debug(['Command: %s', targetCommand.command], {}, (...r) =>
-      console.log(...r)
-    );
+    /* prettier-ignore */ logger.culogger.debug(['Command: %s', targetCommand.command], {}, (...r) => console.log(...r));
 
     //
     return targetCommand.command;
