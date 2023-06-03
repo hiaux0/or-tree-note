@@ -577,11 +577,19 @@ export abstract class AbstractMode {
   /** **** */
   indentRight(): VimStateClass {
     const { indentSize } = this.vimOptions;
-    const spaces = ' '.repeat(indentSize);
-    const updatedInput = `${spaces}${this.vimState.getActiveLine().text}`;
+    const text = this.vimState.getActiveLine().text;
 
+    const numOfWhiteSpaceAtStart = getNumOfWhiteSpaceAtStart(text);
+
+    let newCol = this.vimState.cursor.col;
+    if (numOfWhiteSpaceAtStart === this.vimState.cursor.col) {
+      newCol = newCol + indentSize;
+    }
+    this.vimState.cursor.col = newCol;
+
+    const spaces = ' '.repeat(indentSize);
+    const updatedInput = `${spaces}${text}`;
     this.vimState.updateActiveLine(updatedInput);
-    this.vimState.cursor.col += indentSize;
     this.vimState.lines[this.vimState.cursor.line].text = updatedInput;
     this.reTokenizeInput(updatedInput);
 
@@ -591,17 +599,22 @@ export abstract class AbstractMode {
     const { indentSize } = this.vimOptions;
     const text = this.vimState.getActiveLine().text;
 
-    const stagedSubText = text.substring(0, indentSize);
-    const whiteSpaceAtStartIndex = /\w/g.exec(stagedSubText);
-    let numOfWhiteSpaceAtStart = stagedSubText.length;
-    if (whiteSpaceAtStartIndex !== null) {
-      numOfWhiteSpaceAtStart = whiteSpaceAtStartIndex.index;
+    const numOfWhiteSpaceAtStart = getNumOfWhiteSpaceAtStart(text);
+
+    let colsToIndentLeft;
+    colsToIndentLeft = numOfWhiteSpaceAtStart % indentSize;
+    if (colsToIndentLeft === 0) {
+      colsToIndentLeft = indentSize;
     }
 
-    const updatedInput = text.substring(numOfWhiteSpaceAtStart);
-    this.vimState.updateActiveLine(updatedInput);
-    this.vimState.cursor.col -= numOfWhiteSpaceAtStart;
+    const previousCol = this.vimState.cursor.col;
+    const maybeNewCol = Math.max(numOfWhiteSpaceAtStart - colsToIndentLeft, 0);
+    const newCol = previousCol < maybeNewCol ? previousCol : maybeNewCol;
+    this.vimState.cursor.col = newCol;
+
+    const updatedInput = text.substring(colsToIndentLeft);
     this.vimState.lines[this.vimState.cursor.line].text = updatedInput;
+    this.vimState.updateActiveLine(updatedInput);
     this.reTokenizeInput(updatedInput);
 
     return this.vimState;
@@ -641,8 +654,6 @@ export abstract class AbstractMode {
     this.vimState.cursor.line = this.vimState.cursor.line + 1;
     this.vimState.lines = tempLines;
     this.vimState.mode = VimMode.INSERT;
-
-    /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: abstract-mode.ts ~ line 502 ~ createNewLine');
     return this.vimState;
   }
 
@@ -765,6 +776,15 @@ export abstract class AbstractMode {
   nothing(): VimStateClass {
     return this.vimState;
   }
+}
+
+function getNumOfWhiteSpaceAtStart(text: string) {
+  const whiteSpaceAtStartIndex = /\w/g.exec(text);
+  let numOfWhiteSpaceAtStart = text.length;
+  if (whiteSpaceAtStartIndex !== null) {
+    numOfWhiteSpaceAtStart = whiteSpaceAtStartIndex.index;
+  }
+  return numOfWhiteSpaceAtStart;
 }
 
 export function isValidHorizontalPosition(
