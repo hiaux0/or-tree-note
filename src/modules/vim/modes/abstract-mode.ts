@@ -316,7 +316,10 @@ export abstract class AbstractMode {
     return this.vimState;
   }
   cursorLineEnd(): VimStateClass {
-    this.vimState.cursor.col = this.vimState.getActiveLine().text.length - 1;
+    this.vimState.cursor.col = Math.max(
+      this.vimState.getActiveLine().text.length - 1,
+      0
+    );
     return this.vimState;
   }
   cursorLineStart(): VimStateClass {
