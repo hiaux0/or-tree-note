@@ -35,6 +35,7 @@ import {
   KeyBindingModes,
   VimOptions,
 } from './vim-types';
+import { isModifierKey } from './vim-utils';
 
 const logger = new Logger('VimCommandManager');
 
@@ -242,7 +243,7 @@ export class VimCommandManager {
      *                   ^ wait for
      */
     if (commandAwaitingNextInput) {
-      if (input === '<Shift>') {
+      if (isModifierKey(input)) {
         // do nothing
       } else if (commandAwaitingNextInput.targetCommand) {
         /** 2nd round: Ie. after pressing f, we arrived at the 2nd round, that handles the next input */
