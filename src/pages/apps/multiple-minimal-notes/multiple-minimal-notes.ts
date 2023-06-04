@@ -26,6 +26,7 @@ export class MultipleMinimalNotes {
     this.vimEditorMap = {
       editors: {
         '0': {
+          name: 'test name',
           vimState: this.vimStates[0],
           linesAddons: {},
         },

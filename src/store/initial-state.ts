@@ -55,6 +55,7 @@ export type EditorId = string;
 export type EditorIds = EditorId[];
 
 export interface IVimEditor {
+  name?: string;
   linesAddons: Record<string, EditorLine>; // Migration_3
   vimState?: VimStateV2;
 }

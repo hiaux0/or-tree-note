@@ -4,7 +4,7 @@
   <h1>${value}</h1>
 
   <template repeat.for="vimEditor of vimEditors">
-    ${vimEditor.vimState.id}
+    <input type="text" value.bind="vimEditor.name" />
     <minimal-notes
       initial-vim-state.bind="vimEditor.vimState"
       active.bind="vimEditorMap.activeEditorIds.includes(vimEditor.vimState.id)"
