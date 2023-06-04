@@ -8,6 +8,19 @@ export class App {
 
   constructor(private router: Router) {}
 
+  bind() {
+    document.addEventListener('mousedown', (ev: MouseEvent) => {
+      if (ev.buttons === 4) {
+        console.clear();
+      }
+    });
+    document.addEventListener('keydown', (ev: KeyboardEvent) => {
+      if (ev.key === 'z') {
+        console.clear();
+      }
+    });
+  }
+
   attached() {
     const editor = document.getElementById('editor');
     let isComposing = false;
