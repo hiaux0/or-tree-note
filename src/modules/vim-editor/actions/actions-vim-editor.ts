@@ -3,11 +3,11 @@ import produce from 'immer';
 import { cloneDeep } from 'lodash';
 import { VimStateClass } from 'modules/vim/vim-state';
 import { VimLine } from 'modules/vim/vim-types';
-import { EditorIds, VimEditorState } from 'store/initial-state';
+import { EditorId, EditorIds, VimEditorState } from 'store/initial-state';
 
 export function changeVimState(
   state: StateHistory<VimEditorState>,
-  editorId: number,
+  editorId: EditorId,
   newVimState: VimStateClass
 ) {
   return nextStateHistory(
@@ -33,7 +33,7 @@ export function changeVimState(
 
 export const changeText = (
   state: StateHistory<VimEditorState>,
-  editorId: number,
+  editorId: EditorId,
   targetLineNumber: number,
   newText: string
 ) => {
@@ -50,7 +50,7 @@ export const changeText = (
 
 export const changeManyText = (
   state: StateHistory<VimEditorState>,
-  editorId: number,
+  editorId: EditorId,
   newLines: VimLine[]
 ) => {
   return nextStateHistory(
@@ -63,7 +63,7 @@ export const changeManyText = (
 
 export function createNewLine(
   state: StateHistory<VimEditorState>,
-  editorId: number,
+  editorId: EditorId,
   newLineIndex: number,
   previousText: string,
   newText: string
@@ -94,7 +94,7 @@ export function changeActiveEditors(
 
 export function toggleActiveEditors(
   state: StateHistory<VimEditorState>,
-  editorId: number
+  editorId: EditorId
 ) {
   const asSet = new Set(state.present.activeEditorIds);
 
