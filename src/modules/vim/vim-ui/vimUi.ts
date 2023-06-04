@@ -162,7 +162,7 @@ export class VimUi {
 
   getLineRectOffsetLeft() {
     const children = this.container.querySelectorAll<HTMLElement>(
-      `.${this.childSelector}`
+      this.childSelector
     );
     const currentChild = children[this.currentLineNumber];
     let childOffsetLeft = 0;

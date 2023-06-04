@@ -39,7 +39,7 @@ export class MinimalNotes {
     const vimEditorOptionsV2: VimEditorOptionsV2 = {
       container: this.inputContainerRef,
       caret: this.caretRef,
-      childSelector: 'inputLine',
+      childSelector: '.inputLine',
       startLines,
       startCursor: savedVimState.cursor,
       removeTrailingWhitespace: true,
@@ -56,7 +56,9 @@ export class MinimalNotes {
 
         // Insert Mode logic
         // wait until keydown got painted to the dom
-        const $childs = this.inputContainerRef.querySelectorAll('div');
+        const $childs = this.inputContainerRef.querySelectorAll(
+          vimEditorOptionsV2.childSelector
+        );
         let targetNode = $childs[vimResult.vimState.cursor.line].childNodes[0];
         if (DomService.isTextNode(targetNode)) {
           if (vim.vimState.snippet) {
