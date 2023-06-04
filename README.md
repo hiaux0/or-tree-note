@@ -1,6 +1,7 @@
 # Configs
   - firefox
     - dom.events.testing.asyncClipboard -> true
+    - dom.events.asyncClipboard.readText -> true
 
 # How to add a new command
 
