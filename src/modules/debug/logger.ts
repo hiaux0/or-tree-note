@@ -178,10 +178,14 @@ export class Logger {
 
     //
     if (logOpt.throwOnError && logOpt.isError) {
+      if (callback) {
+        callback(...messageWithLogScope);
+      } else {
+        console.error(...messageWithLogScope);
+      }
       /**
        * We console.error AND throw, because we want to keep the formatting of the console.**
        */
-      console.error(...messageWithLogScope);
       throw new Error('!!! [[ERROR]] Check above message !!!');
     }
 
