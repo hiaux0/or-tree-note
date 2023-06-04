@@ -488,7 +488,7 @@ function getCommandAwaitingNextInput(
   potentialCommands: VimCommand[]
 ): PotentialCommandReturn | undefined {
   const keySequence = queuedKeys.join('').concat(input);
-  const awaitingCommand = commandsThatWaitForNextInput.find(
+  const finalAwaitingCommand = commandsThatWaitForNextInput.find(
     // BUG?
     /**
      * 1. press <space>
@@ -498,10 +498,10 @@ function getCommandAwaitingNextInput(
      */
     (command) => command.key === keySequence
   );
-  if (awaitingCommand) {
+  if (finalAwaitingCommand) {
     return {
       targetCommand: undefined,
-      potentialCommands: [awaitingCommand],
+      potentialCommands: [finalAwaitingCommand],
     };
   }
 
