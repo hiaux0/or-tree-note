@@ -1,5 +1,6 @@
 import { getRandomId } from 'common/random';
 import { ISnippet } from 'resources/keybindings/snippets/snippets';
+import { EditorId } from 'store/initial-state';
 
 import {
   VimCommand,
@@ -54,6 +55,7 @@ export const EMPTY_VIM_LINE: VimLine = { text: '', id: getRandomId() };
 export type FoldMap = Record<string, boolean>;
 
 export type VimStateV2 = {
+  id?: EditorId;
   cursor?: Cursor;
   lines?: VimLine[];
   mode?: VimMode;
@@ -119,6 +121,7 @@ export type ModeChanged = (
 ) => void;
 
 export interface VimEditorOptionsV2 {
+  id?: EditorId;
   startCursor?: Cursor;
   startLines?: VimLine[];
   container?: HTMLElement;
@@ -129,6 +132,7 @@ export interface VimEditorOptionsV2 {
   afterInit?: (
     vim: VimCore
   ) => QueueInputReturn[] | Promise<QueueInputReturn[]> | void;
+  onBeforeCommand?: () => boolean;
   commandListener: CommandListener;
   modeChanged?: ModeChanged;
   onCompositionUpdate?: (vim: VimCore, event: Event) => void;
