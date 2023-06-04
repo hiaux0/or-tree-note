@@ -49,7 +49,7 @@ export class MinimalNotes {
       commandListener: (vimResult, _, vim) => {
         // TODO: extract to somewhere in the core, update vimState with dom
         if (vimResult.vimState.mode !== VimMode.INSERT) {
-          vimResult.vimState.reportVimState();
+          // vimResult.vimState.reportVimState();
           this.vimState = vimResult.vimState;
           return;
         }
@@ -74,7 +74,7 @@ export class MinimalNotes {
         // Only update cursor, but not text
         // Text will be updated once insert mode is left
         this.vimState.cursor = vimResult.vimState.cursor;
-        vimResult.vimState.reportVimState();
+        // vimResult.vimState.reportVimState();
       },
       modeChanged: (vimResult, newMode, oldMode, vim) => {
         // TODO: extract to somewhere in the core, update vimState with dom
