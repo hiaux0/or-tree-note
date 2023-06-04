@@ -4,6 +4,7 @@ export enum VIM_COMMAND {
   'backspace' = 'backspace',
   'clearLine' = 'clearLine',
   'createNewLine' = 'createNewLine',
+  'cancelAll' = 'cancelAll',
   'copy' = 'copy',
   'cursorRight' = 'cursorRight',
   'cursorUp' = 'cursorUp',

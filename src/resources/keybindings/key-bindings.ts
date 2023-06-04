@@ -106,6 +106,7 @@ const keyBindings: KeyBindingModes = {
     { key: '<Control>s', command: VIM_COMMAND['save'] },
     { key: '<Control>v', command: VIM_COMMAND['paste'] },
     { key: '<Enter>', command: VIM_COMMAND['newLine'] },
+    { key: '<Escape>', command: VIM_COMMAND['cancelAll'] },
     { key: '<Backspace>', command: VIM_COMMAND['backspace'] },
     { key: '<Meta>', command: VIM_COMMAND['nothing'] },
     ...commandsAllModes,

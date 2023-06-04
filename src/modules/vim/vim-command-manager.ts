@@ -1,7 +1,7 @@
 import { Logger } from 'common/logging/logging';
 import { groupBy, includes } from 'lodash';
 import { inputContainsSequence } from 'modules/string/string';
-import { SPECIAL_KEYS } from 'resources/keybindings/app-keys';
+import { ESCAPE, SPECIAL_KEYS } from 'resources/keybindings/app-keys';
 import {
   commandsThatWaitForNextInput,
   cursorNormalAndInsert,
@@ -194,7 +194,13 @@ export class VimCommandManager {
   ): PotentialCommandReturn {
     //
     let targetKeyBinding: VimCommand[];
-    if (this.potentialCommands?.length) {
+    if (input === ESCAPE) {
+      this.emptyQueuedKeys();
+      return {
+        targetCommand: { key: '<Escape>', command: VIM_COMMAND['cancelAll'] },
+        potentialCommands: [],
+      };
+    } else if (this.potentialCommands?.length) {
       targetKeyBinding = this.potentialCommands;
     } else {
       targetKeyBinding = this.keyBindings[
@@ -346,7 +352,7 @@ export class VimCommandManager {
       if (potentialCommands?.length) {
         /* prettier-ignore */ logger.culogger.debug(['Awaiting potential commands: %o', potentialCommands], {}, (...r) => console.log(...r));
       } else {
-        /* prettier-ignore */ logger.culogger.debug([ 'No command for key: %s in Mode: %s ((vim.ts-getCommandName))', input, this.activeMode, ], { isError: true }, (...r) => console.log(...r));
+        /* prettier-ignore */ logger.culogger.debug([ 'No command for key: %s in Mode: %s ((vim.ts-getCommandName))', input, this.activeMode, ], { isError: true }, (...r) => console.error(...r));
       }
 
       return;

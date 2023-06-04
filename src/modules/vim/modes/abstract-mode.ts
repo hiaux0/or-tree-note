@@ -773,6 +773,10 @@ export abstract class AbstractMode {
     return this.vimState;
   }
 
+  cancelAll(): VimStateClass {
+    return this.vimState;
+  }
+
   nothing(): VimStateClass {
     return this.vimState;
   }
