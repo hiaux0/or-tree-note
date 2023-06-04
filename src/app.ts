@@ -15,8 +15,10 @@ export class App {
       }
     });
     document.addEventListener('keydown', (ev: KeyboardEvent) => {
-      if (ev.key === 'z') {
-        console.clear();
+      if (ev.key === 'q') {
+        setTimeout(() => {
+          console.clear();
+        }, 0);
       }
     });
   }
