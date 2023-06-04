@@ -62,11 +62,11 @@ export async function initVim(vimEditorOptionsV2: VimEditorOptionsV2) {
     const afterResults = await afterInit(vim);
 
     if (afterResults) {
-      afterResults.forEach((result) => {
-        if (isModeChangeCommand(result.targetCommand)) {
-          modeChanged(result, result.vimState.mode, undefined, vim);
+      afterResults.forEach((vimResult) => {
+        if (isModeChangeCommand(vimResult.targetCommand)) {
+          modeChanged(vimResult, vimResult.vimState.mode, undefined, vim);
         } else {
-          commandListener(result, undefined, vim);
+          commandListener(vimResult, undefined, vim);
         }
       });
     }
