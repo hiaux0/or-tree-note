@@ -191,24 +191,6 @@ export class VimCommandManager {
     input: string,
     modifiers: string[] = []
   ): PotentialCommandReturn {
-    const commandAwaitingNextInput = getCommandAwaitingNextInput(
-      input,
-      this.queuedKeys,
-      this.potentialCommands
-    );
-    // const includes = this.includesPotentialCommands(commandAwaitingNextInput);
-    // if (includes) {
-    if (commandAwaitingNextInput !== undefined) {
-      if (this.potentialCommands.length === 0) {
-        // /* prettier-ignore */ console.log('>>>> a.1 >>>> ~ file: vim-command-manager.ts ~ line 161 ~ this.potentialCommands', this.potentialCommands);
-        this.potentialCommands = commandAwaitingNextInput.potentialCommands;
-      } else if (this.potentialCommands.length === 1) {
-        // /* prettier-ignore */ console.log('>>>> a.2 >>>> ~ file: vim-command-manager.ts ~ line 161 ~ this.potentialCommands', this.potentialCommands);
-        this.potentialCommands = [];
-      }
-      return commandAwaitingNextInput;
-    }
-
     //
     let targetKeyBinding: VimCommand[];
     if (this.potentialCommands?.length) {
@@ -238,8 +220,7 @@ export class VimCommandManager {
     } else {
       keySequence = input;
     }
-    /* prettier-ignore */ logger.culogger.debug(['keySequence: %s', keySequence], {}, (...r) => console.log(...r));
-
+    /* prettier-ignore */ logger.culogger.debug(['keySequence: %s', keySequence], {}, (...r) => { return console.log(...r); });
     const potentialCommands = targetKeyBinding.filter((keyBinding) => {
       // if (ignoreCaseForModifiers(keyBinding.key, keySequence)) {
       //   return true;
@@ -249,9 +230,28 @@ export class VimCommandManager {
     });
 
     /* prettier-ignore */ logger.culogger.debug(['potentialCommands: %o', potentialCommands], {}, (...r) => console.log(...r));
-
+    const commandAwaitingNextInput = getCommandAwaitingNextInput(
+      input,
+      this.queuedKeys,
+      this.potentialCommands
+    );
     let targetCommand: VimCommand;
-    if (potentialCommands.length === 0) {
+    /**
+     * 'f' -> 'Shift' -> 'N'
+     *        ^ ignore
+     *                   ^ wait for
+     */
+    if (commandAwaitingNextInput) {
+      if (input === '<Shift>') {
+        // do nothing
+      } else if (commandAwaitingNextInput.targetCommand) {
+        /** 2nd round: Ie. after pressing f, we arrived at the 2nd round, that handles the next input */
+        targetCommand = commandAwaitingNextInput.targetCommand;
+        this.emptyQueuedKeys();
+      } else {
+        this.potentialCommands = commandAwaitingNextInput.potentialCommands;
+      }
+    } else if (potentialCommands.length === 0) {
       this.emptyQueuedKeys();
       throw new Error('Empty Array');
     } else if (
