@@ -35,6 +35,7 @@ export async function initVim(vimEditorOptionsV2: VimEditorOptionsV2) {
   const {
     startCursor,
     startLines,
+    onBeforeCommand,
     commandListener,
     modeChanged,
     onCompositionUpdate,
@@ -112,6 +113,12 @@ export async function initVim(vimEditorOptionsV2: VimEditorOptionsV2) {
     }
     if (isComposing) {
       return;
+    }
+    if (onBeforeCommand) {
+      const result = onBeforeCommand();
+      if (result === false) {
+        return;
+      }
     }
 
     // console.clear();
@@ -206,6 +213,12 @@ export async function initVim(vimEditorOptionsV2: VimEditorOptionsV2) {
     }
     if (isComposing) {
       return;
+    }
+    if (onBeforeCommand) {
+      const result = onBeforeCommand();
+      if (result === false) {
+        return;
+      }
     }
 
     // console.clear();
