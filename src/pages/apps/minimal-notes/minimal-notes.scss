@@ -95,6 +95,19 @@ $editorLineHeight: 21.4667px;
     width: 65%;
     @include caretStylesPerMode();
 
+    &.container--active {
+      border: 1px solid green;
+    }
+
+    &.container--deactive {
+      border: 1px solid grey;
+      cursor: default !important;
+
+      #caret {
+        display: none;
+      }
+    }
+
     .inputContainer {
       border: 1px solid black;
 

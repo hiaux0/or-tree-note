@@ -1,10 +1,16 @@
 <template>
   <div class="notesComponentContainer">
-    <div class="container mode-${vimState.mode}">
+    <div
+      class="
+        container
+        mode-${vimState.mode}
+        ${active ?  'container--active' : 'container--deactive'}
+      "
+    >
       <div
         ref="inputContainerRef"
         class="inputContainer"
-        contenteditable.bind="contenteditable"
+        contenteditable.bind="contenteditable && active"
       >
         <template repeat.for="line of vimState.lines">
           <div highlight class="inputLine">${line.text}</div>
