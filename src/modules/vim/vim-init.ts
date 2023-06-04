@@ -176,6 +176,7 @@ export async function initVim(vimEditorOptionsV2: VimEditorOptionsV2) {
     }
 
     // console.clear();
+    /* prettier-ignore */ console.log('%c------------------------------------------------------------------------------------------', `background: ${'darkblue'}`);
 
     //
     const pressedKey = getPressedKey(ev);

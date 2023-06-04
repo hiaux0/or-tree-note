@@ -33,7 +33,7 @@ export class Logger {
   ) {
     this.culogger = new Culogger({ scope });
     this.culogger.overwriteDefaultLogOtpions({
-      log: false,
+      log: true,
       logLevel: 'INFO',
       focusedLogging: false,
       // logScope: false,
