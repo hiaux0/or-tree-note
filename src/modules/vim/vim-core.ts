@@ -261,13 +261,17 @@ export class VimCore {
     if (queueInputReturn.vimState == null) return;
 
     const { cursor, lines } = queueInputReturn.vimState;
-    const text = queueInputReturn.vimState.getActiveLine();
-    const actviveLine = lines[cursor.line];
-
+    const text = queueInputReturn.vimState.getActiveLine().text;
+    if (lines[cursor.line] === undefined) {
+      console.warn('bug: cursor line is -1');
+      return;
+      // debugger;
+    }
+    const actviveLine = lines[cursor.line].text;
     if (actviveLine !== text) {
       const errorMessage = 'Active line and vim state wrong.';
-      const expected = `Expected: ${text.text}`;
-      const received = `Received: ${actviveLine.text}`;
+      const expected = `Expected: ${text}`;
+      const received = `Received: ${actviveLine}`;
       throw new Error(`${errorMessage}\n${expected}\n${received}`);
     }
 
