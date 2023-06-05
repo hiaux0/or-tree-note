@@ -52,15 +52,17 @@ export async function initVim(vimEditorOptionsV2: VimEditorOptionsV2) {
     finalLines = [{ text: '123' }, { text: 'abc' }];
   }
 
-  /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: vim-init.ts ~ line 48 ~ finalLines', finalLines);
   const vim = new VimCore(finalLines, finalCursor, {
+    vimState: vimEditorOptionsV2.vimState,
     vimPlugins: plugins ?? [],
   });
   const vimUi = new VimUi(vim, vimEditorOptionsV2);
 
   //
-  await initKeys(vimEditorOptionsV2.container);
-  await initMouse(vimEditorOptionsV2.container);
+  if (vimEditorOptionsV2.container) {
+    await initKeys(vimEditorOptionsV2.container);
+    await initMouse(vimEditorOptionsV2.container);
+  }
 
   if (afterInit) {
     const afterResults = await afterInit(vim);
@@ -107,6 +109,7 @@ export async function initVim(vimEditorOptionsV2: VimEditorOptionsV2) {
   }
 
   async function handleKeysInsert(ev: KeyboardEvent) {
+    ev.stopPropagation();
     //
     if (checkAllowedBrowserShortcuts(ev)) {
       return;
@@ -207,6 +210,7 @@ export async function initVim(vimEditorOptionsV2: VimEditorOptionsV2) {
   }
 
   async function handleKeysNonInsert(ev: KeyboardEvent) {
+    ev.stopPropagation();
     //
     if (checkAllowedBrowserShortcuts(ev)) {
       return;
@@ -287,6 +291,8 @@ export async function initVim(vimEditorOptionsV2: VimEditorOptionsV2) {
   }
 
   function handleCompositionUpdate(e: CompositionEvent): void {
+    if (!vimEditorOptionsV2.childSelector) return;
+
     const $childs = (event.target as HTMLElement).querySelectorAll(
       vimEditorOptionsV2.childSelector
     );
