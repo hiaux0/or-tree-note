@@ -88,6 +88,7 @@ export enum VimMode {
 export type VimModeKeys = keyof typeof VimMode;
 
 export interface VimOptions {
+  vimState?: VimStateV2;
   keyBindings?: KeyBindingModes;
   leader?: string;
   vimPlugins?: VimPlugin[];
@@ -121,6 +122,7 @@ export type ModeChanged = (
 ) => void;
 
 export interface VimEditorOptionsV2 {
+  vimState?: VimStateV2;
   id?: EditorId;
   startCursor?: Cursor;
   startLines?: VimLine[];
