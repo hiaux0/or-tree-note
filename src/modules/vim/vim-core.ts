@@ -61,10 +61,12 @@ export class VimCore {
       ...defaultVimOptions,
       ...this.vimOptions,
     };
-    const initialVimState = new VimStateClass({
-      cursor,
-      lines,
-    });
+    const initialVimState = new VimStateClass(
+      vimOptions.vimState ?? {
+        cursor,
+        lines,
+      }
+    );
     this.vimCommandManager = new VimCommandManager(
       initialVimState,
       finalVimOptions
