@@ -41,6 +41,8 @@ export class VimUi {
     this.caretWidth = getCssVar('--caret-size-width');
     this.caretHeight = getCssVar('--caret-size-height');
 
+    if (!this.caret) return;
+    if (!this.container) return;
     this.update(vim.vimState);
   }
 
@@ -49,6 +51,8 @@ export class VimUi {
   }
 
   private setCursorMovement(newCursorValue?: Cursor) {
+    if (!this.caret) return;
+
     //
     let newCursorLine: number;
     let newCursorCol: number;
@@ -240,6 +244,8 @@ export class VimUi {
   }
 
   resetCaretBlinking() {
+    if (!this.caret) return;
+
     this.caret.classList.remove('caret-blinking');
     /**
      * Needed to restart the animation
