@@ -1,5 +1,6 @@
 import { Logger } from 'common/logging/logging';
 import { ISnippet } from 'resources/keybindings/snippets/snippets';
+import { EditorId } from 'store/initial-state';
 
 import { VimCommandNames } from './vim-commands-repository';
 import {
@@ -14,6 +15,7 @@ import {
 const logger = new Logger('VimState');
 
 export class VimStateClass {
+  id: EditorId;
   cursor: Cursor;
   foldMap: FoldMap;
   lines: VimLine[];
@@ -25,6 +27,7 @@ export class VimStateClass {
   snippet: ISnippet;
 
   constructor(readonly vimState: VimStateV2) {
+    this.id = vimState.id;
     this.cursor = vimState.cursor;
     this.foldMap = vimState.foldMap;
     this.lines = vimState.lines;
