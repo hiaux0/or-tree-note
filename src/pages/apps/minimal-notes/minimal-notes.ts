@@ -1,7 +1,6 @@
 import { bindable } from 'aurelia-framework';
 // import { Logger } from 'common/logging/logging';
 import { initVim } from 'modules/vim/vim-init';
-import { VimStateClass } from 'modules/vim/vim-state';
 import {
   VimEditorOptionsV2,
   VimLine,
@@ -14,7 +13,7 @@ import './minimal-notes.scss';
 // const logger = new Logger('MinimalNotes');
 
 export class MinimalNotes {
-  @bindable() initialVimState: VimStateV2;
+  @bindable() vimState: VimStateV2;
   @bindable() active = false;
 
   inputContainerRef: HTMLDivElement;
@@ -23,19 +22,18 @@ export class MinimalNotes {
   currentModeName = VimMode.NORMAL;
 
   lines: VimLine[] = [];
-  vimState: VimStateClass;
 
   attached() {
     void this.initVim();
   }
 
   private async initVim() {
-    const savedVimState =
-      this.initialVimState ?? (await StorageService.getVimState());
+    const savedVimState = this.vimState ?? (await StorageService.getVimState());
     const startLines = savedVimState.lines ?? [];
     this.lines = startLines;
 
     const vimEditorOptionsV2: VimEditorOptionsV2 = {
+      vimState: this.vimState,
       container: this.inputContainerRef,
       caret: this.caretRef,
       childSelector: '.inputLine',
@@ -67,8 +65,8 @@ export class MinimalNotes {
     vimEditorOptionsV2.plugins = [
       {
         commandName: 'save',
-        execute: (vimState) => {
-          void StorageService.saveVimState(vimState.serialize());
+        execute: () => {
+          /** TODO: if not here, then gives error, when trying to save minimal notes */
         },
       },
     ];

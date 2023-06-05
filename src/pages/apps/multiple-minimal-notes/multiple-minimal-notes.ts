@@ -1,6 +1,7 @@
 import { bindable, computedFrom } from 'aurelia-framework';
 import './multiple-minimal-notes.scss';
-import { VimStateV2 } from 'modules/vim/vim-types';
+import { initVim } from 'modules/vim/vim-init';
+import { VimEditorOptionsV2, VimMode, VimStateV2 } from 'modules/vim/vim-types';
 import { StorageService } from 'storage/vimStorage';
 import { VimEditorState } from 'store/initial-state';
 
@@ -8,6 +9,7 @@ export class MultipleMinimalNotes {
   @bindable value = 'MultipleMinimalNotes';
   vimStates: VimStateV2[];
   vimEditorMap: VimEditorState;
+  multileNotesContainerRef: HTMLElement;
 
   @computedFrom('vimEditorMap.editors')
   get vimEditors() {
@@ -23,19 +25,44 @@ export class MultipleMinimalNotes {
     ]);
     this.vimStates.forEach((state, index) => (state.id = String(index)));
 
-    this.vimEditorMap = {
-      editors: {
-        '0': {
-          name: 'test name',
-          vimState: this.vimStates[0],
-          linesAddons: {},
-        },
-        '1': {
-          vimState: this.vimStates[1],
-          linesAddons: {},
+    const storedVimEditors = await StorageService.getVimEditors();
+
+    this.vimEditorMap = Object.keys(storedVimEditors).length
+      ? storedVimEditors
+      : {
+          editors: {
+            '0': {
+              name: 'test name',
+              vimState: this.vimStates[0],
+              linesAddons: {},
+            },
+            '1': {
+              vimState: this.vimStates[1],
+              linesAddons: {},
+            },
+          },
+          activeEditorIds: ['0'],
+        };
+    /* prettier-ignore */ console.log('vimState.id:', this.vimEditorMap.editors['0'].vimState.id);
+
+    void this.initVim();
+  }
+
+  async initVim() {
+    const vimEditorOptionsV2: VimEditorOptionsV2 = {
+      container: this.multileNotesContainerRef,
+      commandListener: (vimResult) => {},
+      modeChanged: (vimResult) => {},
+    };
+    vimEditorOptionsV2.plugins = [
+      {
+        commandName: 'save',
+        execute: (vimState) => {
+          console.log('hello');
+          void StorageService.saveVimEditors(this.vimEditorMap);
         },
       },
-      activeEditorIds: ['0'],
-    };
+    ];
+    await initVim(vimEditorOptionsV2);
   }
 }

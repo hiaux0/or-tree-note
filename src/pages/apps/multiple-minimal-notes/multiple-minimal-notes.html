@@ -3,11 +3,13 @@
 
   <h1>${value}</h1>
 
-  <template repeat.for="vimEditor of vimEditors">
-    <input type="text" value.bind="vimEditor.name" />
-    <minimal-notes
-      initial-vim-state.bind="vimEditor.vimState"
-      active.bind="vimEditorMap.activeEditorIds.includes(vimEditor.vimState.id)"
-    ></minimal-notes>
-  </template>
+  <section ref="multileNotesContainerRef">
+    <template repeat.for="vimEditor of vimEditors">
+      <input type="text" value.bind="vimEditor.name" />
+      <minimal-notes
+        vim-state.two-way="vimEditor.vimState"
+        active.bind="vimEditorMap.activeEditorIds.includes(vimEditor.vimState.id)"
+      ></minimal-notes>
+    </template>
+  </section>
 </template>
