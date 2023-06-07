@@ -23,6 +23,7 @@
 
   ## Backlog
 
+  - [ ] [diw] when many whitespaces, shoudl delete them all
   - [ ] await this.queueInputSequence('u^'); // TODO: side effect? why works without assigning to `vimState`?
   - [ ][r] rr not working (tt, ff, TT, FF)
     - DO, should wo afte refactoring whole command and (awaiting command) handling

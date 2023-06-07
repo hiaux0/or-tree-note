@@ -28,7 +28,8 @@ export class MultipleMinimalNotes {
     const storedVimEditors = await StorageService.getVimEditors();
 
     this.vimEditorMap = Object.keys(storedVimEditors).length
-      ? storedVimEditors
+      ? // this.vimEditorMap = false
+        storedVimEditors
       : {
           editors: {
             '0': {
