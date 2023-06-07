@@ -1,5 +1,6 @@
 import { Logger } from 'common/logging/logging';
 import { cloneDeep } from 'lodash';
+import { DebugService } from 'modules/debug/debugService';
 import { SPACE } from 'resources/keybindings/app-keys';
 import keyBindingsJson from 'resources/keybindings/key-bindings';
 
@@ -100,6 +101,11 @@ export class VimCore {
       void 0;
     }
     if (!targetCommandName) return;
+    DebugService.startDebugCollection(
+      targetCommandName,
+      input,
+      cloneDeep(this.vimState)
+    );
 
     let vimState: VimStateClass | undefined;
 
@@ -165,6 +171,8 @@ export class VimCore {
     } else {
       vimState = this.vimState;
     }
+    DebugService.endDebugCollection(this.vimState);
+    /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: vim-core.ts ~ line 179 ~ endDebugCollection');
 
     //
     const result: QueueInputReturn = {
