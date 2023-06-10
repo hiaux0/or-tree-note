@@ -1,5 +1,6 @@
 <template>
   <div class="notesComponentContainer">
+    <!-- minimalNote -->
     <div
       data-vim-id="${vimState.id}"
       class="
@@ -13,6 +14,7 @@
         'container--deactive'}
       "
     >
+      <!-- inputContainer -->
       <div
         ref="inputContainerRef"
         class="inputContainer"
@@ -22,12 +24,16 @@
           <div highlight class="inputLine">${line.text}</div>
         </template>
       </div>
+
+      <!-- caret -->
       <div
         id="caret"
         ref="caretRef"
         class="caret-${currentModeName} caret-blinking"
       ></div>
     </div>
+
+    <!-- debugContainer -->
     <div class="debugContainer">
       <div style="text-decoration: underline">
         Debug mode (${vimState.mode})</div

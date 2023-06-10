@@ -1,12 +1,15 @@
 <template>
   <require from="../minimal-notes/minimal-notes"></require>
 
-  <h1>${value}</h1>
+  <button click.delegate="addNote()">Add Note</button>
 
   <section ref="multileNotesContainerRef">
     <template repeat.for="vimEditor of vimEditors">
       <div class="minimalNoteContainer">
         <input type="text" value.bind="vimEditor.name" />
+        <button click.delegate="removeNote(vimEditor.vimState.id)"
+          >Remove</button
+        >
         <minimal-notes
           vim-state.two-way="vimEditor.vimState"
           active.bind="vimEditorMap.activeEditorIds.includes(vimEditor.vimState.id)"
