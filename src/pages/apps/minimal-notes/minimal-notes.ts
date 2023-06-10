@@ -1,4 +1,4 @@
-import { bindable } from 'aurelia-framework';
+import { bindable, computedFrom } from 'aurelia-framework';
 // import { Logger } from 'common/logging/logging';
 import { initVim } from 'modules/vim/vim-init';
 import {
@@ -18,10 +18,15 @@ export class MinimalNotes {
 
   inputContainerRef: HTMLDivElement;
   caretRef: HTMLDivElement;
-  contenteditable = true;
   currentModeName = VimMode.NORMAL;
 
   lines: VimLine[] = [];
+
+  @computedFrom('vimState.mode')
+  get contenteditable() {
+    const is = this.vimState.mode === VimMode.INSERT;
+    return is;
+  }
 
   attached() {
     void this.initVim();
