@@ -10,6 +10,18 @@
         <button click.delegate="removeNote(vimEditor.vimState.id)"
           >Remove</button
         >
+        <button click.delegate="downloadText()" style="height: 30px"
+          >download</button
+        >
+        <label class="item" for="uploadFile">Upload</label>
+        <input
+          type="file"
+          id="uploadFile"
+          accept="application/json"
+          style="display: none"
+          files.bind="uploadedFiles"
+          change.delegate="dev_upload()"
+        />
         <minimal-notes
           vim-state.two-way="vimEditor.vimState"
           active.bind="vimEditorMap.activeEditorIds.includes(vimEditor.vimState.id)"

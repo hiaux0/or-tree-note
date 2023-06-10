@@ -13,6 +13,7 @@ export class MultipleMinimalNotes {
   vimStates: VimStateV2[];
   vimEditorMap: VimEditorState;
   multileNotesContainerRef: HTMLElement;
+  private readonly uploadedFiles: File[] = [];
 
   @computedFrom('vimEditorMap.editors')
   get vimEditors() {
@@ -104,6 +105,39 @@ export class MultipleMinimalNotes {
     // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
     delete this.vimEditorMap.editors[editorId];
     this.vimEditorMap.editors = cloneDeep(this.vimEditorMap.editors);
-    /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: multiple-minimal-notes.ts:105 ~ editorId:', editorId);
+  }
+
+  private downloadText(): void {
+    function getCurrentDate() {
+      const date = new Date();
+      const dateString = date.toLocaleDateString();
+      return dateString;
+    }
+
+    function download(content: string, fileName: string) {
+      const element = document.createElement('a');
+      element.setAttribute(
+        'href',
+        `data:text/plain;charset=utf-8,${encodeURIComponent(content)}`
+      );
+      element.setAttribute('download', `${fileName}.json`);
+
+      element.style.display = 'none';
+      document.body.appendChild(element);
+
+      element.click();
+
+      document.body.removeChild(element);
+    }
+
+    const stringify = JSON.stringify(this.vimEditorMap, null, 4);
+    const fileName = `${getCurrentDate()}-or-tree-note`;
+    download(stringify, fileName);
+  }
+
+  private async dev_upload(): Promise<void> {
+    const data = await this.uploadedFiles[0].text();
+    const json = JSON.parse(data) as VimEditorState;
+    this.vimEditorMap = json;
   }
 }
