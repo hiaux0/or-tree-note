@@ -41,7 +41,7 @@ export class MinimalNotes {
       startCursor: savedVimState.cursor,
       removeTrailingWhitespace: true,
       afterInit: (vim) => {
-        this.vimState = vim.vimState;
+        this.vimState = vim.vimState.serialize();
       },
       onBeforeCommand: () => {
         return this.active;
@@ -55,11 +55,11 @@ export class MinimalNotes {
            */
           this.vimState.cursor = vimResult.vimState.cursor;
         } else {
-          this.vimState = vimResult.vimState;
+          this.vimState = vimResult.vimState.serialize();
         }
       },
       modeChanged: (vimResult) => {
-        this.vimState = vimResult.vimState;
+        this.vimState = vimResult.vimState.serialize();
       },
     };
     vimEditorOptionsV2.plugins = [
