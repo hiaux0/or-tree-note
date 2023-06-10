@@ -2,6 +2,13 @@
 
 # Current
 
+- [x] switch editors
+- [x] add editors
+- [x] remove editors
+
+- [x] enter in insert
+- [x] cursor in insert
+  - take from click changing
 - .
 
 # Feat
@@ -9,6 +16,7 @@
 - .
 
   - [ ] [debug] history to access state, so I can reproduce the issue
+  - [ ] /\*_ ISSUE-jMia9Mjf: overwrite for now, should add managing _/
 
   ## Done Feat
 
@@ -24,12 +32,18 @@
   ## Backlog
 
   - [ ] [diw] when many whitespaces, shoudl delete them all
-  - [ ] await this.queueInputSequence('u^'); // TODO: side effect? why works without assigning to `vimState`?
   - [ ][r] rr not working (tt, ff, TT, FF)
     - DO, should wo afte refactoring whole command and (awaiting command) handling
+  - [ ] joining lines in insert then ESC -> deletes all
+    - --> !!!! big issue: rendering not working somehow
+    - the state in vim is there, but html breaks
+      - [ ] re-consider insert<>normal rendering
+      - [ ] try au2?
 
   ## Done
 
+  - [x] await this.queueInputSequence('u^'); // TODO: side effect? why works without assigning to `vimState`?
+    - whole core is based on mutation (`abstract-mode.t`s)
   - [x][r] r -> <ESC> -> writes escape
   - [x][t] not workgin
   - [x][f] not supporting going to upper case chars (because of queued shift)
@@ -49,6 +63,8 @@
 
 - .
 
+  - [ ] [multiple] /\*_ ISSUE-xC83cN1d: remove lines and cursore, for vimOptions. (or take vimState from vimOptions) _/
+  - [ ] [multiple] currently multiple listens to all key presses / commands? Maybe add option, to just listen to specific commands
   - [ ] allow caret and container option have selector (and not element itself)
   - [ ] [refac] `vim-init.ts` and the composition handling should go into `vim-core.t`s
   - [ ] [refac] unify modifier behavior (Shift vs <Shift>)
