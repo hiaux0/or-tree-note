@@ -302,6 +302,7 @@ export async function initVim(vimEditorOptionsV2: VimEditorOptionsV2) {
       setTimeout(() => {
         const $childs = vimEditorOptionsV2.container.querySelectorAll('div');
         if (!$childs) return;
+        if (!$childs[cursor.line]) return;
 
         const targetNode = $childs[cursor.line].childNodes[0];
         const range = SelectionService.createRange(targetNode, cursor);
