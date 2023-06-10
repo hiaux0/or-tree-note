@@ -51,6 +51,7 @@ export class MultipleMinimalNotes {
 
   async initVim() {
     const vimEditorOptionsV2: VimEditorOptionsV2 = {
+      id: 'mmn-container',
       container: this.multileNotesContainerRef,
       commandListener: (vimResult) => {},
       modeChanged: (vimResult) => {},

@@ -52,6 +52,14 @@ export async function initVim(vimEditorOptionsV2: VimEditorOptionsV2) {
     finalLines = [{ text: '123' }, { text: 'abc' }];
   }
 
+  if (vimEditorOptionsV2.id) {
+    vimEditorOptionsV2.vimState = {
+      cursor: finalCursor,
+      lines: finalLines,
+    };
+    vimEditorOptionsV2.vimState.id = vimEditorOptionsV2.id;
+  }
+
   const vim = new VimCore(finalLines, finalCursor, {
     vimState: vimEditorOptionsV2.vimState,
     vimPlugins: plugins ?? [],
