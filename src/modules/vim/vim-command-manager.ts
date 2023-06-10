@@ -365,7 +365,8 @@ export class VimCommandManager {
   }
 
   private isInsertMode() {
-    return this.activeMode === VimMode.INSERT;
+    const is = this.activeMode === VimMode.INSERT;
+    return is;
   }
 
   emptyQueuedKeys() {

@@ -89,6 +89,7 @@ export class VimCore {
     input: string,
     modifiers?: string[]
   ): Promise<QueueInputReturn | undefined> {
+    /* prettier-ignore */ logger.culogger.debug(['Mode: (%s) %s', this.vimState.mode], {}, (...r) => console.log(...r));
     this.vimState.snippet = undefined;
     const modifiersText = `${modifiers?.join('+ ')}`;
     /* prettier-ignore */ logger.culogger.debug(['Received input: (%s) %s', modifiersText, input], {}, (...r) => console.log(...r));
