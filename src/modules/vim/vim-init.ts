@@ -78,9 +78,20 @@ export async function initVim(vimEditorOptionsV2: VimEditorOptionsV2) {
     if (afterResults) {
       afterResults.forEach((vimResult) => {
         if (isModeChangeCommand(vimResult.targetCommand)) {
-          modeChanged(vimResult, vimResult.vimState.mode, undefined, vim);
+          const updatedVimState = modeChanged(
+            vimResult,
+            vimResult.vimState.mode,
+            undefined,
+            vim
+          );
+          if (updatedVimState) {
+            vim.vimState.updateVimState(updatedVimState);
+          }
         } else {
-          commandListener(vimResult, undefined, vim);
+          const updatedVimState = commandListener(vimResult, undefined, vim);
+          if (updatedVimState) {
+            vim.vimState.updateVimState(updatedVimState);
+          }
         }
       });
     }
@@ -90,7 +101,7 @@ export async function initVim(vimEditorOptionsV2: VimEditorOptionsV2) {
   async function initKeys(container: HTMLElement) {
     // Insert (Conteneditable) inptus
     container.addEventListener('keydown', (e) => {
-      console.clear();
+      // console.clear();
       if (vim.vimState.mode !== VimMode.INSERT) return;
       /* prettier-ignore */ logger.culogger.debug(['Keydown']);
       void handleKeysInsert(e);
@@ -182,7 +193,10 @@ export async function initVim(vimEditorOptionsV2: VimEditorOptionsV2) {
        */
       vimEditorOptionsV2.container.contentEditable = 'false';
 
-      modeChanged(result, newMode, currentMode, vim);
+      const updatedVimState = modeChanged(result, newMode, currentMode, vim);
+      if (updatedVimState) {
+        vim.vimState.updateVimState(updatedVimState);
+      }
     } else {
       if (!vimEditorOptionsV2.childSelector) return;
 
@@ -204,11 +218,14 @@ export async function initVim(vimEditorOptionsV2: VimEditorOptionsV2) {
           targetNode.textContent;
       }
 
-      commandListener(
+      const updatedVimState = commandListener(
         result,
         { pressedKey, ev, modifiersText: modifiers },
         vim
       );
+      if (updatedVimState) {
+        vim.vimState.updateVimState(updatedVimState);
+      }
     }
 
     // Let browser input pass
@@ -285,13 +302,19 @@ export async function initVim(vimEditorOptionsV2: VimEditorOptionsV2) {
         rangy.getSelection().setSingleRange(range);
       });
 
-      modeChanged(result, newMode, currentMode, vim);
+      const updatedVimState = modeChanged(result, newMode, currentMode, vim);
+      if (updatedVimState) {
+        vim.vimState.updateVimState(updatedVimState);
+      }
     } else {
-      commandListener(
+      const updatedVimState = commandListener(
         result,
         { pressedKey, ev, modifiersText: modifiers },
         vim
       );
+      if (updatedVimState) {
+        vim.vimState.updateVimState(updatedVimState);
+      }
     }
 
     // Let browser input pass
