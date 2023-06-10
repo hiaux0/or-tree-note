@@ -68,7 +68,8 @@ export class VimStateClass {
   }
 
   public getPreviousLine() {
-    const previous = this.getLineAt(this.cursor.line - 1);
+    const lineIndex = Math.max(this.cursor.line - 1, 0);
+    const previous = this.getLineAt(lineIndex);
     return previous;
   }
 
