@@ -58,18 +58,7 @@ export class MinimalNotes {
           this.vimState = vimResult.vimState;
         }
       },
-      modeChanged: (vimResult, newMode) => {
-        if (newMode === VimMode.NORMAL) {
-          const $inputLines =
-            this.inputContainerRef.querySelectorAll('.inputLine');
-          const linesFromInsert: VimLine[] = [];
-          Array.from($inputLines).forEach((line) => {
-            linesFromInsert.push({ text: line.textContent });
-          });
-          vimResult.vimState.lines = linesFromInsert;
-          this.vimState = vimResult.vimState.serialize();
-          return vimResult.vimState.serialize();
-        }
+      modeChanged: (vimResult) => {
         this.vimState = vimResult.vimState;
       },
     };

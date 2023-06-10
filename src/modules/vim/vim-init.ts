@@ -179,19 +179,28 @@ export async function initVim(vimEditorOptionsV2: VimEditorOptionsV2) {
     const newMode = result.vimState.mode;
     if (isModeChangeCommand(result.targetCommand, currentMode, newMode)) {
       if (currentMode !== VimMode.INSERT) return;
-
-      const range = SelectionService.getSingleRange();
-      const updatedCursor = {
-        line: result.vimState.cursor.line,
-        col: Math.max(range.startOffset - 1, 0), // - 1 INS -> NO, cursor moves one left
-      };
+      const curserFromInsert = SelectionService.getCursorFromSelection(
+        vimEditorOptionsV2.container
+      );
       // TODO: investigate the vimCore handling of cursorLeft from IN->NO
-      vim.vimState.updateCursor(updatedCursor);
+      vim.vimState.updateCursor(curserFromInsert);
+      result.vimState.updateCursor(curserFromInsert);
+      vimUi.update(vim.vimState);
       /**
        * STOP: When trying to setTimeout, the contenteditable border does not go away
        * setTimeout(() => { }, 0);
        */
       vimEditorOptionsV2.container.contentEditable = 'false';
+
+      // Update text from insert (including new lines) to vimState
+      const $inputLines =
+        vimEditorOptionsV2.container.querySelectorAll('.inputLine');
+      const linesFromInsert: VimLine[] = [];
+      Array.from($inputLines).forEach((line) => {
+        linesFromInsert.push({ text: line.textContent });
+      });
+      vim.vimState.lines = linesFromInsert;
+      result.vimState.lines = linesFromInsert;
 
       const updatedVimState = modeChanged(result, newMode, currentMode, vim);
       if (updatedVimState) {

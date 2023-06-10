@@ -47,4 +47,22 @@ export class SelectionService {
 
     // document.getSelection().addRange(range);
   }
+
+  static getCursorFromSelection(element: HTMLElement): Cursor {
+    const selection = document.getSelection();
+    for (let rangeIndex = 0; rangeIndex < selection.rangeCount; rangeIndex++) {
+      const range = selection.getRangeAt(rangeIndex);
+      const col = range.startOffset;
+      const line = getLineIndex(range.startContainer);
+
+      const cursor = { col, line };
+      return cursor;
+    }
+
+    function getLineIndex(startContainer: Node): number {
+      const $children = Array.from(element.children);
+      const positionIndex = $children.indexOf(startContainer.parentElement);
+      return positionIndex;
+    }
+  }
 }
