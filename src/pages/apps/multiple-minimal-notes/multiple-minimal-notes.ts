@@ -46,7 +46,23 @@ export class MultipleMinimalNotes {
         };
     /* prettier-ignore */ console.log('vimState.id:', this.vimEditorMap.editors['0'].vimState.id);
 
+    this.initEventListeners();
     void this.initVim();
+  }
+
+  private initEventListeners() {
+    document.addEventListener('click', (ev: MouseEvent) => {
+      const $target = ev.target as HTMLElement;
+      const $notesContainer = $target.closest<HTMLElement>(
+        '.notesComponentContainer'
+      );
+      if (!$notesContainer) return;
+
+      const $note = $notesContainer.querySelector<HTMLElement>('.minimalNote');
+      const vimId = $note.dataset.vimId;
+      /** ISSUE-jMia9Mjf: overwrite for now, should add managing */
+      this.vimEditorMap.activeEditorIds = [vimId];
+    });
   }
 
   async initVim() {
@@ -59,8 +75,7 @@ export class MultipleMinimalNotes {
     vimEditorOptionsV2.plugins = [
       {
         commandName: 'save',
-        execute: (vimState) => {
-          console.log('hello');
+        execute: () => {
           void StorageService.saveVimEditors(this.vimEditorMap);
         },
       },

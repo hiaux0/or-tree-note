@@ -53,6 +53,7 @@ export class VimCore {
   private readonly vimCommandManager: VimCommandManager;
   private readonly activeLine: string;
 
+  /** ISSUE-xC83cN1d: remove lines and cursore, for vimOptions. (or take vimState from vimOptions) */
   constructor(
     private readonly lines: VimLine[],
     private readonly cursor: Cursor = defaultCursor,
@@ -174,7 +175,6 @@ export class VimCore {
       vimState = this.vimState;
     }
     DebugService.endDebugCollection(this.vimState);
-    /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: vim-core.ts ~ line 179 ~ endDebugCollection');
 
     //
     const result: QueueInputReturn = {

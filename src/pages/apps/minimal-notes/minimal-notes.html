@@ -1,10 +1,16 @@
 <template>
   <div class="notesComponentContainer">
     <div
+      data-vim-id="${vimState.id}"
       class="
+        minimalNote
         container
         mode-${vimState.mode}
-        ${active ?  'container--active' : 'container--deactive'}
+        ${active
+        ?
+        'container--active'
+        :
+        'container--deactive'}
       "
     >
       <div

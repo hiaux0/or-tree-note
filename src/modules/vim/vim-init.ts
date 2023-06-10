@@ -184,6 +184,8 @@ export async function initVim(vimEditorOptionsV2: VimEditorOptionsV2) {
 
       modeChanged(result, newMode, currentMode, vim);
     } else {
+      if (!vimEditorOptionsV2.childSelector) return;
+
       const $childs = vimEditorOptionsV2.container.querySelectorAll(
         vimEditorOptionsV2.childSelector
       );
@@ -273,6 +275,8 @@ export async function initVim(vimEditorOptionsV2: VimEditorOptionsV2) {
       const cursor = result.vimState.cursor;
       setTimeout(() => {
         const $childs = vimEditorOptionsV2.container.querySelectorAll('div');
+        if (!$childs) return;
+
         const targetNode = $childs[cursor.line].childNodes[0];
         const range = SelectionService.createRange(targetNode, cursor);
 

@@ -5,11 +5,13 @@
 
   <section ref="multileNotesContainerRef">
     <template repeat.for="vimEditor of vimEditors">
-      <input type="text" value.bind="vimEditor.name" />
-      <minimal-notes
-        vim-state.two-way="vimEditor.vimState"
-        active.bind="vimEditorMap.activeEditorIds.includes(vimEditor.vimState.id)"
-      ></minimal-notes>
+      <div class="minimalNoteContainer">
+        <input type="text" value.bind="vimEditor.name" />
+        <minimal-notes
+          vim-state.two-way="vimEditor.vimState"
+          active.bind="vimEditorMap.activeEditorIds.includes(vimEditor.vimState.id)"
+        ></minimal-notes>
+      </div>
     </template>
   </section>
 </template>
