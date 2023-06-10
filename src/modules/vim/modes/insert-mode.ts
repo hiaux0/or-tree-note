@@ -111,4 +111,8 @@ export class InsertMode extends AbstractMode {
     // return this.vimState;
     // /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: insert-mode.ts ~ line 51 ~ space');
   }
+
+  newLine(): VimStateClass {
+    return this.vimState;
+  }
 }
