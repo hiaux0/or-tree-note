@@ -26,7 +26,7 @@ export class VimStateClass {
   commandName: VimCommandNames;
   snippet: ISnippet;
 
-  constructor(readonly vimState: VimStateV2) {
+  constructor(private readonly vimState: VimStateV2) {
     this.updateVimState(vimState);
   }
 
