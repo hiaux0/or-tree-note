@@ -1,5 +1,6 @@
 import { Logger } from 'common/logging/logging';
 import { ISnippet } from 'resources/keybindings/snippets/snippets';
+import { EditorId } from 'store/initial-state';
 
 import { VimCommandNames } from './vim-commands-repository';
 import {
@@ -14,6 +15,7 @@ import {
 const logger = new Logger('VimState');
 
 export class VimStateClass {
+  id: EditorId;
   cursor: Cursor;
   foldMap: FoldMap;
   lines: VimLine[];
@@ -24,16 +26,8 @@ export class VimStateClass {
   commandName: VimCommandNames;
   snippet: ISnippet;
 
-  constructor(readonly vimState: VimStateV2) {
-    this.cursor = vimState.cursor;
-    this.foldMap = vimState.foldMap;
-    this.lines = vimState.lines;
-    this.mode = vimState.mode ?? VimMode.NORMAL;
-    this.visualStartCursor = vimState.visualStartCursor;
-    this.visualEndCursor = vimState.visualEndCursor;
-    this.deletedLinesIndeces = vimState.deletedLinesIndeces;
-    this.commandName = vimState.commandName;
-    this.snippet = vimState.snippet;
+  constructor(private readonly vimState: VimStateV2) {
+    this.updateVimState(vimState);
   }
 
   public static create(cursor: Cursor, lines?: VimLine[]) {
@@ -42,6 +36,7 @@ export class VimStateClass {
 
   public serialize(): VimStateV2 {
     return {
+      id: this.id,
       cursor: this.cursor,
       foldMap: this.foldMap,
       lines: this.lines,
@@ -50,6 +45,7 @@ export class VimStateClass {
       visualEndCursor: this.visualEndCursor,
       deletedLinesIndeces: this.deletedLinesIndeces,
       commandName: this.commandName,
+      snippet: this.snippet,
     };
   }
 
@@ -65,7 +61,8 @@ export class VimStateClass {
   }
 
   public getPreviousLine() {
-    const previous = this.getLineAt(this.cursor.line - 1);
+    const lineIndex = Math.max(this.cursor.line - 1, 0);
+    const previous = this.getLineAt(lineIndex);
     return previous;
   }
 
@@ -81,6 +78,19 @@ export class VimStateClass {
     this.cursor = cursor;
   }
 
+  public updateVimState(vimState: VimStateV2) {
+    this.id = vimState.id;
+    this.cursor = vimState.cursor;
+    this.foldMap = vimState.foldMap;
+    this.lines = vimState.lines;
+    this.mode = vimState.mode ?? VimMode.NORMAL;
+    this.visualStartCursor = vimState.visualStartCursor;
+    this.visualEndCursor = vimState.visualEndCursor;
+    this.deletedLinesIndeces = vimState.deletedLinesIndeces;
+    this.commandName = vimState.commandName;
+    this.snippet = vimState.snippet;
+  }
+
   public reportVimState() {
     const { cursor, lines, mode } = this;
     logger.culogger.overwriteDefaultLogOtpions({ log: true });
@@ -88,5 +98,10 @@ export class VimStateClass {
     /* prettier-ignore */ logger.culogger.debug(['Cursor at', {...cursor}], {}, (...r) => console.log(...r));
     /* prettier-ignore */ logger.culogger.debug(['Lines are', lines.map(l => l.text)], {}, (...r) => console.log(...r));
     logger.culogger.overwriteDefaultLogOtpions({ log: false });
+  }
+
+  public isInsertMode(): boolean {
+    const is = this.mode === VimMode.INSERT;
+    return is;
   }
 }

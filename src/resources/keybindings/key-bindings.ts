@@ -121,7 +121,7 @@ const keyBindings: KeyBindingModes = {
     { key: '<Shift>', command: VIM_COMMAND['shift'] },
     { key: Modifier['<Space>'], command: VIM_COMMAND['space'] },
     { key: '<Control>', command: VIM_COMMAND['nothing'] },
-    { key: '<Tab>', command: VIM_COMMAND['indentRight'] },
+    { key: '<Tab>', command: VIM_COMMAND['tab'] },
     { key: '<Shift><Tab>', command: VIM_COMMAND['indentLeft'] },
     // snippets
     ...commandsAllModes,

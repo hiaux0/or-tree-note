@@ -32,7 +32,7 @@ export class MyNotes {
    *     just to make the code work
    */
   bind() {
-    this.numOfEditors = this.editors.length;
+    this.numOfEditors = Object.keys(this.editors).length;
   }
 
   attached() {

@@ -53,6 +53,7 @@ export class VimCore {
   private readonly vimCommandManager: VimCommandManager;
   private readonly activeLine: string;
 
+  /** ISSUE-xC83cN1d: remove lines and cursore, for vimOptions. (or take vimState from vimOptions) */
   constructor(
     private readonly lines: VimLine[],
     private readonly cursor: Cursor = defaultCursor,
@@ -62,10 +63,12 @@ export class VimCore {
       ...defaultVimOptions,
       ...this.vimOptions,
     };
-    const initialVimState = new VimStateClass({
-      cursor,
-      lines,
-    });
+    const initialVimState = new VimStateClass(
+      vimOptions.vimState ?? {
+        cursor,
+        lines,
+      }
+    );
     this.vimCommandManager = new VimCommandManager(
       initialVimState,
       finalVimOptions
@@ -86,6 +89,7 @@ export class VimCore {
     input: string,
     modifiers?: string[]
   ): Promise<QueueInputReturn | undefined> {
+    /* prettier-ignore */ logger.culogger.debug(['Mode: (%s) %s', this.vimState.mode], {}, (...r) => console.log(...r));
     this.vimState.snippet = undefined;
     const modifiersText = `${modifiers?.join('+ ')}`;
     /* prettier-ignore */ logger.culogger.debug(['Received input: (%s) %s', modifiersText, input], {}, (...r) => console.log(...r));
@@ -140,7 +144,7 @@ export class VimCore {
       /** Commands */
       /** ******** */
       case VIM_COMMAND['newLine']:
-        await this.queueInputSequence('u^'); // TODO: side effect? why works without assigning to `vimState`?
+        await this.queueInputSequence('u^');
         break;
       case VIM_COMMAND['paste']: {
         const clipboardTextRaw = await navigator.clipboard.readText();
@@ -172,7 +176,6 @@ export class VimCore {
       vimState = this.vimState;
     }
     DebugService.endDebugCollection(this.vimState);
-    /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: vim-core.ts ~ line 179 ~ endDebugCollection');
 
     //
     const result: QueueInputReturn = {
@@ -269,13 +272,17 @@ export class VimCore {
     if (queueInputReturn.vimState == null) return;
 
     const { cursor, lines } = queueInputReturn.vimState;
-    const text = queueInputReturn.vimState.getActiveLine();
-    const actviveLine = lines[cursor.line];
-
+    const text = queueInputReturn.vimState.getActiveLine().text;
+    if (lines[cursor.line] === undefined) {
+      console.warn('bug: cursor line is -1');
+      return;
+      // debugger;
+    }
+    const actviveLine = lines[cursor.line].text;
     if (actviveLine !== text) {
       const errorMessage = 'Active line and vim state wrong.';
-      const expected = `Expected: ${text.text}`;
-      const received = `Received: ${actviveLine.text}`;
+      const expected = `Expected: ${text}`;
+      const received = `Received: ${actviveLine}`;
       throw new Error(`${errorMessage}\n${expected}\n${received}`);
     }
 

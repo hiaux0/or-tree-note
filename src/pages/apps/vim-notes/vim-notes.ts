@@ -16,6 +16,7 @@ import {
 } from 'modules/vim/vim-types';
 import { distinctUntilChanged, map } from 'rxjs/operators';
 import {
+  EditorId,
   EditorIds,
   EditorLine,
   IVimEditor,
@@ -46,7 +47,7 @@ import './vim-notes.scss';
 })
 export class VimNotes {
   @bindable lines: VimLine[];
-  @bindable editorId: number;
+  @bindable editorId: EditorId;
 
   line: EditorLine;
   state: StateHistory<VimEditorState>;
@@ -141,10 +142,10 @@ export class VimNotes {
           const currentState = this.state.present;
 
           if (vimEditorOptions.removeTrailingWhitespace) {
-            const withoutTrailingWhitespace = this.removeTrailingWhitespace(
-              this.state.present.editors
-            );
-            currentState.editors = withoutTrailingWhitespace;
+            // const withoutTrailingWhitespace = this.removeTrailingWhitespace(
+            //   this.state.present.editors
+            // );
+            // currentState.editors = withoutTrailingWhitespace;
           }
 
           const stringified = JSON.stringify(currentState);

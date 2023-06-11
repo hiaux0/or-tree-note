@@ -338,8 +338,6 @@ export class VimCommandManager {
           return; // todo
         } else if (isSpace(input)) {
           return VIM_COMMAND.space;
-        } else if (isTab(input)) {
-          return VIM_COMMAND.indentRight;
         } else if (isCommonCommand(input, modifiers) != null) {
           const targetCommand = isCommonCommand(input, modifiers);
           return VIM_COMMAND[targetCommand.command];
@@ -365,7 +363,8 @@ export class VimCommandManager {
   }
 
   private isInsertMode() {
-    return this.activeMode === VimMode.INSERT;
+    const is = this.activeMode === VimMode.INSERT;
+    return is;
   }
 
   emptyQueuedKeys() {

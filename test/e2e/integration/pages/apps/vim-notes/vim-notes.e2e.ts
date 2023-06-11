@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-call */
 import { CURRENT_OTN_MODE, OTN_STATE_KEY } from 'src/local-storage';
 
 const initialContent = '012 456';

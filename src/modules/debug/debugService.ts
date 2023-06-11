@@ -5,6 +5,7 @@ import { VimStateClass } from 'modules/vim/vim-state';
 import { VimStateV2 } from 'modules/vim/vim-types';
 
 let hitCounter = 0;
+const shouldCollect = false;
 
 export class DebugService {
   public static targetCommandNames: VIM_COMMAND[] = [];
@@ -23,12 +24,16 @@ export class DebugService {
     input: unknown,
     vimState: VimStateClass
   ) {
+    if (!shouldCollect) return;
+
     this.targetCommandNames.push(targetCommandName);
     this.inputs.push(input);
     this.beforeVimStates.push(cloneDeep(vimState.serialize()));
   }
 
   public static endDebugCollection(vimState: VimStateClass) {
+    if (!shouldCollect) return;
+
     this.afterVimStates.push(cloneDeep(vimState.serialize()));
 
     const index = 0;

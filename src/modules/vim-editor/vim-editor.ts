@@ -1,10 +1,11 @@
 import { VimCore } from 'modules/vim/vim-core';
 import { VimExecutingMode, VimPlugin } from 'modules/vim/vim-types';
+import { EditorId } from 'store/initial-state';
 
 import { VimEditorTextMode } from './modes/vim-editor-text-mode';
 
 export interface VimEditorOptions {
-  id: number;
+  id: EditorId;
   // Input / Setup
   inputList?: string[];
   htmlInputList?: HTMLElement[];

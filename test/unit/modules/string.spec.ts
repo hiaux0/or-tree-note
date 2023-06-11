@@ -44,15 +44,15 @@ describe('filterListByCharSequence', () => {
 describe('filterStringByCharSequence', () => {
   it('Should return one result - 1', () => {
     const input = 'z';
-    expect(inputContainsSequence(input, 'z')).toBeTrue();
+    expect(inputContainsSequence(input, 'z')).toBe(true);
   });
   it('Should return one result - 2', () => {
     const input = 'foo';
-    expect(inputContainsSequence(input, 'fo')).toBeTrue();
+    expect(inputContainsSequence(input, 'fo')).toBe(true);
   });
   it('Should not return when no match', () => {
     const input = 'bar';
-    expect(inputContainsSequence(input, 'br')).toBeFalse();
+    expect(inputContainsSequence(input, 'br')).toBe(false);
   });
 });
 

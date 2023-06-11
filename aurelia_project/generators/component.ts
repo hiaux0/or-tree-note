@@ -1,6 +1,6 @@
-import { inject } from "aurelia-dependency-injection";
-import { Project, ProjectItem, CLIOptions, UI } from "aurelia-cli";
-import * as path from "path";
+import { inject } from 'aurelia-dependency-injection';
+import { Project, ProjectItem, CLIOptions, UI } from 'aurelia-cli';
+import * as path from 'path';
 
 @inject(Project, CLIOptions, UI)
 export default class ElementGenerator {
@@ -13,13 +13,13 @@ export default class ElementGenerator {
   async execute() {
     const name = await this.ui.ensureAnswer(
       this.options.args[0],
-      "What would you like to call the component?"
+      'What would you like to call the component?'
     );
 
     const subFolders = await this.ui.ensureAnswer(
       this.options.args[1],
       "What sub-folder would you like to add it to?\nIf it doesn't exist it will be created for you.\n\nDefault folder is the source folder (src).",
-      "."
+      '.'
     );
 
     let fileName = this.project.makeFileName(name);
@@ -27,15 +27,15 @@ export default class ElementGenerator {
 
     this.project.root.add(
       ProjectItem.text(
-        path.join(subFolders, fileName, fileName + ".ts"),
+        path.join(subFolders, fileName, fileName + '.ts'),
         this.generateJSSource(className, fileName)
       ),
       ProjectItem.text(
-        path.join(subFolders, fileName, fileName + ".html"),
+        path.join(subFolders, fileName, fileName + '.html'),
         this.generateHTMLSource(fileName, subFolders)
       ),
       ProjectItem.text(
-        path.join(subFolders, fileName, fileName + ".scss"),
+        path.join(subFolders, fileName, fileName + '.scss'),
         this.generateSCSSSource(fileName)
       )
     );
@@ -61,8 +61,9 @@ export class ${className} {
 
   generateHTMLSource(fileName, subFolders) {
     return `<template>
+  <button> <a href="#${subFolders}/${fileName}">${fileName}</a> </button>
   <require from='../${fileName}/${fileName}'></require>
-  <a md-button role="button" class="button navigationButton" href="#${subFolders}/${fileName}">${fileName}</a>
+
 
   <h1>\${value}</h1>
 </template>`;

@@ -1,6 +1,6 @@
 import { nextStateHistory, StateHistory } from 'aurelia-store';
 import produce from 'immer';
-import { VimEditorState } from 'store/initial-state';
+import { EditorId, VimEditorState } from 'store/initial-state';
 
 // /**
 //  */
@@ -13,7 +13,7 @@ import { VimEditorState } from 'store/initial-state';
 
 export const toggleCheckbox = (
   state: StateHistory<VimEditorState>,
-  editorId: number,
+  editorId: EditorId,
   targetLineNumber: number
 ) => {
   return nextStateHistory(

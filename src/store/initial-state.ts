@@ -51,15 +51,17 @@ export interface EditorLine {
   macro?: LineMacro;
 }
 
+export type EditorId = string;
+export type EditorIds = EditorId[];
+
 export interface IVimEditor {
+  name?: string;
   linesAddons: Record<string, EditorLine>; // Migration_3
   vimState?: VimStateV2;
 }
 
-export type EditorIds = number[];
-
 export interface VimEditorState {
-  editors?: IVimEditor[];
+  editors?: Record<EditorId, IVimEditor>;
   activeEditorIds?: EditorIds;
 }
 
@@ -76,28 +78,8 @@ export interface VimEditorState {
  * - snippets
  */
 export const initialVimEditorState: VimEditorState = {
-  editors: [
-    // {
-    //   vimState: {
-    //     lines: [
-    //       {
-    //         text: 'Hello, World',
-    //         id: '456'
-    //       }
-    //     ]
-    //   },
-    //   linesAddons: {
-    //     '123': {},
-    //     '456': {
-    //       macro: {
-    //         checkbox: {
-    //           value: true,
-    //         },
-    //       },
-    //     },
-    //   },
-    // },
-    {
+  editors: {
+    '0': {
       vimState: {},
       linesAddons: {
         'one two three': {
@@ -107,9 +89,8 @@ export const initialVimEditorState: VimEditorState = {
             },
           },
         },
-        'other': {},
       },
     },
-  ],
-  activeEditorIds: [0],
+  },
+  activeEditorIds: ['0'],
 };

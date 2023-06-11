@@ -8,7 +8,7 @@ import { Logger } from 'modules/debug/logger';
 import { rootContainer } from 'modules/root-container';
 import { VimStateClass } from 'modules/vim/vim-state';
 import { Cursor, VimMode } from 'modules/vim/vim-types';
-import { VimEditorState } from 'store/initial-state';
+import { EditorId, VimEditorState } from 'store/initial-state';
 
 import {
   createNewLine,
@@ -38,7 +38,7 @@ export abstract class AbstractTextMode {
   private readonly childrenMutationObserver: ChildrenMutationObserver;
 
   constructor(
-    public editerId: number,
+    public editerId: EditorId,
     public parentElement: HTMLElement,
     public childSelector: string,
     public caretElement: HTMLElement,

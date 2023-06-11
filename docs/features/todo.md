@@ -2,14 +2,26 @@
 
 # Current
 
+- [x] switch editors
+- [x] add editors
+- [x] remove editors
+
+- [x] enter in insert
+- [x] cursor in insert
+  - take from click changing
 - .
 
 # Feat
 
 - .
 
-  - [ ] [testing] write about, why I'm not doing tdd anymore
   - [ ] [debug] history to access state, so I can reproduce the issue
+  - [ ] /\*_ ISSUE-jMia9Mjf: overwrite for now, should add managing _/
+
+  ## Done Feat
+
+  - [x] [testing] write about, why I'm not doing tdd anymore
+    - because had too many different steps hello world, what
 
 # Bug
 
@@ -17,18 +29,28 @@
 
   ## Current
 
-  - [ ] [$] at start of empty line goes to -1
-
   ## Backlog
 
-  - [ ] [Normal] diw deletes the first word it encounters in the line
-  - [ ][indent] ` |hello` Indenting too much, will put cursor out of bound on the left
-  - [ ][t] not supporting going to upper case chars (because of queued shift)
-  - [ ][cc] does not clear line
-  - [ ] await this.queueInputSequence('u^'); // TODO: side effect? why works without assigning to `vimState`?
+  - [ ] [diw] when many whitespaces, shoudl delete them all
+  - [ ][r] rr not working (tt, ff, TT, FF)
+    - DO, should wo afte refactoring whole command and (awaiting command) handling
+  - [ ] joining lines in insert then ESC -> deletes all
+    - --> !!!! big issue: rendering not working somehow
+    - the state in vim is there, but html breaks
+      - [ ] re-consider insert<>normal rendering
+      - [ ] try au2?
 
   ## Done
 
+  - [x] await this.queueInputSequence('u^'); // TODO: side effect? why works without assigning to `vimState`?
+    - whole core is based on mutation (`abstract-mode.t`s)
+  - [x][r] r -> <ESC> -> writes escape
+  - [x][t] not workgin
+  - [x][f] not supporting going to upper case chars (because of queued shift)
+  - [x] [Normal] diw deletes the first word it encounters in the line
+  - [x][cc] does not clear line
+  - [x][indent] ` |hello` Indenting too much, will put cursor out of bound on the left
+  - [x] [$] at start of empty line goes to -1
   - [x] [r] replaced not reflected in UI (have to go to insert mode to see)
   - [x] fix testing
   - [x] [nor] 'o' on vim with only one line throws some error
@@ -41,30 +63,41 @@
 
 - .
 
+  - [ ] [multiple] /\*_ ISSUE-xC83cN1d: remove lines and cursore, for vimOptions. (or take vimState from vimOptions) _/
+  - [ ] [multiple] currently multiple listens to all key presses / commands? Maybe add option, to just listen to specific commands
+  - [ ] allow caret and container option have selector (and not element itself)
+  - [ ] [refac] `vim-init.ts` and the composition handling should go into `vim-core.t`s
+  - [ ] [refac] unify modifier behavior (Shift vs <Shift>)
+  - [ ] multi cursor
+
+    - [ ] `queueInputSequence` should support <ctrl> (additionally to <Control>)
+
   - [ ] [paste] in insert, paste keeps formatting.. Want?
   - [ ] [refac] consider making vim-core nodejs compatible (currently, for paste, has `navigator`)
     - move to `vim-init` instead?
       - since it has Browser code
-  - [ ] allow caret and container option have selector (and not element itself)
-  - [ ] [modes] differentiate for <Esc>, if a mode change, or cancelling
     - background, just thought, it might be helpful to differentiate
-  - [ ] `queueInputSequence` should support <ctrl> (additionally to <Control>)
   - [ ] [snippets] cursor placeholder support (`$1 $0`)
-  - [ ] changeText should not execute 2 actions (1 changeText 2 changeVimState (the cursor to the right))
-    - could be part of a bigger refactor, where I want to compose the vim actions more
   - [ ] show whitespace &zwnj;
-  - [ ] consider another code highlightin library
-    - https://github.com/shikijs/shiki
-  - [ ] undo/redo should not trigger on every keystroke
-    - eg. when I type "hello", and then undo, then the whole word "hello" should be undone, and not every char
 
   ## Later
 
   - .
+  - [ ] consider another code highlightin library
+    - https://github.com/shikijs/shiki
     - [ ] text replacements - WITH composition possiliibty (eg. ,a , cause a can become â)
       - do when find annoying
     - [ ] highilgiht on every keystroke (to register when I type eg. "#" as md header)
       - later: need to do some children mutation observation (abstract-text-mode.ts)?
+  - obsolete? -> not using actions anymore in `minimal-notes`
+    - [x] changeText should not execute 2 actions (1 changeText 2 changeVimState (the cursor to the right))
+      - could be part of a bigger refactor, where I want to compose the vim actions more
+    - [x] undo/redo should not trigger on every keystroke
+      - eg. when I type "hello", and then undo, then the whole word "hello" should be undone, and not every char
+
+  ## Done Code Enhancements
+
+  - [x] [modes] differentiate for <Esc>, if a mode change, or cancelling
 
 # Refactoring
 

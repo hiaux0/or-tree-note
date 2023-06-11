@@ -183,7 +183,7 @@ export abstract class AbstractMode {
       return this.vimState;
     }
 
-    this.vimState.cursor.col = updaterCursorCol;
+    this.setCursorCol(updaterCursorCol);
     return this.vimState;
   }
   cursorUp(): VimStateClass {
@@ -198,6 +198,7 @@ export abstract class AbstractMode {
     }
 
     const newActiveLine = this.vimState.lines[newCurLine];
+    if (!newActiveLine) return;
     const isValidHorizontalAfterMovedVertically = isValidHorizontalPosition(
       this.vimState.cursor.col + 1,
       newActiveLine.text
@@ -205,13 +206,13 @@ export abstract class AbstractMode {
 
     if (!isValidHorizontalAfterMovedVertically) {
       // TODO: Call "$" to put cursor to end of line
-      this.vimState.cursor.col = Math.max(newActiveLine.text.length - 1, 0);
+      this.setCursorCol(Math.max(newActiveLine.text.length - 1, 0));
     }
 
     const newActiveText = this.vimState.lines[newCurLine];
 
     // this.vimState.updateActiveLine(newActiveText);
-    this.vimState.cursor.line = newCurLine;
+    this.setCursorLine(newCurLine);
     this.reTokenizeInput(newActiveText.text);
 
     return this.vimState;
@@ -235,12 +236,12 @@ export abstract class AbstractMode {
 
     if (!isValidHorizontalAfterMovedVertically) {
       // TODO: Call "$" to put cursor to end of line
-      this.vimState.cursor.col = Math.max(newActiveLine.text.length - 1, 0);
+      this.setCursorCol(Math.max(newActiveLine.text.length - 1, 0));
     }
 
     const newActiveText = this.vimState.lines[newCurLine];
 
-    this.vimState.cursor.line = newCurLine;
+    this.setCursorLine(newCurLine);
     this.reTokenizeInput(newActiveText.text);
 
     return this.vimState;
@@ -263,7 +264,7 @@ export abstract class AbstractMode {
     }
 
     if (resultCol) {
-      this.vimState.cursor.col = resultCol;
+      this.setCursorCol(resultCol);
     }
 
     return this.vimState;
@@ -286,7 +287,7 @@ export abstract class AbstractMode {
     }
 
     if (resultCol) {
-      this.vimState.cursor.col = resultCol;
+      this.setCursorCol(resultCol);
     }
 
     return this.vimState;
@@ -313,15 +314,14 @@ export abstract class AbstractMode {
     }
 
     if (resultCol !== undefined) {
-      this.vimState.cursor.col = resultCol;
+      this.setCursorCol(resultCol);
     }
 
     return this.vimState;
   }
   cursorLineEnd(): VimStateClass {
-    this.vimState.cursor.col = Math.max(
-      this.vimState.getActiveLine().text.length - 1,
-      0
+    this.setCursorCol(
+      Math.max(this.vimState.getActiveLine().text.length - 1, 0)
     );
     return this.vimState;
   }
@@ -330,7 +330,7 @@ export abstract class AbstractMode {
       this.vimState.getActiveLine().text
     );
 
-    this.vimState.cursor.col = nonWhiteSpaceIndex;
+    this.setCursorCol(nonWhiteSpaceIndex);
     return this.vimState;
   }
   jumpNextBlock(): VimStateClass {
@@ -370,7 +370,7 @@ export abstract class AbstractMode {
       finalLine = previousBlockIndex;
     }
 
-    this.vimState.cursor.line = finalLine;
+    this.setCursorLine(finalLine);
 
     return this.vimState;
   }
@@ -411,7 +411,7 @@ export abstract class AbstractMode {
       finalLine = previousBlockIndex;
     }
 
-    this.vimState.cursor.line = finalLine;
+    this.setCursorLine(finalLine);
 
     return this.vimState;
   }
@@ -425,7 +425,7 @@ export abstract class AbstractMode {
     );
 
     if (targetCharacterIndex > -1) {
-      this.vimState.cursor.col = targetCharacterIndex;
+      this.setCursorCol(targetCharacterIndex);
     }
 
     return this.vimState;
@@ -438,7 +438,7 @@ export abstract class AbstractMode {
 
     if (targetCharacterIndex > -1) {
       const finalNewIndex = cursor.col + targetCharacterIndex; // before substring + target index
-      this.vimState.cursor.col = finalNewIndex;
+      this.setCursorCol(finalNewIndex);
     }
 
     return this.vimState;
@@ -453,7 +453,7 @@ export abstract class AbstractMode {
     );
 
     if (targetCharacterIndex > -1) {
-      this.vimState.cursor.col = targetCharacterIndex + 1; // + 1 after char
+      this.setCursorCol(targetCharacterIndex + 1); // + 1 after char
     }
 
     return this.vimState;
@@ -466,7 +466,7 @@ export abstract class AbstractMode {
     if (targetCharacterIndex > 0) {
       // ^ -1: stay, 0: stay, cos at beginning
       const finalNewIndex = cursor.col + targetCharacterIndex - 1; // before substring + target index - before character
-      this.vimState.cursor.col = finalNewIndex;
+      this.setCursorCol(finalNewIndex);
     }
 
     return this.vimState;
@@ -475,6 +475,14 @@ export abstract class AbstractMode {
   /** ************** */
   /* Cursor Helpers */
   /** ************** */
+  public setCursorCol(updaterCursorCol: number) {
+    this.vimState.cursor.col = Math.max(updaterCursorCol, 0);
+  }
+
+  public setCursorLine(updaterCursorLine: number) {
+    this.vimState.cursor.line = Math.max(updaterCursorLine, 0);
+  }
+
   public moveRight(amount: number): VimStateClass {
     const updaterCursorCol = this.vimState.cursor.col + amount;
 
@@ -486,9 +494,10 @@ export abstract class AbstractMode {
       return this.vimState;
     }
 
-    this.vimState.cursor.col = updaterCursorCol;
+    this.setCursorCol(updaterCursorCol);
     return this.vimState;
   }
+
   getTokenUnderCursor(): TokenizedString | undefined {
     const tokenizedInput = this.reTokenizeInput(
       this.vimState.getActiveLine().text
@@ -585,12 +594,11 @@ export abstract class AbstractMode {
     if (numOfWhiteSpaceAtStart === this.vimState.cursor.col) {
       newCol = newCol + indentSize;
     }
-    this.vimState.cursor.col = newCol;
+    this.setCursorCol(newCol);
 
     const spaces = ' '.repeat(indentSize);
     const updatedInput = `${spaces}${text}`;
     this.vimState.updateActiveLine(updatedInput);
-    this.vimState.lines[this.vimState.cursor.line].text = updatedInput;
     this.reTokenizeInput(updatedInput);
 
     return this.vimState;
@@ -610,7 +618,7 @@ export abstract class AbstractMode {
     const previousCol = this.vimState.cursor.col;
     const maybeNewCol = Math.max(numOfWhiteSpaceAtStart - colsToIndentLeft, 0);
     const newCol = previousCol < maybeNewCol ? previousCol : maybeNewCol;
-    this.vimState.cursor.col = newCol;
+    this.setCursorCol(newCol);
 
     const updatedInput = text.substring(colsToIndentLeft);
     this.vimState.lines[this.vimState.cursor.line].text = updatedInput;
@@ -649,9 +657,9 @@ export abstract class AbstractMode {
     const tempLines = [...this.vimState.lines];
     const numOfWs = StringUtil.getLeadingWhitespaceNum(currentLine);
     tempLines.splice(newLineIndex, 0, { text: ' '.repeat(numOfWs) });
-    this.vimState.cursor.col = numOfWs;
+    this.setCursorCol(numOfWs);
     // put cursor below
-    this.vimState.cursor.line = this.vimState.cursor.line + 1;
+    this.setCursorLine(this.vimState.cursor.line + 1);
     this.vimState.lines = tempLines;
     this.vimState.mode = VimMode.INSERT;
     return this.vimState;
@@ -669,9 +677,9 @@ export abstract class AbstractMode {
     } else {
       newCol = 0;
     }
-    this.vimState.cursor.col = newCol;
+    this.setCursorCol(newCol);
 
-    this.vimState.cursor.line = Math.max(curLine - 1, 0);
+    this.setCursorLine(Math.max(curLine - 1, 0));
     const activeLine = this.vimState.getActiveLine().text;
     this.vimState.updateActiveLine(activeLine ?? '');
 
@@ -689,7 +697,7 @@ export abstract class AbstractMode {
     const prevCursor = this.vimState.cursor.line - 1;
     this.vimState.updateLine(prevCursor, joined);
     this.deleteLine();
-    this.vimState.cursor.col = prev.length;
+    this.setCursorCol(prev.length);
 
     return this.vimState;
   }
@@ -700,7 +708,7 @@ export abstract class AbstractMode {
       this.vimState.lines,
       this.vimState.foldMap
     );
-    this.vimState.cursor.line = parentIndex;
+    this.setCursorLine(parentIndex);
 
     this.vimState.foldMap = foldMap;
     return this.vimState;

@@ -1,8 +1,11 @@
 import { Logger } from 'common/logging/logging';
 import { isMac } from 'common/platform/platform-check';
 import { CursorUtils } from 'modules/cursor/cursor-utils';
-import { ESCAPE, SPACE } from 'resources/keybindings/app-keys';
-import { Modifier } from 'resources/keybindings/key-bindings';
+import { DomService } from 'modules/DomService';
+import { SelectionService } from 'modules/SelectionService';
+import rangy from 'rangy';
+import { SPACE } from 'resources/keybindings/app-keys';
+import { isTab, Modifier } from 'resources/keybindings/key-bindings';
 
 import { VimCore } from './vim-core';
 import {
@@ -32,6 +35,7 @@ export async function initVim(vimEditorOptionsV2: VimEditorOptionsV2) {
   const {
     startCursor,
     startLines,
+    onBeforeCommand,
     commandListener,
     modeChanged,
     onCompositionUpdate,
@@ -48,25 +52,46 @@ export async function initVim(vimEditorOptionsV2: VimEditorOptionsV2) {
     finalLines = [{ text: '123' }, { text: 'abc' }];
   }
 
-  /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: vim-init.ts ~ line 48 ~ finalLines', finalLines);
+  if (vimEditorOptionsV2.id) {
+    vimEditorOptionsV2.vimState = {
+      cursor: finalCursor,
+      lines: finalLines,
+    };
+    vimEditorOptionsV2.vimState.id = vimEditorOptionsV2.id;
+  }
+
   const vim = new VimCore(finalLines, finalCursor, {
+    vimState: vimEditorOptionsV2.vimState,
     vimPlugins: plugins ?? [],
   });
   const vimUi = new VimUi(vim, vimEditorOptionsV2);
 
   //
-  await initKeys(vimEditorOptionsV2.container);
-  await initMouse(vimEditorOptionsV2.container);
+  if (vimEditorOptionsV2.container) {
+    await initKeys(vimEditorOptionsV2.container);
+    await initMouse(vimEditorOptionsV2.container);
+  }
 
   if (afterInit) {
     const afterResults = await afterInit(vim);
 
     if (afterResults) {
-      afterResults.forEach((result) => {
-        if (isModeChangeCommand(result.targetCommand)) {
-          modeChanged(result, result.vimState.mode, undefined, vim);
+      afterResults.forEach((vimResult) => {
+        if (isModeChangeCommand(vimResult.targetCommand)) {
+          const updatedVimState = modeChanged(
+            vimResult,
+            vimResult.vimState.mode,
+            undefined,
+            vim
+          );
+          if (updatedVimState) {
+            vim.vimState.updateVimState(updatedVimState);
+          }
         } else {
-          commandListener(result, undefined, vim);
+          const updatedVimState = commandListener(vimResult, undefined, vim);
+          if (updatedVimState) {
+            vim.vimState.updateVimState(updatedVimState);
+          }
         }
       });
     }
@@ -76,7 +101,7 @@ export async function initVim(vimEditorOptionsV2: VimEditorOptionsV2) {
   async function initKeys(container: HTMLElement) {
     // Insert (Conteneditable) inptus
     container.addEventListener('keydown', (e) => {
-      console.clear();
+      // console.clear();
       if (vim.vimState.mode !== VimMode.INSERT) return;
       /* prettier-ignore */ logger.culogger.debug(['Keydown']);
       void handleKeysInsert(e);
@@ -84,6 +109,7 @@ export async function initVim(vimEditorOptionsV2: VimEditorOptionsV2) {
     // Normal modes inputs
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
     hotkeys('*', async (e) => {
       // might be obsolete, since not hit anyways, if `container` has focus
       if (vim.vimState.mode === VimMode.INSERT) return;
@@ -93,9 +119,8 @@ export async function initVim(vimEditorOptionsV2: VimEditorOptionsV2) {
     container.addEventListener('compositionstart', () => {
       isComposing = true;
     });
-    container.addEventListener(
-      'input',
-      (e) => void onCompositionUpdate(vim, e)
+    container.addEventListener('input', (e) =>
+      handleCompositionUpdate(e as CompositionEvent)
     );
     container.addEventListener('compositionend', () => {
       isComposing = false;
@@ -103,6 +128,7 @@ export async function initVim(vimEditorOptionsV2: VimEditorOptionsV2) {
   }
 
   async function handleKeysInsert(ev: KeyboardEvent) {
+    ev.stopPropagation();
     //
     if (checkAllowedBrowserShortcuts(ev)) {
       return;
@@ -110,8 +136,14 @@ export async function initVim(vimEditorOptionsV2: VimEditorOptionsV2) {
     if (isComposing) {
       return;
     }
+    if (onBeforeCommand) {
+      const result = onBeforeCommand();
+      if (result === false) {
+        return;
+      }
+    }
 
-    // console.clear();
+    console.clear();
 
     //
     const pressedKey = getPressedKey(ev);
@@ -127,9 +159,6 @@ export async function initVim(vimEditorOptionsV2: VimEditorOptionsV2) {
       case VimMode.INSERT: {
         if (pressedKey === 'Process') {
           return;
-        } else if (pressedKey === ESCAPE) {
-          // /* prettier-ignore */ logger.culogger.todo('bug with dupe lines', (...r)=>console.log(...r));
-          // return;
         }
         break;
       }
@@ -149,13 +178,64 @@ export async function initVim(vimEditorOptionsV2: VimEditorOptionsV2) {
     //
     const newMode = result.vimState.mode;
     if (isModeChangeCommand(result.targetCommand, currentMode, newMode)) {
-      modeChanged(result, newMode, currentMode, vim);
+      if (currentMode !== VimMode.INSERT) return;
+      const curserFromInsert = SelectionService.getCursorFromSelection(
+        vimEditorOptionsV2.container
+      );
+      // TODO: investigate the vimCore handling of cursorLeft from IN->NO
+      vim.vimState.updateCursor(curserFromInsert);
+      result.vimState.updateCursor(curserFromInsert);
+      vimUi.update(vim.vimState);
+      /**
+       * STOP: When trying to setTimeout, the contenteditable border does not go away
+       * setTimeout(() => { }, 0);
+       */
+      vimEditorOptionsV2.container.contentEditable = 'false';
+
+      // Update text from insert (including new lines) to vimState
+      const $inputLines =
+        vimEditorOptionsV2.container.querySelectorAll('.inputLine');
+      const linesFromInsert: VimLine[] = [];
+      Array.from($inputLines).forEach((line) => {
+        linesFromInsert.push({ text: line.textContent });
+      });
+      vim.vimState.lines = linesFromInsert;
+      result.vimState.lines = linesFromInsert;
+
+      const updatedVimState = modeChanged(result, newMode, currentMode, vim);
+      if (updatedVimState) {
+        vim.vimState.updateVimState(updatedVimState);
+      }
     } else {
-      commandListener(
+      if (!vimEditorOptionsV2.childSelector) return;
+
+      const $childs = vimEditorOptionsV2.container.querySelectorAll(
+        vimEditorOptionsV2.childSelector
+      );
+      let targetNode = $childs[result.vimState.cursor.line].childNodes[0];
+      if (DomService.isTextNode(targetNode)) {
+        if (vim.vimState.snippet) {
+          const snippet = vim.vimState.snippet;
+          const replaced = replaceSequenceWith(
+            snippet.body.join(''),
+            snippet.prefix.length,
+            vim.vimState.lines[result.vimState.cursor.line].text
+          );
+          targetNode = replaced.node as ChildNode;
+          updateUi(result);
+        }
+        vim.vimState.lines[result.vimState.cursor.line].text =
+          targetNode.textContent;
+      }
+
+      const updatedVimState = commandListener(
         result,
         { pressedKey, ev, modifiersText: modifiers },
         vim
       );
+      if (updatedVimState) {
+        vim.vimState.updateVimState(updatedVimState);
+      }
     }
 
     // Let browser input pass
@@ -167,6 +247,7 @@ export async function initVim(vimEditorOptionsV2: VimEditorOptionsV2) {
   }
 
   async function handleKeysNonInsert(ev: KeyboardEvent) {
+    ev.stopPropagation();
     //
     if (checkAllowedBrowserShortcuts(ev)) {
       return;
@@ -174,8 +255,15 @@ export async function initVim(vimEditorOptionsV2: VimEditorOptionsV2) {
     if (isComposing) {
       return;
     }
+    if (onBeforeCommand) {
+      const result = onBeforeCommand();
+      if (result === false) {
+        return;
+      }
+    }
 
-    // console.clear();
+    console.clear();
+    /* prettier-ignore */ console.log('%c------------------------------------------------------------------------------------------', `background: ${'darkblue'}`);
 
     //
     const pressedKey = getPressedKey(ev);
@@ -211,13 +299,33 @@ export async function initVim(vimEditorOptionsV2: VimEditorOptionsV2) {
     //
     const newMode = result.vimState.mode;
     if (isModeChangeCommand(result.targetCommand, currentMode, newMode)) {
-      modeChanged(result, newMode, currentMode, vim);
+      const cursor = result.vimState.cursor;
+      setTimeout(() => {
+        const $childs = vimEditorOptionsV2.container.querySelectorAll('div');
+        if (!$childs) return;
+        if (!$childs[cursor.line]) return;
+
+        const targetNode = $childs[cursor.line].childNodes[0];
+        const range = SelectionService.createRange(targetNode, cursor);
+
+        vimEditorOptionsV2.container.contentEditable = 'true';
+        vimEditorOptionsV2.container.focus();
+        rangy.getSelection().setSingleRange(range);
+      });
+
+      const updatedVimState = modeChanged(result, newMode, currentMode, vim);
+      if (updatedVimState) {
+        vim.vimState.updateVimState(updatedVimState);
+      }
     } else {
-      commandListener(
+      const updatedVimState = commandListener(
         result,
         { pressedKey, ev, modifiersText: modifiers },
         vim
       );
+      if (updatedVimState) {
+        vim.vimState.updateVimState(updatedVimState);
+      }
     }
 
     // Let browser input pass
@@ -228,11 +336,36 @@ export async function initVim(vimEditorOptionsV2: VimEditorOptionsV2) {
     }
   }
 
+  function handleCompositionUpdate(e: CompositionEvent): void {
+    if (!vimEditorOptionsV2.childSelector) return;
+
+    const $childs = (event.target as HTMLElement).querySelectorAll(
+      vimEditorOptionsV2.childSelector
+    );
+    const targetNode = $childs[vim.vimState.cursor.line].childNodes[0];
+    vim.vimState.updateLine(vim.vimState.cursor.line, targetNode.textContent);
+    const range = SelectionService.getSingleRange();
+    vim.vimState.updateCursor({
+      line: vim.vimState.cursor.line,
+      col: range.startOffset,
+    });
+
+    if (onCompositionUpdate) {
+      onCompositionUpdate(vim, e);
+    }
+  }
+
   async function executeCommandInEditor(
     input: string,
-    _ev: KeyboardEvent,
+    ev: KeyboardEvent,
     modifiers: string[]
   ) {
+    if (vim.vimState.isInsertMode()) {
+      if (isTab(input)) {
+        ev.preventDefault();
+      }
+    }
+
     const result = await vim.queueInput(input, modifiers);
     // ev.preventDefault();
 
@@ -268,6 +401,18 @@ export async function initVim(vimEditorOptionsV2: VimEditorOptionsV2) {
 
   function updateUi(result: QueueInputReturn) {
     vimUi.update(result.vimState);
+    updateUiSetDocumentRange(result.vimState.cursor);
+  }
+
+  function updateUiSetDocumentRange(cursor: Cursor) {
+    const $childs = vimEditorOptionsV2.container.querySelectorAll('div');
+    if (!$childs) return;
+    if (!$childs[cursor.line]) return;
+
+    const targetNode = $childs[cursor.line].childNodes[0];
+    const range = SelectionService.createRange(targetNode, cursor);
+
+    rangy.getSelection().setSingleRange(range);
   }
 }
 
@@ -324,4 +469,29 @@ function getPressedKey(ev: KeyboardEvent) {
     pressedKey = ev.key;
   }
   return pressedKey;
+}
+
+function replaceSequenceWith(
+  text: string,
+  snippetLength: number,
+  wholeLine: string
+): { node: Node; range: Range } | undefined {
+  const sel = SelectionService.getSelection();
+  if (sel?.rangeCount) {
+    const range = sel.getRangeAt(0);
+
+    const textNode = range.startContainer;
+    textNode.textContent = wholeLine;
+    const finalNewStart = text.length + range.startOffset - snippetLength + 1;
+    const newStart = Math.max(
+      finalNewStart, // account for char pressed, but not typed out
+      0
+    );
+    range.setStart(textNode, newStart);
+    range.deleteContents();
+    sel.removeAllRanges();
+    sel.addRange(range);
+
+    return { node: sel.anchorNode, range };
+  }
 }

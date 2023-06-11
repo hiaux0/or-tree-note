@@ -1,7 +1,10 @@
 import { SnippetsService } from 'modules/snippets/snippetsService';
 import { insert, replaceAt, replaceRange } from 'modules/string/string';
-import { isSpace } from 'resources/keybindings/key-bindings';
-import { USER_SNIPPETS } from 'resources/keybindings/snippets/snippets';
+import { isSpace, isTab } from 'resources/keybindings/key-bindings';
+import {
+  ISnippet,
+  USER_SNIPPETS,
+} from 'resources/keybindings/snippets/snippets';
 
 import { SPACE } from '../../../resources/keybindings/app-keys';
 import { VIM_COMMAND } from '../vim-commands-repository';
@@ -29,7 +32,22 @@ export class InsertMode extends AbstractMode {
     // keep track of input for snippets
     // have a trigger time window, in which snippets can be trigged
     clearInterval(this.typingIntervalTimer);
-    if (this.queuedKeys.length || SnippetsService.containsPrefix(newInput)) {
+
+    if (isTab(newInput)) {
+      const { indentSize } = this.vimOptions;
+      const snippetBody = [' '.repeat(indentSize)];
+      const tabAsSnippet: ISnippet = {
+        prefix: 'Tab',
+        body: snippetBody,
+      };
+      newInput = snippetBody[0];
+      moveRightBy = snippetBody[0].length;
+      this.vimState.commandName = VIM_COMMAND['snippet'];
+      this.vimState.snippet = tabAsSnippet;
+    } else if (
+      this.queuedKeys.length ||
+      SnippetsService.containsPrefix(newInput)
+    ) {
       this.queuedKeys.push(newInput);
       this.typingIntervalTimer = setTimeout(() => {
         this.clearQueuedKeys();
@@ -106,9 +124,14 @@ export class InsertMode extends AbstractMode {
   }
 
   space(): VimStateClass {
-    /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: insert-mode.ts ~ line 53 ~ space');
-    return this.type(SPACE);
-    // return this.vimState;
-    // /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: insert-mode.ts ~ line 51 ~ space');
+    return this.vimState;
+  }
+
+  tab(): VimStateClass {
+    return this.vimState;
+  }
+
+  newLine(): VimStateClass {
+    return this.vimState;
   }
 }
