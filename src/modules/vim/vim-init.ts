@@ -410,8 +410,11 @@ export async function initVim(vimEditorOptionsV2: VimEditorOptionsV2) {
     if (!$childs[cursor.line]) return;
 
     const targetNode = $childs[cursor.line].childNodes[0];
+    /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: vim-init.ts:414 ~ cursor:', cursor);
     const range = SelectionService.createRange(targetNode, cursor);
+    /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: vim-init.ts:415 ~ range:', range);
 
+    // rangy.getSelection().removeAllRanges();
     rangy.getSelection().setSingleRange(range);
   }
 }

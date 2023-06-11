@@ -326,8 +326,8 @@ export class VimCommandManager {
           return VIM_COMMAND.backspace;
         } else if (isControl(input)) {
           return; // todo
-        } else if (isDelete(input)) {
-          return;
+          // } else if (isDelete(input)) {
+          //   return;
         } else if (isEnter(input)) {
           return VIM_COMMAND.newLine;
         } else if (isEscape(input)) {
