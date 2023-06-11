@@ -1,0 +1,30 @@
+<template>
+  <!-- Container -->
+  <!-- contenteditable="true" -->
+  <div class="everyComponentContainer" ref="containerRef">
+    <!-- Vim info -->
+    <div class="vimInfoContainer">
+      <div>Mode: ${mode}</div>
+    </div>
+
+    <!-- Original Notes -->
+    <div class="noteContainer" ref="noteContainerRef">
+      <div contenteditable="true" class="inputLine">Hello</div>
+      <div class="inputLine">World</div>
+    </div>
+
+    <!-- Merge Original with Copied Notes -->
+    <!-- <div class="noteContainer" contenteditable="true" ref="noteContainerRef">
+      <template repeat.for="line of vimState.lines">
+        <div class="inputLine">${line.text}</div>
+      </template>
+    </div> -->
+
+    <!-- Copied Notes -->
+    <div class="copiedNoteContainer">
+      <template repeat.for="line of vimState.lines">
+        <div class="copiedInputLine">${line.text}</div>
+      </template>
+    </div>
+  </div>
+</template>

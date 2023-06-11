@@ -1,0 +1,18 @@
+.everyComponentContainer {
+  border: 1px solid black;
+
+  .noteContainer {
+    border: 1px solid black;
+  }
+
+  .copiedNoteContainer {
+    margin-top: 20px;
+    opacity: 0.7;
+  }
+
+  .input {
+    margin: 5px;
+    padding: 5px;
+    border: 1px solid black;
+  }
+}

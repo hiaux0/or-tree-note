@@ -71,6 +71,10 @@ export interface QueueInputReturn {
   vimState: VimStateClass | null;
   targetCommand: VIM_COMMAND;
 }
+export interface QueueInputReturnv2 {
+  vimState: VimStateV2 | null;
+  targetCommand: VIM_COMMAND;
+}
 
 /**
  * 0 based index
@@ -87,12 +91,22 @@ export enum VimMode {
 }
 export type VimModeKeys = keyof typeof VimMode;
 
+export interface VimHooks {
+  afterInit?: (
+    vim: VimCore
+  ) => QueueInputReturn[] | Promise<QueueInputReturn[]> | void;
+  onBeforeCommand?: () => boolean;
+  commandListenerv2?: CommandListenerv2;
+  modeChangedv2?: ModeChangedv2;
+}
+
 export interface VimOptions {
   vimState?: VimStateV2;
   keyBindings?: KeyBindingModes;
   leader?: string;
   vimPlugins?: VimPlugin[];
   indentSize?: number;
+  hooks?: VimHooks;
 }
 
 export interface VimPlugin {
@@ -112,13 +126,24 @@ export interface InputData {
 export type CommandListener = (
   vimResults: QueueInputReturn,
   inputData: InputData,
-  vim: VimCore
+  vim?: VimCore
+) => void | VimStateV2;
+export type CommandListenerv2 = (
+  vimResults: QueueInputReturnv2
+  // inputData: InputData,
+  // vim?: VimCore
 ) => void | VimStateV2;
 export type ModeChanged = (
   vimResults: QueueInputReturn,
   newMode: VimMode,
   oldMode: VimMode,
-  vim: VimCore
+  vim?: VimCore
+) => void | VimStateV2;
+export type ModeChangedv2 = (
+  vimResults: QueueInputReturnv2,
+  newMode: VimMode,
+  oldMode: VimMode,
+  vim?: VimCore
 ) => void | VimStateV2;
 
 export interface VimEditorOptionsV2 {
@@ -136,6 +161,8 @@ export interface VimEditorOptionsV2 {
   ) => QueueInputReturn[] | Promise<QueueInputReturn[]> | void;
   onBeforeCommand?: () => boolean;
   commandListener: CommandListener;
+  commandListenerv2?: CommandListenerv2;
   modeChanged?: ModeChanged;
+  modeChangedv2?: ModeChangedv2;
   onCompositionUpdate?: (vim: VimCore, event: Event) => void;
 }
