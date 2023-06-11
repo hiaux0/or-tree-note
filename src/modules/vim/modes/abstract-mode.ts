@@ -599,7 +599,6 @@ export abstract class AbstractMode {
     const spaces = ' '.repeat(indentSize);
     const updatedInput = `${spaces}${text}`;
     this.vimState.updateActiveLine(updatedInput);
-    this.vimState.lines[this.vimState.cursor.line].text = updatedInput;
     this.reTokenizeInput(updatedInput);
 
     return this.vimState;

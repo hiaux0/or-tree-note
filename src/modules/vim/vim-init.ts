@@ -5,7 +5,7 @@ import { DomService } from 'modules/DomService';
 import { SelectionService } from 'modules/SelectionService';
 import rangy from 'rangy';
 import { SPACE } from 'resources/keybindings/app-keys';
-import { Modifier } from 'resources/keybindings/key-bindings';
+import { isTab, Modifier } from 'resources/keybindings/key-bindings';
 
 import { VimCore } from './vim-core';
 import {
@@ -143,7 +143,7 @@ export async function initVim(vimEditorOptionsV2: VimEditorOptionsV2) {
       }
     }
 
-    // console.clear();
+    console.clear();
 
     //
     const pressedKey = getPressedKey(ev);
@@ -222,6 +222,7 @@ export async function initVim(vimEditorOptionsV2: VimEditorOptionsV2) {
             vim.vimState.lines[result.vimState.cursor.line].text
           );
           targetNode = replaced.node as ChildNode;
+          updateUi(result);
         }
         vim.vimState.lines[result.vimState.cursor.line].text =
           targetNode.textContent;
@@ -261,7 +262,7 @@ export async function initVim(vimEditorOptionsV2: VimEditorOptionsV2) {
       }
     }
 
-    // console.clear();
+    console.clear();
     /* prettier-ignore */ console.log('%c------------------------------------------------------------------------------------------', `background: ${'darkblue'}`);
 
     //
@@ -356,9 +357,15 @@ export async function initVim(vimEditorOptionsV2: VimEditorOptionsV2) {
 
   async function executeCommandInEditor(
     input: string,
-    _ev: KeyboardEvent,
+    ev: KeyboardEvent,
     modifiers: string[]
   ) {
+    if (vim.vimState.isInsertMode()) {
+      if (isTab(input)) {
+        ev.preventDefault();
+      }
+    }
+
     const result = await vim.queueInput(input, modifiers);
     // ev.preventDefault();
 
@@ -394,6 +401,18 @@ export async function initVim(vimEditorOptionsV2: VimEditorOptionsV2) {
 
   function updateUi(result: QueueInputReturn) {
     vimUi.update(result.vimState);
+    updateUiSetDocumentRange(result.vimState.cursor);
+  }
+
+  function updateUiSetDocumentRange(cursor: Cursor) {
+    const $childs = vimEditorOptionsV2.container.querySelectorAll('div');
+    if (!$childs) return;
+    if (!$childs[cursor.line]) return;
+
+    const targetNode = $childs[cursor.line].childNodes[0];
+    const range = SelectionService.createRange(targetNode, cursor);
+
+    rangy.getSelection().setSingleRange(range);
   }
 }
 

@@ -99,4 +99,9 @@ export class VimStateClass {
     /* prettier-ignore */ logger.culogger.debug(['Lines are', lines.map(l => l.text)], {}, (...r) => console.log(...r));
     logger.culogger.overwriteDefaultLogOtpions({ log: false });
   }
+
+  public isInsertMode(): boolean {
+    const is = this.mode === VimMode.INSERT;
+    return is;
+  }
 }

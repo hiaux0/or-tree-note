@@ -33,6 +33,7 @@ export enum VIM_COMMAND {
   'replace' = 'replace',
   'snippet' = 'snippet',
   'space' = 'space',
+  'tab' = 'tab',
   'toCharacterAtBack' = 'toCharacterAtBack',
   'toCharacterAt' = 'toCharacterAt',
   'toCharacterAfterBack' = 'toCharacterAfterBack',
