@@ -1,5 +1,6 @@
+import { cloneDeep } from 'lodash';
 import { VimStateClass } from 'modules/vim/vim-state';
-import { Cursor } from 'modules/vim/vim-types';
+import { Cursor, VimStateV2 } from 'modules/vim/vim-types';
 
 export class CursorUtils {
   static isWithinLines(
@@ -54,5 +55,14 @@ export class CursorUtils {
       ...vimState.cursor,
       ...newCursor,
     };
+  }
+
+  static updateCursorV2(vimState: VimStateV2, newCursor: Partial<Cursor>) {
+    const newVimState = cloneDeep(vimState);
+    newVimState.cursor = {
+      ...vimState.cursor,
+      ...newCursor,
+    };
+    return newVimState;
   }
 }

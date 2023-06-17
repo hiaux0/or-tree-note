@@ -1,10 +1,13 @@
 import { Logger } from '../../../../../common/logging/logging';
-import { isMac } from '../../../../../common/platform/platform-check';
+import { CursorUtils } from '../../../../../modules/cursor/cursor-utils';
+import { VIM_COMMAND } from '../../../../../modules/vim/vim-commands-repository';
 import {
   VimEditorOptionsV2,
   VimMode,
   VimLine,
+  VimStateV2,
 } from '../../../../../modules/vim/vim-types';
+import { ShortcutService } from '../../shortcuts/ShortcutService';
 import { VimCoreV2, testVimState } from '../vimCore/VimCoreV2';
 
 const logger = new Logger('VimInputHandler');
@@ -15,42 +18,102 @@ const logger = new Logger('VimInputHandler');
 export class VimInputHandler {
   vimCore: VimCoreV2;
   container: HTMLElement;
-  vimEditorOptions: VimEditorOptionsV2;
 
-  constructor(vimEditorOptions: VimEditorOptionsV2) {
-    const lines = this.getTextFromChildren(vimEditorOptions);
-    /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: every-component.ts:46 ~ lines:', lines);
-    const finalVimState = lines.length > 0 ? { lines } : testVimState;
+  constructor(private readonly vimEditorOptions: VimEditorOptionsV2) {
+    this.container = this.vimEditorOptions.container;
+
+    this.init();
+  }
+
+  private init() {
+    this.initVimCore();
+    this.initEventListeners();
+  }
+
+  private initVimCore() {
+    const lines = this.getTextFromChildren(this.vimEditorOptions);
+    const finalVimState = testVimState;
+    if (lines.length > 0) {
+      finalVimState.lines = lines;
+    }
 
     this.vimCore = new VimCoreV2(finalVimState, {
       hooks: {
         modeChangedv2: (vimResults, newMode, oldMode) => {
-          vimEditorOptions.modeChangedv2(vimResults, newMode, oldMode);
+          this.vimEditorOptions.modeChangedv2(vimResults, newMode, oldMode);
         },
         commandListenerv2: (vimResults) => {
           if (this.vimCore.getVimState().mode === VimMode.INSERT) {
-            requestAnimationFrame(() => {
-              /* prettier-ignore */ logger.culogger.todo('update insert to normal', (...r)=>console.log(...r));
-              const lines = this.getTextFromChildren(vimEditorOptions);
-              /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: every-component.ts:60 ~ lines:', lines);
-              const vimState = this.vimCore.getVimState();
-              vimState.lines = lines;
-              this.vimCore.setVimState(vimState);
+            /* prettier-ignore */ logger.culogger.todo('update insert to normal', (...r) => console.log(...r));
+            const vimState = this.updateVimState(this.vimEditorOptions);
 
-              // update cursor
-
-              vimResults.vimState = vimState;
-              vimEditorOptions.commandListenerv2(vimResults);
-            });
+            vimResults.vimState = vimState;
+            this.vimEditorOptions.commandListenerv2(vimResults);
           }
         },
       },
     });
+  }
 
-    this.vimEditorOptions = vimEditorOptions;
-    this.container = vimEditorOptions.container;
+  private initEventListeners() {
+    this.initKeyListeners();
+    this.initMouseListeners();
+  }
 
-    this.init();
+  private initKeyListeners() {
+    this.container.addEventListener('keydown', (ev) => {
+      console.clear();
+      if (ShortcutService.checkAllowedBrowserShortcuts(ev)) return;
+
+      // ev.preventDefault();
+      /* prettier-ignore */ logger.culogger.debug(['Received input %s', ev.key], {}, (...r) => console.log(...r));
+      /** Let ev paint the DOM first, so we can get the (nativly) updated DOM with keydown */
+      requestAnimationFrame(() => {
+        this.vimCore.executeCommand(ev.key);
+      });
+    });
+  }
+
+  private initMouseListeners() {
+    this.container.addEventListener('click', () => {
+      console.clear();
+      const vimState = this.vimCore.getVimState();
+      this.updateCursor(vimState);
+      this.vimCore.setVimState(vimState);
+
+      const vimResults = {
+        vimState,
+        targetCommand: VIM_COMMAND.nothing,
+      };
+      this.vimEditorOptions.commandListenerv2(vimResults);
+    });
+  }
+
+  private updateVimState(vimEditorOptions: VimEditorOptionsV2) {
+    const lines = this.getTextFromChildren(vimEditorOptions);
+    const vimState = this.vimCore.getVimState();
+    vimState.lines = lines;
+    this.updateCursor(vimState);
+    this.vimCore.setVimState(vimState);
+    return vimState;
+  }
+
+  private updateCursor(vimState: VimStateV2) {
+    const selection = document.getSelection();
+    for (let rangeIndex = 0; rangeIndex < selection.rangeCount; rangeIndex++) {
+      const range = selection.getRangeAt(rangeIndex);
+      const col = range.startOffset;
+      const line = getLineIndex(this.container, range.startContainer);
+
+      const updatedVimState = CursorUtils.updateCursorV2(vimState, {
+        line,
+        col,
+      });
+
+      /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: VimInputHandler.ts:81 ~ updatedVimState.cursor:', updatedVimState.cursor);
+
+      vimState.cursor = updatedVimState.cursor;
+    }
   }
 
   private getTextFromChildren({
@@ -64,34 +127,10 @@ export class VimInputHandler {
     });
     return lines;
   }
+}
 
-  init() {
-    this.container.addEventListener('keydown', (ev) => {
-      console.clear();
-      if (this.checkAllowedBrowserShortcuts(ev)) return;
-
-      // ev.preventDefault();
-      /* prettier-ignore */ logger.culogger.debug(['Received input %s', ev.key], {}, (...r)=>console.log(...r));
-      this.vimCore.executeCommand(ev.key);
-    });
-  }
-
-  checkAllowedBrowserShortcuts(ev: KeyboardEvent) {
-    const mainModifier = isMac ? ev.metaKey : ev.ctrlKey;
-    const reload = ev.key === 'r' && mainModifier;
-    const hardReload = ev.key === 'R' && mainModifier && ev.shiftKey;
-    if (reload || hardReload) {
-      return true;
-    } else if (ev.key === 'l' && mainModifier) {
-      return true;
-    } else if (ev.key === 'C' && mainModifier && ev.shiftKey) {
-      return true;
-    } else if (ev.key === '=' && mainModifier) {
-      return true;
-    } else if (ev.key === '-' && mainModifier) {
-      return true;
-    }
-
-    return false;
-  }
+function getLineIndex(parent: Element, startContainer: Node): number {
+  const $children = Array.from(parent.children);
+  const positionIndex = $children.indexOf(startContainer.parentElement);
+  return positionIndex;
 }
