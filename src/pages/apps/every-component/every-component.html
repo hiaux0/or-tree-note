@@ -8,9 +8,12 @@
     </div>
 
     <!-- Original Notes -->
-    <div class="noteContainer" ref="noteContainerRef">
-      <div contenteditable="true" class="inputLine">Hello</div>
-      <div class="inputLine">World</div>
+    <div class="noteContainer" ref="noteContainerRef" contenteditable="true">
+      <!-- <div contenteditable="true" class="inputLine">Hello</div>
+      <div class="inputLine">World</div> -->
+      <template repeat.for="line of vimState.lines">
+        <div class="inputLine">${line.text}</div>
+      </template>
     </div>
 
     <!-- Merge Original with Copied Notes -->
@@ -22,7 +25,7 @@
 
     <!-- Copied Notes -->
     <div class="copiedNoteContainer">
-      <template repeat.for="line of vimState.lines">
+      <template repeat.for="line of tempVimStateInsertMode.lines">
         <div class="copiedInputLine">${line.text}</div>
       </template>
     </div>
