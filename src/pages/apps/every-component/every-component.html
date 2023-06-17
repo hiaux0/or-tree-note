@@ -1,6 +1,5 @@
 <template>
   <!-- Container -->
-  <!-- contenteditable="true" -->
   <div class="everyComponentContainer" ref="containerRef">
     <!-- Vim info -->
     <div class="vimInfoContainer">
@@ -8,26 +7,46 @@
     </div>
 
     <!-- Original Notes -->
-    <div class="noteContainer" ref="noteContainerRef" contenteditable="true">
-      <!-- <div contenteditable="true" class="inputLine">Hello</div>
-      <div class="inputLine">World</div> -->
+    <div class="noteContainer" ref="noteContainerRef">
       <template repeat.for="line of vimState.lines">
-        <div class="inputLine">${line.text}</div>
+        <div
+          if.bind="$index === 0"
+          contenteditable="true"
+          autofocus
+          class="inputLine"
+          >${line.text}</div
+        >
+        <div else contenteditable class="inputLine">${line.text}</div>
       </template>
     </div>
 
-    <!-- Merge Original with Copied Notes -->
-    <!-- <div class="noteContainer" contenteditable="true" ref="noteContainerRef">
-      <template repeat.for="line of vimState.lines">
-        <div class="inputLine">${line.text}</div>
-      </template>
-    </div> -->
-
     <!-- Copied Notes -->
     <div class="copiedNoteContainer">
-      <template repeat.for="line of tempVimStateInsertMode.lines">
-        <div class="copiedInputLine">${line.text}</div>
-      </template>
+      <div class="inputLineContainer">
+        <template repeat.for="line of tempVimStateInsertMode.lines">
+          <div class="copiedInputLine">${line.text}</div>
+        </template>
+      </div>
+
+      <!-- debug -->
+      <!-- debugContainer -->
+      <div class="debugContainer">
+        <div style="text-decoration: underline">
+          Debug mode (${vimState.mode})</div
+        >
+        <div>
+          <strong>Cursor</strong>
+          L: ${vimState.cursor.line} - C: ${vimState.cursor.col}
+        </div>
+        <div>
+          <strong>Text:</strong>
+          ${vimState.lines[vimState.cursor.line].text}</div
+        >
+        <div>
+          <strong># of lines: </strong>
+          ${vimState.lines.length}
+        </div>
+      </div>
     </div>
   </div>
 </template>

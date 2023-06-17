@@ -8,6 +8,9 @@
   .copiedNoteContainer {
     margin-top: 20px;
     opacity: 0.7;
+
+    display: flex;
+    justify-content: space-between;
   }
 
   .input {
