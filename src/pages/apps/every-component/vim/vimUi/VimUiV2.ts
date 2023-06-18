@@ -212,6 +212,15 @@ export class VimUiV2 {
   /* prettier-ignore */ toggleFold(vimState: VimStateClass)               { this.setCursorMovement(vimState?.cursor); }
   /* prettier-ignore */ enterNormalMode(vimState: VimStateClass)          { this.setCursorMovement(vimState?.cursor); }
 
+  enterNormalModeV2(vimState: VimStateV2) {
+    /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: VimUiV2.ts:217 ~ vimState.cursor:', vimState.cursor);
+    this.setCursorMovement(vimState.cursor);
+  }
+
+  enterInsertMode() {
+    this.container.focus();
+  }
+
   /** "o" and not "enter" */
   async createNewLine(vimState: VimStateClass) {
     // const newLineIndex = vimState.cursor.line;

@@ -9,7 +9,6 @@ export class EveryComponent {
   @bindable value = 'EveryComponent';
   private readonly caretRef: HTMLDivElement;
   private readonly inputContainerRef: HTMLDivElement;
-  private mode: VimMode;
   private vimState: VimStateV2 = testVimState;
   /** Should be moved inside vim */
   private tempVimStateInsertMode: VimStateV2;

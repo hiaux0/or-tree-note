@@ -1,4 +1,5 @@
 import { cloneDeep } from 'lodash';
+
 import { Logger } from '../../../../../common/logging/logging';
 import { CursorUtils } from '../../../../../modules/cursor/cursor-utils';
 import { VIM_COMMAND } from '../../../../../modules/vim/vim-commands-repository';
@@ -49,15 +50,20 @@ export class VimInputHandler {
         },
         modeChangedv2: (vimResults, newMode, oldMode) => {
           this.vimEditorOptions.modeChangedv2(vimResults, newMode, oldMode);
+
+          if (newMode === VimMode.NORMAL) {
+            this.vimUi.enterNormalModeV2(this.vimCore.getVimState());
+          }
         },
         commandListenerv2: (vimResults) => {
           if (this.vimCore.getVimState().mode === VimMode.INSERT) {
-            /* prettier-ignore */ logger.culogger.todo('update insert to normal', (...r) => console.log(...r));
-            const vimState = this.updateVimState(this.vimEditorOptions);
+            const vimState = this.updateVimStateFromInsert(
+              this.vimEditorOptions
+            );
 
             vimResults.vimState = vimState;
-            this.vimEditorOptions.commandListenerv2(vimResults);
           }
+          this.vimEditorOptions.commandListenerv2(vimResults);
         },
       },
     });
@@ -97,16 +103,38 @@ export class VimInputHandler {
   }
 
   private initKeyListeners() {
-    this.container.addEventListener('keydown', (ev) => {
+    document.addEventListener('keydown', (ev: KeyboardEvent) => {
       console.clear();
       if (ShortcutService.checkAllowedBrowserShortcuts(ev)) return;
-
       // ev.preventDefault();
       /* prettier-ignore */ logger.culogger.debug(['Received input %s', ev.key], {}, (...r) => console.log(...r));
-      /** Let ev paint the DOM first, so we can get the (nativly) updated DOM with keydown */
-      requestAnimationFrame(() => {
-        this.vimCore.executeCommand(ev.key);
-      });
+
+      if (this.vimCore.getMode() === VimMode.INSERT) {
+        /**
+         * Let
+         * this.container.addEventListener('keydown', (ev) => {
+         * handle insert
+         */
+        this.handleInsertMode(ev);
+        return;
+      }
+
+      this.handleNormalMode(ev);
+    });
+  }
+
+  private handleInsertMode(ev: KeyboardEvent) {
+    /** Let ev paint the DOM first, so we can get the (nativly) updated DOM with keydown */
+    requestAnimationFrame(() => {
+      this.vimCore.executeCommand(ev.key);
+    });
+  }
+
+  private handleNormalMode(ev: KeyboardEvent) {
+    this.vimCore.executeCommand(ev.key);
+    /** Needed, else cursor not updating */
+    requestAnimationFrame(() => {
+      this.vimUi.enterInsertMode();
     });
   }
 
@@ -126,13 +154,13 @@ export class VimInputHandler {
     });
   }
 
-  private updateVimState(vimEditorOptions: VimEditorOptionsV2) {
+  private updateVimStateFromInsert(vimEditorOptions: VimEditorOptionsV2) {
     const lines = this.getTextFromChildren(vimEditorOptions);
     const vimState = this.vimCore.getVimState();
     vimState.lines = lines;
-    this.updateCursor(vimState);
-    this.vimCore.setVimState(vimState);
-    return vimState;
+    const updateWithCursor = this.updateCursor(vimState);
+    this.vimCore.setVimState(updateWithCursor);
+    return updateWithCursor;
   }
 
   private updateCursor(vimState: VimStateV2) {

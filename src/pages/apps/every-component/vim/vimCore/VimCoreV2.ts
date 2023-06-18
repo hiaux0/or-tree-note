@@ -20,8 +20,8 @@ export const testVimState: VimStateV2 = {
  * Main concern: Given an input, return the executed command's output
  */
 export class VimCoreV2 {
-  private vimState: VimStateV2 = {};
   private readonly vimCommandManager: VimCommandManagerV2;
+  private vimState: VimStateV2 = {};
   private readonly vimOptions: VimOptions;
 
   constructor(vimState: VimStateV2 = {}, vimOptions: VimOptions = {}) {
@@ -55,6 +55,7 @@ export class VimCoreV2 {
     // Hooks: modeChanged -------------------------------------------------------
     const newMode = updatedVimState.mode;
     const hasModeChanged = oldMode !== newMode;
+    /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: VimCoreV2.ts:58 ~ hasModeChanged:', hasModeChanged);
     if (hasModeChanged) {
       /* prettier-ignore */ logger.culogger.debug(['New Mode: %s', newMode], {}, (...r)=>console.log(...r));
       this.vimOptions.hooks.modeChangedv2(
@@ -73,6 +74,10 @@ export class VimCoreV2 {
 
   public getVimState() {
     return cloneDeep(this.vimState);
+  }
+
+  public getMode() {
+    return this.vimState.mode;
   }
 
   public setVimState(vimState: VimStateV2) {
