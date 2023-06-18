@@ -96,6 +96,9 @@ export interface VimHooks {
   afterInit?: (
     vim: VimCore
   ) => QueueInputReturn[] | Promise<QueueInputReturn[]> | void;
+  afterInitv2?: (
+    vim: VimCoreV2
+  ) => QueueInputReturnv2[] | Promise<QueueInputReturnv2[]> | void;
   onBeforeCommand?: () => boolean;
   commandListenerv2?: CommandListenerv2;
   modeChangedv2?: ModeChangedv2;

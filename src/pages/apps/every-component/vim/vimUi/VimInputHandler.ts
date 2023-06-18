@@ -3,6 +3,7 @@ import { cloneDeep } from 'lodash';
 import { Logger } from '../../../../../common/logging/logging';
 import { CursorUtils } from '../../../../../modules/cursor/cursor-utils';
 import { VIM_COMMAND } from '../../../../../modules/vim/vim-commands-repository';
+import { assembleModifiers } from '../../../../../modules/vim/vim-init';
 import {
   VimEditorOptionsV2,
   VimMode,
@@ -45,8 +46,9 @@ export class VimInputHandler {
 
     this.vimCore = new VimCoreV2(finalVimState, {
       hooks: {
-        afterInit: (vimCore) => {
-          void this.vimEditorOptions.afterInit(vimCore);
+        afterInitv2: (vimCore) => {
+          void this.vimEditorOptions.afterInitv2(vimCore);
+          void vimCore.queueInputSequence('ll');
         },
         modeChangedv2: (vimResults, newMode, oldMode) => {
           this.vimEditorOptions.modeChangedv2(vimResults, newMode, oldMode);
@@ -109,29 +111,17 @@ export class VimInputHandler {
       // ev.preventDefault();
       /* prettier-ignore */ logger.culogger.debug(['Received input %s', ev.key], {}, (...r) => console.log(...r));
 
-      if (this.vimCore.getMode() === VimMode.INSERT) {
-        /**
-         * Let
-         * this.container.addEventListener('keydown', (ev) => {
-         * handle insert
-         */
-        this.handleInsertMode(ev);
-        return;
-      }
+      const { collectedModifiers } = ShortcutService.assembleModifiers(ev);
+      const pressedKey = ShortcutService.getPressedKey(ev);
 
-      this.handleNormalMode(ev);
+      requestAnimationFrame(() => {
+        void this.vimCore.executeCommand(pressedKey, collectedModifiers);
+        this.handleNormalMode();
+      });
     });
   }
 
-  private handleInsertMode(ev: KeyboardEvent) {
-    /** Let ev paint the DOM first, so we can get the (nativly) updated DOM with keydown */
-    requestAnimationFrame(() => {
-      this.vimCore.executeCommand(ev.key);
-    });
-  }
-
-  private handleNormalMode(ev: KeyboardEvent) {
-    this.vimCore.executeCommand(ev.key);
+  private handleNormalMode() {
     /** Needed, else cursor not updating */
     requestAnimationFrame(() => {
       this.vimUi.enterInsertMode();

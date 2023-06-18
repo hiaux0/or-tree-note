@@ -29,7 +29,7 @@ import { VimCommand, VIM_COMMAND } from './vim-commands-repository';
 import { defaultVimOptions } from './vim-core';
 import { VimStateClass } from './vim-state';
 import {
-  FindPotentialCommandReturn as PotentialCommandReturn,
+  FindPotentialCommandReturn,
   VimMode,
   QueueInputReturn,
   KeyBindingModes,
@@ -191,7 +191,7 @@ export class VimCommandManager {
   findPotentialCommand(
     input: string,
     modifiers: string[] = []
-  ): PotentialCommandReturn {
+  ): FindPotentialCommandReturn {
     //
     let targetKeyBinding: VimCommand[];
     if (input === ESCAPE) {
@@ -276,7 +276,7 @@ export class VimCommandManager {
   }
 
   private includesPotentialCommands(
-    commandAwaitingNextInput: PotentialCommandReturn
+    commandAwaitingNextInput: FindPotentialCommandReturn
   ): VimCommand | undefined {
     const has = this.potentialCommands.find((command) => {
       const found = includes(
@@ -294,7 +294,7 @@ export class VimCommandManager {
     modifiers: string[] = []
   ): VIM_COMMAND | undefined {
     let targetCommand: VimCommand;
-    let potentialCommands: PotentialCommandReturn['potentialCommands'];
+    let potentialCommands: FindPotentialCommandReturn['potentialCommands'];
 
     try {
       /** Else, it "awaiting commands" like `t` will not function properly in insert mode. Can this be improved? */
@@ -492,7 +492,7 @@ function getCommandAwaitingNextInput(
   input: string,
   queuedKeys: string[],
   potentialCommands: VimCommand[]
-): PotentialCommandReturn | undefined {
+): FindPotentialCommandReturn | undefined {
   const keySequence = queuedKeys.join('').concat(input);
   const finalAwaitingCommand = commandsThatWaitForNextInput.find(
     // BUG?

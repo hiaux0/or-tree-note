@@ -2,11 +2,16 @@ import { cloneDeep } from 'lodash';
 
 import { Logger } from '../../../../../common/logging/logging';
 import { VIM_COMMAND } from '../../../../../modules/vim/vim-commands-repository';
+import { defaultVimOptions } from '../../../../../modules/vim/vim-core';
 import {
   VimStateV2,
   VimOptions,
   VimMode,
+  VimExecutingMode,
+  QueueInputReturn,
+  QueueInputReturnv2,
 } from '../../../../../modules/vim/vim-types';
+import { ShortcutService } from '../../shortcuts/ShortcutService';
 import { VimCommandManagerV2 } from './vimCommandManager/VimCommandManagerV2';
 
 const logger = new Logger('VimCoreV2');
@@ -21,29 +26,41 @@ export const testVimState: VimStateV2 = {
  */
 export class VimCoreV2 {
   private readonly vimCommandManager: VimCommandManagerV2;
-  private vimState: VimStateV2 = {};
-  private readonly vimOptions: VimOptions;
 
-  constructor(vimState: VimStateV2 = {}, vimOptions: VimOptions = {}) {
+  constructor(
+    private vimState: VimStateV2 = {},
+    private readonly vimOptions: VimOptions = defaultVimOptions
+  ) {
     this.vimState = vimState;
-    this.vimOptions = vimOptions;
+    const finalOptions = {
+      ...defaultVimOptions,
+      ...vimOptions,
+    };
+    this.vimOptions = finalOptions;
 
-    this.vimCommandManager = new VimCommandManagerV2();
+    this.vimCommandManager = new VimCommandManagerV2(vimState, finalOptions);
 
     // defaults
     this.vimState.mode = VimMode.NORMAL;
   }
 
-  public executeCommand(key: string): VimStateV2 | undefined {
+  public async executeCommand(
+    input: string,
+    modifiers: string[]
+  ): Promise<QueueInputReturnv2 | undefined> {
     // Old -------------------------------------------------------
     const oldMode = this.vimState.mode;
     /* prettier-ignore */ logger.culogger.debug(['Old Mode: %s', oldMode], {}, (...r)=>console.log(...r));
 
     // Execute -------------------------------------------------------
-    const updatedVimState = this.vimCommandManager.executeCommand(
+    const executedResult = await this.vimCommandManager.executeCommand(
       this.vimState,
-      key
+      input,
+      modifiers
     );
+    if (!executedResult) return;
+
+    const updatedVimState = executedResult.vimState;
     if (!updatedVimState) return;
     /* prettier-ignore */ logger.culogger.debug(['updatedVimState: %o', updatedVimState], {}, (...r)=>console.log(...r));
 
@@ -69,7 +86,36 @@ export class VimCoreV2 {
     }
 
     this.setVimState(updatedVimState);
-    return updatedVimState;
+    return executedResult;
+  }
+
+  async queueInputSequence(
+    inputSequence: string | string[],
+    vimExecutingMode: VimExecutingMode = VimExecutingMode.INDIVIDUAL
+  ): Promise<QueueInputReturnv2[]> {
+    const resultList: QueueInputReturnv2[] = [];
+    let givenInputSequence: string[];
+
+    if (typeof inputSequence === 'string') {
+      givenInputSequence = ShortcutService.splitInputSequence(inputSequence);
+    } else {
+      givenInputSequence = inputSequence;
+    }
+
+    await Promise.all(
+      givenInputSequence.map(async (input) => {
+        const subResult = await this.executeCommand(input, []);
+        if (subResult?.targetCommand !== undefined) {
+          resultList.push(subResult);
+        }
+      })
+    );
+
+    if (vimExecutingMode === VimExecutingMode.INDIVIDUAL) {
+      return resultList;
+    }
+
+    return this.vimCommandManager.batchResults(resultList);
   }
 
   public getVimState() {
