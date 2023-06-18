@@ -133,7 +133,7 @@ export type CommandListener = (
   vim?: VimCore
 ) => void | VimStateV2;
 export type CommandListenerv2 = (
-  vimResults: QueueInputReturnv2
+  vimResult: QueueInputReturnv2
   // inputData: InputData,
   // vim?: VimCore
 ) => void | VimStateV2;
@@ -165,7 +165,7 @@ export interface VimEditorOptionsV2 {
   ) => QueueInputReturn[] | Promise<QueueInputReturn[]> | void;
   afterInitv2?: (
     vim: VimCoreV2
-  ) => QueueInputReturn[] | Promise<QueueInputReturn[]> | void;
+  ) => QueueInputReturnv2[] | Promise<QueueInputReturnv2[]> | void;
   onBeforeCommand?: () => boolean;
   commandListener: CommandListener;
   commandListenerv2?: CommandListenerv2;

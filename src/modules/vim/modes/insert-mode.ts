@@ -91,10 +91,10 @@ export class InsertMode extends AbstractMode {
     this.queuedKeys = [];
   }
 
-  async executeCommand(
+  executeCommand(
     commandName: VIM_COMMAND,
     commandValue: unknown
-  ): Promise<VimStateClass> {
+  ): VimStateClass {
     return super.executeCommand(commandName, commandValue, this.currentMode);
   }
 

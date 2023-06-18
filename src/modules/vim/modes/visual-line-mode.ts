@@ -11,11 +11,11 @@ const logger = new Logger({ scope: 'VisualMode' });
 export class VisualLineMode extends AbstractMode {
   currentMode = VimMode.VISUALLINE;
 
-  async executeCommand(
+  executeCommand(
     commandName: VIM_COMMAND,
     commandValue: unknown
-  ): Promise<VimStateClass> {
-    const newVimState = await super.executeCommand(
+  ): VimStateClass {
+    const newVimState = super.executeCommand(
       commandName,
       commandValue,
       this.currentMode

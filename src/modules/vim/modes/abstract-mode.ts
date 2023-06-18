@@ -44,11 +44,11 @@ export abstract class AbstractMode {
     // this.vimState.lines = this.vimState.lines;
   }
 
-  async executeCommand(
+  executeCommand(
     commandName: VIM_COMMAND,
     commandInput: unknown,
     currentMode: VimMode
-  ): Promise<VimStateClass> {
+  ): VimStateClass {
     const targetVimPluginCommand = this.vimOptions.vimPlugins?.find(
       (plugin) => {
         return plugin.commandName === commandName;
@@ -79,7 +79,7 @@ export abstract class AbstractMode {
 
     const previousOutput = cloneDeep(this.vimState); // side effect, thus clone before executing command
     // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-    const result = (await this[commandName](commandInput)) as VimStateClass;
+    const result = this[commandName](commandInput) as VimStateClass;
 
     try {
       this.validateHorizontalCursor(result);

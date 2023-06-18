@@ -44,17 +44,18 @@ export class VimCoreV2 {
     this.vimState.mode = VimMode.NORMAL;
   }
 
-  public async executeCommand(
+  public executeCommand(
+    vimState: VimStateV2,
     input: string,
     modifiers: string[]
-  ): Promise<QueueInputReturnv2 | undefined> {
+  ): QueueInputReturnv2 | undefined {
     // Old -------------------------------------------------------
     const oldMode = this.vimState.mode;
     /* prettier-ignore */ logger.culogger.debug(['Old Mode: %s', oldMode], {}, (...r)=>console.log(...r));
 
     // Execute -------------------------------------------------------
-    const executedResult = await this.vimCommandManager.executeCommand(
-      this.vimState,
+    const executedResult = this.vimCommandManager.executeCommand(
+      vimState,
       input,
       modifiers
     );
@@ -72,7 +73,6 @@ export class VimCoreV2 {
     // Hooks: modeChanged -------------------------------------------------------
     const newMode = updatedVimState.mode;
     const hasModeChanged = oldMode !== newMode;
-    /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: VimCoreV2.ts:58 ~ hasModeChanged:', hasModeChanged);
     if (hasModeChanged) {
       /* prettier-ignore */ logger.culogger.debug(['New Mode: %s', newMode], {}, (...r)=>console.log(...r));
       this.vimOptions.hooks.modeChangedv2(
@@ -89,10 +89,10 @@ export class VimCoreV2 {
     return executedResult;
   }
 
-  async queueInputSequence(
+  queueInputSequence(
     inputSequence: string | string[],
     vimExecutingMode: VimExecutingMode = VimExecutingMode.INDIVIDUAL
-  ): Promise<QueueInputReturnv2[]> {
+  ): QueueInputReturnv2[] {
     const resultList: QueueInputReturnv2[] = [];
     let givenInputSequence: string[];
 
@@ -102,20 +102,30 @@ export class VimCoreV2 {
       givenInputSequence = inputSequence;
     }
 
-    await Promise.all(
-      givenInputSequence.map(async (input) => {
-        const subResult = await this.executeCommand(input, []);
-        if (subResult?.targetCommand !== undefined) {
-          resultList.push(subResult);
-        }
-      })
-    );
+    let vimState = this.getVimState();
+    givenInputSequence.forEach((input) => {
+      const subResult = this.vimCommandManager.executeCommand(
+        vimState,
+        input,
+        []
+      );
+      if (subResult?.targetCommand !== undefined) {
+        vimState = subResult.vimState;
+        resultList.push(subResult);
+      }
+    });
+    // await Promise.all(
+    // );
 
     if (vimExecutingMode === VimExecutingMode.INDIVIDUAL) {
       return resultList;
     }
 
-    return this.vimCommandManager.batchResults(resultList);
+    // const batched = this.vimCommandManager.batchResults(resultList);
+    // batched.forEach((batch) => {
+    //   /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: VimCoreV2.ts:125 ~ batch.vimState.cursor:', batch.vimState.cursor);
+    // });
+    // return batched;
   }
 
   public getVimState() {
@@ -132,6 +142,7 @@ export class VimCoreV2 {
   }
 
   public reportVimState(state?: VimStateV2) {
+    return;
     // console.trace('reportVimState');
     const { cursor, lines, mode } = state ?? this.vimState;
     logger.culogger.overwriteDefaultLogOtpions({ log: true });

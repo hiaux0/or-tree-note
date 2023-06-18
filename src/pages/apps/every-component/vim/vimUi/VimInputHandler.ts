@@ -32,12 +32,14 @@ export class VimInputHandler {
   }
 
   private async init() {
-    await this.initVimCore();
-    this.initEventListeners();
+    this.initVimCore();
     this.vimUi = new VimUiV2(this.vimCore, this.vimEditorOptions);
+
+    this.initEventListeners();
+    await this.afterInitVimCore();
   }
 
-  private async initVimCore() {
+  private initVimCore() {
     const lines = this.getTextFromChildren(this.vimEditorOptions);
     const finalVimState = testVimState;
     if (lines.length > 0) {
@@ -57,19 +59,22 @@ export class VimInputHandler {
             this.vimUi.enterNormalModeV2(this.vimCore.getVimState());
           }
         },
-        commandListenerv2: (vimResults) => {
+        commandListenerv2: (vimResult) => {
           if (this.vimCore.getVimState().mode === VimMode.INSERT) {
             const vimState = this.updateVimStateFromInsert(
               this.vimEditorOptions
             );
 
-            vimResults.vimState = vimState;
+            vimResult.vimState = vimState;
           }
-          this.vimEditorOptions.commandListenerv2(vimResults);
+          this.vimEditorOptions.commandListenerv2(vimResult);
+          this.vimUi.update(vimResult.vimState);
         },
       },
     });
+  }
 
+  private async afterInitVimCore() {
     if (this.vimEditorOptions.afterInitv2) {
       const afterResults = await this.vimEditorOptions.afterInitv2(
         this.vimCore
@@ -94,6 +99,8 @@ export class VimInputHandler {
               this.vimCore.setVimState(updatedVimState);
             }
           }
+          this.vimUi.update(vimResult.vimState);
+          this.vimCore.setVimState(vimResult.vimState);
         });
       }
     }
@@ -115,7 +122,11 @@ export class VimInputHandler {
       const pressedKey = ShortcutService.getPressedKey(ev);
 
       requestAnimationFrame(() => {
-        void this.vimCore.executeCommand(pressedKey, collectedModifiers);
+        void this.vimCore.executeCommand(
+          this.vimCore.getVimState(),
+          pressedKey,
+          collectedModifiers
+        );
         this.handleNormalMode();
       });
     });

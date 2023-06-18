@@ -30,11 +30,11 @@ export class VimCommandManagerV2 {
     );
   }
 
-  public async executeCommand(
+  public executeCommand(
     vimState: VimStateV2,
     input: string,
     modifiers: string[]
-  ): Promise<QueueInputReturnv2> {
+  ): QueueInputReturnv2 {
     /* prettier-ignore */ logger.culogger.debug(['Mode: (%s) %s', vimState.mode], {}, (...r) => console.log(...r));
     vimState.snippet = undefined;
     const modifiersText = `${modifiers?.join('+ ')}`;
@@ -48,33 +48,25 @@ export class VimCommandManagerV2 {
         input,
         modifiers
       );
-      /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: VimCommandManagerV2.ts:40 ~ targetCommandName:', targetCommandName);
     } catch (_error) {
       void 0;
     }
     if (!targetCommandName) return;
 
-    const result = await this.executeVimCommand(
-      vimState,
-      targetCommandName,
-      input
-    );
+    const result = this.executeVimCommand(vimState, targetCommandName, input);
 
     return result;
   }
 
-  private async executeVimCommand(
+  private executeVimCommand(
     vimState: VimStateV2,
     commandName: VIM_COMMAND,
     commandInput?: unknown
-  ): Promise<QueueInputReturnv2> {
+  ): QueueInputReturnv2 {
     const currentMode = this.getCurrentMode(vimState);
     let targetVimState = vimState;
     try {
-      const newVimState = await currentMode.executeCommand(
-        commandName,
-        commandInput
-      );
+      const newVimState = currentMode.executeCommand(commandName, commandInput);
       if (newVimState !== undefined) {
         if (newVimState.snippet) {
           newVimState.commandName = VIM_COMMAND.snippet;
@@ -117,7 +109,11 @@ export class VimCommandManagerV2 {
   private getCurrentMode(vimState: VimStateV2) {
     const activeMode = vimState.mode;
     if (activeMode === VimMode.NORMAL) {
-      return this.normalMode;
+      // return this.normalMode;
+      return new NormalMode(
+        new VimStateClass(cloneDeep(vimState)),
+        this.vimOptions
+      );
       // } else if (activeMode === VimMode.INSERT) {
       //   return this.insertMode;
       // } else if (activeMode === VimMode.VISUAL) {
