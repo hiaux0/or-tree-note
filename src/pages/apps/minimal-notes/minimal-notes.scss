@@ -51,6 +51,23 @@ $editorLineHeight: 21.4667px;
   animation: 1.3s $animationName step-end infinite;
 }
 
+@mixin caretStyles() {
+  #caret {
+    height: 25px;
+    width: 10px;
+    border: 1px solid black;
+    background: gray;
+
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: $caretSizeHeight;
+    width: $caretSizeWidth;
+
+    opacity: 0.5;
+  }
+}
+
 @mixin caretStylesPerMode() {
   &.mode-NORMAL {
     #caret {
@@ -83,6 +100,12 @@ $editorLineHeight: 21.4667px;
     #caret {
       background: rgba(226, 190, 143, 0.63);
       border: 1px solid black;
+    }
+  }
+
+  &.container--deactive {
+    #caret {
+      display: none;
     }
   }
 }
@@ -120,20 +143,7 @@ $editorLineHeight: 21.4667px;
       }
     }
 
-    #caret {
-      height: 25px;
-      width: 10px;
-      border: 1px solid black;
-      background: gray;
-
-      position: absolute;
-      top: 0;
-      left: 0;
-      height: $caretSizeHeight;
-      width: $caretSizeWidth;
-
-      opacity: 0.5;
-    }
+    @include caretStyles();
   }
 
   .debugContainer {

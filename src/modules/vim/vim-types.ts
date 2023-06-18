@@ -2,6 +2,7 @@ import { getRandomId } from 'common/random';
 import { ISnippet } from 'resources/keybindings/snippets/snippets';
 import { EditorId } from 'store/initial-state';
 
+import { VimCoreV2 } from '../../pages/apps/every-component/vim/vimCore/VimCoreV2';
 import {
   VimCommand,
   SynonymKey,
@@ -143,7 +144,7 @@ export type ModeChangedv2 = (
   vimResults: QueueInputReturnv2,
   newMode: VimMode,
   oldMode: VimMode,
-  vim?: VimCore
+  vim?: VimCoreV2
 ) => void | VimStateV2;
 
 export interface VimEditorOptionsV2 {
@@ -158,6 +159,9 @@ export interface VimEditorOptionsV2 {
   plugins?: VimPlugin[];
   afterInit?: (
     vim: VimCore
+  ) => QueueInputReturn[] | Promise<QueueInputReturn[]> | void;
+  afterInitv2?: (
+    vim: VimCoreV2
   ) => QueueInputReturn[] | Promise<QueueInputReturn[]> | void;
   onBeforeCommand?: () => boolean;
   commandListener: CommandListener;

@@ -31,7 +31,7 @@ export class VimCoreV2 {
     this.vimCommandManager = new VimCommandManagerV2();
 
     // defaults
-    this.vimState.mode = VimMode.INSERT;
+    this.vimState.mode = VimMode.NORMAL;
   }
 
   public executeCommand(key: string): VimStateV2 | undefined {

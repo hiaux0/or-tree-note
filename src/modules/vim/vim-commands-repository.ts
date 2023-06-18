@@ -3,6 +3,7 @@ import { ModifiersType } from '../../resources/keybindings/app-keys';
 export enum VIM_COMMAND {
   'backspace' = 'backspace',
   'clearLine' = 'clearLine',
+  'click' = 'click',
   'createNewLine' = 'createNewLine',
   'cancelAll' = 'cancelAll',
   'copy' = 'copy',

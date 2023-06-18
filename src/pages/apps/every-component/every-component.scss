@@ -1,8 +1,115 @@
+@import '../../../common/variables.scss';
+
+
+$caretBackgroundColor: lightblue;
+$caretColor: black;
+$carentWidth: 1.6px;
+$caretSizeWidth: 0.6 * $fontSize;
+// $caretSizeHeight: 1.29 * $fontSize;
+$caretSizeHeight: 21.4667px;
+$editorLineHeight: 21.4667px;
+
+:root {
+  --caret-size-width: #{$caretSizeWidth};
+  --caret-size-height: #{$caretSizeHeight};
+}
+
+@keyframes blinkInsert {
+
+  from,
+  to {
+    border-left: $carentWidth solid $caretColor;
+  }
+
+  50% {
+    border-left: none;
+  }
+}
+
+@keyframes blinkNormal {
+
+  from,
+  to {
+    background: $caretBackgroundColor;
+  }
+
+  50% {
+    background: transparent;
+  }
+}
+
+@mixin caretBlinking($animationName) {
+  animation: 1.3s $animationName step-end infinite;
+}
+
+@mixin caretStyles() {
+  #caret {
+    height: 25px;
+    width: 10px;
+    border: 1px solid black;
+    background: gray;
+
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: $caretSizeHeight;
+    width: $caretSizeWidth;
+
+    opacity: 0.5;
+  }
+}
+
+@mixin caretStylesPerMode() {
+  &.mode-NORMAL {
+    #caret {
+      border: 1px solid black;
+
+      &.caret-blinking {
+        @include caretBlinking(blinkNormal);
+      }
+
+      &::after {
+        content: '.';
+        background: red;
+        width: 2px;
+        display: block;
+        z-index: 2;
+        position: relative;
+      }
+    }
+  }
+
+  &.mode-INSERT {
+    #caret {
+      background: transparent;
+      border: none;
+    }
+  }
+
+  &.mode-VISUAL,
+  &.mode-VISUALLINE {
+    #caret {
+      background: rgba(226, 190, 143, 0.63);
+      border: 1px solid black;
+    }
+  }
+
+  &.container--deactive {
+    #caret {
+      display: none;
+    }
+  }
+}
+
 .everyComponentContainer {
   border: 1px solid black;
 
   .noteContainer {
+    position: relative;
     border: 1px solid black;
+
+    @include caretStyles();
+    @include caretStylesPerMode();
   }
 
   .copiedNoteContainer {

@@ -1,3 +1,4 @@
+import { cloneDeep } from 'lodash';
 import { Logger } from '../../../../../common/logging/logging';
 import { CursorUtils } from '../../../../../modules/cursor/cursor-utils';
 import { VIM_COMMAND } from '../../../../../modules/vim/vim-commands-repository';
@@ -7,8 +8,10 @@ import {
   VimLine,
   VimStateV2,
 } from '../../../../../modules/vim/vim-types';
+import { isModeChangeCommand } from '../../../../../modules/vim/vim-utils';
 import { ShortcutService } from '../../shortcuts/ShortcutService';
 import { VimCoreV2, testVimState } from '../vimCore/VimCoreV2';
+import { VimUiV2 } from './VimUiV2';
 
 const logger = new Logger('VimInputHandler');
 
@@ -16,21 +19,23 @@ const logger = new Logger('VimInputHandler');
  * Handle input and provide an API to interact with the result
  */
 export class VimInputHandler {
-  vimCore: VimCoreV2;
-  container: HTMLElement;
+  private readonly container: HTMLElement;
+  private vimCore: VimCoreV2;
+  private vimUi: VimUiV2;
 
   constructor(private readonly vimEditorOptions: VimEditorOptionsV2) {
     this.container = this.vimEditorOptions.container;
 
-    this.init();
+    void this.init();
   }
 
-  private init() {
-    this.initVimCore();
+  private async init() {
+    await this.initVimCore();
     this.initEventListeners();
+    this.vimUi = new VimUiV2(this.vimCore, this.vimEditorOptions);
   }
 
-  private initVimCore() {
+  private async initVimCore() {
     const lines = this.getTextFromChildren(this.vimEditorOptions);
     const finalVimState = testVimState;
     if (lines.length > 0) {
@@ -39,6 +44,9 @@ export class VimInputHandler {
 
     this.vimCore = new VimCoreV2(finalVimState, {
       hooks: {
+        afterInit: (vimCore) => {
+          void this.vimEditorOptions.afterInit(vimCore);
+        },
         modeChangedv2: (vimResults, newMode, oldMode) => {
           this.vimEditorOptions.modeChangedv2(vimResults, newMode, oldMode);
         },
@@ -53,6 +61,34 @@ export class VimInputHandler {
         },
       },
     });
+
+    if (this.vimEditorOptions.afterInitv2) {
+      const afterResults = await this.vimEditorOptions.afterInitv2(
+        this.vimCore
+      );
+
+      if (afterResults) {
+        afterResults.forEach((vimResult) => {
+          if (isModeChangeCommand(vimResult.targetCommand)) {
+            const updatedVimState = this.vimEditorOptions.modeChangedv2(
+              vimResult,
+              vimResult.vimState.mode,
+              undefined,
+              this.vimCore
+            );
+            if (updatedVimState) {
+              this.vimCore.setVimState(updatedVimState);
+            }
+          } else {
+            const updatedVimState =
+              this.vimEditorOptions.commandListenerv2(vimResult);
+            if (updatedVimState) {
+              this.vimCore.setVimState(updatedVimState);
+            }
+          }
+        });
+      }
+    }
   }
 
   private initEventListeners() {
@@ -78,12 +114,13 @@ export class VimInputHandler {
     this.container.addEventListener('click', () => {
       console.clear();
       const vimState = this.vimCore.getVimState();
-      this.updateCursor(vimState);
-      this.vimCore.setVimState(vimState);
+      const updatedWithCursor = this.updateCursor(vimState);
+      this.vimCore.setVimState(updatedWithCursor);
+      this.vimUi.update(updatedWithCursor);
 
       const vimResults = {
-        vimState,
-        targetCommand: VIM_COMMAND.nothing,
+        vimState: updatedWithCursor,
+        targetCommand: VIM_COMMAND.click,
       };
       this.vimEditorOptions.commandListenerv2(vimResults);
     });
@@ -99,6 +136,7 @@ export class VimInputHandler {
   }
 
   private updateCursor(vimState: VimStateV2) {
+    const newVimMode = cloneDeep(vimState);
     const selection = document.getSelection();
     for (let rangeIndex = 0; rangeIndex < selection.rangeCount; rangeIndex++) {
       const range = selection.getRangeAt(rangeIndex);
@@ -109,11 +147,10 @@ export class VimInputHandler {
         line,
         col,
       });
-
-      /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: VimInputHandler.ts:81 ~ updatedVimState.cursor:', updatedVimState.cursor);
-
-      vimState.cursor = updatedVimState.cursor;
+      newVimMode.cursor = updatedVimState.cursor;
     }
+
+    return newVimMode;
   }
 
   private getTextFromChildren({
@@ -129,8 +166,9 @@ export class VimInputHandler {
   }
 }
 
-function getLineIndex(parent: Element, startContainer: Node): number {
+function getLineIndex(parent: Element, textNode: Node): number {
   const $children = Array.from(parent.children);
-  const positionIndex = $children.indexOf(startContainer.parentElement);
+  const parentOfTextNode = textNode.parentElement;
+  const positionIndex = $children.indexOf(parentOfTextNode);
   return positionIndex;
 }
