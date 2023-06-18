@@ -34,20 +34,22 @@ export class EveryComponent {
       },
       commandListener: (vimResult) => {},
       commandListenerv2: (vimResult) => {
+        this.tempVimStateInsertMode = vimResult.vimState;
+        if (this.vimState.mode === VimMode.INSERT) {
+          /** Either have temp state (like now), to not have cursor reset, because aurelia re-render.
+           * Or always update cursor correctly, after aurelia re-render
+           */
+          return;
+        }
         this.updateVimState(vimResult.vimState);
       },
       modeChangedv2: (vimResult) => {
-        this.mode = vimResult.vimState.mode;
         this.updateVimState(vimResult.vimState);
       },
     });
   }
 
   private updateVimState(newVimState?: VimStateV2) {
-    this.tempVimStateInsertMode = newVimState;
-    if (this.mode === VimMode.INSERT) {
-      return;
-    }
     this.vimState = newVimState ?? this.tempVimStateInsertMode;
   }
 }
