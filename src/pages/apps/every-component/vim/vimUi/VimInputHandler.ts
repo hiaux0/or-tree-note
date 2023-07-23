@@ -3,7 +3,6 @@ import { cloneDeep } from 'lodash';
 import { Logger } from '../../../../../common/logging/logging';
 import { CursorUtils } from '../../../../../modules/cursor/cursor-utils';
 import { VIM_COMMAND } from '../../../../../modules/vim/vim-commands-repository';
-import { assembleModifiers } from '../../../../../modules/vim/vim-init';
 import {
   VimEditorOptionsV2,
   VimMode,
@@ -120,6 +119,7 @@ export class VimInputHandler {
 
       const { collectedModifiers } = ShortcutService.assembleModifiers(ev);
       const pressedKey = ShortcutService.getPressedKey(ev);
+      /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: VimInputHandler.ts:122 ~ pressedKey:', pressedKey);
 
       requestAnimationFrame(() => {
         void this.vimCore.executeCommand(

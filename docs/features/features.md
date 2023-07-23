@@ -46,14 +46,20 @@
       - Insert
       - Visual
       - VisualLine
-    - Cursor
-    - Lines
     - Plugins
     - Other Features
+    - VimState
+      - Cursor
+      - Lines
+    - VimCommandManager
+      - execute
+        - CommandService
   - VimUi
     - Showing different Modes
     - User Input
       - Handle user input/events
+        - Click
+        - Key
 
 # Architecture Old
 

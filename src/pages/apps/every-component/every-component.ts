@@ -30,7 +30,7 @@ export class EveryComponent {
       childSelector: 'inputLine',
       afterInitv2: (vimCore) => {
         this.vimState.mode = vimCore.getVimState().mode;
-        return vimCore.queueInputSequence('$u');
+        // return vimCore.queueInputSequence('$ui');
       },
       commandListener: (vimResult) => {},
       commandListenerv2: (vimResult) => {

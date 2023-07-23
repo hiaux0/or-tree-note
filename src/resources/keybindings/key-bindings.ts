@@ -118,6 +118,8 @@ const keyBindings: KeyBindingModes = {
     { key: '<Backspace>', command: VIM_COMMAND['backspace'] },
     { key: '<Delete>', command: VIM_COMMAND['delete'] },
     { key: '<Enter>', command: VIM_COMMAND['newLine'] },
+    { key: '<Escape>', command: VIM_COMMAND['enterNormalMode'] },
+    { key: 'Escape', command: VIM_COMMAND['enterNormalMode'] },
     { key: '<Shift>', command: VIM_COMMAND['shift'] },
     { key: Modifier['<Space>'], command: VIM_COMMAND['space'] },
     { key: '<Control>', command: VIM_COMMAND['nothing'] },

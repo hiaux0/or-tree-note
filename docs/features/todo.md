@@ -1,15 +1,15 @@
 - [ ] [Normal]
 
 # Current
-
-- [x] switch editors
-- [x] add editors
-- [x] remove editors
-
-- [x] enter in insert
-- [x] cursor in insert
-  - take from click changing
 - .
+  - [ ] every
+    - [ ] commands
+      - CommandService
+      - ShortcutService
+      -
+    - [x] cursor ui
+      - [x] clicking in normal mode should update cursor
+      - [x] listener for non-insert mode
 
 # Feat
 
@@ -111,6 +111,13 @@
 # Done
 
 - .
+  - [x] switch editors
+  - [x] add editors
+  - [x] remove editors
+
+  - [x] enter in insert
+  - [x] cursor in insert
+    - take from click changing
 
   - [x] [Editor] text replacements
   - [x] [Editor] code highlighting

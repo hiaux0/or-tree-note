@@ -38,13 +38,13 @@ export class CommandsService {
 
     try {
       /** Else, it "awaiting commands" like `t` will not function properly in insert mode. Can this be improved? */
-      if (vimState.mode !== VimMode.INSERT) {
-        ({ targetCommand, potentialCommands } = this.findPotentialCommand(
-          vimState,
-          input,
-          modifiers
-        ));
-      }
+      // if (vimState.mode !== VimMode.INSERT) {
+      ({ targetCommand, potentialCommands } = this.findPotentialCommand(
+        vimState,
+        input,
+        modifiers
+      ));
+      // }
     } catch (error) {
       /* prettier-ignore */ logger.culogger.debug(['Error: %s', error], { onlyVerbose: true }, (...r) => console.log(...r));
       // throw error;
@@ -126,6 +126,7 @@ export class CommandsService {
       const result = inputContainsSequence(keyBinding.key, keySequence);
       return result;
     });
+    /* prettier-ignore */ console.log('>>>> _ >>>> ~ file: CommandsService.ts:129 ~ potentialCommands:', potentialCommands);
 
     /* prettier-ignore */ logger.culogger.debug(['potentialCommands: %o', potentialCommands], {}, (...r) => console.log(...r));
     const commandAwaitingNextInput = this.getCommandAwaitingNextInput(

@@ -11,6 +11,7 @@ import {
   QueueInputReturnv2,
 } from '../../../../../../modules/vim/vim-types';
 import { CommandsService } from '../commands/CommandsService';
+import { InsertMode } from '../../../../../../modules/vim/modes/insert-mode';
 
 const logger = new Logger('VimCommandManagerV2');
 
@@ -114,8 +115,11 @@ export class VimCommandManagerV2 {
         new VimStateClass(cloneDeep(vimState)),
         this.vimOptions
       );
-      // } else if (activeMode === VimMode.INSERT) {
-      //   return this.insertMode;
+    } else if (activeMode === VimMode.INSERT) {
+      return new InsertMode(
+        new VimStateClass(cloneDeep(vimState)),
+        this.vimOptions
+      );
       // } else if (activeMode === VimMode.VISUAL) {
       //   return this.visualMode;
       // } else if (activeMode === VimMode.VISUALLINE) {

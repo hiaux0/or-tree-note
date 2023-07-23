@@ -41,4 +41,9 @@ export class NormalMode extends AbstractMode {
 
     return this.vimState;
   }
+
+  enterInsertMode(): VimStateClass {
+    this.vimState.mode = VimMode.INSERT;
+    return this.vimState;
+  }
 }
