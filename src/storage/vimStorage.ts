@@ -3,7 +3,7 @@ import { VimStateV2 } from 'modules/vim/vim-types';
 
 import { setInDatabase } from './Database';
 
-export class StorageService {
+export class VimStorageService {
   public static async saveVimState(vimState: VimStateV2): Promise<VimStateV2> {
     await setInDatabase('vimState', vimState);
     return vimState;

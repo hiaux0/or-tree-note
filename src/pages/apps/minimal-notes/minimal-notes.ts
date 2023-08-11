@@ -11,7 +11,7 @@ import {
   VimMode,
 } from 'modules/vim/vim-types';
 import rangy from 'rangy';
-import { StorageService } from 'storage/vimStorage';
+import { VimStorageService } from 'storage/vimStorage';
 import './minimal-notes.scss';
 
 // const logger = new Logger('MinimalNotes');
@@ -32,7 +32,7 @@ export class MinimalNotes {
   }
 
   private async initVim() {
-    const savedVimState = await StorageService.getVimState();
+    const savedVimState = await VimStorageService.getVimState();
     const startLines = savedVimState.lines ?? [];
     this.lines = startLines;
 
@@ -126,7 +126,7 @@ export class MinimalNotes {
       {
         commandName: 'save',
         execute: (vimState) => {
-          void StorageService.saveVimState(vimState.serialize());
+          void VimStorageService.saveVimState(vimState.serialize());
         },
       },
     ];
