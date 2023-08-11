@@ -1,0 +1,20 @@
+<template>
+  <h3>Todos</h3>
+
+  <div repeat.for="todo of todos">
+    <!-- <div style="color: grey;"> ${todo.id} </div> -->
+    <!-- <div style="color: #a2b8a2"> @${todo.id} </div> -->
+    <div style="color: #a2b8a2">
+      <span repeat.for="tag of todo.tags">@${tag.label} </span>
+    </div>
+
+    <input
+      type="text"
+      placeholder="add tag"
+      value.bind="tagValueMap[todo.id]"
+      keyup.delegate="addTag($event, todo.id)"
+    />
+    <div> ${todo.content} </div>
+    <hr />
+  </div>
+</template>
