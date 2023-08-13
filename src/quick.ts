@@ -1,5 +1,3 @@
-const text = '### Hello';
-// const text = '    Hello';
-const whiteSpaceAtStartIndex = /\S/g.exec(text);
- whiteSpaceAtStartIndex;/* ? */
+// type Test<T> = T extends never ? string : number;
 
+// const hello: Test<any>;
