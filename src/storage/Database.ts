@@ -1,6 +1,6 @@
 import localforage from 'localforage';
 
-export type DatabaseKeys = 'vimState';
+export type DatabaseKeys = 'vimState' | 'secondBrainPoc';
 
 // fake a cache so we don't slow down stuff we've already seen
 let fakeCache: Record<string, unknown> = {};

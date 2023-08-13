@@ -1,9 +1,10 @@
 export type Id = string;
 
 export interface IApp {
-  activeEditorId: Id;
+  activeEditorId?: Id;
   todos: ITodo[];
-  notes: INote[];
+  tags: ITag[];
+  notes?: INote[];
 }
 
 export interface ITag {
@@ -14,7 +15,7 @@ export interface ITag {
 export interface ITodo {
   id: Id;
   content: string;
-  tags?: ITag[];
+  tagIds?: ITag['id'][];
 }
 
 export interface INote {

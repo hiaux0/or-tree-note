@@ -14,5 +14,6 @@ export const mockData: IApp = {
       content: '- [ ] come up with way to enhance todo experience',
     },
   ],
+  tags: [],
   notes: [],
 };
