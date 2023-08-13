@@ -1,16 +1,10 @@
 @import './common/variables.scss';
 @import './ui/styles/reset.scss';
+@import './ui/styles/tailwind/tailwind.scss';
 
 * {
   box-sizing: border-box;
 }
-
-body {
-  background: #706363;
-  font-size: $fontSize;
-  font-family: monospace;
-}
-
 
 #mouse-coordinates {
   position: absolute;
