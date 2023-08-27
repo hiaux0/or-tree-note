@@ -1,0 +1,75 @@
+<template>
+  <style>
+    .gray {
+      color: #a2b8a2;
+    }
+
+    .selected {
+      border: 1px solid yellow;
+    }
+  </style>
+
+  <button click.delegate="clearStorage()">Clear storage</button>
+  <h3>Tag Filter</h3>
+  <div>
+    <span>All Tags:</span>
+    <!-- prettier-ignore -->
+    <span
+      repeat.for="tag of appState.tags"
+      style="cursor: pointer"
+      class="
+        gray
+        ${componentState.selectedTagIds.includes(tag.id) ? 'selected' : ''}
+      "
+      click.delegate="toggleTag(tag.id)"
+      >@${tag.label}
+    </span>
+  </div>
+
+  <!-- <h3>Todos</h3> -->
+  <h3>Todos</h3>
+
+  <section>
+    <div>Add todo</div>
+    <input
+      type="text"
+      placeholder="addTodo"
+      value.bind="componentState.newTodo"
+      keyup.delegate="addTodo(componentState.newTodo, $event)"
+    />
+  </section>
+
+  <hr>
+  <hr>
+
+  <div repeat.for="todo of filteredTodos" data-todo-id.bind="todo.id">
+    <!-- <div style="color: grey;"> ${todo.id} </div> -->
+    <!-- <div style="color: #a2b8a2"> @${todo.id} </div> -->
+
+    <input
+      type="text"
+      placeholder="add tag"
+      value.bind="tagValueMap[todo.id]"
+      keyup.delegate="addTag(todo.id, $event)"
+      style="background: transparent"
+    />
+    <span class="gray">
+      <span repeat.for="tagId of todo.tagIds"
+        >@${todoService.getTagById(tagId).label}
+        <button
+          style="
+            background-color: transparent;
+            color: #6a3232;
+            border: none;
+            cursor: pointer;
+          "
+          click.delegate="removeTag(todo.id, tagId)"
+          >x</button
+        >
+      </span>
+    </span>
+
+    <div> ${todo.content} </div>
+    <hr />
+  </div>
+</template>

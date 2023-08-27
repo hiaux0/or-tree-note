@@ -8,6 +8,7 @@ import {
   VimStateV2,
 } from 'modules/vim/vim-types';
 import { StorageService } from 'storage/vimStorage';
+import rangy from 'rangy';
 import './minimal-notes.scss';
 
 // const logger = new Logger('MinimalNotes');
@@ -70,8 +71,8 @@ export class MinimalNotes {
     vimEditorOptionsV2.plugins = [
       {
         commandName: 'save',
-        execute: () => {
-          /** TODO: if not here, then gives error, when trying to save minimal notes */
+        execute: (vimState) => {
+          void StorageService.saveVimState(vimState.serialize());
         },
       },
     ];
